@@ -1,11 +1,28 @@
 import './App.css';
+import * as React from 'react';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 
-function App() {
+import LoginScreen from './screens/login.js';
+import HomeScreen from './screens/home.js';
+import SignUpScreen from './screens/signup.js';
+import JournalScreen from './screens/journal/journal.js';
+import EatingScreen from './screens/journal/eating.js';
+import ActivityScreen from './screens/journal/activity.js';
+import GalleryScreen from './screens/journal/gallery.js';
+
+export default function App() {
   return (
-    <div className="App">
-
-    </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<LoginScreen />} />
+          <Route path='/login' element={<LoginScreen />} />
+          {/* <Route path='/signup' element={<SignUpScreen />} />
+          <Route path='/home' element={<HomeScreen />} />
+          <Route path='/journal' element={<JournalScreen />} />
+          <Route path='/eating' element={<EatingScreen />} />
+          <Route path='/activity' element={<ActivityScreen />} />
+          <Route path='/gallery' element={<GalleryScreen />} /> */}
+        </Routes>
+      </BrowserRouter>
   );
 }
-
-export default App;
