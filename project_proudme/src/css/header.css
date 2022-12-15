@@ -1,5 +1,12 @@
 nav {
     height: 8%;
     background-color: #B4E1FF;    
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly
 }
 
+.left-nav {
+    justify-content: space-between;
+}
