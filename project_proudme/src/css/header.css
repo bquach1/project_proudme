@@ -2,11 +2,16 @@ nav {
     height: 8%;
     background-color: #B4E1FF;    
     display: flex;
-    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
-    justify-content: space-evenly
 }
 
 .left-nav {
+    margin-left: 2%;
+    width: 40%;
+    display: flex;
     justify-content: space-between;
+    align-items: center;
 }
+
+
