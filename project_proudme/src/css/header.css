@@ -14,4 +14,8 @@ nav {
     align-items: center;
 }
 
-
+#welcome {
+    color: #2E6AA1;
+    font-family: Roboto;
+    margin-top: 2%;
+}

@@ -1,0 +1,17 @@
+.form {
+    background-color: #FFFBD6;
+    width: 50%;
+    margin: auto;
+    border-radius: 10px;
+    height: 40vh;
+}
+
+.loginButton {
+    background-color: #EF9090;
+    border-style: none;
+    color: white;
+}
+
+.loginButton:hover {
+    cursor: pointer;
+}
