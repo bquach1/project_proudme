@@ -2,7 +2,7 @@ import React from 'react';
 
 const PetScreen = () => {
     return (
-        <div class="pet">
+        <div className="pet">
             <h1>Coming soon!</h1>
         </div>
     );

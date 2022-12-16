@@ -69,7 +69,7 @@ const LoginScreen = () => {
             <div className="button-container">
               <Button 
                 style={{backgroundColor: '#EF9090', color: 'white', padding: '10px 50px 10px 50px', 
-                borderRadius: '20px', textTransform: 'none'}}
+                borderRadius: '20px', textTransform: 'none', marginTop: '2%'}}
                 type="submit">
                     Log In
               </Button>
@@ -79,14 +79,16 @@ const LoginScreen = () => {
     );
 
     function successfulLogin() {
-
+        setTimeout(() => {
+            navigate('/home');
+    ***REMOVED***, 5000);
 ***REMOVED***
 
     return (
-        <div class="login">
+        <div className="login">
             <h1 id="welcome">Welcome back to ProudME!</h1>
             <div className="login-form">
-                {isSubmitted ? <div>User is successfully logged in</div> : renderForm}
+                {isSubmitted ? successfulLogin : renderForm}
             </div>
         </div>
     );

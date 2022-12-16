@@ -4,6 +4,9 @@
     margin: auto;
     border-radius: 10px;
     height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items:baseline;
 }
 
 .loginButton {
@@ -12,6 +15,12 @@
     color: white;
 }
 
-.loginButton:hover {
-    cursor: pointer;
+label {
+    color: #A87B06;
+    font-weight: bold;
+    display: flex;
+}
+
+input {
+    width: 100%;
 }

@@ -2,7 +2,7 @@ import React from 'react';
 
 const JournalScreen = () => {
     return (
-        <div class="journal">
+        <div className="journal">
             <h1>Journal Screen</h1>
         </div>
     );
