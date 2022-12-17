@@ -3,10 +3,18 @@
     width: 50%;
     margin: auto;
     border-radius: 10px;
-    height: 40vh;
-    display: flex;
-    justify-content: center;
-    align-items:baseline;
+    height: 50vh;
+    padding: 10px;
+    box-shadow: 5px 5px 5px 5px #808080;
+    margin-top: 2%;
+}
+
+form {
+    width: 100%;
+    /* display: flex;
+    flex-direction: column; */
+    /* align-items: center;
+    justify-content: center; */
 }
 
 .loginButton {
@@ -18,9 +26,29 @@
 label {
     color: #A87B06;
     font-weight: bold;
+    font-size: 20px;
     display: flex;
+    align-items: flex-start;
 }
 
 input {
-    width: 100%;
+    height: 40px;
+    margin: 10px 5px 10px 5px;
+    border-style: none;
+    display: flex;
+    align-self: center;
+    border-radius: 10px;
+    width: 97%;
+    padding: 10px 10px 10px 10px;
+    box-shadow: 2px 2px 2px 2px #808080; 
+}
+
+.input-container {
+    padding: 10px 10px 10px 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.registration {
+    margin-top: 4%;
 }

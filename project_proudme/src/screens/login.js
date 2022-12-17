@@ -69,27 +69,34 @@ const LoginScreen = () => {
             <div className="button-container">
               <Button 
                 style={{backgroundColor: '#EF9090', color: 'white', padding: '10px 50px 10px 50px', 
-                borderRadius: '20px', textTransform: 'none', marginTop: '2%'}}
+                borderRadius: '20px', textTransform: 'none', marginTop: '2%', height: '60px', 
+                width: '25%', fontSize: '25px'}}
                 type="submit">
                     Log In
               </Button>
+            </div>
+            <div class="registration">
+                <h2>Forgot your <a href='/signup'>Username or Password</a>?</h2>
+                <h2>Don't have an account? <a href='signup'>Register Here</a>!</h2>
             </div>
           </form>
         </div>
     );
 
+    const renderSuccess = (
+        <div>User successfully logged in!</div>
+    );
+
     function successfulLogin() {
         setTimeout(() => {
             navigate('/home');
-    ***REMOVED***, 5000);
+    ***REMOVED***, 3000);
 ***REMOVED***
 
     return (
         <div className="login">
             <h1 id="welcome">Welcome back to ProudME!</h1>
-            <div className="login-form">
-                {isSubmitted ? successfulLogin : renderForm}
-            </div>
+            {isSubmitted ? renderSuccess && successfulLogin() : renderForm}
         </div>
     );
 };

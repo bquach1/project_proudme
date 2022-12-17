@@ -35,7 +35,11 @@ const Header = () => {
             </div>
 
             <div className="right-nav">
-                <Button style={{backgroundColor: "#B18EEB", borderRadius: "50px", color: "white", fontFamily: "Roboto"}}>Sign In</Button>
+                <Button 
+                    style={{backgroundColor: "#B18EEB", borderRadius: "50px", color: "white", fontFamily: "Roboto"}}
+                    onClick={() => navigate('/login')}
+                    >Sign In
+                </Button>
                 <Button style={{backgroundColor: "#B18EEB", borderRadius: "50px", color: "white", fontFamily: "Roboto"}}>ProudME PE</Button>
                 <Button style={{backgroundColor: "#B18EEB", borderRadius: "50px", color: "white", fontFamily: "Roboto"}}>ProudME PE</Button>
             </div>
