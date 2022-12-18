@@ -35,9 +35,9 @@ const Header = () => {
             </div>
 
             <div className="right-nav">
-                <a href="/login">Sign In</a>
-                <Button style={{backgroundColor: "#B18EEB", borderRadius: "50px", color: "white", fontFamily: "Roboto"}}>ProudME PE</Button>
-                <Button style={{backgroundColor: "#B18EEB", borderRadius: "50px", color: "white", fontFamily: "Roboto"}}>ProudME PE</Button>
+                <a className="nav-link" href="/login">Sign In</a>
+                <div className="nav-link">|</div>
+                <a className="nav-link" href="/pet">For Grown-Ups</a>
             </div>
 
         </nav>

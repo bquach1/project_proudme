@@ -16,10 +16,21 @@ nav {
 
 .right-nav {
     color: #2E6AA1;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 20%;
+    margin-right: 2%;
+    justify-content: flex-end;
 }
 
 #welcome {
     color: #2E6AA1;
     font-family: Roboto;
     margin-top: 2%;
+}
+
+.nav-link {
+    margin: 2%;
 }
