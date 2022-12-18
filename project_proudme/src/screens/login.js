@@ -83,20 +83,19 @@ const LoginScreen = () => {
         </div>
     );
 
-    const renderSuccess = (
-        <div>User successfully logged in!</div>
-    );
-
     function successfulLogin() {
         setTimeout(() => {
             navigate('/home');
     ***REMOVED***, 3000);
+        return (
+            <div className="success-login">User successfully logged in!</div>
+        );
 ***REMOVED***
 
     return (
         <div className="login">
             <h1 id="welcome">Welcome back to ProudME!</h1>
-            {isSubmitted ? renderSuccess && successfulLogin() : renderForm}
+            {isSubmitted ? successfulLogin() : renderForm}
         </div>
     );
 };

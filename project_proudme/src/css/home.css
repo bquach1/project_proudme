@@ -1,0 +1,26 @@
+.home {
+    margin-top: 4%;
+}
+
+.petRoom {
+    width: 40%;
+    background-color: #D3C5C5;
+    border-radius: 90px;
+    padding: 5px;
+}
+
+.imageWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    color: #2E6AA1;
+}
+
+.right-icons {
+    margin-left: 75%;
+    width: 7%;
+    position: absolute;
+}
