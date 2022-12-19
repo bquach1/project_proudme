@@ -1,0 +1,31 @@
+.title {
+    color: #2E6AA1;
+}
+
+.journal {
+    margin-top: 2%;
+}
+
+.journalWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.journalCover {
+    width: 55%;
+    margin-top: 2%;
+}
+
+.leftPageWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: auto;
+    margin-right: 30%;
+    position: absolute;
+}
+
+.leftpage1 {
+    width: 75%;
+}

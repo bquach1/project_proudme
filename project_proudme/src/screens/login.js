@@ -75,7 +75,7 @@ const LoginScreen = () => {
                     Log In
               </Button>
             </div>
-            <div class="registration">
+            <div className="registration">
                 <h2>Forgot your <a href='/signup'>Username or Password</a>?</h2>
                 <h2>Don't have an account? <a href='signup'>Register Here</a>!</h2>
             </div>

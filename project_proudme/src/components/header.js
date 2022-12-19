@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
+import { slide as Menu } from 'react-burger-menu';
 
 import '../css/header.css';
 
