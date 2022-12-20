@@ -39,6 +39,23 @@ input {
     box-shadow: 2px 2px 2px 2px #808080; 
 }
 
+.dropdown {
+    height: 40px;
+    margin: 10px 5px 10px 5px;
+    border-style: none;
+    display: flex;
+    align-self: left;
+    border-radius: 10px;
+    width: 30%;
+    padding: 10px 10px 10px 10px;
+    box-shadow: 2px 2px 2px 2px #808080; 
+}
+
+.birth-container {
+    display: flex;
+    justify-content: space-between;
+}
+
 .input-container {
     padding: 10px 10px 10px 10px;
     display: flex;
@@ -54,13 +71,13 @@ input {
     font-weight: bold;
 }
 
-a:link { text-decoration: none; }
+a:link { text-decoration: none; color: #8054C9; }
 
 
-a:visited { text-decoration: none; }
+a:visited { text-decoration: none; color: #8054C9;}
 
 
-a:hover { text-decoration: none; }
+a:hover { text-decoration: none; color: #8054C9;}
 
 
-a:active { text-decoration: none; }
+a:active { text-decoration: none; color: #8054C9;}

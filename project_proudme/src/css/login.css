@@ -64,3 +64,7 @@ a:hover { text-decoration: none; }
 
 
 a:active { text-decoration: none; }
+
+a {
+    color: #8054C9;
+}
