@@ -20,6 +20,7 @@ export default function App() {
         <Header />
         <Routes>
           <Route path='/' element={<LoginScreen />} />
+          <Route path='/project-proudme' element={<LoginScreen />} />
           <Route path='/login' element={<LoginScreen />} />
           <Route path='/signup' element={<SignUpScreen />} />
           <Route path='/home' element={<HomeScreen />} />
