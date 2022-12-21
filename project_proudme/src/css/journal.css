@@ -112,7 +112,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 10%;
+    margin-top: 20%;
     margin-left: 10%;
     margin-bottom: 100%;
     grid-row: 2;
@@ -213,4 +213,20 @@
 .example-text {
     margin-top: 2%;
     margin-bottom: 2%;
+}
+
+.reflect-wrapper:hover {
+    cursor: pointer;
+}
+
+.goal-container {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    box-shadow: 1px 1px 1px 1px #808080; 
+    border-radius: 5px;
+}
+
+.current-goal {
+    display: flex;
 }

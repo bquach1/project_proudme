@@ -232,6 +232,18 @@ const JournalScreen = () => {
                 <div className="leftPageWrapper">
                         <div className="goal-box">
                             <h1 className="journal-title">My Goals</h1>
+                            <div className="current-goal">
+                                <div className="goal-container">
+                                        
+                                        <h3>{goal}</h3>
+                                        <h6>{description}</h6>
+                                        <h2>{numericalValue}</h2>
+                                    </div>
+                                <div className="reflect-wrapper">
+                                    <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} />
+                                    <p style={{fontWeight: 'bold'}}>Reflect</p>
+                                </div>
+                            </div>
                             <Button style={{marginTop: '5%', backgroundColor: '#ADF083', borderRadius: '20px', width: '70%',
                             height: '60px', textTransform: 'none', fontSize: '20px', fontWeight: 'bold'}}
                             onClick = {() => handleOpenGoalModal()}
