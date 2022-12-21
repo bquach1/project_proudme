@@ -112,7 +112,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 15%;
+    margin-top: 10%;
     margin-left: 10%;
     margin-bottom: 100%;
     grid-row: 2;
@@ -134,13 +134,83 @@
     border-radius: 25px;
     padding: 10px;
     margin-left: 27.5%;
-    margin-top: 22%;
+    margin-top: 19%;
     background-color: white;
     width: 20%;
     display: flex;
     flex-direction: column;
 }
 
+.inside-modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .modal-input {
     width: 80%;
+    background-color: #ECECEC;
+    font-size: 20px;
+}
+
+.progress-title {
+    display: flex;
+    align-items: left;
+    margin-top: 4%;
+}
+
+.radio-group {
+    display: flex;
+    width: 80%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tip-icon {
+    color: #9F9F9F;
+}
+
+.nav-options {
+    display: flex;
+    margin-top: 4%;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.progress-error {
+    font-size: 16px;
+    color: red;
+}
+
+.numerical-selection {
+    background-color: #ECECEC;
+    margin: 10px 5px 10px 5px;
+    border-style: none;
+    display: flex;
+    align-self: left;
+    border-radius: 10px;
+    width: 100%;
+    padding: 10px 10px 10px 10px;
+    box-shadow: 2px 2px 2px 2px #808080; 
+}
+
+.goal-selection {
+    display: flex;
+    width: 88%;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.modal-half-input {
+    display: flex;
+    width: 40%;
+    background-color: #ECECEC;
+    font-size: 14px;
+}
+
+.example-text {
+    margin-top: 2%;
+    margin-bottom: 2%;
 }
