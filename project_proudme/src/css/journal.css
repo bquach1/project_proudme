@@ -221,12 +221,46 @@
 
 .goal-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    padding: 10px;
     background-color: white;
     box-shadow: 1px 1px 1px 1px #808080; 
     border-radius: 5px;
+    width: 80%;
 }
 
 .current-goal {
     display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.selection-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.number-text {
+    color: #8054C9;
+    font-weight: bold;
+}
+
+#upIcon {
+    cursor: pointer;
+}
+
+#downIcon {
+    cursor: pointer;
+}
+
+#upIcon:hover {
+    transform: scale(1.5);
+    color: green;
+}
+
+#downIcon:hover {
+    transform: scale(1.5);
+    color:red;
 }

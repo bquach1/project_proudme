@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../css/journal.css';
 
-import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Modal from '@mui/material/Modal';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { Select, FormControl, InputLabel, MenuItem } from '@mui/material';
+import { Select, FormControl, FormGroup, InputLabel, MenuItem, Switch, FormControlLabel } from '@mui/material';
 
 import { FaQuestionCircle } from 'react-icons/fa';
+import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
+import { flexbox } from '@mui/system';
 
 const JournalScreen = () => {
 
@@ -18,11 +17,12 @@ const JournalScreen = () => {
     const [booleanSelected, setBooleanSelected] = useState(false);
     const [numberSelected, setNumberSelected] = useState(false);
     const [timerSelected, setTimerSelected] = useState(false);
-
+    
     const [goal, setGoal] = useState('');
-    const [numericalValue, setNumericalValue] = useState('');
+    const [numericalValue, setNumericalValue] = useState(0);
     const [unit, setUnit] = useState('');
     const [description, setDescription] = useState('');
+    const [threshold, setThreshold] = useState('');
 
     const handleOpenGoalModal = () => {
         setOpen(true);
@@ -42,7 +42,6 @@ const JournalScreen = () => {
             setDefineOpen(false);
             setProgressError(true);
     ***REMOVED***
-        
 ***REMOVED***;
 
     const handleCloseDefineModal = () => {
@@ -54,8 +53,13 @@ const JournalScreen = () => {
 ***REMOVED***;
 
     const handleNumericalChange = (e) => {
-        setNumericalValue(e.target.value);
+        e.persist();
+        setNumericalValue(+e.target.value);
 ***REMOVED***;
+
+    const handleThresholdChange = (e) => {
+        setThreshold(e.target.value);
+***REMOVED***
 
     const handleUnitChange = (e) => {
         setUnit(e.target.value);
@@ -64,6 +68,32 @@ const JournalScreen = () => {
     const handleDescriptionChange = (e) => {
         setDescription(e.target.value);
 ***REMOVED***;
+
+    function renderNumericGoal() {
+        return (
+        <div className="current-goal">
+            <div className="goal-container">
+
+                    <div className="goal-description">
+                        <h3 className="goal-text">{goal}</h3>
+                        <h6 className="goal-text">{description}</h6>
+                    </div>
+
+                    <div className="selection-container">
+
+                        <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1) } />
+                        <h2 className="number-text">{numericalValue}</h2>
+                        <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
+                    </div>
+
+                </div>
+            <div className="reflect-wrapper">
+                <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Icon to reflect on selected goal" />
+                <p style={{fontWeight: 'bold'}}>Reflect</p>
+            </div>
+        </div>
+        );
+***REMOVED***
 
     const createGoalModal = () => {
         return (
@@ -154,6 +184,7 @@ const JournalScreen = () => {
 ***REMOVED***;
 
     function defineGoalModal() {
+
         return (
             
             <Modal
@@ -164,11 +195,21 @@ const JournalScreen = () => {
             >
                 <div className="modal">
                 {booleanSelected &&
-                    <div>
-                        <h2>Defining a New Goal</h2>
-                        <h4>Boolean Goal Name</h4>
-                        <input className="modal-input" type="text" name="goal" onChange={handleGoalChange} value={goal}/>
-                    </div>
+                <div className="inside-modal">
+                    <h2>Defining a New Goal</h2>
+                    <h4>Goal Name</h4>
+                    <input className="modal-input" type="text" name="goal" placeholder="Goal Name" onChange={handleGoalChange} value={goal}/>
+                    <h2>Have you achieved your goal?</h2>
+                    <FormGroup sx={{
+                        // display: 'flex',
+                        // flexDirection: 'row',
+                        marginTop: '2%'
+                ***REMOVED***}>
+                        <FormControlLabel control={<Switch defaultChecked/>} label="Goal complete?" />
+                    </FormGroup>
+                    <h5 className="example-text">Example: "Eat fruits / vegetables" At least 5 times a day.</h5>
+                    <input className="modal-input" type="text" name="description" placeholder="Optional Description..." onChange={handleDescriptionChange} value={description}/>
+                </div>
             ***REMOVED***
 
                 {numberSelected &&
@@ -177,14 +218,14 @@ const JournalScreen = () => {
                     <h4>Goal Name</h4>
                     <input className="modal-input" type="text" name="goal" placeholder="Goal Name" onChange={handleGoalChange} value={goal}/>
                     <div className="goal-selection">
-                        <select className="numerical-selection" name="numerical-select" value={numericalValue} onChange={handleNumericalChange}>
-                            <option value={"At Least"}>At least</option>
-                            <option value={"At Most"}>At most</option>
-                            <option value={"Equals"}>Equals</option>
-                            <option value={"Greater Than"}>Greater than</option>
-                            <option value={"Less Than"}>Less than</option>
+                        <select className="numerical-selection" id="numerical-selection" name="numerical-select" defaultValue={"at_least"} onChange={e => handleThresholdChange(e)}>
+                            <option value={"at_least"}>At least</option>
+                            <option value={"at_most"}>At most</option>
+                            <option value={"equals"}>Equals</option>
+                            <option value={"greater_than"}>Greater than</option>
+                            <option value={"less_than"}>Less than</option>
                         </select>
-                        <input className="numerical-selection" type="text" placeholder="Quantity" />
+                        <input className="numerical-selection" type="number" onChange={handleNumericalChange} placeholder="Quantity" value={numericalValue}/>
                     </div>
                     <input className="modal-half-input" type="text" name="goal-measurement" placeholder="Unit of measurement"
                     onChange={handleUnitChange} value={unit} />
@@ -194,10 +235,24 @@ const JournalScreen = () => {
             ***REMOVED***
 
                 {timerSelected &&
-                <div>
+                <div className="inside-modal">
                     <h2>Defining a New Goal</h2>
-                    <h4>Timer Goal Name</h4>
-                    <input className="modal-input" type="text" name="goal" onChange={handleGoalChange} value={goal}/>
+                    <h4>Goal Name</h4>
+                    <input className="modal-input" type="text" name="goal" placeholder="Goal Name" onChange={handleGoalChange} value={goal}/>
+                    <div className="goal-selection">
+                        <select className="numerical-selection" id="numerical-selection" name="numerical-select" defaultValue={"at_least"} onChange={e => handleThresholdChange(e)}>
+                            <option value={"at_least"}>At least</option>
+                            <option value={"at_most"}>At most</option>
+                            <option value={"equals"}>Equals</option>
+                            <option value={"greater_than"}>Greater than</option>
+                            <option value={"less_than"}>Less than</option>
+                        </select>
+                        <input className="numerical-selection" type="number" onChange={handleNumericalChange} placeholder="Quantity" value={numericalValue}/>
+                    </div>
+                    <input className="modal-half-input" type="text" name="goal-measurement" placeholder="Unit of measurement"
+                    onChange={handleUnitChange} value={unit} />
+                    <h5 className="example-text">Example: "Eat fruits / vegetables" At least 5 times a day.</h5>
+                    <input className="modal-input" type="text" name="description" placeholder="Optional Description..." onChange={handleDescriptionChange} value={description}/>
                 </div>
             ***REMOVED***
                 
@@ -211,7 +266,7 @@ const JournalScreen = () => {
 
                         <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                         borderRadius: '20px'}}
-                        onClick={() => { handleCloseDefineModal(); }}
+                        onClick={() => { handleCloseDefineModal(); renderNumericGoal(); }}
                         >
                             Create Goal
                         </Button>
@@ -228,19 +283,28 @@ const JournalScreen = () => {
             <h1 className="title">My Journal</h1>
             <div className="journalWrapper">
                 <img className="journalCover" src={require('../../components/images/journal/journal_cover.png')}
-                alt="Journal cover image" />
+                alt="Journal cover wrapper image" />
                 <div className="leftPageWrapper">
                         <div className="goal-box">
                             <h1 className="journal-title">My Goals</h1>
                             <div className="current-goal">
                                 <div className="goal-container">
-                                        
-                                        <h3>{goal}</h3>
-                                        <h6>{description}</h6>
-                                        <h2>{numericalValue}</h2>
+
+                                        <div className="goal-description">
+                                            <h3 className="goal-text">{goal}</h3>
+                                            <h6 className="goal-text">{description}</h6>
+                                        </div>
+
+                                        <div className="selection-container">
+
+                                            <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1) } />
+                                            <h2 className="number-text">{numericalValue}</h2>
+                                            <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
+                                        </div>
+
                                     </div>
                                 <div className="reflect-wrapper">
-                                    <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} />
+                                    <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" />
                                     <p style={{fontWeight: 'bold'}}>Reflect</p>
                                 </div>
                             </div>
