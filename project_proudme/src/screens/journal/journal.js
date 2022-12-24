@@ -7,7 +7,6 @@ import { Select, FormControl, FormGroup, InputLabel, MenuItem, Switch, FormContr
 
 import { FaQuestionCircle } from 'react-icons/fa';
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
-import { flexbox } from '@mui/system';
 
 const JournalScreen = () => {
 
@@ -23,6 +22,7 @@ const JournalScreen = () => {
     const [unit, setUnit] = useState('');
     const [description, setDescription] = useState('');
     const [threshold, setThreshold] = useState('');
+    const [goalIsComplete, setGoalIsComplete] = useState(false);
 
     const handleOpenGoalModal = () => {
         setOpen(true);
@@ -67,6 +67,10 @@ const JournalScreen = () => {
 
     const handleDescriptionChange = (e) => {
         setDescription(e.target.value);
+***REMOVED***;
+
+    const handleGoalIsCompleteChange = () => {
+        setGoalIsComplete(!goalIsComplete);
 ***REMOVED***;
 
     function renderNumericGoal() {
@@ -200,12 +204,16 @@ const JournalScreen = () => {
                     <h4>Goal Name</h4>
                     <input className="modal-input" type="text" name="goal" placeholder="Goal Name" onChange={handleGoalChange} value={goal}/>
                     <h2>Have you achieved your goal?</h2>
-                    <FormGroup sx={{
-                        // display: 'flex',
-                        // flexDirection: 'row',
-                        marginTop: '2%'
+                    <FormGroup onChange={ () => {handleGoalIsCompleteChange(); console.log(goalIsComplete);} }
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        marginTop: '2%',
                 ***REMOVED***}>
-                        <FormControlLabel control={<Switch defaultChecked/>} label="Goal complete?" />
+                        <FormControlLabel sx={{
+                            color: 'black'
+                    ***REMOVED***}
+                        control={<Switch color="secondary"/>} label="Goal complete?" />
                     </FormGroup>
                     <h5 className="example-text">Example: "Eat fruits / vegetables" At least 5 times a day.</h5>
                     <input className="modal-input" type="text" name="description" placeholder="Optional Description..." onChange={handleDescriptionChange} value={description}/>
