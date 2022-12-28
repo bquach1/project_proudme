@@ -3,7 +3,7 @@ import '../../css/journal.css';
 
 import Button from '@material-ui/core/Button';
 import Modal from '@mui/material/Modal';
-import { Select, FormControl, FormGroup, InputLabel, MenuItem, Switch, FormControlLabel } from '@mui/material';
+import { Select, FormControl, FormGroup, Switch, FormControlLabel } from '@mui/material';
 
 import { FaQuestionCircle } from 'react-icons/fa';
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
@@ -23,6 +23,9 @@ const JournalScreen = () => {
     const [description, setDescription] = useState('');
     const [threshold, setThreshold] = useState('');
     const [goalIsComplete, setGoalIsComplete] = useState(false);
+
+    var goalArray = [
+    ];
 
     const handleOpenGoalModal = () => {
         setOpen(true);
@@ -71,6 +74,15 @@ const JournalScreen = () => {
 
     const handleGoalIsCompleteChange = () => {
         setGoalIsComplete(!goalIsComplete);
+***REMOVED***;
+
+    function addGoal() {
+        var count = 0;
+        count++;
+        for (var i = 0; i < count; i++) {
+            goalArray.push(<div>{i}</div>);
+    ***REMOVED***
+        console.log(goalArray);
 ***REMOVED***;
 
     function renderNumericGoal() {
@@ -274,7 +286,7 @@ const JournalScreen = () => {
 
                         <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                         borderRadius: '20px'}}
-                        onClick={() => { handleCloseDefineModal(); renderNumericGoal(); }}
+                        onClick={() => { handleCloseDefineModal(); renderNumericGoal(); addGoal(); }}
                         >
                             Create Goal
                         </Button>
@@ -320,6 +332,7 @@ const JournalScreen = () => {
                             height: '60px', textTransform: 'none', fontSize: '20px', fontWeight: 'bold'}}
                             onClick = {() => handleOpenGoalModal()}
                             >Create a New Goal</Button>
+                            {goalArray}
                             {createGoalModal()}
                             {defineGoalModal()}
                         </div>
