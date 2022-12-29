@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../../css/journal.css';
 
 import Button from '@material-ui/core/Button';
 import Modal from '@mui/material/Modal';
-import { Select, FormControl, FormGroup, Switch, FormControlLabel } from '@mui/material';
+import { FormGroup, Switch, FormControlLabel } from '@mui/material';
 
 import { FaQuestionCircle } from 'react-icons/fa';
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
@@ -24,8 +24,7 @@ const JournalScreen = () => {
     const [threshold, setThreshold] = useState('');
     const [goalIsComplete, setGoalIsComplete] = useState(false);
 
-    var goalArray = [
-    ];
+    var goalArray = [];
 
     const handleOpenGoalModal = () => {
         setOpen(true);
@@ -344,10 +343,47 @@ const JournalScreen = () => {
                         alt="Third left-side page"/>
                 </div>
                 <img className="middle-line" src={require('../../components/images/journal/middle_line.png')} alt="Middle journal line"/>
-                <img className="bookmark" src={require('../../components/images/journal/bookmark.png')} alt="Yellow bookmark icon"/>
                 <div className="rightPageWrapper">
+                <img className="bookmark" src={require('../../components/images/journal/bookmark.png')} alt="Yellow bookmark icon"/>
                     <div className="goal-box">
                         <h1 className="journal-title">Recommended Goals</h1>
+
+                                <div className="recommendation-container">
+                                    <div className="goal-description">
+                                        <img className="eating" src={require('../../components/images/journal/eating_goals.png')} alt="Eating goals icon"/>
+                                    </div>
+
+                                    <div className="selection-container">
+                                        <h3>Eating + Drinking</h3>
+                                        <p>Changing up eating habits can improve your health. See some recommended diet goals here!</p>
+                                    </div>
+                                </div>
+
+                                <div className="recommendation-container">
+
+                                    <div className="goal-description">
+                                        <img className="activity" src={require('../../components/images/journal/activity_goals.png')} alt="Eating goals icon"/>
+                                    </div>
+
+                                    <div className="selection-container">
+                                        <h3>Activity</h3>
+                                        <p>Getting active and breaking into a sweat will keep your body happy. See some recommended activity goals here!</p>
+                                    </div>
+
+                                </div>
+
+                                <div className="recommendation-container">
+
+                                    <div className="goal-description">
+                                        <img className="screentime" src={require('../../components/images/journal/screentime_goals.png')} alt="Eating goals icon"/>
+                                    </div>
+
+                                    <div className="selection-container">
+                                        <h3>Screentime</h3>
+                                        <p>Other habits like balancing your screentime and sleep schedule can also improve your health!</p>
+                                    </div>
+
+                                </div>
                     </div>
                     <img className="rightpage1" src={require('../../components/images/journal/right_page.png')} 
                     alt="First right-side page"/>
