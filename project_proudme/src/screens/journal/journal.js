@@ -302,7 +302,7 @@ const JournalScreen = () => {
             <h1 className="title">My Journal</h1>
             <div className="journalWrapper">
                 <img className="journalCover" src={require('../../components/images/journal/journal_cover.png')}
-                alt="Journal cover wrapper image" />
+                alt="Journal cover screen wrapper" />
                 <div className="leftPageWrapper">
                         <div className="goal-box">
                             <h1 className="journal-title">My Goals</h1>
@@ -356,7 +356,16 @@ const JournalScreen = () => {
                                     <div className="selection-container">
                                         <h3>Eating + Drinking</h3>
                                         <p>Changing up eating habits can improve your health. See some recommended diet goals here!</p>
+                                        <div className="viewGoalButton">
+                                            <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                                            borderRadius: '20px'}}
+                                            onClick={() => { handleCloseDefineModal(); renderNumericGoal(); addGoal(); }}
+                                            >
+                                                View Goals
+                                            </Button>
+                                        </div>
                                     </div>
+
                                 </div>
 
                                 <div className="recommendation-container">
@@ -368,6 +377,14 @@ const JournalScreen = () => {
                                     <div className="selection-container">
                                         <h3>Activity</h3>
                                         <p>Getting active and breaking into a sweat will keep your body happy. See some recommended activity goals here!</p>
+                                        <div className="viewGoalButton">
+                                            <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                                            borderRadius: '20px'}}
+                                            onClick={() => { handleCloseDefineModal(); renderNumericGoal(); addGoal(); }}
+                                            >
+                                                View Goals
+                                            </Button>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -381,6 +398,14 @@ const JournalScreen = () => {
                                     <div className="selection-container">
                                         <h3>Screentime</h3>
                                         <p>Other habits like balancing your screentime and sleep schedule can also improve your health!</p>
+                                        <div className="viewGoalButton">
+                                            <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                                            borderRadius: '20px'}}
+                                            onClick={() => { handleCloseDefineModal(); renderNumericGoal(); addGoal(); }}
+                                            >
+                                                View Goals
+                                            </Button>
+                                        </div>
                                     </div>
 
                                 </div>

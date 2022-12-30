@@ -10,6 +10,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     margin-top: 1%;
 }
 
@@ -112,7 +113,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 60%;
+    /* margin-top: 60%; */
     margin-left: 10%;
     margin-bottom: 100%;
     grid-row: 2;
@@ -223,6 +224,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     text-align: left;
     padding: 10px;
     background-color: white;
@@ -276,4 +278,9 @@
     border-radius: 5px;
     width: 90%;
     margin-top: 2%;
+}
+
+.viewGoalButton {
+    display: flex;
+    justify-content: flex-end;
 }
