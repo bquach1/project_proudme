@@ -113,7 +113,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    /* margin-top: 60%; */
+    top: 2%;
     margin-left: 10%;
     margin-bottom: 100%;
     grid-row: 2;
@@ -230,18 +230,14 @@
     background-color: white;
     box-shadow: 1px 1px 1px 1px #808080; 
     border-radius: 5px;
-    width: 80%;
+    width: 75%;
 }
 
 .current-goal {
     display: flex;
     width: 100%;
     justify-content: space-between;
-}
-
-.selection-container {
-    display: flex;
-    flex-direction: column;
+    margin-top: 1%;
 }
 
 .number-text {
@@ -270,7 +266,6 @@
 .recommendation-container {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     text-align: left;
     padding: 10px;
     background-color: white;
@@ -278,6 +273,12 @@
     border-radius: 5px;
     width: 90%;
     margin-top: 2%;
+}
+
+.selection-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 5%;
 }
 
 .viewGoalButton {

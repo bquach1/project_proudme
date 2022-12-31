@@ -24,7 +24,27 @@ const JournalScreen = () => {
     const [threshold, setThreshold] = useState('');
     const [goalIsComplete, setGoalIsComplete] = useState(false);
 
-    var goalArray = [];
+    var goalArray = [<div className="current-goal">
+                                <div className="goal-container">
+
+                                        <div className="goal-description">
+                                            <h3 className="goal-text">{goal}</h3>
+                                            <h6 className="goal-text">{description}</h6>
+                                        </div>
+
+                                        <div className="selection-container">
+
+                                            <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1) } />
+                                            <h2 className="number-text">{numericalValue}</h2>
+                                            <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
+                                        </div>
+
+                                    </div>
+                                <div className="reflect-wrapper">
+                                    <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" />
+                                    <p style={{fontWeight: 'bold'}}>Reflect</p>
+                                </div>
+                    </div>];
 
     const handleOpenGoalModal = () => {
         setOpen(true);
@@ -306,32 +326,11 @@ const JournalScreen = () => {
                 <div className="leftPageWrapper">
                         <div className="goal-box">
                             <h1 className="journal-title">My Goals</h1>
-                            <div className="current-goal">
-                                <div className="goal-container">
-
-                                        <div className="goal-description">
-                                            <h3 className="goal-text">{goal}</h3>
-                                            <h6 className="goal-text">{description}</h6>
-                                        </div>
-
-                                        <div className="selection-container">
-
-                                            <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1) } />
-                                            <h2 className="number-text">{numericalValue}</h2>
-                                            <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
-                                        </div>
-
-                                    </div>
-                                <div className="reflect-wrapper">
-                                    <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" />
-                                    <p style={{fontWeight: 'bold'}}>Reflect</p>
-                                </div>
-                            </div>
+                            {goalArray}
                             <Button style={{marginTop: '5%', backgroundColor: '#ADF083', borderRadius: '20px', width: '70%',
                             height: '60px', textTransform: 'none', fontSize: '20px', fontWeight: 'bold'}}
                             onClick = {() => handleOpenGoalModal()}
                             >Create a New Goal</Button>
-                            {goalArray}
                             {createGoalModal()}
                             {defineGoalModal()}
                         </div>
@@ -357,8 +356,8 @@ const JournalScreen = () => {
                                         <h3>Eating + Drinking</h3>
                                         <p>Changing up eating habits can improve your health. See some recommended diet goals here!</p>
                                         <div className="viewGoalButton">
-                                            <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                                            borderRadius: '20px'}}
+                                            <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                                            borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
                                             onClick={() => { handleCloseDefineModal(); renderNumericGoal(); addGoal(); }}
                                             >
                                                 View Goals
@@ -378,8 +377,8 @@ const JournalScreen = () => {
                                         <h3>Activity</h3>
                                         <p>Getting active and breaking into a sweat will keep your body happy. See some recommended activity goals here!</p>
                                         <div className="viewGoalButton">
-                                            <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                                            borderRadius: '20px'}}
+                                            <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                                            borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
                                             onClick={() => { handleCloseDefineModal(); renderNumericGoal(); addGoal(); }}
                                             >
                                                 View Goals
@@ -399,8 +398,8 @@ const JournalScreen = () => {
                                         <h3>Screentime</h3>
                                         <p>Other habits like balancing your screentime and sleep schedule can also improve your health!</p>
                                         <div className="viewGoalButton">
-                                            <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                                            borderRadius: '20px'}}
+                                            <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                                            borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
                                             onClick={() => { handleCloseDefineModal(); renderNumericGoal(); addGoal(); }}
                                             >
                                                 View Goals
