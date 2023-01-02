@@ -265,7 +265,7 @@
 
 .recommendation-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     text-align: left;
     padding: 10px;
     background-color: white;
@@ -284,4 +284,31 @@
 .viewGoalButton {
     display: flex;
     justify-content: flex-end;
+}
+
+.recommendedGoalButton {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* eating goals */
+
+.eating-goal-header {
+    font-size: 16px;
+}
+
+.text-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.single-button-container {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
 }
