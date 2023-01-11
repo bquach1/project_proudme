@@ -595,7 +595,7 @@ const JournalScreen = () => {
                     :
 
                     <div className="goal-box">
-                        <h1 className="journal-title">Recommended Goals</h1>
+                        <h1 className="journal-title">Behaviors</h1>
 
                                 <div className="recommendation-container">
                                     <div className="text-container">
@@ -678,3 +678,13 @@ const JournalScreen = () => {
 };
 
 export default JournalScreen;
+
+// Set Up Goals
+// Behaviors
+// Monitor
+// preset categories with threshold levels from email for recommended goals.
+// look into a database to track the amount of time spent on creating / setting up goals, using website, etc. (Google analytics)
+// timeline, today's date, track when goals are created (using current date)
+
+// ProudME PE
+// hub for researchers to upload video files

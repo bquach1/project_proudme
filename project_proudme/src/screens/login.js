@@ -70,7 +70,7 @@ const LoginScreen = () => {
               <Button 
                 style={{backgroundColor: '#EF9090', color: 'white', padding: '10px 50px 10px 50px', 
                 borderRadius: '20px', textTransform: 'none', marginTop: '2%', height: '60px', 
-                width: '25%', fontSize: '25px'}}
+                width: '25%', fontSize: '25px', margin: 'auto', marginBottom: '0px'}}
                 type="submit">
                     Log In
               </Button>

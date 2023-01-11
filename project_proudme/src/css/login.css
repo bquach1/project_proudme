@@ -1,9 +1,10 @@
 .form {
+    display: flex;
     background-color: #FFFBD6;
     width: 50%;
     margin: auto;
     border-radius: 10px;
-    height: 55vh;
+    height: auto;
     padding: 10px;
     box-shadow: 5px 5px 5px 5px #808080;
     margin-top: 2%;
@@ -11,12 +12,6 @@
 
 form {
     width: 100%;
-}
-
-.loginButton {
-    background-color: #EF9090;
-    border-style: none;
-    color: white;
 }
 
 label {
@@ -45,10 +40,6 @@ input {
     flex-direction: column;
 }
 
-.registration {
-    margin-top: 6%;
-}
-
 .success-login {
     font-size: 30px;
     font-weight: bold;
@@ -67,4 +58,12 @@ a:active { text-decoration: none; }
 
 a {
     color: #8054C9;
+}
+
+.button-container {
+    display: flex;
+}
+
+.checkbox-container {
+    margin-left: 2%;
 }

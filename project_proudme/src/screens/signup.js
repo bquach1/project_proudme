@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
-import { Checkbox } from '@material-ui/core';
+import { Checkbox, FormGroup, FormControlLabel, Typography } from '@material-ui/core';
 
 import '../css/signup.css';
 
@@ -237,13 +237,19 @@ const SignUpScreen = () => {
                 <label>Confirm Email Address: </label>
                     <input className="input" onChange={handleEmailConfirm} type="text" value={emailConfirm} required />
                 </div>
-                <Checkbox>I agree to the Terms of Use & Privacy Policy.</Checkbox>
-                <Checkbox>I agree to the Terms of Use & Privacy Policy.</Checkbox>
+                <div className="checkbox-container">
+                  <FormGroup>
+                    <FormControlLabel control={<Checkbox />} label = {<Typography variant="p" style={{color:'black'}}> 
+                    I agree to the Terms of Use & Privacy Policy.</Typography>}/>
+                    <FormControlLabel control={<Checkbox />} label = {<Typography variant="p" style={{color:'black'}}> 
+                    I agree to receive news ad updates by email from ProudME.</Typography>}/>
+                  </FormGroup>
+                </div>
             </div>
             <div className="button-container">
               <Button 
                 style={{backgroundColor: '#EF9090', color: 'white', padding: '10px 50px 10px 50px', 
-                borderRadius: '20px', textTransform: 'none', marginTop: '2%', height: '60px', 
+                borderRadius: '20px', textTransform: 'none', marginTop: '2%', margin: 'auto', height: '60px', 
                 width: '25%', fontSize: '25px'}}
                 type="submit">
                     Register
