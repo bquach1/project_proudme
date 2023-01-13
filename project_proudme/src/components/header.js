@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
-import { slide as Menu } from 'react-burger-menu';
+// import { slide as Menu } from 'react-burger-menu';
 
 import '../css/header.css';
 
@@ -31,7 +31,7 @@ const Header = () => {
                     >Pet Store</Button>
                 <Button 
                     style={{backgroundColor: "#AB87FF", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
-                    onClick={() => navigate('/pet')}
+                    onClick={() => navigate('/pe')}
                     >ProudME PE</Button>
             </div>
 

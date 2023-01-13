@@ -7,7 +7,10 @@
     padding: 10px;
     box-shadow: 5px 5px 5px 5px #808080;
     margin-top: 2%;
-    margin-bottom: 2%;
+}
+
+.signup-form {
+    /* margin-bottom: 2%; */
 }
 
 form {

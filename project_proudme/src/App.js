@@ -10,6 +10,7 @@ import EatingScreen from './screens/journal/eating.js';
 import ActivityScreen from './screens/journal/activity.js';
 import GalleryScreen from './screens/journal/gallery.js';
 import PetScreen from './screens/pet/pet.js';
+import PEScreen from './screens/pe/pe.js';
 
 import Header from './components/header';
 
@@ -29,6 +30,7 @@ export default function App() {
           <Route path='/activity' element={<ActivityScreen />} />
           <Route path='/gallery' element={<GalleryScreen />} />
           <Route path='/pet' element={<PetScreen />} />
+          <Route path='/pe' element={<PEScreen />} />
         </Routes>
       </BrowserRouter>
     </div>
