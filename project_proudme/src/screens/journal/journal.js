@@ -24,28 +24,30 @@ const JournalScreen = () => {
     const [threshold, setThreshold] = useState('');
     const [goalIsComplete, setGoalIsComplete] = useState(false);
     const [rightScreenMode, setRightScreenMode] = useState('');
+    const [goalArray, setGoalArray] = useState([]);
 
-    var goalArray = [<div className="current-goal">
-                                <div className="goal-container">
+    // var goalArray = [<div className="current-goal">
+    //                             <div className="goal-container">
 
-                                        <div className="goal-description">
-                                            <h3 className="goal-text">{goal}</h3>
-                                            <h6 className="goal-text">{description}</h6>
-                                        </div>
+    //                                     <div className="goal-description">
+    //                                         <h3 className="goal-text">{goal}</h3>
+    //                                         <h6 className="goal-text">{description}</h6>
+    //                                     </div>
 
-                                        <div className="selection-container">
+    //                                     <div className="selection-container">
 
-                                            <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1) } />
-                                            <h2 className="number-text">{numericalValue}</h2>
-                                            <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
-                                        </div>
+    //                                         <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1) } />
+    //                                         <h2 className="number-text">{numericalValue}</h2>
+    //                                         <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
+    //                                     </div>
 
-                                    </div>
-                                <div className="reflect-wrapper">
-                                    <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" />
-                                    <p style={{fontWeight: 'bold'}}>Reflect</p>
-                                </div>
-                    </div>];
+    //                                 </div>
+    //                             <div className="reflect-wrapper">
+    //                                 <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" />
+    //                                 <p style={{fontWeight: 'bold'}}>Reflect</p>
+    //                             </div>
+    //                 </div>
+    //                 ];
 
     const handleOpenGoalModal = () => {
         setOpen(true);
@@ -98,9 +100,30 @@ const JournalScreen = () => {
 
     function addGoal() {
 
-        goalArray.push(<div>Hello</div>);
+        setGoalArray( updatedArray => [...updatedArray, 
+                                    <div className="current-goal">
+                                        <div className="goal-container">
 
-        console.log(goalArray);
+                                            <div className="goal-description">
+                                                <h3 className="goal-text">{goal}</h3>
+                                                <h6 className="goal-text">{description}</h6>
+                                            </div>
+
+                                            <div className="selection-container">
+
+                                                <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1) } />
+                                                <h2 className="number-text">{numericalValue}</h2>
+                                                <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
+                                            </div>
+
+                                        </div>
+
+                                        <div className="reflect-wrapper">
+                                            <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" />
+                                            <p style={{fontWeight: 'bold'}}>Reflect</p>
+                                        </div>
+                                    </div>]);
+
 ***REMOVED***;
 
     function renderNumericGoal() {
@@ -330,7 +353,6 @@ const JournalScreen = () => {
                             height: '60px', textTransform: 'none', fontSize: '20px', fontWeight: 'bold'}}
                             onClick = {() => handleOpenGoalModal()}
                             >Create a New Goal</Button>
-                            <Button onClick={() => addGoal()}>Add Goal</Button>
                             {createGoalModal()}
                             {defineGoalModal()}
                         </div>
@@ -459,66 +481,104 @@ const JournalScreen = () => {
                     <div className="goal-box">
                         <h1 className="journal-title">Activity Goals</h1>
 
-                                <div className="recommendation-container">
+                        <div className="recommendation-container">
+                                    
                                     <div className="text-container">
-                                        <img className="eating" src={require('../../components/images/journal/eating_goals.png')} alt="Eating goals icon"/>
+                                        <div className="eating-goal-image">
+                                            <img src={require('../../components/images/journal/apple.png')} alt="Apple for servings goal"/>
+                                        </div>
 
                                         <div className="selection-container">
-                                            <h3>Eating + Drinking</h3>
-                                            <p>Changing up eating habits can improve your health. See some recommended diet goals here!</p>
+                                            <h3 className="eating-goal-header">Eat 5 servings of fruits/vegetables</h3>
+                                            <p>Eating fruits and vegetables can help you be healthy and get the vitamins and nutrients for a more balanced diet.</p>
                                         </div>
 
                                     </div>
-                                    
+
                                     <div className="button-container">
-                                        <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                                                borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
-                                                onClick={() => { setRightScreenMode('Eating Goal Mode') }}
+                                        <Button variant="contained"
+                                                startIcon={<img src={require("../../components/images/journal/brain.png")} 
+                                                alt="Brain for learn more button"/>}
+                                                style={{backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                                borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'}}
+                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
                                                 >
-                                                    View Goals
+                                                    Learn More
                                                 </Button>
+                                                <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                                borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
+                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                                >
+                                                    Add to My Goals
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                <div className="recommendation-container">
+
+                                    <div className="text-container">
+
+                                        <div className="eating-goal-image">
+                                            <img src={require('../../components/images/journal/no_candy.png')} alt="Crossed out candy icon for avoid sugary food"/>
+                                        </div>
+
+                                        <div className="selection-container">
+                                            <h3 className="eating-goal-header">Avoid Sugary Food</h3>
+                                            <p>Avoiding food with lots of sugar that are made from high fructose corn syrup can lower risk of unhealthy weight gain.</p>
+                                        </div>
+
+                                    </div>
+
+                                    <div className="button-container">
+                                        <Button variant="contained"
+                                                startIcon={<img src={require("../../components/images/journal/brain.png")} 
+                                                alt="Brain for learn more button"/>}
+                                                style={{backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                                borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'}}
+                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                                >
+                                                    Learn More
+                                                </Button>
+                                                <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                                borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
+                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                                >
+                                                    Add to My Goals
+                                        </Button>
                                     </div>
 
                                 </div>
 
                                 <div className="recommendation-container">
-
-                                    <div className="goal-description">
-                                        <img className="activity" src={require('../../components/images/journal/activity_goals.png')} alt="Eating goals icon"/>
-                                    </div>
-
-                                    <div className="selection-container">
-                                        <h3>Activity</h3>
-                                        <p>Getting active and breaking into a sweat will keep your body happy. See some recommended activity goals here!</p>
-                                        <div className="viewGoalButton">
-                                            <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                                            borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
-                                            onClick={() => { setRightScreenMode('Activity Goal Mode') }}
-                                            >
-                                                View Goals
-                                            </Button>
+                                    
+                                    <div className="text-container">
+                                        
+                                        <div className="eating-goal-image">
+                                            <img src={require('../../components/images/journal/water_cup.png')} alt="Water cup for choice over other drinks"/>
                                         </div>
-                                    </div>
 
-                                </div>
+                                        <div className="selection-container">
+                                            <h3 className="eating-goal-header">Choose water over juice/soda</h3>
+                                            <p>Drinking water is a great way to stay hydrated without consuming extra sugars or unhealthy drinks.</p>
+                                        </div>         
+                                    </div> 
 
-                                <div className="recommendation-container">
-
-                                    <div className="goal-description">
-                                        <img className="screentime" src={require('../../components/images/journal/screentime_goals.png')} alt="Eating goals icon"/>
-                                    </div>
-
-                                    <div className="selection-container">
-                                        <h3>Screentime</h3>
-                                        <p>Other habits like balancing your screentime and sleep schedule can also improve your health!</p>
-                                        <div className="viewGoalButton">
-                                            <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                                            borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
-                                            onClick={() => { setRightScreenMode('Other Goal Mode') }}
-                                            >
-                                                View Goals
-                                            </Button>
-                                        </div>
+                                    <div className="button-container">
+                                        <Button variant="contained"
+                                                startIcon={<img src={require("../../components/images/journal/brain.png")} 
+                                                alt="Brain for learn more button"/>}
+                                                style={{backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                                borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'}}
+                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                                >
+                                                    Learn More
+                                                </Button>
+                                                <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                                borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
+                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                                >
+                                                    Add to My Goals
+                                        </Button>
                                     </div>
 
                                 </div>
@@ -529,64 +589,104 @@ const JournalScreen = () => {
                     <div className="goal-box">
                         <h1 className="journal-title">Other Goals</h1>
 
-                                <div className="recommendation-container">
-                                    <div className="goal-description">
-                                        <img className="eating" src={require('../../components/images/journal/eating_goals.png')} alt="Eating goals icon"/>
+                        <div className="recommendation-container">
+                                    
+                                    <div className="text-container">
+                                        <div className="eating-goal-image">
+                                            <img src={require('../../components/images/journal/apple.png')} alt="Apple for servings goal"/>
+                                        </div>
+
+                                        <div className="selection-container">
+                                            <h3 className="eating-goal-header">Eat 5 servings of fruits/vegetables</h3>
+                                            <p>Eating fruits and vegetables can help you be healthy and get the vitamins and nutrients for a more balanced diet.</p>
+                                        </div>
+
                                     </div>
 
-                                    <div className="selection-container">
-                                        <h3>Eating + Drinking</h3>
-                                        <p>Changing up eating habits can improve your health. See some recommended diet goals here!</p>
-                                        <div className="viewGoalButton">
-                                            <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                                            borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
-                                            onClick={() => { setRightScreenMode('Eating Goal Mode') }}
-                                            >
-                                                View Goals
-                                            </Button>
+                                    <div className="button-container">
+                                        <Button variant="contained"
+                                                startIcon={<img src={require("../../components/images/journal/brain.png")} 
+                                                alt="Brain for learn more button"/>}
+                                                style={{backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                                borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'}}
+                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                                >
+                                                    Learn More
+                                                </Button>
+                                                <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                                borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
+                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                                >
+                                                    Add to My Goals
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                <div className="recommendation-container">
+
+                                    <div className="text-container">
+
+                                        <div className="eating-goal-image">
+                                            <img src={require('../../components/images/journal/no_candy.png')} alt="Crossed out candy icon for avoid sugary food"/>
                                         </div>
+
+                                        <div className="selection-container">
+                                            <h3 className="eating-goal-header">Avoid Sugary Food</h3>
+                                            <p>Avoiding food with lots of sugar that are made from high fructose corn syrup can lower risk of unhealthy weight gain.</p>
+                                        </div>
+
+                                    </div>
+
+                                    <div className="button-container">
+                                        <Button variant="contained"
+                                                startIcon={<img src={require("../../components/images/journal/brain.png")} 
+                                                alt="Brain for learn more button"/>}
+                                                style={{backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                                borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'}}
+                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                                >
+                                                    Learn More
+                                                </Button>
+                                                <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                                borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
+                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                                >
+                                                    Add to My Goals
+                                        </Button>
                                     </div>
 
                                 </div>
 
                                 <div className="recommendation-container">
-
-                                    <div className="goal-description">
-                                        <img className="activity" src={require('../../components/images/journal/activity_goals.png')} alt="Eating goals icon"/>
-                                    </div>
-
-                                    <div className="selection-container">
-                                        <h3>Activity</h3>
-                                        <p>Getting active and breaking into a sweat will keep your body happy. See some recommended activity goals here!</p>
-                                        <div className="viewGoalButton">
-                                            <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                                            borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
-                                            onClick={() => { setRightScreenMode('Activity Goal Mode') }}
-                                            >
-                                                View Goals
-                                            </Button>
+                                    
+                                    <div className="text-container">
+                                        
+                                        <div className="eating-goal-image">
+                                            <img src={require('../../components/images/journal/water_cup.png')} alt="Water cup for choice over other drinks"/>
                                         </div>
-                                    </div>
 
-                                </div>
+                                        <div className="selection-container">
+                                            <h3 className="eating-goal-header">Choose water over juice/soda</h3>
+                                            <p>Drinking water is a great way to stay hydrated without consuming extra sugars or unhealthy drinks.</p>
+                                        </div>         
+                                    </div> 
 
-                                <div className="recommendation-container">
-
-                                    <div className="goal-description">
-                                        <img className="screentime" src={require('../../components/images/journal/screentime_goals.png')} alt="Eating goals icon"/>
-                                    </div>
-
-                                    <div className="selection-container">
-                                        <h3>Screentime</h3>
-                                        <p>Other habits like balancing your screentime and sleep schedule can also improve your health!</p>
-                                        <div className="viewGoalButton">
-                                            <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                                            borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
-                                            onClick={() => { setRightScreenMode('Other Goal Mode') }}
-                                            >
-                                                View Goals
-                                            </Button>
-                                        </div>
+                                    <div className="button-container">
+                                        <Button variant="contained"
+                                                startIcon={<img src={require("../../components/images/journal/brain.png")} 
+                                                alt="Brain for learn more button"/>}
+                                                style={{backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                                borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'}}
+                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                                >
+                                                    Learn More
+                                                </Button>
+                                                <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                                borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
+                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                                >
+                                                    Add to My Goals
+                                        </Button>
                                     </div>
 
                                 </div>
@@ -632,7 +732,7 @@ const JournalScreen = () => {
                                     <div className="single-button-container">
                                         <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                                         borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%' }}
-                                        onClick={() => { setRightScreenMode('Eating Goal Mode') }}
+                                        onClick={() => { setRightScreenMode('Activity Goal Mode') }}
                                         >
                                             View Goals
                                         </Button>
@@ -654,7 +754,7 @@ const JournalScreen = () => {
                                     <div className="single-button-container">
                                         <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                                         borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%' }}
-                                        onClick={() => { setRightScreenMode('Eating Goal Mode') }}
+                                        onClick={() => { setRightScreenMode('Other Goal Mode') }}
                                         >
                                             View Goals
                                         </Button>
