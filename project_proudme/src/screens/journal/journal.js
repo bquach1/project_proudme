@@ -26,29 +26,6 @@ const JournalScreen = () => {
     const [rightScreenMode, setRightScreenMode] = useState('');
     const [goalArray, setGoalArray] = useState([]);
 
-    // var goalArray = [<div className="current-goal">
-    //                             <div className="goal-container">
-
-    //                                     <div className="goal-description">
-    //                                         <h3 className="goal-text">{goal}</h3>
-    //                                         <h6 className="goal-text">{description}</h6>
-    //                                     </div>
-
-    //                                     <div className="selection-container">
-
-    //                                         <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1) } />
-    //                                         <h2 className="number-text">{numericalValue}</h2>
-    //                                         <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
-    //                                     </div>
-
-    //                                 </div>
-    //                             <div className="reflect-wrapper">
-    //                                 <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" />
-    //                                 <p style={{fontWeight: 'bold'}}>Reflect</p>
-    //                             </div>
-    //                 </div>
-    //                 ];
-
     const handleOpenGoalModal = () => {
         setOpen(true);
 ***REMOVED***;
