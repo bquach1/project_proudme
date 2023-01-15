@@ -322,7 +322,9 @@ const JournalScreen = () => {
             <div className="journalWrapper">
                 <img className="journalCover" src={require('../../components/images/journal/journal_cover.png')}
                 alt="Journal cover screen wrapper" />
-                <div className="leftPageWrapper">
+                <img className="reflection-tab" src={require('../../components/images/journal/reflection_tab.png')} 
+                    alt="Reflection bookmark tab" />
+                <div className="leftPageWrapper">                   
                         <div className="goal-box">
                             <h1 className="journal-title">My Goals</h1>
                             {goalArray}
