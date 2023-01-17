@@ -1,6 +1,6 @@
 import './App.css';
 import * as React from 'react';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import { Routes, Route, HashRouter } from 'react-router-dom';
 
 import LoginScreen from './screens/login.js';
 import HomeScreen from './screens/home.js';
@@ -17,7 +17,7 @@ import Header from './components/header';
 export default function App() {
   return (
     <div className="App">
-      <BrowserRouter>
+      <HashRouter>
         <Header />
         <Routes>
           <Route path='/' element={<LoginScreen />} />
@@ -32,7 +32,7 @@ export default function App() {
           <Route path='/pet' element={<PetScreen />} />
           <Route path='/pe' element={<PEScreen />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </div>
   );
 }
