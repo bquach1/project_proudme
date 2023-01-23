@@ -239,9 +239,9 @@ const SignUpScreen = () => {
                 </div>
                 <div className="checkbox-container">
                   <FormGroup>
-                    <FormControlLabel control={<Checkbox />} label = {<Typography variant="p" style={{color:'black'}}> 
+                    <FormControlLabel control={<Checkbox />} label = {<Typography style={{color:'black'}}> 
                     I agree to the Terms of Use & Privacy Policy.</Typography>}/>
-                    <FormControlLabel control={<Checkbox />} label = {<Typography variant="p" style={{color:'black'}}> 
+                    <FormControlLabel control={<Checkbox />} label = {<Typography style={{color:'black'}}> 
                     I agree to receive news ad updates by email from ProudME.</Typography>}/>
                   </FormGroup>
                 </div>

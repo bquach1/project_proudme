@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
 
@@ -76,8 +76,12 @@ const LoginScreen = () => {
               </Button>
             </div>
             <div className="registration">
-                <h2>Forgot your <a href='/signup'>Username or Password</a>?</h2>
-                <h2>Don't have an account? <a href='signup'>Register Here</a>!</h2>
+                <div className="registration-link">
+                    <h2>Forgot your <a className="nav-link" onClick={() => navigate('/signup')}>Username or Password</a>?</h2>
+                </div>
+                <div className="registration-link">
+                    <h2>Don't have an account? <a className="nav-link" onClick={() => navigate('/signup')}>Register Here</a>!</h2>
+                </div>
             </div>
           </form>
         </div>

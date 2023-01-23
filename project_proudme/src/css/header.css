@@ -35,6 +35,10 @@ nav {
     margin: 2%;
 }
 
+.nav-link:hover {
+    cursor: pointer;
+}
+
 a {
     color: #2E6AA1;
 }

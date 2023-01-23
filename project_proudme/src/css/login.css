@@ -60,10 +60,27 @@ a {
     color: #8054C9;
 }
 
+h2 {
+    margin: 0px;
+}
+
 .button-container {
     display: flex;
 }
 
 .checkbox-container {
     margin-left: 2%;
+}
+
+.nav-link {
+    color: #2d2638;
+}
+
+.nav-link:hover {
+    color: blue;
+    cursor:pointer;
+}
+
+.nav-link:visited {
+    color: #8054C9;
 }

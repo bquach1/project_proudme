@@ -1,7 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
-// import { slide as Menu } from 'react-burger-menu';
 
 import '../css/header.css';
 
@@ -36,9 +35,9 @@ const Header = () => {
             </div>
 
             <div className="right-nav">
-                <a className="nav-link" href="/login">Sign In</a>
+                <p className="nav-link" onClick={() => navigate('/login')}>Sign In</p>
                 <div className="nav-link">|</div>
-                <a className="nav-link" href="/pet">For Grown-Ups</a>
+                <p className="nav-link" onClick={() => navigate('/pet')}>For Grown-Ups</p>
             </div>
 
         </nav>
