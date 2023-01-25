@@ -25,6 +25,7 @@ const JournalScreen = () => {
     const [goalIsComplete, setGoalIsComplete] = useState(false);
     const [rightScreenMode, setRightScreenMode] = useState('');
     const [goalArray, setGoalArray] = useState([]);
+    const [goalCount, setGoalCount] = useState(0);
 
     const handleOpenGoalModal = () => {
         setOpen(true);
@@ -75,6 +76,10 @@ const JournalScreen = () => {
         setGoalIsComplete(!goalIsComplete);
 ***REMOVED***;
 
+    const handleGoalCountChange = () => {
+        setGoalCount(goalCount + 1);
+***REMOVED***
+
     function addGoal() {
 
         setGoalArray( updatedArray => [...updatedArray, 
@@ -100,8 +105,38 @@ const JournalScreen = () => {
                                             <p style={{fontWeight: 'bold'}}>Reflect</p>
                                         </div>
                                     </div>]);
+        handleGoalCountChange();                            
 
 ***REMOVED***;
+
+    function addEatingGoal() {
+
+        setGoalArray( updatedArray => [...updatedArray, 
+            <div className="current-goal">
+                <div className="goal-container">
+
+                    <div className="goal-description">
+                        <h3 className="goal-text">{"Eat 5 or more servings of fruits and/or vegetables"}</h3>
+                        <h6 className="goal-text">{"Reach goal increments for servings of fruit (1-5)"}</h6>
+                    </div>
+
+                    <div className="selection-container">
+
+                        <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1) } />
+                        <h2 className="number-text">{numericalValue}</h2>
+                        <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
+                    </div>
+
+                </div>
+
+                <div className="reflect-wrapper">
+                    <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" />
+                    <p style={{fontWeight: 'bold'}}>Reflect</p>
+                </div>
+            </div>]);
+        handleGoalCountChange();  
+
+***REMOVED***
 
     function renderNumericGoal() {
         return (
@@ -333,11 +368,18 @@ const JournalScreen = () => {
                 <div className="leftPageWrapper">                   
                         <div className="goal-box">
                             <h1 className="journal-title">My Goals</h1>
-                            {goalArray}
-                            <Button style={{marginTop: '5%', backgroundColor: '#ADF083', borderRadius: '20px', width: '70%',
-                            height: '60px', textTransform: 'none', fontSize: '20px', fontWeight: 'bold'}}
-                            onClick = {() => handleOpenGoalModal()}
-                            >Create a New Goal</Button>
+                            { goalCount === 0 ? 
+                            <div>You don't have any goals added yet. Add some recommended behaviors from the right page to start!</div> 
+                            :
+                            <div>
+                                {goalArray}
+                                <Button style={{marginTop: '5%', backgroundColor: '#ADF083', borderRadius: '20px', width: '70%',
+                                height: '60px', textTransform: 'none', fontSize: '20px', fontWeight: 'bold'}}
+                                onClick = {() => handleOpenGoalModal()}
+                                >Create a New Goal</Button>
+                                </div>
+                        ***REMOVED***
+                            
                             {createGoalModal()}
                             {defineGoalModal()}
                         </div>
@@ -383,7 +425,7 @@ const JournalScreen = () => {
                                                 </Button>
                                                 <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
                                                 borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
-                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                                onClick={() => { addEatingGoal() }}
                                                 >
                                                     Add to My Goals
                                         </Button>
