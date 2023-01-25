@@ -45,24 +45,7 @@ input {
     font-weight: bold;
 }
 
-a:link { text-decoration: none; }
-
-
-a:visited { text-decoration: none; }
-
-
-a:hover { text-decoration: none; }
-
-
-a:active { text-decoration: none; }
-
-a {
-    color: #8054C9;
-}
-
-h2 {
-    margin: 0px;
-}
+a:link { color: #8054C9; }
 
 .button-container {
     display: flex;
@@ -73,12 +56,12 @@ h2 {
 }
 
 .nav-link {
-    color: #2d2638;
+    color: #8054C9;
 }
 
 .nav-link:hover {
-    color: blue;
-    cursor:pointer;
+    color: #8054C9;
+    cursor: pointer;
 }
 
 .nav-link:visited {

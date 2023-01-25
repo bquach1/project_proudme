@@ -256,7 +256,7 @@ const SignUpScreen = () => {
               </Button>
             </div>
             <div className="registration">
-                <h2>Already have an account? <a href='/login'>Sign In!</a></h2>
+                <h2>Already have an account?<a className="nav-link" onClick={() => navigate('/login')}>Sign In!</a></h2>
             </div>
           </form>
         </div>

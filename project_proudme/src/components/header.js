@@ -36,7 +36,7 @@ const Header = () => {
 
             <div className="right-nav">
                 <p className="nav-link" onClick={() => navigate('/login')}>Sign In</p>
-                <div className="nav-link">|</div>
+                <div className="nav-text">|</div>
                 <p className="nav-link" onClick={() => navigate('/pet')}>For Grown-Ups</p>
             </div>
 

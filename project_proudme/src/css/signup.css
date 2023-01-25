@@ -81,3 +81,7 @@ a:hover { text-decoration: none; color: #8054C9;}
 
 
 a:active { text-decoration: none; color: #8054C9;}
+
+.nav-link {
+    color: #8054C9;
+}
