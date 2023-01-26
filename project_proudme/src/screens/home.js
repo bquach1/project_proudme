@@ -1,20 +1,24 @@
 import React from 'react';
 import '../css/home.css';
 import Button from '@material-ui/core/Button';
+import { useNavigate } from 'react-router-dom';
 
 const HomeScreen = () => {
+
+    let navigate = useNavigate();
+
     return (
         <div className="home">
             <h1 className="title">Hello Username!</h1>
             <div className="imageWrapper">
             <div className="left-icons">
-                <a href='/pet'>
+                <a className="click-icons" onClick={() => navigate('/pet')}>
                     <img className="miniGamesIcon" src={require('../components/images/home/mini_games_icon.png')} />
                 </a>
-                <a href='/pet'>
+                <a className="click-icons" onClick={() => navigate('/pet')}>
                     <img className="learnMoreIcon" src={require('../components/images/home/learn_more_icon.png')} />
                 </a>
-                <a href='/pet'>
+                <a className="click-icons" onClick={() => navigate('/pet')}>
                     <img className="petStoreIcon" src={require('../components/images/home/pet_store_icon.png')} />
                 </a>
             </div>
@@ -24,10 +28,10 @@ const HomeScreen = () => {
                 backgroundColor: '#EED5AB', borderRadius: '50px', color: '#A87B06',
                 fontWeight: 'bold',padding: '10px 30px 10px 30px', marginTop: '29%'}}>Visit PetName!</Button>
             <div className="right-icons">
-                <a href='/journal'>
+                <a className="click-icons" onClick={() => navigate('/journal')}>
                     <img className="checkinIcon" src={require('../components/images/home/checkin_icon.png')} />
                 </a>
-                <a href='/journal'>
+                <a className="click-icons" onClick={() => navigate('/journal')}>
                     <img className="journalIcon" src={require('../components/images/home/journal_icon.png')} />
                 </a>
             </div>

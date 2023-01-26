@@ -34,3 +34,7 @@
     flex-direction: column;
     justify-content: space-between;
 }
+
+.click-icons:hover {
+    cursor: pointer;
+}
