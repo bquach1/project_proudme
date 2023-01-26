@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import '../css/home.css';
 import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
@@ -7,9 +7,16 @@ const HomeScreen = () => {
 
     let navigate = useNavigate();
 
+    var dateToday = new Date(),
+    date = "Today's date is " + (dateToday.getMonth() + 1)+ '/' + dateToday.getDate()  + '/' +  dateToday.getFullYear() + ".";
+
+    var currentTime = dateToday.toLocaleTimeString();
+
     return (
         <div className="home">
             <h1 className="title">Hello Username!</h1>
+            <h4>{date}</h4>
+            <h4>{currentTime}</h4>
             <div className="imageWrapper">
             <div className="left-icons">
                 <a className="click-icons" onClick={() => navigate('/pet')}>
