@@ -123,7 +123,7 @@ const JournalScreen = () => {
                     <div className="selection-container">
 
                         <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1) } />
-                        <h2 className="number-text">{numericalValue}</h2>
+                        <h2 className="number-text">{5}</h2>
                         <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
                     </div>
 
@@ -136,32 +136,6 @@ const JournalScreen = () => {
             </div>]);
         handleGoalCountChange();  
 
-***REMOVED***
-
-    function renderNumericGoal() {
-        return (
-        <div className="current-goal">
-            <div className="goal-container">
-
-                    <div className="goal-description">
-                        <h3 className="goal-text">{goal}</h3>
-                        <h6 className="goal-text">{description}</h6>
-                    </div>
-
-                    <div className="selection-container">
-
-                        <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1) } />
-                        <h2 className="number-text">{numericalValue}</h2>
-                        <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
-                    </div>
-
-                </div>
-            <div className="reflect-wrapper">
-                <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Icon to reflect on selected goal" />
-                <p style={{fontWeight: 'bold'}}>Reflect</p>
-            </div>
-        </div>
-        );
 ***REMOVED***
 
     const createGoalModal = () => {
@@ -339,7 +313,7 @@ const JournalScreen = () => {
 
                         <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                         borderRadius: '20px'}}
-                        onClick={() => { handleCloseDefineModal(); renderNumericGoal(); addGoal(); }}
+                        onClick={() => { handleCloseDefineModal(); addGoal(); }}
                         >
                             Create Goal
                         </Button>
@@ -366,34 +340,7 @@ const JournalScreen = () => {
                 <img className="gallery-tab" src={require('../../components/images/journal/gallery_tab.png')} 
                     alt="Gallery bookmark tab" />
                 <div className="leftPageWrapper">                   
-                        <div className="goal-box">
-                            <h1 className="journal-title">My Goals</h1>
-                            { goalCount === 0 ? 
-                            <div>You don't have any goals added yet. Add some recommended behaviors from the right page to start!</div> 
-                            :
-                            <div>
-                                {goalArray}
-                                <Button style={{marginTop: '5%', backgroundColor: '#ADF083', borderRadius: '20px', width: '70%',
-                                height: '60px', textTransform: 'none', fontSize: '20px', fontWeight: 'bold'}}
-                                onClick = {() => handleOpenGoalModal()}
-                                >Create a New Goal</Button>
-                                </div>
-                        ***REMOVED***
-                            
-                            {createGoalModal()}
-                            {defineGoalModal()}
-                        </div>
-                        <img className="leftpage1" src={require('../../components/images/journal/left_page.png')} 
-                        alt="First left-side page" />
-                        <img className="leftpage2" src={require('../../components/images/journal/left_page2.png')} 
-                        alt="Second left-side page"/>
-                        <img className="leftpage3" src={require('../../components/images/journal/left_page3.png')} 
-                        alt="Third left-side page"/>
-                </div>
-                <img className="middle-line" src={require('../../components/images/journal/middle_line.png')} alt="Middle journal line"/>
-                <div className="rightPageWrapper">
-                <img className="bookmark" src={require('../../components/images/journal/bookmark.png')} alt="Yellow bookmark icon"/>
-                    
+                                    
                     { rightScreenMode === "Eating Goal Mode" ?
                     
                     <div className="goal-box">
@@ -432,7 +379,7 @@ const JournalScreen = () => {
                                     </div>
                                 </div>
 
-                                <div className="recommendation-container">
+                                {/* <div className="recommendation-container">
 
                                     <div className="text-container">
 
@@ -499,7 +446,7 @@ const JournalScreen = () => {
                                         </Button>
                                     </div>
 
-                                </div>
+                                </div> */}
 
                     </div>
 
@@ -792,12 +739,39 @@ const JournalScreen = () => {
 
                 ***REMOVED***
 
-                    <img className="rightpage1" src={require('../../components/images/journal/right_page.png')} 
-                    alt="First right-side page"/>
-                    <img className="rightpage2" src={require('../../components/images/journal/right_page2.png')} 
-                    alt="Second right-side page" />
-                    <img className="rightpage3" src={require('../../components/images/journal/right_page.png')} 
-                    alt="Third right-side page"/>
+                    <img className="leftpage1" src={require('../../components/images/journal/right_page.png')} 
+                    alt="First left-side page"/>
+                    <img className="leftpage2" src={require('../../components/images/journal/right_page2.png')} 
+                    alt="Second left-side page" />
+                    <img className="leftpage3" src={require('../../components/images/journal/right_page.png')} 
+                    alt="Third left-side page"/>
+                </div>
+                <img className="middle-line" src={require('../../components/images/journal/middle_line.png')} alt="Middle journal line"/>
+                <div className="rightPageWrapper">
+                <img className="bookmark" src={require('../../components/images/journal/bookmark.png')} alt="Yellow bookmark icon"/>
+                <div className="goal-box">
+                            <h1 className="journal-title">My Goals</h1>
+                            { goalCount === 0 ? 
+                            <div className="goal-text">You don't have any goals added yet. Add some recommended behaviors from the left page to start!</div> 
+                            :
+                            <div>
+                                {goalArray}
+                                <Button style={{marginTop: '5%', backgroundColor: '#ADF083', borderRadius: '20px', width: '70%',
+                                height: '60px', textTransform: 'none', fontSize: '20px', fontWeight: 'bold'}}
+                                onClick = {() => handleOpenGoalModal()}
+                                >Edit a Goal</Button>
+                                </div>
+                        ***REMOVED***
+                            
+                            {createGoalModal()}
+                            {defineGoalModal()}
+                        </div>
+                        <img className="rightpage1" src={require('../../components/images/journal/left_page.png')} 
+                        alt="First right-side page" />
+                        <img className="rightpage2" src={require('../../components/images/journal/left_page2.png')} 
+                        alt="Second right-side page"/>
+                        <img className="rightpage3" src={require('../../components/images/journal/left_page3.png')} 
+                        alt="Third right-side page"/>
                 </div>
             </div>
         </div>
