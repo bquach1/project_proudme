@@ -326,7 +326,7 @@
 
 .reflection-tab {
     position: absolute;
-    margin-right: 51%;
+    margin-right: 70%;
     z-index: 250;
 }
 
@@ -336,7 +336,7 @@
 
 .achievements-tab {
     position: absolute;
-    margin-right: 52%;
+    margin-right: 71%;
     margin-top: 15%;
     z-index: 150;
 }
@@ -347,7 +347,7 @@
 
 .goals-tab {
     position: absolute;
-    margin-left: 52%;
+    margin-left: 70%;
     margin-bottom: 25%;
     z-index: 250;
 }
@@ -358,7 +358,7 @@
 
 .gallery-tab {
     position: absolute;
-    margin-left: 53%;
+    margin-left: 71%;
     margin-bottom: 10%;
     z-index: 150;
 }
