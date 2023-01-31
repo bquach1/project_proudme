@@ -9,93 +9,64 @@ const SignUpScreen = () => {
 
     const navigate = useNavigate();
 
-    // States for registration
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [emailConfirm, setEmailConfirm] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordConfirm, setPasswordConfirm] = useState('');
-    const [month, setMonth] = useState('');
-    const [day, setDay] = useState('');
-    const [year, setYear] = useState('');
-
     // States for checking the errors
     const [submitted, setSubmitted] = useState(false);
     const [error, setError] = useState(false);
 
-    // Handling the name change
-    const handleName = (e) => {
-        setName(e.target.value);
-        setSubmitted(false);
-***REMOVED***;
-
-    // Handling the email change
-    const handleEmail = (e) => {
-        setEmail(e.target.value);
-        setSubmitted(false);
-***REMOVED***;
-
-    const handleEmailConfirm = (e) => {
-        setEmailConfirm(e.target.value);
-        setSubmitted(false);
-***REMOVED***;
-
-    // Handling the password change
-    const handlePassword = (e) => {
-        setPassword(e.target.value);
-        setSubmitted(false);
-***REMOVED***;
-
-    const handlePasswordConfirm = (e) => {
-        setPasswordConfirm(e.target.value);
-        setSubmitted(false);
+    const [form, setForm] = useState({
+      name: "",
+      password: "",
+      birthMonth: "",
+      birthDay: "",
+      birthYear: "",
+      email: ""
+    ***REMOVED***
+    
+    // These methods will update the state properties.
+    function updateForm(value) {
+      return setForm((prev) => {
+        return { ...prev, ...value };
+      ***REMOVED***
 ***REMOVED***
-
-    const handleMonth = (e) => {
-        setMonth(e.target.value);
-        setSubmitted(false);
-***REMOVED***;
-
-    const handleDay = (e) => {
-        setDay(e.target.value);
-        setSubmitted(false);
-***REMOVED***;
-
-    const handleYear = (e) => {
-        setYear(e.target.value);
-        setSubmitted(false);
-***REMOVED***;
-
-    // Handling the form submission
-    const handleSubmit = (e) => {
-    e.preventDefault();
-    if (name === '' || email === '' || password === '') {
-        setError(true);
+    
+    // This function will handle the submission.
+    async function onSubmit(e) {
+      e.preventDefault();
+    
+      // When a post request is sent to the create url, we'll add a new record to the database.
+      const newPerson = { ...form };
+    
+      await fetch("http://localhost:5000/record/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+    ***REMOVED***,
+        body: JSON.stringify(newPerson),
+  ***REMOVED***)
+      .catch(error => {
+        window.alert(error);
+        return;
+      ***REMOVED***
+    
+      setForm({ name: "", password: "", birthMonth: "", birthDay: "", birthYear: "", email: "" ***REMOVED***
+      navigate("/login");
 ***REMOVED***
-        setSubmitted(true);
-        setError(false);
-***REMOVED***
-***REMOVED***;
 
     const renderForm = (
         <div className="signup">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={onSubmit}>
             <div className="input-container">
               <label>Username: </label>
-              <input className="input" onChange={handleName} type="text" value={name} required />
+              <input className="input" onChange={(e) => updateForm({name: e.target.value})} type="text" value={form.name} required />
             </div>
             <div className="input-container">
               <label>Password: </label>
-              <input className="input" onChange={handlePassword} type="password" value={password} required />
-            </div>
-            <div className="input-container">
-              <label>Confirm Password: </label>
-              <input className="input" onChange={handlePasswordConfirm} type="password" value={passwordConfirm} required />
+              <input className="input" onChange={(e) => updateForm({password: e.target.value})} type="password" value={form.password} required />
             </div>
             <div className="input-container">
                 <label>Date of Birth: </label>
                 <div className="birth-container">
-                    <select className="dropdown" name="month" onChange={handleMonth} value={month} required>
+                    <select className="dropdown" name="month" onChange={(e) => updateForm({birthMonth: e.target.value})} value={form.birthMonth} required>
                         <option value="January">January</option>
                         <option value="February">February</option>
                         <option value="March">March</option>
@@ -105,11 +76,10 @@ const SignUpScreen = () => {
                         <option value="July">July</option>
                         <option value="August">August</option>
                         <option value="September">September</option>
-                        <option value="October">January</option>
                         <option value="November">November</option>
                         <option value="December">December</option>
                     </select>
-                    <select className="dropdown" name="day" onChange={handleDay} value={day} required>
+                    <select className="dropdown" name="day" onChange={(e) => updateForm({birthDay: e.target.value})} value={form.birthDay} required>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -143,7 +113,7 @@ const SignUpScreen = () => {
                         <option value="30">30</option>
                         <option value="31">31</option>
                     </select>
-                    <select className="dropdown" name="year" onChange={handleYear} value={year} required>
+                    <select className="dropdown" name="year" onChange={(e) => updateForm({birthYear: e.target.value})} value={form.birthYear} required>
                         <option value="1940">1940</option>
                         <option value="1941">1941</option>
                         <option value="1942">1942</option>
@@ -231,11 +201,9 @@ const SignUpScreen = () => {
                 </div>
                 <div className="input-container">
                 <label>Email Address: </label>
-                    <input className="input" onChange={handleEmail} type="text" value={email} required />
+                    <input className="input" type="text" onChange={(e) => updateForm({email: e.target.value})} value={form.email} required />
                 </div>
                 <div className="input-container">
-                <label>Confirm Email Address: </label>
-                    <input className="input" onChange={handleEmailConfirm} type="text" value={emailConfirm} required />
                 </div>
                 <div className="checkbox-container">
                   <FormGroup>
@@ -251,7 +219,7 @@ const SignUpScreen = () => {
                 style={{backgroundColor: '#EF9090', color: 'white', padding: '10px 50px 10px 50px', 
                 borderRadius: '20px', textTransform: 'none', marginTop: '2%', margin: 'auto', height: '60px', 
                 width: '25%', fontSize: '25px'}}
-                type="submit">
+                type="submit" value="Register user">
                     Register
               </Button>
             </div>
@@ -269,7 +237,7 @@ const SignUpScreen = () => {
             style={{
               display: submitted ? '' : 'none',
         ***REMOVED***}>
-            <h1>User {name} successfully registered!!</h1>
+            <h1>User {form.name} successfully registered!!</h1>
           </div>
         );
   ***REMOVED***;

@@ -66,6 +66,8 @@ a:link { color: #8054C9; }
     cursor: pointer;
 }
 
-.nav-link:visited {
-    color: #8054C9;
+h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

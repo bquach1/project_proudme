@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,6 +7,15 @@ import '../css/login.css';
 const LoginScreen = () => {
 
     const navigate = useNavigate();
+
+    const [form, setForm] = useState({
+        name: "",
+        password: "",
+        birthMonth: "",
+        birthDay: "",
+        birthYear: "",
+        email: ""
+    ***REMOVED***
 
     const tempDatabase = [
         {
@@ -33,13 +42,39 @@ const LoginScreen = () => {
         )
 ***REMOVED***;
 
+    const [records, setRecords] = useState([]);
+ 
+    // This method fetches the records from the database.
+    useEffect(() => {
+      async function getRecords() {
+        const response = await fetch(`http://localhost:5000/record/`);
+    
+        if (!response.ok) {
+          const message = `An error occurred: ${response.statusText}`;
+          window.alert(message);
+          return;
+    ***REMOVED***
+    
+        const records = await response.json();
+        setRecords(records);
+        console.log(records);
+  ***REMOVED***
+    
+      getRecords();
+    
+      return;
+***REMOVED***, [records.length]);
+    
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
         var { usernameError, passwordError } = document.forms[0];
 
-        const userData = tempDatabase.find((user) => user.username === usernameError.value);
+        const userData = records.find((user) => user.name === usernameError.value);
     
+        console.log(userData);
+
         if (userData) {
             if (userData.password !== passwordError.value) {
                 setErrorMessages({ name: "passwordError", message: errors.passwordError ***REMOVED***
