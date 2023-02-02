@@ -15,9 +15,13 @@ const SignUpScreen = () => {
 
     const [form, setForm] = useState({
       name: "",
+      firstName: "",
+      lastName: "",
+      gender: "",
+      schoolYear: "",
+      schoolAttended: "",
       password: "",
       birthMonth: "",
-      birthDay: "",
       birthYear: "",
       email: ""
     ***REMOVED***
@@ -63,10 +67,25 @@ const SignUpScreen = () => {
               <label>Password: </label>
               <input className="input" onChange={(e) => updateForm({password: e.target.value})} type="password" value={form.password} required />
             </div>
-            <div className="input-container">
-                <label>Date of Birth: </label>
-                <div className="birth-container">
-                    <select className="dropdown" name="month" onChange={(e) => updateForm({birthMonth: e.target.value})} value={form.birthMonth} required>
+            <div className="line-container">
+              <div className="row-container">
+              <label>First Name: </label>
+                <input className="dropdown" onChange={(e) => updateForm({firstName: e.target.value})} type="text" value={form.firstName} required />
+              </div>              
+              <div className="row-container">
+              <label>Last Name: </label>
+                <input className="dropdown" onChange={(e) => updateForm({lastName: e.target.value})} type="text" value={form.lastName} required />
+              </div>
+              <div className="row-container">
+              <label>School Attended: </label>
+                <input className="dropdown" placeholder="Full school name" onChange={(e) => updateForm({schoolAttended: e.target.value})} type="text" value={form.schoolAttended} required />
+              </div>
+            </div>
+            <div className="line-container">
+                <div className="row-container">
+                <label>Birth Month: </label>
+                    <select className="dropdown" name="month" onChange={(e) => updateForm({birthMonth: e.target.value})} required>
+                        <option value="" selected disabled hidden>Select an option</option>
                         <option value="January">January</option>
                         <option value="February">February</option>
                         <option value="March">March</option>
@@ -79,81 +98,11 @@ const SignUpScreen = () => {
                         <option value="November">November</option>
                         <option value="December">December</option>
                     </select>
-                    <select className="dropdown" name="day" onChange={(e) => updateForm({birthDay: e.target.value})} value={form.birthDay} required>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15">15</option>
-                        <option value="16">16</option>
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                        <option value="23">23</option>
-                        <option value="24">24</option>
-                        <option value="25">25</option>
-                        <option value="26">26</option>
-                        <option value="27">27</option>
-                        <option value="28">28</option>
-                        <option value="29">29</option>
-                        <option value="30">30</option>
-                        <option value="31">31</option>
-                    </select>
-                    <select className="dropdown" name="year" onChange={(e) => updateForm({birthYear: e.target.value})} value={form.birthYear} required>
-                        <option value="1940">1940</option>
-                        <option value="1941">1941</option>
-                        <option value="1942">1942</option>
-                        <option value="1943">1943</option>
-                        <option value="1944">1944</option>
-                        <option value="1945">1945</option>
-                        <option value="1946">1946</option>
-                        <option value="1947">1947</option>
-                        <option value="1948">1948</option>
-                        <option value="1949">1949</option>
-                        <option value="1950">1950</option>
-                        <option value="1951">1951</option>
-                        <option value="1952">1952</option>
-                        <option value="1953">1953</option>
-                        <option value="1954">1954</option>
-                        <option value="1955">1955</option>
-                        <option value="1956">1956</option>
-                        <option value="1957">1957</option>
-                        <option value="1958">1958</option>
-                        <option value="1959">1959</option>
-                        <option value="1960">1960</option>
-                        <option value="1961">1961</option>
-                        <option value="1962">1962</option>
-                        <option value="1963">1963</option>
-                        <option value="1964">1964</option>
-                        <option value="1965">1965</option>
-                        <option value="1966">1966</option>
-                        <option value="1967">1967</option>
-                        <option value="1968">1968</option>
-                        <option value="1969">1969</option>
-                        <option value="1970">1970</option>
-                        <option value="1971">1971</option>
-                        <option value="1972">1972</option>
-                        <option value="1973">1973</option>
-                        <option value="1974">1974</option>
-                        <option value="1975">1975</option>
-                        <option value="1976">1976</option>
-                        <option value="1977">1977</option>
-                        <option value="1978">1978</option>
-                        <option value="1979">1979</option>
+                </div>              
+                <div className="row-container">
+                <label>Birth Year: </label>
+                    <select className="dropdown" name="year" onChange={(e) => updateForm({birthYear: e.target.value})} required>
+                        <option value="" selected disabled hidden>Select an option</option>
                         <option value="1980">1980</option>
                         <option value="1981">1981</option>
                         <option value="1982">1982</option>
@@ -199,12 +148,45 @@ const SignUpScreen = () => {
                         <option value="2022">2022</option>
                     </select>
                 </div>
+                <div className="row-container">
+                <label>Grade Level: </label>
+                    <select className="dropdown" name="grade" onChange={(e) => updateForm({gradeLevel: e.target.value})} required>
+                        <option value="" selected disabled hidden>Select an option</option>
+                        <option value="prek">Pre-K</option>
+                        <option value="kindergarten">Kindergarten</option>
+                        <option value="first">1st</option>
+                        <option value="second">2nd</option>
+                        <option value="third">3rd</option>
+                        <option value="fourth">4th</option>
+                        <option value="fifth">5th</option>
+                        <option value="sixth">6th</option>
+                        <option value="seventh">7th</option>
+                        <option value="eighth">8th</option>
+                        <option value="ninth">9th</option>
+                        <option value="tenth">10th</option>
+                        <option value="eleventh">11th</option>
+                        <option value="twelfth">12th</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+              </div>
+              <div className="line-container">
                 <div className="input-container">
+                <label>Gender: </label>
+                  <select className="dropdown" name="gender" onChange={(e) => updateForm({gender: e.target.value})} required>
+                      <option value="" selected disabled hidden>Select an option</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                      <option value="none">Prefer not to tell</option>
+                  </select>
+                  </div>
+                  <div className="input-container">
                 <label>Email Address: </label>
                     <input className="input" type="text" onChange={(e) => updateForm({email: e.target.value})} value={form.email} required />
                 </div>
-                <div className="input-container">
-                </div>
+              </div>
+              <div className="row-container">
                 <div className="checkbox-container">
                   <FormGroup>
                     <FormControlLabel control={<Checkbox />} label = {<Typography style={{color:'black'}}> 
@@ -264,3 +246,6 @@ const SignUpScreen = () => {
 };
 
 export default SignUpScreen;
+
+// have left page recommended goals removed after child adds a goal to the right page.
+// automated feedback, move right page to left page after goal added, reflection on right page after click (blank at first).

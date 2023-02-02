@@ -42,24 +42,31 @@ input {
 .dropdown {
     height: 40px;
     margin: 10px 5px 10px 5px;
+    margin-left: auto;
     border-style: none;
     display: flex;
-    align-self: left;
+    /* align-self: left; */
     border-radius: 10px;
-    width: 30%;
+    width: 100%;
     padding: 10px 10px 10px 10px;
     box-shadow: 2px 2px 2px 2px #808080; 
 }
 
-.birth-container {
+.row-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
 }
 
 .input-container {
     padding: 10px 10px 10px 10px;
     display: flex;
     flex-direction: column;
+}
+
+.line-container {
+    padding: 10px 10px 10px 10px;
+    display: flex;
+    justify-content:space-evenly;
 }
 
 .registration {
@@ -73,12 +80,9 @@ input {
 
 a:link { text-decoration: none; color: #8054C9; }
 
-
 a:visited { text-decoration: none; color: #8054C9;}
 
-
 a:hover { text-decoration: none; color: #8054C9;}
-
 
 a:active { text-decoration: none; color: #8054C9;}
 

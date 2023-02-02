@@ -8,26 +8,6 @@ const LoginScreen = () => {
 
     const navigate = useNavigate();
 
-    const [form, setForm] = useState({
-        name: "",
-        password: "",
-        birthMonth: "",
-        birthDay: "",
-        birthYear: "",
-        email: ""
-    ***REMOVED***
-
-    const tempDatabase = [
-        {
-            username: "testUser",
-            password: "testPassword"
-    ***REMOVED***,
-        {
-            username: "testUser2",
-            password: "testPassword2"
-    ***REMOVED***
-    ];
-
     const errors = {
         usernameError: "invalid username",
         passwordError: "invalid password"
@@ -37,8 +17,9 @@ const LoginScreen = () => {
     const [isSubmitted, setIsSubmitted] = useState(false);
 
     const renderErrorMessage = (name) => {
+        // window.alert("Incorrect login.");
         name === errorMessages.name && (
-            <div className="error">{errorMessages.message}</div>
+            <div className="popup">{errorMessages.message}</div>
         )
 ***REMOVED***;
 
@@ -57,7 +38,6 @@ const LoginScreen = () => {
     
         const records = await response.json();
         setRecords(records);
-        console.log(records);
   ***REMOVED***
     
       getRecords();
@@ -72,8 +52,6 @@ const LoginScreen = () => {
         var { usernameError, passwordError } = document.forms[0];
 
         const userData = records.find((user) => user.name === usernameError.value);
-    
-        console.log(userData);
 
         if (userData) {
             if (userData.password !== passwordError.value) {

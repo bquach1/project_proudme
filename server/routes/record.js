@@ -42,9 +42,13 @@ recordRoutes.route("/record/add").post(function (req, response) {
  let myobj = {
    name: req.body.name,
    password: req.body.password,
+   firstName: req.body.firstName,
+   lastName: req.body.lastName,
+   schoolAttended: req.body.schoolAttended,
    birthMonth: req.body.birthMonth,
-   birthDay: req.body.birthDay,
    birthYear: req.body.birthYear,
+   gradeLevel: req.body.gradeLevel,
+   gender: req.body.gender,
    email: req.body.email
  };
  db_connect.collection("records").insertOne(myobj, function (err, res) {
@@ -59,12 +63,16 @@ recordRoutes.route("/update/:id").post(function (req, response) {
  let myquery = { _id: ObjectId(req.params.id) };
  let newvalues = {
    $set: {
-        name: req.body.name,
-        password: req.body.password,
-        birthMonth: req.body.birthMonth,
-        birthDay: req.body.birthDay,
-        birthYear: req.body.birthYear,
-        email: req.body.email
+    name: req.body.name,
+    password: req.body.password,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    schoolAttended: req.body.schoolAttended,
+    birthMonth: req.body.birthMonth,
+    birthYear: req.body.birthYear,
+    gradeLevel: req.body.gradeLevel,
+    gender: req.body.gender,
+    email: req.body.email
  ***REMOVED***,
  };
  db_connect
