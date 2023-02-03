@@ -12,6 +12,7 @@ const JournalScreen = () => {
 
     const [open, setOpen] = useState(false);
     const [defineOpen, setDefineOpen] = useState(false);
+    const [reflectOpen, setReflectOpen] = useState(false);
     const [progressError, setProgressError] = useState(false);
     const [booleanSelected, setBooleanSelected] = useState(false);
     const [numberSelected, setNumberSelected] = useState(false);
@@ -26,6 +27,8 @@ const JournalScreen = () => {
     const [rightScreenMode, setRightScreenMode] = useState('');
     const [goalArray, setGoalArray] = useState([]);
     const [goalCount, setGoalCount] = useState(0);
+
+    const [reflection, setReflection] = useState('');
 
     const handleOpenGoalModal = () => {
         setOpen(true);
@@ -49,6 +52,14 @@ const JournalScreen = () => {
 
     const handleCloseDefineModal = () => {
         setDefineOpen(false);
+***REMOVED***;
+
+    const handleOpenReflectModal = () => {
+        setReflectOpen(true);
+***REMOVED***;
+
+    const handleCloseReflectModal = () => {
+        setReflectOpen(false);
 ***REMOVED***;
 
     const handleGoalChange = (e) => {
@@ -80,6 +91,10 @@ const JournalScreen = () => {
         setGoalCount(goalCount + 1);
 ***REMOVED***
 
+    const handleReflectionChange = (e) => {
+        setReflection(e.target.value);
+***REMOVED***
+
     function addGoal() {
 
         setGoalArray( updatedArray => [...updatedArray, 
@@ -101,7 +116,9 @@ const JournalScreen = () => {
                                         </div>
 
                                         <div className="reflect-wrapper">
-                                            <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" />
+                                            <img className="reflect-image" 
+                                                src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon"
+                                                onClick={() => handleOpenReflectModal() } />
                                             <p style={{fontWeight: 'bold'}}>Reflect</p>
                                         </div>
                                     </div>]);
@@ -130,7 +147,9 @@ const JournalScreen = () => {
                 </div>
 
                 <div className="reflect-wrapper">
-                    <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" />
+                    <img className="reflect-image" 
+                    src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" 
+                    onClick={() => handleOpenReflectModal() } />
                     <p style={{fontWeight: 'bold'}}>Reflect</p>
                 </div>
             </div>]);
@@ -159,7 +178,9 @@ const JournalScreen = () => {
                 </div>
 
                 <div className="reflect-wrapper">
-                    <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" />
+                    <img className="reflect-image" 
+                    src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon"
+                    onClick={() => handleOpenReflectModal() } />
                     <p style={{fontWeight: 'bold'}}>Reflect</p>
                 </div>
             </div>]);
@@ -188,7 +209,9 @@ const JournalScreen = () => {
                 </div>
 
                 <div className="reflect-wrapper">
-                    <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" />
+                    <img className="reflect-image" 
+                    src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" 
+                    onClick={() => handleOpenReflectModal() } />
                     <p style={{fontWeight: 'bold'}}>Reflect</p>
                 </div>
             </div>]);
@@ -217,7 +240,9 @@ const JournalScreen = () => {
                 </div>
 
                 <div className="reflect-wrapper">
-                    <img className="reflect-image" src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" />
+                    <img className="reflect-image" 
+                    src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon" 
+                    onClick={() => handleOpenReflectModal() } />
                     <p style={{fontWeight: 'bold'}}>Reflect</p>
                 </div>
             </div>]);
@@ -412,6 +437,46 @@ const JournalScreen = () => {
         );
 ***REMOVED***;
 
+    function createReflectModal() {
+
+        return (
+            
+            <Modal
+                aria-labelledby="reflect-modal"
+                aria-describedby="modal-to-reflect-on-goal"
+                open={reflectOpen}
+                onClose={handleCloseReflectModal}
+            >
+                <div className="modal">
+                <div className="inside-modal">
+                    <h2>Reflect on Your Goal</h2>
+                    <h4>Give some thoughts on things your goal progress so far.</h4>
+                    <input className="modal-input" type="text" name="reflection" placeholder="Reflection thoughts" 
+                    onChange={handleReflectionChange} value={reflection}/>
+                </div>
+                            
+                <div className="nav-options">
+                        <Button style={{backgroundColor: '#D9D9D9', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                        borderRadius: '20px'}}
+                        onClick={() => { handleCloseReflectModal(); }}
+                        >
+                            Cancel
+                        </Button>
+
+                        <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                        borderRadius: '20px'}}
+                        onClick={() => { handleCloseReflectModal(); }}
+                        >
+                            Create Goal
+                        </Button>
+                </div>
+
+                </div>
+                
+            </Modal>
+        );
+***REMOVED***;
+
     return (
         <div className="journal">
             <h1 className="title">My Journal</h1>
@@ -453,7 +518,7 @@ const JournalScreen = () => {
                                                 alt="Brain for learn more button"/>}
                                                 style={{backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
                                                 borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'}}
-                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                                onClick={() => console.log('l')}
                                                 >
                                                     Learn More
                                                 </Button>
@@ -465,75 +530,6 @@ const JournalScreen = () => {
                                         </Button>
                                     </div>
                                 </div>
-
-                                {/* <div className="recommendation-container">
-
-                                    <div className="text-container">
-
-                                        <div className="eating-goal-image">
-                                            <img src={require('../../components/images/journal/no_candy.png')} alt="Crossed out candy icon for avoid sugary food"/>
-                                        </div>
-
-                                        <div className="selection-container">
-                                            <h3 className="eating-goal-header">Avoid Sugary Food</h3>
-                                            <p>Avoiding food with lots of sugar that are made from high fructose corn syrup can lower risk of unhealthy weight gain.</p>
-                                        </div>
-
-                                    </div>
-
-                                    <div className="button-container">
-                                        <Button variant="contained"
-                                                startIcon={<img src={require("../../components/images/journal/brain.png")} 
-                                                alt="Brain for learn more button"/>}
-                                                style={{backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                                                borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'}}
-                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
-                                                >
-                                                    Learn More
-                                                </Button>
-                                                <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                                                borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
-                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
-                                                >
-                                                    Add to My Goals
-                                        </Button>
-                                    </div>
-
-                                </div>
-
-                                <div className="recommendation-container">
-                                    
-                                    <div className="text-container">
-                                        
-                                        <div className="eating-goal-image">
-                                            <img src={require('../../components/images/journal/water_cup.png')} alt="Water cup for choice over other drinks"/>
-                                        </div>
-
-                                        <div className="selection-container">
-                                            <h3 className="eating-goal-header">Choose water over juice/soda</h3>
-                                            <p>Drinking water is a great way to stay hydrated without consuming extra sugars or unhealthy drinks.</p>
-                                        </div>         
-                                    </div> 
-
-                                    <div className="button-container">
-                                        <Button variant="contained"
-                                                startIcon={<img src={require("../../components/images/journal/brain.png")} 
-                                                alt="Brain for learn more button"/>}
-                                                style={{backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                                                borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'}}
-                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
-                                                >
-                                                    Learn More
-                                                </Button>
-                                                <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                                                borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
-                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
-                                                >
-                                                    Add to My Goals
-                                        </Button>
-                                    </div>
-
-                                </div> */}
 
                     </div>
 
@@ -751,6 +747,7 @@ const JournalScreen = () => {
                             
                             {createGoalModal()}
                             {defineGoalModal()}
+                            {createReflectModal()}
                         </div>
                         <img className="rightpage1" src={require('../../components/images/journal/left_page.png')} 
                         alt="First right-side page" />
@@ -769,6 +766,5 @@ export default JournalScreen;
 // Set Up Goals
 // Behaviors
 // Monitor
-// preset categories with threshold levels from email for recommended goals.
 // look into a database to track the amount of time spent on creating / setting up goals, using website, etc. (Google analytics)
 // timeline, today's date, track when goals are created (using current date)
