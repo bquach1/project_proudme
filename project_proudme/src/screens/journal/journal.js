@@ -154,6 +154,7 @@ const JournalScreen = () => {
                 </div>
             </div>]);
         handleGoalCountChange();  
+        setRightScreenMode("Goal Selected Mode");
 
 ***REMOVED***
 
@@ -185,6 +186,7 @@ const JournalScreen = () => {
                 </div>
             </div>]);
         handleGoalCountChange();  
+        setRightScreenMode("Goal Selected Mode");
 
 ***REMOVED***
 
@@ -215,7 +217,8 @@ const JournalScreen = () => {
                     <p style={{fontWeight: 'bold'}}>Reflect</p>
                 </div>
             </div>]);
-        handleGoalCountChange();  
+        handleGoalCountChange(); 
+        setRightScreenMode("Goal Selected Mode"); 
 
 ***REMOVED***
 
@@ -247,6 +250,7 @@ const JournalScreen = () => {
                 </div>
             </div>]);
         handleGoalCountChange();  
+        setRightScreenMode("Goal Selected Mode");
 
 ***REMOVED***
 
@@ -450,7 +454,7 @@ const JournalScreen = () => {
                 <div className="modal">
                 <div className="inside-modal">
                     <h2>Reflect on Your Goal</h2>
-                    <h4>Give some thoughts on things your goal progress so far.</h4>
+                    <h4>Give some thoughts on your goal progress so far.</h4>
                     <input className="modal-input" type="text" name="reflection" placeholder="Reflection thoughts" 
                     onChange={handleReflectionChange} value={reflection}/>
                 </div>
@@ -573,10 +577,10 @@ const JournalScreen = () => {
 
                     </div>
 
-                    : rightScreenMode === "Other Goal Mode" ?
+                    : rightScreenMode === "Screentime Goal Mode" ?
 
                     <div className="goal-box">
-                        <h1 className="journal-title">Other Goals</h1>
+                        <h1 className="journal-title">Screentime Goals</h1>
 
                         <div className="recommendation-container">
                                     
@@ -611,41 +615,54 @@ const JournalScreen = () => {
                                     </div>
                                 </div>
 
-                                <div className="recommendation-container">
+                    </div>
 
-                                    <div className="text-container">
+                    : rightScreenMode === "Sleep Goal Mode" ?
 
-                                        <div className="eating-goal-image">
-                                            <img src={require('../../components/images/journal/pillow_icon.png')} alt="Crossed out candy icon for avoid sugary food"/>
-                                        </div>
+                    <div className="goal-box">
+                        <h1 className="journal-title">Screentime Goals</h1>
 
-                                        <div className="selection-container">
-                                            <h3 className="eating-goal-header">Get 9 hours of sleep a day</h3>
-                                            <p>Getting a good amount of sleep improves focus while lowering stress and risk of serious health problems.</p>
-                                        </div>
+                        <div className="recommendation-container">
 
-                                    </div>
+                        <div className="text-container">
 
-                                    <div className="button-container">
-                                        <Button variant="contained"
-                                                startIcon={<img src={require("../../components/images/journal/brain.png")} 
-                                                alt="Brain for learn more button"/>}
-                                                style={{backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                                                borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'}}
-                                                onClick={() => { setRightScreenMode('Other Goal Mode') }}
-                                                >
-                                                    Learn More
-                                                </Button>
-                                                <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                                                borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
-                                                onClick={() => { addSleepGoal() }}
-                                                >
-                                                    Add to My Goals
-                                        </Button>
-                                    </div>
+                            <div className="eating-goal-image">
+                                <img src={require('../../components/images/journal/pillow_icon.png')} alt="Crossed out candy icon for avoid sugary food"/>
+                            </div>
 
-                                </div>
+                            <div className="selection-container">
+                                <h3 className="eating-goal-header">Get 9 hours of sleep a day</h3>
+                                <p>Getting a good amount of sleep improves focus while lowering stress and risk of serious health problems.</p>
+                            </div>
 
+                        </div>
+
+                        <div className="button-container">
+                            <Button variant="contained"
+                                    startIcon={<img src={require("../../components/images/journal/brain.png")} 
+                                    alt="Brain for learn more button"/>}
+                                    style={{backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                    borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'}}
+                                    onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                    >
+                                        Learn More
+                                    </Button>
+                                    <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                    borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'}}
+                                    onClick={() => { addSleepGoal() }}
+                                    >
+                                        Add to My Goals
+                            </Button>
+                        </div>
+
+                        </div>
+
+                    </div>
+
+                    : rightScreenMode === "Goal Selected Mode" ?
+
+                    <div className="goal-box">
+                        <h4>You've selected a goal. Do your best! If you still want to work on more goals right now, click the Yellow "Goals" tab on the right page.</h4>
                     </div>
 
                     :
@@ -699,18 +716,40 @@ const JournalScreen = () => {
                                 <div className="recommendation-container">
 
                                     <div className="text-container">
-                                        <img className="screentime" src={require('../../components/images/journal/screentime_goals.png')} alt="Eating goals icon"/>
+                                        <img className="screentime" src={require('../../components/images/journal/tablet_icon.png')} alt="Eating goals icon"/>
 
                                         <div className="selection-container">
-                                            <h3>Other Goals</h3>
-                                            <p>Other habits like balancing your screentime and sleep schedule can also improve your health!</p>
+                                            <h3>Screentime</h3>
+                                            <p>Limiting your screentime can improve your focus and make you more productive to reach healthy goals!</p>
                                         </div>
                                     </div>
 
                                     <div className="single-button-container">
                                         <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                                         borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%' }}
-                                        onClick={() => { setRightScreenMode('Other Goal Mode') }}
+                                        onClick={() => { setRightScreenMode('Screentime Goal Mode') }}
+                                        >
+                                            View Goals
+                                        </Button>
+                                    </div>
+
+                                </div>
+
+                                <div className="recommendation-container">
+
+                                    <div className="text-container">
+                                        <img className="sleep" src={require('../../components/images/journal/pillow_icon.png')} alt="Eating goals icon"/>
+
+                                        <div className="selection-container">
+                                            <h3>Sleep</h3>
+                                            <p>Getting more sleep is important to work best and lower risk of major health problems.</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="single-button-container">
+                                        <Button style={{backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                                        borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%' }}
+                                        onClick={() => { setRightScreenMode('Sleep Goal Mode') }}
                                         >
                                             View Goals
                                         </Button>
@@ -763,8 +802,5 @@ const JournalScreen = () => {
 
 export default JournalScreen;
 
-// Set Up Goals
-// Behaviors
-// Monitor
 // look into a database to track the amount of time spent on creating / setting up goals, using website, etc. (Google analytics)
 // timeline, today's date, track when goals are created (using current date)

@@ -58,7 +58,7 @@ const SignUpScreen = () => {
 
     const renderForm = (
         <div className="signup">
-          <form onSubmit={onSubmit}>
+          <form className="signup-form" onSubmit={onSubmit}>
             <div className="input-container">
               <label>Username: </label>
               <input className="input" onChange={(e) => updateForm({name: e.target.value})} type="text" value={form.name} required />
@@ -238,7 +238,7 @@ const SignUpScreen = () => {
   ***REMOVED***;
 
     return (
-        <div className="signup-form">
+        <div>
             <h1 id="welcome">Thanks for joining ProudME!</h1>
             {submitted ? successMessage : renderForm}
         </div>

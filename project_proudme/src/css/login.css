@@ -57,6 +57,7 @@ a:link { color: #8054C9; }
 
 .nav-link {
     color: #8054C9;
+    display: flex;
     margin-left: auto;
     margin-right: auto;
 }

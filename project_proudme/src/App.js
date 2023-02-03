@@ -11,9 +11,6 @@ import ActivityScreen from './screens/journal/activity.js';
 import GalleryScreen from './screens/journal/gallery.js';
 import PetScreen from './screens/pet/pet.js';
 import PEScreen from './screens/pe/pe.js';
-import RecordList from './components/database/recordList';
-import Edit from './components/database/edit';
-import Create from './components/database/create';
 
 import Header from './components/header';
 
@@ -34,9 +31,6 @@ export default function App() {
           <Route path='/gallery' element={<GalleryScreen />} />
           <Route path='/pet' element={<PetScreen />} />
           <Route path='/pe' element={<PEScreen />} />
-          <Route exact path="/db" element={<RecordList />} />
-          <Route path="/db/edit/:id" element={<Edit />} />
-          <Route path="/db/create" element={<Create />} />
         </Routes>
       </HashRouter>
     </div>
