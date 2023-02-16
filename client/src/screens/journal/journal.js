@@ -4,8 +4,8 @@ import '../../css/journal.css';
 import Button from '@material-ui/core/Button';
 import Modal from '@mui/material/Modal';
 import { FormGroup, Switch, FormControlLabel } from '@mui/material';
+import { CSVLink } from 'react-csv';
 
-import { FaQuestionCircle } from 'react-icons/fa';
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 
 const JournalScreen = () => {
@@ -22,13 +22,16 @@ const JournalScreen = () => {
     const [numericalValue, setNumericalValue] = useState(0);
     const [unit, setUnit] = useState('');
     const [description, setDescription] = useState('');
-    const [threshold, setThreshold] = useState('');
     const [goalIsComplete, setGoalIsComplete] = useState(false);
     const [rightScreenMode, setRightScreenMode] = useState('');
-    const [goalArray, setGoalArray] = useState([]);
-    const [goalCount, setGoalCount] = useState(0);
 
+    const [goalArray, setGoalArray] = useState([]);
+    const [progressArray, setProgressArray] = useState([]);
+    const [reflectionArray, setReflectionArray] = useState([]);
+    const [goalCount, setGoalCount] = useState(0);
     const [reflection, setReflection] = useState('');
+
+    const [dataList, setDataList] = useState([]);
 
     const handleOpenGoalModal = () => {
         setOpen(true);
@@ -71,10 +74,6 @@ const JournalScreen = () => {
         setNumericalValue(+e.target.value);
 ***REMOVED***;
 
-    const handleThresholdChange = (e) => {
-        setThreshold(e.target.value);
-***REMOVED***
-
     const handleUnitChange = (e) => {
         setUnit(e.target.value);
 ***REMOVED***
@@ -89,39 +88,39 @@ const JournalScreen = () => {
 
     const handleGoalCountChange = () => {
         setGoalCount(goalCount + 1);
+        setProgressArray( updatedArray => [...updatedArray, 
+            <div className="current-goal">
+                <div className="goal-container">
+
+                    <div className="goal-description">
+                        <h3 className="goal-text">Progress Tracking</h3>
+                        <h6 className="goal-text">You currently have {goalCount + 1} active goals</h6>
+                    </div>
+
+                </div>
+            </div>]);
 ***REMOVED***
 
     const handleReflectionChange = (e) => {
         setReflection(e.target.value);
 ***REMOVED***
 
+    const CSV = () => {
+
+        const headers = [
+            { label: "Goal Details", key: "goalDetails" },
+            { label: "Goal Quantity", key: "goalQuantity" },
+            { label: "Type of Goal", key: "goalType" },
+        ];
+    
+        return (
+            <div>
+                <CSVLink data={dataList} headers={headers} filename='goaldata.csv'>Download Goal Data</CSVLink>
+            </div>
+        )
+***REMOVED***
+
     function addGoal() {
-
-        setGoalArray( updatedArray => [...updatedArray, 
-                                    <div className="current-goal">
-                                        <div className="goal-container">
-
-                                            <div className="goal-description">
-                                                <h3 className="goal-text">{goal}</h3>
-                                                <h6 className="goal-text">{description}</h6>
-                                            </div>
-
-                                            <div className="selection-container">
-
-                                                <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1) } />
-                                                <h2 className="number-text">{numericalValue}</h2>
-                                                <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
-                                            </div>
-
-                                        </div>
-
-                                        <div className="reflect-wrapper">
-                                            <img className="reflect-image" 
-                                                src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon"
-                                                onClick={() => handleOpenReflectModal() } />
-                                            <p style={{fontWeight: 'bold'}}>Reflect</p>
-                                        </div>
-                                    </div>]);
         handleGoalCountChange();                            
 
 ***REMOVED***;
@@ -132,7 +131,7 @@ const JournalScreen = () => {
             <div className="current-goal">
                 <div className="goal-container">
 
-                    <div className="goal-description">
+                    <div className="goal-description" onClick={() => handleOpenGoalModal()}>
                         <h3 className="goal-text">{"Eat 5 or more servings of fruits and/or vegetables"}</h3>
                         <h6 className="goal-text">{"Reach goal increments for servings of fruit (1-5)"}</h6>
                     </div>
@@ -155,6 +154,9 @@ const JournalScreen = () => {
             </div>]);
         handleGoalCountChange();  
         setRightScreenMode("Goal Selected Mode");
+
+        const newData = [...dataList, {"goalDetails": "Eat 5 or more servings of fruits and/or vegetables", "goalQuantity": 5, "goalType": "Eating"}];
+        setDataList(newData);
 
 ***REMOVED***
 
@@ -188,6 +190,9 @@ const JournalScreen = () => {
         handleGoalCountChange();  
         setRightScreenMode("Goal Selected Mode");
 
+        const newData = [...dataList, {"goalDetails": "Get at least 60 minutes of physical activity per day", "goalQuantity": 60, "goalType": "Activity"}];
+        setDataList(newData);
+
 ***REMOVED***
 
     function addScreentimeGoal() {
@@ -219,6 +224,9 @@ const JournalScreen = () => {
             </div>]);
         handleGoalCountChange(); 
         setRightScreenMode("Goal Selected Mode"); 
+
+        const newData = [...dataList, {"goalDetails": "Limit screentime to 2 hours a day", "goalQuantity": 2, "goalType": "Screentime"}];
+        setDataList(newData);
 
 ***REMOVED***
 
@@ -252,7 +260,19 @@ const JournalScreen = () => {
         handleGoalCountChange();  
         setRightScreenMode("Goal Selected Mode");
 
+        const newData = [...dataList, {"goalDetails": "Sleep at least 9 hours a night", "goalQuantity": 9, "goalType": "Sleep"}];
+        setDataList(newData);
+
 ***REMOVED***
+
+    function addReflection() {
+        setReflectionArray( updatedArray => [...updatedArray,
+            <div className="current-goal">
+                {reflection}
+            </div>
+        ]
+        );
+***REMOVED***;
 
     const createGoalModal = () => {
         return (
@@ -263,83 +283,105 @@ const JournalScreen = () => {
                 onClose={handleCloseGoalModal}
             >
                 <div className="modal">
-                    <h2>Creating a New Goal</h2>
-                    <h4>Goal Name</h4>
+                <h2>Edit Your Goal Progress</h2>
+                <h4>Goal Name</h4>
                     <input className="modal-input" type="text" name="goal" onChange={handleGoalChange} value={goal}/>
-                    <h4 className="progress-title">Keep track of your progress with a:</h4>
-
-                    <div className="radio-group">
-                        {booleanSelected ?
-                        <Button style={{backgroundColor: '#AB87FF', marginTop: '4%', borderRadius: '20px', width: '90%', height: '60px',
-                        textTransform: 'none', fontWeight: 'bold', fontSize: '18px', color: 'white'}}
-                        onClick={() => { setBooleanSelected(false); setProgressError(true); }}
-                        >Yes or No</Button> 
-                        :
-                        <Button style={{backgroundColor: '#ECECEC', marginTop: '4%', borderRadius: '20px', width: '90%', height: '60px',
-                        textTransform: 'none', fontWeight: 'bold', fontSize: '18px'}}
-                        onClick={() => { setBooleanSelected(true); setNumberSelected(false); setTimerSelected(false); setProgressError(false); }}
-                        >Yes or No</Button>
-                    ***REMOVED***
-
-                        <FaQuestionCircle className="tip-icon" size={28}/>
-                    </div>
-
-                    <div className="radio-group">
-                        {numberSelected ?
-                        <Button style={{backgroundColor: '#AB87FF', marginTop: '4%', borderRadius: '20px', width: '90%', height: '60px',
-                        textTransform: 'none', fontWeight: 'bold', fontSize: '18px', color: 'white'}}
-                        onClick={() => { setNumberSelected(false); setProgressError(true); }}
-                        >Numeric Value</Button> 
-                        :
-                        <Button style={{backgroundColor: '#ECECEC', marginTop: '4%', borderRadius: '20px', width: '90%', height: '60px',
-                        textTransform: 'none', fontWeight: 'bold', fontSize: '18px'}}
-                        onClick={() => { setNumberSelected(true); setBooleanSelected(false); setTimerSelected(false); setProgressError(false); }}
-                        >Numeric Value</Button>
-                    ***REMOVED***
-
-                        <FaQuestionCircle className="tip-icon" size={28}/>
-                    </div>
-
-                    <div className="radio-group">
-                        {timerSelected ?
-                        <Button style={{backgroundColor: '#AB87FF', marginTop: '4%', borderRadius: '20px', width: '90%', height: '60px',
-                        textTransform: 'none', fontWeight: 'bold', fontSize: '18px', color: 'white'}}
-                        onClick={() => { setTimerSelected(false); setProgressError(true); }}
-                        >Timer</Button> 
-                        :
-                        <Button style={{backgroundColor: '#ECECEC', marginTop: '4%', borderRadius: '20px', width: '90%', height: '60px',
-                        textTransform: 'none', fontWeight: 'bold', fontSize: '18px'}}
-                        onClick={() => { setTimerSelected(true); setBooleanSelected(false); setNumberSelected(false); setProgressError(false); }}
-                        >Timer</Button>
-                    ***REMOVED***
-
-                        <FaQuestionCircle className="tip-icon" size={28}/>
-                    </div> 
-                    
-                    {progressError &&
-                    <div className="progress-error">
-                        <h4>Please select a progress tracking method before moving on!</h4>
-                    </div>}
-
-                    <div className="nav-options">
-                        <Button style={{backgroundColor: '#D9D9D9', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                        borderRadius: '20px'}}
-                        onClick={() => { handleCloseGoalModal(); setBooleanSelected(false); setNumberSelected(false); setTimerSelected(false); }}
-                        >
-                            Cancel
-                        </Button>
-
-                        <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                        borderRadius: '20px'}}
-                        onClick={() => { handleOpenDefineModal(); }}
-                        >
-                            Next Step
-                        </Button>
-                    </div>
-
+                <h4>How much have you progressed towards your goal this week?</h4>
+                    <input className="modal-input" type="text" name="goal" onChange={handleGoalChange} value={goal}/>
+                <Button style={{backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                    borderRadius: '20px'}}
+                    onClick={() => { handleCloseDefineModal(); addGoal(); }}
+                    >
+                        Log Progress
+                </Button>
                 </div>
             </Modal>
         );
+    //         <Modal
+    //             aria-labelledby="goal-modal"
+    //             aria-describedby="modal-to-create-new-goal"
+    //             open={open}
+    //             onClose={handleCloseGoalModal}
+    //         >
+    //             <div className="modal">
+    //                 <h2>Edit Your Goal Progress</h2>
+    //                 <h4>Goal Name</h4>
+    //                 <input className="modal-input" type="text" name="goal" onChange={handleGoalChange} value={goal}/>
+    //                 <h4 className="progress-title">Keep track of your progress with a:</h4>
+
+    //                 <div className="radio-group">
+    //                     {booleanSelected ?
+    //                     <Button style={{backgroundColor: '#AB87FF', marginTop: '4%', borderRadius: '20px', width: '90%', height: '60px',
+    //                     textTransform: 'none', fontWeight: 'bold', fontSize: '18px', color: 'white'}}
+    //                     onClick={() => { setBooleanSelected(false); setProgressError(true); }}
+    //                     >Yes or No</Button> 
+    //                     :
+    //                     <Button style={{backgroundColor: '#ECECEC', marginTop: '4%', borderRadius: '20px', width: '90%', height: '60px',
+    //                     textTransform: 'none', fontWeight: 'bold', fontSize: '18px'}}
+    //                     onClick={() => { setBooleanSelected(true); setNumberSelected(false); setTimerSelected(false); setProgressError(false); }}
+    //                     >Yes or No</Button>
+    //                 ***REMOVED***
+
+    //                     <FaQuestionCircle className="tip-icon" size={28}/>
+    //                 </div>
+
+    //                 <div className="radio-group">
+    //                     {numberSelected ?
+    //                     <Button style={{backgroundColor: '#AB87FF', marginTop: '4%', borderRadius: '20px', width: '90%', height: '60px',
+    //                     textTransform: 'none', fontWeight: 'bold', fontSize: '18px', color: 'white'}}
+    //                     onClick={() => { setNumberSelected(false); setProgressError(true); }}
+    //                     >Numeric Value</Button> 
+    //                     :
+    //                     <Button style={{backgroundColor: '#ECECEC', marginTop: '4%', borderRadius: '20px', width: '90%', height: '60px',
+    //                     textTransform: 'none', fontWeight: 'bold', fontSize: '18px'}}
+    //                     onClick={() => { setNumberSelected(true); setBooleanSelected(false); setTimerSelected(false); setProgressError(false); }}
+    //                     >Numeric Value</Button>
+    //                 ***REMOVED***
+
+    //                     <FaQuestionCircle className="tip-icon" size={28}/>
+    //                 </div>
+
+    //                 <div className="radio-group">
+    //                     {timerSelected ?
+    //                     <Button style={{backgroundColor: '#AB87FF', marginTop: '4%', borderRadius: '20px', width: '90%', height: '60px',
+    //                     textTransform: 'none', fontWeight: 'bold', fontSize: '18px', color: 'white'}}
+    //                     onClick={() => { setTimerSelected(false); setProgressError(true); }}
+    //                     >Timer</Button> 
+    //                     :
+    //                     <Button style={{backgroundColor: '#ECECEC', marginTop: '4%', borderRadius: '20px', width: '90%', height: '60px',
+    //                     textTransform: 'none', fontWeight: 'bold', fontSize: '18px'}}
+    //                     onClick={() => { setTimerSelected(true); setBooleanSelected(false); setNumberSelected(false); setProgressError(false); }}
+    //                     >Timer</Button>
+    //                 ***REMOVED***
+
+    //                     <FaQuestionCircle className="tip-icon" size={28}/>
+    //                 </div> 
+                    
+    //                 {progressError &&
+    //                 <div className="progress-error">
+    //                     <h4>Please select a progress tracking method before moving on!</h4>
+    //                 </div>}
+
+    //                 <div className="nav-options">
+    //                     <Button style={{backgroundColor: '#D9D9D9', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+    //                     borderRadius: '20px'}}
+    //                     onClick={() => { handleCloseGoalModal(); setBooleanSelected(false); setNumberSelected(false); setTimerSelected(false); }}
+    //                     >
+    //                         Cancel
+    //                     </Button>
+
+    //                     <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+    //                     borderRadius: '20px'}}
+    //                     onClick={() => { handleOpenDefineModal(); }}
+    //                     >
+    //                         Next Step
+    //                     </Button>
+    //                 </div>
+
+    //             </div>
+    //         </Modal>
+    //     );
+    // };
 ***REMOVED***;
 
     function defineGoalModal() {
@@ -381,7 +423,7 @@ const JournalScreen = () => {
                     <h4>Goal Name</h4>
                     <input className="modal-input" type="text" name="goal" placeholder="Goal Name" onChange={handleGoalChange} value={goal}/>
                     <div className="goal-selection">
-                        <select className="numerical-selection" id="numerical-selection" name="numerical-select" defaultValue={"at_least"} onChange={e => handleThresholdChange(e)}>
+                        <select className="numerical-selection" id="numerical-selection" name="numerical-select" defaultValue={"at_least"} >
                             <option value={"at_least"}>At least</option>
                             <option value={"at_most"}>At most</option>
                             <option value={"equals"}>Equals</option>
@@ -403,7 +445,7 @@ const JournalScreen = () => {
                     <h4>Goal Name</h4>
                     <input className="modal-input" type="text" name="goal" placeholder="Goal Name" onChange={handleGoalChange} value={goal}/>
                     <div className="goal-selection">
-                        <select className="numerical-selection" id="numerical-selection" name="numerical-select" defaultValue={"at_least"} onChange={e => handleThresholdChange(e)}>
+                        <select className="numerical-selection" id="numerical-selection" name="numerical-select" defaultValue={"at_least"} >
                             <option value={"at_least"}>At least</option>
                             <option value={"at_most"}>At most</option>
                             <option value={"equals"}>Equals</option>
@@ -457,6 +499,7 @@ const JournalScreen = () => {
                     <h4>Give some thoughts on your goal progress so far.</h4>
                     <input className="modal-input" type="text" name="reflection" placeholder="Reflection thoughts" 
                     onChange={handleReflectionChange} value={reflection}/>
+                    {reflectionArray}
                 </div>
                             
                 <div className="nav-options">
@@ -469,9 +512,9 @@ const JournalScreen = () => {
 
                         <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                         borderRadius: '20px'}}
-                        onClick={() => { handleCloseReflectModal(); }}
+                        onClick={() => { handleCloseReflectModal(); addReflection(); }}
                         >
-                            Create Goal
+                            Reflect
                         </Button>
                 </div>
 
@@ -487,10 +530,8 @@ const JournalScreen = () => {
             <div className="journalWrapper">
                 <img className="journalCover" src={require('../../components/images/journal/journal_cover.png')}
                 alt="Journal cover screen wrapper" />
-                <img className="achievements-tab" src={require('../../components/images/journal/achievements_tab.png')} 
+                <img onClick={() => setRightScreenMode("Progress Mode")} className="achievements-tab" src={require('../../components/images/journal/achievements_tab.png')} 
                     alt="Achievements bookmark tab" />
-                <img className="reflection-tab" src={require('../../components/images/journal/reflection_tab.png')} 
-                    alt="Reflection bookmark tab" />
                 <img onClick={() => setRightScreenMode("")} className="goals-tab" src={require('../../components/images/journal/goals_tab.png')} 
                     alt="Goals bookmark tab" />
                 <img className="gallery-tab" src={require('../../components/images/journal/gallery_tab.png')} 
@@ -662,8 +703,21 @@ const JournalScreen = () => {
                     : rightScreenMode === "Goal Selected Mode" ?
 
                     <div className="goal-box">
-                        <h4>You've selected a goal. Do your best! If you still want to work on more goals right now, click the Yellow "Goals" tab on the right page.</h4>
+                        <h4>You've selected a goal. Do your best! If you still want to work on more goals right now, click the yellow "Goals" tab on the right page.</h4>
                     </div>
+
+                    : rightScreenMode === "Progress Mode" ?
+
+                    <div className="goal-box">
+                        <h1>Progress Checking Mode</h1>
+                            { goalCount === 0 ?
+                            <h4>You're not currently working on any goals. Add some from the goal page!</h4>
+                            : goalCount === 1 ?
+                            <h4>You're currently working on 1 goal.</h4>
+                            :
+                            <h4>You're currently working on {goalCount} goals.</h4>
+                        ***REMOVED***
+                    </div>  
 
                     :
 
@@ -675,7 +729,7 @@ const JournalScreen = () => {
                                         <img className="eating-goal-image" src={require('../../components/images/journal/eating_goals.png')} alt="Eating goals icon"/>
 
                                         <div className="selection-container">
-                                            <h3>Eating + Drinking</h3>
+                                            <h3>Eating</h3>
                                             <p>Changing up eating habits can improve your health. See some recommended diet goals here!</p>
                                         </div>
                                     </div>
@@ -685,7 +739,7 @@ const JournalScreen = () => {
                                         borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%' }}
                                         onClick={() => { setRightScreenMode('Eating Goal Mode') }}
                                         >
-                                            View Goals
+                                            Set Goals
                                         </Button>
                                     </div>
 
@@ -707,7 +761,7 @@ const JournalScreen = () => {
                                         borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%' }}
                                         onClick={() => { setRightScreenMode('Activity Goal Mode') }}
                                         >
-                                            View Goals
+                                            Set Goals
                                         </Button>
                                     </div>
 
@@ -729,7 +783,7 @@ const JournalScreen = () => {
                                         borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%' }}
                                         onClick={() => { setRightScreenMode('Screentime Goal Mode') }}
                                         >
-                                            View Goals
+                                            Set Goals
                                         </Button>
                                     </div>
 
@@ -751,7 +805,7 @@ const JournalScreen = () => {
                                         borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%' }}
                                         onClick={() => { setRightScreenMode('Sleep Goal Mode') }}
                                         >
-                                            View Goals
+                                            Set Goals
                                         </Button>
                                     </div>
 
@@ -780,9 +834,11 @@ const JournalScreen = () => {
                                 <Button style={{marginTop: '5%', backgroundColor: '#ADF083', borderRadius: '20px', width: '70%',
                                 height: '60px', textTransform: 'none', fontSize: '20px', fontWeight: 'bold'}}
                                 onClick = {() => handleOpenGoalModal()}
-                                >Edit a Goal</Button>
+                                >Update Progress</Button>
                                 </div>
                         ***REMOVED***
+
+                            <CSV />
                             
                             {createGoalModal()}
                             {defineGoalModal()}
@@ -802,5 +858,6 @@ const JournalScreen = () => {
 
 export default JournalScreen;
 
-// look into a database to track the amount of time spent on creating / setting up goals, using website, etc. (Google analytics)
-// timeline, today's date, track when goals are created (using current date)
+// numerical rating for reflection
+// percentage of progress from survey questions (multiple modals)
+// incorporate AI for reflections on virtual coach

@@ -6,8 +6,6 @@ import LoginScreen from './screens/login.js';
 import HomeScreen from './screens/home.js';
 import SignUpScreen from './screens/signup.js';
 import JournalScreen from './screens/journal/journal.js';
-import EatingScreen from './screens/journal/eating.js';
-import ActivityScreen from './screens/journal/activity.js';
 import GalleryScreen from './screens/journal/gallery.js';
 import PetScreen from './screens/pet/pet.js';
 import PEScreen from './screens/pe/pe.js';
@@ -28,8 +26,6 @@ class App extends Component {
           <Route path='/signup' element={<SignUpScreen />} />
           <Route path='/home' element={<HomeScreen />} />
           <Route path='/journal' element={<JournalScreen />} />
-          <Route path='/eating' element={<EatingScreen />} />
-          <Route path='/activity' element={<ActivityScreen />} />
           <Route path='/gallery' element={<GalleryScreen />} />
           <Route path='/pet' element={<PetScreen />} />
           <Route path='/pe' element={<PEScreen />} />
@@ -42,7 +38,4 @@ class App extends Component {
 
 export default App;
 
-// remove reflection tab on left pages
-// set goals instead of view goals
-// just eating, no drinking.
 // want users to be able to input numbers and track their progress

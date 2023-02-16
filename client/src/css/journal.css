@@ -315,6 +315,7 @@
 .text-container {
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
 .button-container {
@@ -368,5 +369,9 @@
 }
 
 .gallery-tab:hover {
+    cursor: pointer;
+}
+
+.goal-description {
     cursor: pointer;
 }
