@@ -4,7 +4,7 @@
 
 .journal {
     margin-top: 1%;
-    margin-bottom: 10%;
+    padding-bottom: 5%;
 }
 
 .journalWrapper {
@@ -374,4 +374,9 @@
 
 .goal-description {
     cursor: pointer;
+}
+
+.slider-modal {
+    padding: 20px;
+    margin: 50px;
 }

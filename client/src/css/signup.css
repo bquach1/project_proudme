@@ -93,3 +93,7 @@ a:active { text-decoration: none; color: #8054C9;}
 .nav-link {
     color: #8054C9;
 }
+
+.signup-page {
+    padding-bottom: 5%;
+}

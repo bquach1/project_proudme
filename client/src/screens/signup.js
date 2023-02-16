@@ -238,7 +238,7 @@ const SignUpScreen = () => {
   ***REMOVED***;
 
     return (
-        <div>
+        <div className="signup-page">
             <h1 id="welcome">Thanks for joining ProudME!</h1>
             {submitted ? successMessage : renderForm}
         </div>

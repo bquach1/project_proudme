@@ -3,7 +3,7 @@ import '../../css/journal.css';
 
 import Button from '@material-ui/core/Button';
 import Modal from '@mui/material/Modal';
-import { FormGroup, Switch, FormControlLabel } from '@mui/material';
+import { FormGroup, Box, Switch, FormControlLabel, Slider } from '@mui/material';
 import { CSVLink } from 'react-csv';
 
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
@@ -119,11 +119,6 @@ const JournalScreen = () => {
             </div>
         )
 ***REMOVED***
-
-    function addGoal() {
-        handleGoalCountChange();                            
-
-***REMOVED***;
 
     function addEatingGoal() {
 
@@ -290,7 +285,7 @@ const JournalScreen = () => {
                     <input className="modal-input" type="text" name="goal" onChange={handleGoalChange} value={goal}/>
                 <Button style={{backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                     borderRadius: '20px'}}
-                    onClick={() => { handleCloseDefineModal(); addGoal(); }}
+                    onClick={() => { handleCloseDefineModal(); }}
                     >
                         Log Progress
                 </Button>
@@ -471,7 +466,7 @@ const JournalScreen = () => {
 
                         <Button style={{backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                         borderRadius: '20px'}}
-                        onClick={() => { handleCloseDefineModal(); addGoal(); }}
+                        onClick={() => { handleCloseDefineModal(); }}
                         >
                             Create Goal
                         </Button>
@@ -496,10 +491,19 @@ const JournalScreen = () => {
                 <div className="modal">
                 <div className="inside-modal">
                     <h2>Reflect on Your Goal</h2>
-                    <h4>Give some thoughts on your goal progress so far.</h4>
-                    <input className="modal-input" type="text" name="reflection" placeholder="Reflection thoughts" 
+                    <h4>Rate progress towards your goal this week 1-10. 1 being the lowest (no progress), 10 being the highest (surpassed goal and feel great about it).</h4>
+                    {/* <input className="modal-input" type="text" name="reflection" placeholder="Reflection thoughts" 
                     onChange={handleReflectionChange} value={reflection}/>
-                    {reflectionArray}
+                    {reflectionArray} */}
+                    <Slider
+                        aria-label="Reflection Meter"
+                        defaultValue={1}
+                        valueLabelDisplay="auto"
+                        step={1}
+                        marks
+                        min={1}
+                        max={10}
+                    />
                 </div>
                             
                 <div className="nav-options">
@@ -858,6 +862,5 @@ const JournalScreen = () => {
 
 export default JournalScreen;
 
-// numerical rating for reflection
 // percentage of progress from survey questions (multiple modals)
 // incorporate AI for reflections on virtual coach
