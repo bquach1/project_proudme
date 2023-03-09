@@ -32,6 +32,10 @@ const Header = () => {
                     style={{backgroundColor: "#AB87FF", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
                     onClick={() => navigate('/pe')}
                     >ProudME PE</Button>
+                <Button 
+                    style={{backgroundColor: "#AB87FF", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
+                    onClick={() => navigate('/csv')}
+                    >CSV Reader</Button>
             </div>
 
             <div className="right-nav">

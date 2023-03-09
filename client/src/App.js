@@ -9,6 +9,7 @@ import JournalScreen from './screens/journal/journal.js';
 import GalleryScreen from './screens/journal/gallery.js';
 import PetScreen from './screens/pet/pet.js';
 import PEScreen from './screens/pe/pe.js';
+import CSVScreen from './screens/journal/csv.js';
 
 import Header from './components/header';
 
@@ -29,6 +30,7 @@ class App extends Component {
           <Route path='/gallery' element={<GalleryScreen />} />
           <Route path='/pet' element={<PetScreen />} />
           <Route path='/pe' element={<PEScreen />} />
+          <Route path='/csv' element={<CSVScreen />} />
         </Routes>
       </HashRouter>
     </div>
