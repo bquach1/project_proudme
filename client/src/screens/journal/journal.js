@@ -24,12 +24,15 @@ const JournalScreen = () => {
     const [description, setDescription] = useState('');
     const [goalIsComplete, setGoalIsComplete] = useState(false);
     const [rightScreenMode, setRightScreenMode] = useState('');
+    const [reflectionPage, setReflectionPage] = useState('Default');
 
     const [goalArray, setGoalArray] = useState([]);
     const [progressArray, setProgressArray] = useState([]);
     const [reflectionArray, setReflectionArray] = useState([]);
     const [goalCount, setGoalCount] = useState(0);
     const [reflection, setReflection] = useState('');
+    const reflectionValue = 0;
+    const [reflectionMeter, setReflectionMeter] = useState('');
 
     const [dataList, setDataList] = useState([]);
 
@@ -409,13 +412,45 @@ const JournalScreen = () => {
                 open={reflectOpen}
                 onClose={handleCloseReflectModal}
             >
+
+                { reflectionPage === 'Text' ?
+                <div className="modal">
+                    <div className="inside-modal">
+                        <h2>Reflect on Your Goal</h2>
+                        <h4>Feel free to type some insights into your goal here; it will be recorded for your own tracking.</h4>
+                        <input className="modal-input" type="text" name="reflection" placeholder="Reflection thoughts" 
+                            onChange={handleReflectionChange} value={reflection}/>
+                            {reflectionArray}
+                    </div>
+
+                    <div className="nav-options">
+                        <Button style={{
+                            backgroundColor: '#D9D9D9', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                            borderRadius: '20px'
+                    ***REMOVED***}
+                            onClick={() => { setReflectionPage(''); }}
+                        >
+                            Back
+                        </Button>
+
+                        <Button style={{
+                            backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                            borderRadius: '20px'
+                    ***REMOVED***}
+                            onClick={() => { handleCloseReflectModal(); addReflection(); }}
+                        >
+                            Reflect
+                        </Button>
+                    </div>
+
+                </div>
+
+                :
+
                 <div className="modal">
                     <div className="inside-modal">
                         <h2>Reflect on Your Goal</h2>
                         <h4>Rate progress towards your goal this week 1-10. 1 being the lowest (no progress), 10 being the highest (surpassed goal and feel great about it).</h4>
-                        {/* <input className="modal-input" type="text" name="reflection" placeholder="Reflection thoughts" 
-                    onChange={handleReflectionChange} value={reflection}/>
-                    {reflectionArray} */}
                         <Slider
                             aria-label="Reflection Meter"
                             defaultValue={1}
@@ -424,6 +459,7 @@ const JournalScreen = () => {
                             marks
                             min={1}
                             max={10}
+                            onChange={(e) => setReflectionMeter(e.target.value)}
                         />
                     </div>
 
@@ -441,13 +477,15 @@ const JournalScreen = () => {
                             backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                             borderRadius: '20px'
                     ***REMOVED***}
-                            onClick={() => { handleCloseReflectModal(); addReflection(); }}
+                            onClick={() => { setReflectionPage('Text') }}
                         >
-                            Reflect
+                            Next
                         </Button>
                     </div>
 
                 </div>
+
+            ***REMOVED***
 
             </Modal>
         );
@@ -783,7 +821,11 @@ const JournalScreen = () => {
                             <div className="goal-text">You don't have any goals added yet. Add some recommended behaviors from the left page to start!</div>
                             :
                             <div>
-                                {goalArray}
+                                {goalArray.map((goal, index) =>
+                                    <div>
+                                        {goal}
+                                    </div>
+                                )}
                             </div>
                     ***REMOVED***
 
