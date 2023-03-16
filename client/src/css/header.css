@@ -1,6 +1,6 @@
 nav {
     height: 80px;
-    background-color: #B4E1FF;    
+    background-color: #2C4F74;    
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -33,7 +33,7 @@ nav {
 
 .nav-link {
     margin: 2%;
-    color: #2E6AA1;
+    color: #B2C5CB;
 }
 
 .nav-link:hover {
@@ -42,9 +42,9 @@ nav {
 
 .nav-text {
     margin: 2%;
-    color: #2E6AA1;
+    color: #B2C5CB;
 }
 
 a {
-    color: #2E6AA1;
+    color: #B2C5CB;
 }

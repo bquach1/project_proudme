@@ -10,30 +10,29 @@ const Header = () => {
 
     return (
         <nav>
-            
             <div className="left-nav">
                 <Button 
-                    style={{backgroundColor: "#B18EEB", padding: "10px 15px 10px 15px", borderRadius: "50px", color: "white", fontWeight: "bold", fontSize: "20px"}}
+                    style={{backgroundColor: "#B2C5CB", padding: "10px 15px 10px 15px", borderRadius: "50px", color: "white", fontWeight: "bold", fontSize: "20px"}}
                     onClick={() => navigate('/home')}
                     >PROUDME</Button>
                 <Button 
-                    style={{backgroundColor: "#FFACE4", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
+                    style={{backgroundColor: "transparent", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
                     onClick={() => navigate('/pet')}
                     >My Pet</Button>
                 <Button 
-                    style={{backgroundColor: "#FF9770", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
+                    style={{backgroundColor: "transparent", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
                     onClick={() => navigate('/journal')}
                     >My Journal</Button>
                 <Button 
-                    style={{backgroundColor: "#94E065", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
+                    style={{backgroundColor: "transparent", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
                     onClick={() => navigate('/pet')}
                     >Pet Store</Button>
                 <Button 
-                    style={{backgroundColor: "#AB87FF", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
+                    style={{backgroundColor: "transparent", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
                     onClick={() => navigate('/pe')}
                     >ProudME PE</Button>
                 <Button 
-                    style={{backgroundColor: "#AB87FF", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
+                    style={{backgroundColor: "transparent", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
                     onClick={() => navigate('/csv')}
                     >CSV Reader</Button>
             </div>
@@ -43,7 +42,6 @@ const Header = () => {
                 <div className="nav-text">|</div>
                 <p className="nav-link" onClick={() => navigate('/pet')}>For Grown-Ups</p>
             </div>
-
         </nav>
     );
 }

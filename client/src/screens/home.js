@@ -22,8 +22,8 @@ const HomeScreen = () => {
                 <a className="click-icons" onClick={() => navigate('/pet')}>
                     <img className="miniGamesIcon" src={require('../components/images/home/mini_games_icon.png')} />
                 </a>
-                <a className="click-icons" onClick={() => navigate('/pet')}>
-                    <img className="learnMoreIcon" src={require('../components/images/home/learn_more_icon.png')} />
+                <a className="click-icons" onClick={() => navigate('/pe')}>
+                    <img className="peIcon" src={require('../components/images/home/proudme_pe_icon.png')} />
                 </a>
                 <a className="click-icons" onClick={() => navigate('/pet')}>
                     <img className="petStoreIcon" src={require('../components/images/home/pet_store_icon.png')} />
