@@ -3,7 +3,7 @@ import '../../css/journal.css';
 
 import Button from '@material-ui/core/Button';
 import Modal from '@mui/material/Modal';
-import { FormGroup, Box, Switch, FormControlLabel, Slider } from '@mui/material';
+import { Slider } from '@mui/material';
 import { CSVLink } from 'react-csv';
 
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
@@ -11,23 +11,13 @@ import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 const JournalScreen = () => {
 
   const [open, setOpen] = useState(false);
-  const [defineOpen, setDefineOpen] = useState(false);
   const [reflectOpen, setReflectOpen] = useState(false);
-  const [progressError, setProgressError] = useState(false);
-  const [booleanSelected, setBooleanSelected] = useState(false);
-  const [numberSelected, setNumberSelected] = useState(false);
-  const [timerSelected, setTimerSelected] = useState(false);
 
   const [goal, setGoal] = useState('');
-  const [numericalValue, setNumericalValue] = useState(0);
-  const [unit, setUnit] = useState('');
-  const [description, setDescription] = useState('');
-  const [goalIsComplete, setGoalIsComplete] = useState(false);
   const [rightScreenMode, setRightScreenMode] = useState('');
   const [reflectionPage, setReflectionPage] = useState('Default');
 
   const [goalArray, setGoalArray] = useState([]);
-  const [progressArray, setProgressArray] = useState([]);
   const [reflectionArray, setReflectionArray] = useState([]);
   const [goalCount, setGoalCount] = useState(0);
   const [reflection, setReflection] = useState('');
@@ -44,22 +34,6 @@ const JournalScreen = () => {
     setOpen(false);
 ***REMOVED***;
 
-  const handleOpenDefineModal = () => {
-    if (booleanSelected || numberSelected || timerSelected) {
-      setDefineOpen(true);
-      setProgressError(false);
-      handleCloseGoalModal();
-***REMOVED***
-    else {
-      setDefineOpen(false);
-      setProgressError(true);
-***REMOVED***
-***REMOVED***;
-
-  const handleCloseDefineModal = () => {
-    setDefineOpen(false);
-***REMOVED***;
-
   const handleOpenReflectModal = () => {
     setReflectOpen(true);
 ***REMOVED***;
@@ -72,36 +46,8 @@ const JournalScreen = () => {
     setGoal(e.target.value);
 ***REMOVED***;
 
-  const handleNumericalChange = (e) => {
-    e.persist();
-    setNumericalValue(+e.target.value);
-***REMOVED***;
-
-  const handleUnitChange = (e) => {
-    setUnit(e.target.value);
-***REMOVED***
-
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value);
-***REMOVED***;
-
-  const handleGoalIsCompleteChange = () => {
-    setGoalIsComplete(!goalIsComplete);
-***REMOVED***;
-
   const handleGoalCountChange = () => {
     setGoalCount(goalCount + 1);
-    setProgressArray(updatedArray => [...updatedArray,
-    <div className="current-goal">
-      <div className="goal-container">
-
-        <div className="goal-description">
-          <h3 className="goal-text">Progress Tracking</h3>
-          <h6 className="goal-text">You currently have {goalCount + 1} active goals</h6>
-        </div>
-
-      </div>
-    </div>]);
 ***REMOVED***
 
   const handleReflectionChange = (e) => {
@@ -125,41 +71,34 @@ const JournalScreen = () => {
 
   function updateGoalValue(id, newQuantity) {
     setGoalArray(prevGoals =>
-        prevGoals.map(goal => {
+      prevGoals.map(goal => {
         if (goal.id === id) {
-          return { ...goal, goal: newQuantity };
+          return { ...goal, goalValue: newQuantity };
     ***REMOVED***
         return goal;
   ***REMOVED***)
     );
-    console.log(`Quantity of item ${id} updated to ${newQuantity}`);
+***REMOVED***
+
+  function updateReflectionValue(id, newReflectionValue) {
+    setGoalArray(prevGoals =>
+      prevGoals.map(goal => {
+        if (goal.id === id) {
+          return { ...goal, reflectionValue: newReflectionValue };
+    ***REMOVED***
+        return goal;
+  ***REMOVED***)
+    );
 ***REMOVED***
 
   function addEatingGoal() {
-
-    var goalValue = 5;
-
     const newGoal = {
-    id: goalCount,
-    goalValue: goalValue,
-    div: 
-    <div className="current-goal">
-      <div className="goal-container">
-
-        <div className="goal-description" onClick={() => handleOpenGoalModal()}>
-          <h3 className="goal-text">{"Eat 5 or more servings of fruits and/or vegetables"}</h3>
-          <h6 className="goal-text">{"Reach goal increments for servings of fruit (1-5)"}</h6>
-        </div>
-
-      </div>
-
-      <div className="reflect-wrapper">
-        <img className="reflect-image"
-          src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon"
-          onClick={() => handleOpenReflectModal()} />
-        <p style={{ fontWeight: 'bold' }}>Reflect</p>
-      </div>
-    </div>,
+      id: goalCount,
+      goalValue: 5,
+      divInfo1: "Eat 5 or more servings of fruits and/or vegetables",
+      divInfo2: "Reach target increments for servings of fruit (1-5).",
+      reflection: "",
+      reflectionValue: 0
 ***REMOVED***
 
     setGoalArray([...goalArray, newGoal]);
@@ -171,29 +110,16 @@ const JournalScreen = () => {
 ***REMOVED***
 
   function addActivityGoal() {
+    const newGoal = {
+      id: goalCount,
+      goalValue: 60,
+      divInfo1: "Get at least 60 minutes of physical activity per day",
+      divInfo2: "Do exercises like running or playing sports for at least an hour a day.",
+      reflection: "",
+      reflectionValue: 0
+***REMOVED***
 
-    setGoalArray(updatedArray => [...updatedArray,
-    <div className="current-goal">
-      <div className="goal-container">
-        <div className="goal-description">
-          <h3 className="goal-text">{"Get at least 60 minutes of physical activity per day"}</h3>
-          <h6 className="goal-text">{"Do exercises like running or playing sports for at least an hour a day."}</h6>
-        </div>
-
-        <div className="selection-container">
-          <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1)} />
-          <h2 className="number-text">{numericalValue}</h2>
-          <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
-        </div>
-      </div>
-
-      <div className="reflect-wrapper">
-        <img className="reflect-image"
-          src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon"
-          onClick={() => handleOpenReflectModal()} />
-        <p style={{ fontWeight: 'bold' }}>Reflect</p>
-      </div>
-    </div>]);
+    setGoalArray([...goalArray, newGoal]);
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
@@ -202,29 +128,16 @@ const JournalScreen = () => {
 ***REMOVED***
 
   function addScreentimeGoal() {
-    setGoalArray(updatedArray => [...updatedArray,
-    <div className="current-goal">
-      <div className="goal-container">
-        <div className="goal-description">
-          <h3 className="goal-text">{"Limit screentime to 2 hours a day"}</h3>
-          <h6 className="goal-text">{"Use devices like phones, laptops, and TV's less."}</h6>
-        </div>
+    const newGoal = {
+      id: goalCount,
+      goalValue: 2,
+      divInfo1: "Limit screentime to 2 hours a day",
+      divInfo2: "Use devices like phones, laptops, and TV's less.",
+      reflection: "",
+      reflectionValue: 0
+***REMOVED***
 
-        <div className="selection-container">
-          <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1)} />
-          <h2 className="number-text">{numericalValue}</h2>
-          <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
-        </div>
-      </div>
-
-      <div className="reflect-wrapper">
-        <img className="reflect-image"
-          src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon"
-          onClick={() => handleOpenReflectModal()} />
-        <p style={{ fontWeight: 'bold' }}>Reflect</p>
-      </div>
-    </div>
-    ]);
+    setGoalArray([...goalArray, newGoal]);
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
@@ -233,28 +146,16 @@ const JournalScreen = () => {
 ***REMOVED***
 
   function addSleepGoal() {
-    setGoalArray(updatedArray => [...updatedArray,
-    <div className="current-goal">
-      <div className="goal-container">
-        <div className="goal-description">
-          <h3 className="goal-text">{"Sleep at least 9 hours a night"}</h3>
-          <h6 className="goal-text">{"Get anywhere from 9-11 hours of sleep a night to feel the best."}</h6>
-        </div>
+    const newGoal = {
+      id: goalCount,
+      goalValue: 9,
+      divInfo1: "Sleep at least 9 hours a night",
+      divInfo2: "Get anywhere from 9-11 hours of sleep a night to feel the best.",
+      reflection: "",
+      reflectionValue: 0
+***REMOVED***
 
-        <div className="selection-container">
-          <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1)} />
-          <h2 className="number-text">{numericalValue}</h2>
-          <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
-        </div>
-      </div>
-
-      <div className="reflect-wrapper">
-        <img className="reflect-image"
-          src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon"
-          onClick={() => handleOpenReflectModal()} />
-        <p style={{ fontWeight: 'bold' }}>Reflect</p>
-      </div>
-    </div>]);
+    setGoalArray([...goalArray, newGoal]);
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
@@ -288,7 +189,7 @@ const JournalScreen = () => {
             backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
             borderRadius: '20px'
       ***REMOVED***}
-            onClick={() => { handleCloseDefineModal(); }}
+            onClick={() => { console.log("work") }}
           >
             Log Progress
           </Button>
@@ -566,21 +467,33 @@ const JournalScreen = () => {
               <div className="goal-text">You don't have any goals added yet. Add some recommended behaviors from the left page to start!</div>
               :
               <div>
-                {goalArray.map((goal, index) => (
-                    <div key={goal.id}>
-                        {goal.div}
-                        <div className="selection-container">
+                {goalArray.map((goal) => (
+                  <div className="current-goal" key={goal.id}>
+                    <div className="goal-container">
+                      <div className="goal-description" onClick={() => handleOpenGoalModal()}>
+                        <h3 className="goal-text">{goal.divInfo1}</h3>
+                        <h6 className="goal-text">{goal.divInfo2}</h6>
+                      </div>
+
+                      <div className="selection-container">
                         <IoIosArrowUp id="upIcon" onClick={() => updateGoalValue(goal.id, goal.goalValue + 1)} />
                         <h2 className="number-text">{goal.goalValue}</h2>
                         <IoIosArrowDown id="downIcon" onClick={() => updateGoalValue(goal.id, goal.goalValue - 1)} />
-                        </div>
-                    </div> 
-            ))}
+                      </div>
+                    </div>
+
+                    <div className="reflect-wrapper">
+                      <img className="reflect-image"
+                        src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon"
+                        onClick={() => handleOpenReflectModal()} />
+                      <p style={{ fontWeight: 'bold' }}>Reflect</p>
+                    </div>
+                  </div>
+                ))}
               </div>
         ***REMOVED***
 
             <CSV />
-
             {createGoalModal()}
             {createReflectModal()}
           </div>
@@ -602,4 +515,3 @@ export default JournalScreen;
 // incorporate AI for reflections on virtual coach
 // incorporate progress button instead of update progress at the bottom
 // check during morning, day
-// click on up/down arrow icons to change quantity values 
