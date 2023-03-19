@@ -123,22 +123,32 @@ const JournalScreen = () => {
     )
 ***REMOVED***
 
+  function updateGoalValue(id, newQuantity) {
+    setGoalArray(prevGoals =>
+        prevGoals.map(goal => {
+        if (goal.id === id) {
+          return { ...goal, goal: newQuantity };
+    ***REMOVED***
+        return goal;
+  ***REMOVED***)
+    );
+    console.log(`Quantity of item ${id} updated to ${newQuantity}`);
+***REMOVED***
+
   function addEatingGoal() {
 
-    setGoalArray(updatedArray => [...updatedArray,
+    var goalValue = 5;
+
+    const newGoal = {
+    id: goalCount,
+    goalValue: goalValue,
+    div: 
     <div className="current-goal">
       <div className="goal-container">
 
         <div className="goal-description" onClick={() => handleOpenGoalModal()}>
           <h3 className="goal-text">{"Eat 5 or more servings of fruits and/or vegetables"}</h3>
           <h6 className="goal-text">{"Reach goal increments for servings of fruit (1-5)"}</h6>
-        </div>
-
-        <div className="selection-container">
-
-          <IoIosArrowUp id="upIcon" onClick={() => setNumericalValue(numericalValue + 1)} />
-          <h2 className="number-text">{numericalValue}</h2>
-          <IoIosArrowDown id="downIcon" onClick={() => setNumericalValue(numericalValue - 1)} />
         </div>
 
       </div>
@@ -149,13 +159,15 @@ const JournalScreen = () => {
           onClick={() => handleOpenReflectModal()} />
         <p style={{ fontWeight: 'bold' }}>Reflect</p>
       </div>
-    </div>]);
+    </div>,
+***REMOVED***
+
+    setGoalArray([...goalArray, newGoal]);
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
     const newData = [...dataList, { "goalDetails": "Eat 5 or more servings of fruits and/or vegetables", "goalQuantity": 5, "goalType": "Eating" }];
     setDataList(newData);
-
 ***REMOVED***
 
   function addActivityGoal() {
@@ -554,11 +566,16 @@ const JournalScreen = () => {
               <div className="goal-text">You don't have any goals added yet. Add some recommended behaviors from the left page to start!</div>
               :
               <div>
-                {goalArray.map((goal, index) =>
-                  <div>
-                    {goal}
-                  </div>
-                )}
+                {goalArray.map((goal, index) => (
+                    <div key={goal.id}>
+                        {goal.div}
+                        <div className="selection-container">
+                        <IoIosArrowUp id="upIcon" onClick={() => updateGoalValue(goal.id, goal.goalValue + 1)} />
+                        <h2 className="number-text">{goal.goalValue}</h2>
+                        <IoIosArrowDown id="downIcon" onClick={() => updateGoalValue(goal.id, goal.goalValue - 1)} />
+                        </div>
+                    </div> 
+            ))}
               </div>
         ***REMOVED***
 
