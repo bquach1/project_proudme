@@ -285,105 +285,6 @@ const JournalScreen = () => {
     );
 ***REMOVED***;
 
-  function defineGoalModal() {
-    return (
-      <Modal
-        aria-labelledby="define-modal"
-        aria-describedby="modal-to-define-new-goal"
-        open={defineOpen}
-        onClose={handleCloseDefineModal}
-      >
-        <div className="modal">
-          {booleanSelected &&
-            <div className="inside-modal">
-              <h2>Defining a New Goal</h2>
-              <h4>Goal Name</h4>
-              <input className="modal-input" type="text" name="goal" placeholder="Goal Name" onChange={handleGoalChange} value={goal} />
-              <h2>Have you achieved your goal?</h2>
-              <FormGroup onChange={() => { handleGoalIsCompleteChange(); console.log(goalIsComplete); }}
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  marginTop: '2%',
-            ***REMOVED***}>
-                <FormControlLabel sx={{
-                  color: 'black'
-            ***REMOVED***}
-                  control={<Switch color="secondary" />} label="Goal complete?" />
-              </FormGroup>
-              <h5 className="example-text">Example: "Eat fruits / vegetables" At least 5 times a day.</h5>
-              <input className="modal-input" type="text" name="description" placeholder="Optional Description..." onChange={handleDescriptionChange} value={description} />
-            </div>
-      ***REMOVED***
-
-          {numberSelected &&
-            <div className="inside-modal">
-              <h2>Defining a New Goal</h2>
-              <h4>Goal Name</h4>
-              <input className="modal-input" type="text" name="goal" placeholder="Goal Name" onChange={handleGoalChange} value={goal} />
-              <div className="goal-selection">
-                <select className="numerical-selection" id="numerical-selection" name="numerical-select" defaultValue={"at_least"} >
-                  <option value={"at_least"}>At least</option>
-                  <option value={"at_most"}>At most</option>
-                  <option value={"equals"}>Equals</option>
-                  <option value={"greater_than"}>Greater than</option>
-                  <option value={"less_than"}>Less than</option>
-                </select>
-                <input className="numerical-selection" type="number" onChange={handleNumericalChange} placeholder="Quantity" value={numericalValue} />
-              </div>
-              <input className="modal-half-input" type="text" name="goal-measurement" placeholder="Unit of measurement"
-                onChange={handleUnitChange} value={unit} />
-              <h5 className="example-text">Example: "Eat fruits / vegetables" At least 5 times a day.</h5>
-              <input className="modal-input" type="text" name="description" placeholder="Optional Description..." onChange={handleDescriptionChange} value={description} />
-            </div>
-      ***REMOVED***
-
-          {timerSelected &&
-            <div className="inside-modal">
-              <h2>Defining a New Goal</h2>
-              <h4>Goal Name</h4>
-              <input className="modal-input" type="text" name="goal" placeholder="Goal Name" onChange={handleGoalChange} value={goal} />
-              <div className="goal-selection">
-                <select className="numerical-selection" id="numerical-selection" name="numerical-select" defaultValue={"at_least"} >
-                  <option value={"at_least"}>At least</option>
-                  <option value={"at_most"}>At most</option>
-                  <option value={"equals"}>Equals</option>
-                  <option value={"greater_than"}>Greater than</option>
-                  <option value={"less_than"}>Less than</option>
-                </select>
-                <input className="numerical-selection" type="number" onChange={handleNumericalChange} placeholder="Quantity" value={numericalValue} />
-              </div>
-              <input className="modal-half-input" type="text" name="goal-measurement" placeholder="Unit of measurement"
-                onChange={handleUnitChange} value={unit} />
-              <h5 className="example-text">Example: "Eat fruits / vegetables" At least 5 times a day.</h5>
-              <input className="modal-input" type="text" name="description" placeholder="Optional Description..." onChange={handleDescriptionChange} value={description} />
-            </div>
-      ***REMOVED***
-
-          <div className="nav-options">
-            <Button style={{
-              backgroundColor: '#D9D9D9', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-              borderRadius: '20px'
-        ***REMOVED***}
-              onClick={() => { handleCloseDefineModal(); setBooleanSelected(false); setNumberSelected(false); setTimerSelected(false); setGoal(''); }}
-            >
-              Cancel
-            </Button>
-
-            <Button style={{
-              backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-              borderRadius: '20px'
-        ***REMOVED***}
-              onClick={() => { handleCloseDefineModal(); }}
-            >
-              Create Goal
-            </Button>
-          </div>
-        </div>
-      </Modal>
-    );
-***REMOVED***;
-
   function createReflectModal() {
     return (
       <Modal
@@ -664,7 +565,6 @@ const JournalScreen = () => {
             <CSV />
 
             {createGoalModal()}
-            {defineGoalModal()}
             {createReflectModal()}
           </div>
           <img className="rightpage1" src={require('../../components/images/journal/left_page.png')}
