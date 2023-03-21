@@ -65,6 +65,8 @@ const JournalScreen = () => {
       { label: "Goal Reflection", key: "goalReflection"},
       { label: "Goal Reflection Value", key: "goalReflectionValue" }, 
       { label: "Type of Goal", key: "goalType" },
+      { label: "Start Date", key: "startDate" },
+      { label: "End Date", key: "endDate" }
     ];
 
     return (
@@ -115,13 +117,33 @@ const JournalScreen = () => {
 ***REMOVED***
 
   function addEatingGoal() {
+
+    var dateToday = new Date(),
+      month = dateToday.getMonth(),
+      day = dateToday.getDate(),
+      year = dateToday.getFullYear(),
+      date = (month + 1) + '/' + day  + '/' +  year;
+    
+    var defaultEndDate = new Date();
+    defaultEndDate.setDate(defaultEndDate.getDate() + 14);
+    console.log(defaultEndDate);
+
+    if (defaultEndDate.getMonth != dateToday.getMonth) {
+      var defaultEndDay = (defaultEndDate.getMonth() + 2) + '/' + defaultEndDate.getDate()  + '/' +  year;
+***REMOVED***
+    else {
+      var defaultEndDay = (defaultEndDate.getMonth() + 1) + '/' + defaultEndDate.getDate()  + '/' +  year;
+***REMOVED***
+
     const newGoal = {
       id: goalCount,
       goalValue: 5,
       divInfo1: "Eat 5 or more servings of fruits and/or vegetables",
       divInfo2: "Reach target increments for servings of fruit (1-5).",
       reflection: "",
-      reflectionValue: 0
+      reflectionValue: 0,
+      startDate: date,
+      endDate: defaultEndDay
 ***REMOVED***
 
     setGoalArray([...goalArray, newGoal]);
@@ -131,7 +153,7 @@ const JournalScreen = () => {
     const newData = [...dataList, { "goalDataId": newGoal.id, 
     "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue, 
     "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
-    "goalType": "Eating" }];
+    "goalType": "Eating", "startDate": newGoal.startDate, "endDate": newGoal.endDate }];
     setDataList(newData);
 ***REMOVED***
 
