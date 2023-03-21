@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../../css/journal.css';
 
 import Button from '@material-ui/core/Button';
@@ -10,11 +10,10 @@ import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 
 const JournalScreen = () => {
 
-  const [open, setOpen] = useState(false);
+  const [goalOpen, setGoalOpen] = useState(false);
   const [reflectOpen, setReflectOpen] = useState(false);
   const [selectedGoalReflectionIndex, setSelectedGoalReflectionIndex] = useState(-1);
 
-  const [goal, setGoal] = useState('');
   const [rightScreenMode, setRightScreenMode] = useState('');
   const [reflectionPage, setReflectionPage] = useState('Default');
 
@@ -36,11 +35,11 @@ const JournalScreen = () => {
 ***REMOVED***
 
   const handleOpenGoalModal = () => {
-    setOpen(true);
+    setGoalOpen(true);
 ***REMOVED***;
 
   const handleCloseGoalModal = () => {
-    setOpen(false);
+    setGoalOpen(false);
 ***REMOVED***;
 
   const handleReflectionClick = (index) => {
@@ -51,10 +50,6 @@ const JournalScreen = () => {
   const handleCloseReflectModal = () => {
     setSelectedGoalReflectionIndex(-1);
     setReflectOpen(false);
-***REMOVED***;
-
-  const handleGoalChange = (e) => {
-    setGoal(e.target.value);
 ***REMOVED***;
 
   const handleGoalCountChange = () => {
@@ -86,6 +81,17 @@ const JournalScreen = () => {
     );
 ***REMOVED***
 
+  function updateGoal(id, newDescription) {
+    setGoalArray(prevGoals =>
+      prevGoals.map(goal => {
+        if (goal.id === id) {
+          return { ...goal, divInfo1: newDescription };
+    ***REMOVED***
+        return goal;
+  ***REMOVED***)
+    );
+***REMOVED***
+
   function addEatingGoal() {
     const newGoal = {
       id: goalCount,
@@ -100,7 +106,7 @@ const JournalScreen = () => {
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
-    const newData = [...dataList, { "goalDetails": "Eat 5 or more servings of fruits and/or vegetables", "goalQuantity": 5, "goalType": "Eating" }];
+    const newData = [...dataList, { "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue, "goalType": "Eating" }];
     setDataList(newData);
 ***REMOVED***
 
@@ -157,33 +163,6 @@ const JournalScreen = () => {
     const newData = [...dataList, { "goalDetails": "Sleep at least 9 hours a night", "goalQuantity": 9, "goalType": "Sleep" }];
     setDataList(newData);
 ***REMOVED***
-
-  const createGoalModal = () => {
-    return (
-      <Modal
-        aria-labelledby="goal-modal"
-        aria-describedby="modal-to-create-new-goal"
-        open={open}
-        onClose={handleCloseGoalModal}
-      >
-        <div className="modal">
-          <h2>Edit Your Goal Progress</h2>
-          <h4>Goal Name</h4>
-          <input className="modal-input" type="text" name="goal" onChange={handleGoalChange} value={goal} />
-          <h4>How much have you progressed towards your goal this week?</h4>
-          <input className="modal-input" type="text" name="goal" onChange={handleGoalChange} value={goal} />
-          <Button style={{
-            backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-            borderRadius: '20px'
-      ***REMOVED***}
-            onClick={() => { console.log("work") }}
-          >
-            Log Progress
-          </Button>
-        </div>
-      </Modal>
-    );
-***REMOVED***;
 
   function updateGoalReflection(id, newReflection) {
     setGoalArray(prevGoals =>
@@ -406,12 +385,12 @@ const JournalScreen = () => {
 
                       <div className="selection-container">
                         <IoIosArrowUp id="upIcon" 
-                          onClick={() => {updateGoalValue(goal.id, goal.goalValue + 1)}} />
+                          onClick={() => {updateGoalValue(goal.id, +goal.goalValue + 1)}} />
                         <h2 onClick={() => setInputGoalValue(true)} 
                         className="number-text">
                           {inputGoalValue === true ?
                           <input type="number" name="goalValue" value={goal.goalValue} onBlur={handleBlur}
-                          onChange={(e) => updateGoalValue(goal.id, e.target.value)} 
+                          onChange={(e) => updateGoalValue(goal.id, e.target.value)}
                           onKeyDown={handleEnter}
                           />
                           : 
@@ -419,7 +398,7 @@ const JournalScreen = () => {
                       ***REMOVED***
                         </h2>
                         <IoIosArrowDown id="downIcon" 
-                          onClick={() => {if (goal.goalValue > 0) updateGoalValue(goal.id, goal.goalValue - 1)
+                          onClick={() => {if (goal.goalValue > 0) updateGoalValue(goal.id, +goal.goalValue - 1)
                           else updateGoalValue(goal.id, goal.goalValue)}} />
                       </div>
                     </div>
@@ -509,6 +488,28 @@ const JournalScreen = () => {
                       ***REMOVED***
                         </Modal>
                       )}
+                      <Modal
+                        aria-labelledby="goal-modal"
+                        aria-describedby="modal-to-create-new-goal"
+                        open={goalOpen}
+                        onClose={handleCloseGoalModal}
+                      >
+                        <div className="modal">
+                          <h2>Edit Your Goal Progress</h2>
+                          <h4>Goal Name</h4>
+                          <input className="modal-input" type="text" name="goal" onChange={(e) => updateGoal(goal.id, e.target.value)} value={goal.divInfo1} />
+                          <h4>How much have you progressed towards your goal this week?</h4>
+                          <input className="modal-input" type="number" name="goal" onChange={(e) => updateGoalValue(goal.id, e.target.value)} value={goal.goalValue} />
+                          <Button style={{
+                            backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                            borderRadius: '20px'
+                      ***REMOVED***}
+                            onClick={() => { handleCloseGoalModal() }}
+                          >
+                            Log Progress
+                          </Button>
+                        </div>
+                      </Modal>
                     </div>
                   </div>
                 ))}
@@ -516,7 +517,7 @@ const JournalScreen = () => {
         ***REMOVED***
 
             <CSV />
-            {createGoalModal()}
+
           </div>
           <img className="rightpage1" src={require('../../components/images/journal/left_page.png')}
             alt="First right-side page" />
