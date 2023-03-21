@@ -50,6 +50,7 @@ const JournalScreen = () => {
   const handleCloseReflectModal = () => {
     setSelectedGoalReflectionIndex(-1);
     setReflectOpen(false);
+    setReflectionPage('');
 ***REMOVED***;
 
   const handleGoalCountChange = () => {
@@ -82,6 +83,15 @@ const JournalScreen = () => {
         return goal;
   ***REMOVED***)
     );
+    setDataList(prevGoals =>
+      prevGoals.map(goal => {
+        if (goal.goalDataId === id) {
+          console.log(dataList);
+          return { ...goal, "goalQuantity": newQuantity };
+    ***REMOVED***
+        return goal;
+  ***REMOVED***)
+    );
 ***REMOVED***
 
   function updateGoal(id, newDescription) {
@@ -89,6 +99,15 @@ const JournalScreen = () => {
       prevGoals.map(goal => {
         if (goal.id === id) {
           return { ...goal, divInfo1: newDescription };
+    ***REMOVED***
+        return goal;
+  ***REMOVED***)
+    );
+    setDataList(prevGoals =>
+      prevGoals.map(goal => {
+        if (goal.goalDataId === id) {
+          console.log(dataList);
+          return { ...goal, "goal": newDescription };
     ***REMOVED***
         return goal;
   ***REMOVED***)
@@ -188,6 +207,15 @@ const JournalScreen = () => {
         return goal;
   ***REMOVED***)
     );
+    setDataList(prevGoals =>
+      prevGoals.map(goal => {
+        if (goal.goalDataId === id) {
+          console.log(dataList);
+          return { ...goal, "goalReflection": newReflection };
+    ***REMOVED***
+        return goal;
+  ***REMOVED***)
+    );
 ***REMOVED***
 
   function updateGoalReflectionValue(id, newReflectionValue) {
@@ -195,6 +223,15 @@ const JournalScreen = () => {
       prevGoals.map(goal => {
         if (goal.id === id) {
           return { ...goal, reflectionValue: +newReflectionValue };
+    ***REMOVED***
+        return goal;
+  ***REMOVED***)
+    );
+    setDataList(prevGoals =>
+      prevGoals.map(goal => {
+        if (goal.goalDataId === id) {
+          console.log(dataList);
+          return { ...goal, "goalReflectionValue": +newReflectionValue };
     ***REMOVED***
         return goal;
   ***REMOVED***)
@@ -212,7 +249,7 @@ const JournalScreen = () => {
         <img onClick={() => setRightScreenMode("")} className="goals-tab" src={require('../../components/images/journal/goals_tab.png')}
           alt="Goals bookmark tab" />
         <img className="gallery-tab" src={require('../../components/images/journal/gallery_tab.png')}
-          alt="Gallery bookmark tab" onClick={() => console.log(goalArray)}/>
+          alt="Gallery bookmark tab" onClick={() => console.log(dataList)}/>
         <div className="leftPageWrapper">
           {rightScreenMode === "Goal Selected Mode" ?
             <div className="goal-box">
@@ -454,7 +491,7 @@ const JournalScreen = () => {
                                   backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                                   borderRadius: '20px'
                             ***REMOVED***}
-                                  onClick={() => { handleCloseReflectModal(); setReflectionPage(''); }}
+                                  onClick={() => { handleCloseReflectModal(); }}
                                 >
                                   Reflect
                                 </Button>
