@@ -58,8 +58,11 @@ const JournalScreen = () => {
 
   const CSV = () => {
     const headers = [
+      { label: "Goal Data ID", key: "goalDataId"},
       { label: "Goal Details", key: "goalDetails" },
       { label: "Goal Quantity", key: "goalQuantity" },
+      { label: "Goal Reflection", key: "goalReflection"},
+      { label: "Goal Reflection Value", key: "goalReflectionValue" }, 
       { label: "Type of Goal", key: "goalType" },
     ];
 
@@ -106,7 +109,10 @@ const JournalScreen = () => {
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
-    const newData = [...dataList, { "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue, "goalType": "Eating" }];
+    const newData = [...dataList, { "goalDataId": newGoal.id, 
+    "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue, 
+    "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
+    "goalType": "Eating" }];
     setDataList(newData);
 ***REMOVED***
 
@@ -124,7 +130,10 @@ const JournalScreen = () => {
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
-    const newData = [...dataList, { "goalDetails": "Get at least 60 minutes of physical activity per day", "goalQuantity": 60, "goalType": "Activity" }];
+    const newData = [...dataList, { "goalDataId": newGoal.id, 
+    "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue, 
+    "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
+    "goalType": "Activity" }];
     setDataList(newData);
 ***REMOVED***
 
@@ -142,7 +151,10 @@ const JournalScreen = () => {
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
-    const newData = [...dataList, { "goalDetails": "Limit screentime to 2 hours a day", "goalQuantity": 2, "goalType": "Screentime" }];
+    const newData = [...dataList, { "goalDataId": newGoal.id, 
+    "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue, 
+    "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
+    "goalType": "Screentime" }];
     setDataList(newData);
 ***REMOVED***
 
@@ -160,7 +172,10 @@ const JournalScreen = () => {
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
-    const newData = [...dataList, { "goalDetails": "Sleep at least 9 hours a night", "goalQuantity": 9, "goalType": "Sleep" }];
+    const newData = [...dataList, { "goalDataId": newGoal.id, 
+    "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
+    "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue, 
+    "goalType": "Sleep" }];
     setDataList(newData);
 ***REMOVED***
 
