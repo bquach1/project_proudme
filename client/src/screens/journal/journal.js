@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import Modal from '@mui/material/Modal';
 import { Slider } from '@mui/material';
 import { CSVLink } from 'react-csv';
+import Calendar from "../../components/calendar.js";
 
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 
@@ -16,6 +17,7 @@ const JournalScreen = () => {
 
   const [rightScreenMode, setRightScreenMode] = useState('');
   const [reflectionPage, setReflectionPage] = useState('Default');
+  const [editPage, setEditPage] = useState('General');
 
   const [goalArray, setGoalArray] = useState([]);
   const [goalCount, setGoalCount] = useState(0);
@@ -59,11 +61,11 @@ const JournalScreen = () => {
 
   const CSV = () => {
     const headers = [
-      { label: "Goal Data ID", key: "goalDataId"},
+      { label: "Goal Data ID", key: "goalDataId" },
       { label: "Goal Details", key: "goalDetails" },
       { label: "Goal Quantity", key: "goalQuantity" },
-      { label: "Goal Reflection", key: "goalReflection"},
-      { label: "Goal Reflection Value", key: "goalReflectionValue" }, 
+      { label: "Goal Reflection", key: "goalReflection" },
+      { label: "Goal Reflection Value", key: "goalReflectionValue" },
       { label: "Type of Goal", key: "goalType" },
       { label: "Start Date", key: "startDate" },
       { label: "End Date", key: "endDate" }
@@ -88,7 +90,6 @@ const JournalScreen = () => {
     setDataList(prevGoals =>
       prevGoals.map(goal => {
         if (goal.goalDataId === id) {
-          console.log(dataList);
           return { ...goal, "goalQuantity": newQuantity };
     ***REMOVED***
         return goal;
@@ -108,7 +109,6 @@ const JournalScreen = () => {
     setDataList(prevGoals =>
       prevGoals.map(goal => {
         if (goal.goalDataId === id) {
-          console.log(dataList);
           return { ...goal, "goal": newDescription };
     ***REMOVED***
         return goal;
@@ -122,44 +122,50 @@ const JournalScreen = () => {
       month = dateToday.getMonth(),
       day = dateToday.getDate(),
       year = dateToday.getFullYear(),
-      date = (month + 1) + '/' + day  + '/' +  year;
-    
+      date = (month + 1) + '/' + day + '/' + year;
+
     var defaultEndDate = new Date();
     defaultEndDate.setDate(defaultEndDate.getDate() + 14);
     console.log(defaultEndDate);
 
     if (defaultEndDate.getMonth != dateToday.getMonth) {
-      var defaultEndDay = (defaultEndDate.getMonth() + 2) + '/' + defaultEndDate.getDate()  + '/' +  year;
+      var defaultEndDay = (defaultEndDate.getMonth() + 2) + '/' + defaultEndDate.getDate() + '/' + year;
 ***REMOVED***
     else {
-      var defaultEndDay = (defaultEndDate.getMonth() + 1) + '/' + defaultEndDate.getDate()  + '/' +  year;
+      var defaultEndDay = (defaultEndDate.getMonth() + 1) + '/' + defaultEndDate.getDate() + '/' + year;
 ***REMOVED***
 
     const newGoal = {
       id: goalCount,
+      goalType: "Eating",
       goalValue: 5,
       divInfo1: "Eat 5 or more servings of fruits and/or vegetables",
       divInfo2: "Reach target increments for servings of fruit (1-5).",
       reflection: "",
       reflectionValue: 0,
       startDate: date,
-      endDate: defaultEndDay
+      endDate: defaultEndDay,
+      startDateUnformatted: dateToday,
+      endDateUnformatted: defaultEndDate
 ***REMOVED***
 
     setGoalArray([...goalArray, newGoal]);
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
-    const newData = [...dataList, { "goalDataId": newGoal.id, 
-    "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue, 
-    "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
-    "goalType": "Eating", "startDate": newGoal.startDate, "endDate": newGoal.endDate }];
+    const newData = [...dataList, {
+      "goalDataId": newGoal.id,
+      "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
+      "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
+      "goalType": "Eating", "startDate": newGoal.startDate, "endDate": newGoal.endDate
+***REMOVED***];
     setDataList(newData);
 ***REMOVED***
 
   function addActivityGoal() {
     const newGoal = {
       id: goalCount,
+      goalType: "Activity",
       goalValue: 60,
       divInfo1: "Get at least 60 minutes of physical activity per day",
       divInfo2: "Do exercises like running or playing sports for at least an hour a day.",
@@ -167,20 +173,25 @@ const JournalScreen = () => {
       reflectionValue: 0
 ***REMOVED***
 
+    console.log(newGoal);
+
     setGoalArray([...goalArray, newGoal]);
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
-    const newData = [...dataList, { "goalDataId": newGoal.id, 
-    "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue, 
-    "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
-    "goalType": "Activity" }];
+    const newData = [...dataList, {
+      "goalDataId": newGoal.id,
+      "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
+      "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
+      "goalType": "Activity"
+***REMOVED***];
     setDataList(newData);
 ***REMOVED***
 
   function addScreentimeGoal() {
     const newGoal = {
       id: goalCount,
+      goalType: "Screentime",
       goalValue: 2,
       divInfo1: "Limit screentime to 2 hours a day",
       divInfo2: "Use devices like phones, laptops, and TV's less.",
@@ -192,16 +203,19 @@ const JournalScreen = () => {
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
-    const newData = [...dataList, { "goalDataId": newGoal.id, 
-    "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue, 
-    "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
-    "goalType": "Screentime" }];
+    const newData = [...dataList, {
+      "goalDataId": newGoal.id,
+      "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
+      "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
+      "goalType": "Screentime"
+***REMOVED***];
     setDataList(newData);
 ***REMOVED***
 
   function addSleepGoal() {
     const newGoal = {
       id: goalCount,
+      goalType: "Sleep",
       goalValue: 9,
       divInfo1: "Sleep at least 9 hours a night",
       divInfo2: "Get anywhere from 9-11 hours of sleep a night to feel the best.",
@@ -213,10 +227,12 @@ const JournalScreen = () => {
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
-    const newData = [...dataList, { "goalDataId": newGoal.id, 
-    "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
-    "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue, 
-    "goalType": "Sleep" }];
+    const newData = [...dataList, {
+      "goalDataId": newGoal.id,
+      "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
+      "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
+      "goalType": "Sleep"
+***REMOVED***];
     setDataList(newData);
 ***REMOVED***
 
@@ -260,6 +276,29 @@ const JournalScreen = () => {
     );
 ***REMOVED***
 
+  function updateGoalDates(id, newStartDate, newEndDate) {
+    setGoalArray(prevGoals =>
+      prevGoals.map(goal => {
+        if (goal.id === id) {
+          return {
+            ...goal,
+            startDateUnformatted: newStartDate,
+            endDateUnformatted: newEndDate
+      ***REMOVED***
+    ***REMOVED***
+        return goal;
+  ***REMOVED***))
+    setDataList(prevGoals =>
+      prevGoals.map(goal => {
+        if (goal.goalDataId === id) {
+          console.log(dataList);
+          return { ...goal, "startDate": newStartDate, "endDate": newEndDate };
+    ***REMOVED***
+        return goal;
+  ***REMOVED***)
+    );
+***REMOVED***
+
   return (
     <div className="journal">
       <h1 className="title">My Journal</h1>
@@ -271,7 +310,7 @@ const JournalScreen = () => {
         <img onClick={() => setRightScreenMode("")} className="goals-tab" src={require('../../components/images/journal/goals_tab.png')}
           alt="Goals bookmark tab" />
         <img className="gallery-tab" src={require('../../components/images/journal/gallery_tab.png')}
-          alt="Gallery bookmark tab" onClick={() => console.log(dataList)}/>
+          alt="Gallery bookmark tab" onClick={() => console.log(dataList)} />
         <div className="leftPageWrapper">
           {rightScreenMode === "Goal Selected Mode" ?
             <div className="goal-box">
@@ -458,22 +497,78 @@ const JournalScreen = () => {
                       </div>
 
                       <div className="selection-container">
-                        <IoIosArrowUp id="upIcon" 
-                          onClick={() => {updateGoalValue(goal.id, +goal.goalValue + 1)}} />
-                        <h2 onClick={() => setInputGoalValue(true)} 
-                        className="number-text">
+                        {goal.goalType === "Activity" ?
+                          <IoIosArrowUp id="upIcon"
+                            onClick={() => {
+                              if (goal.goalValue < 105) updateGoalValue(goal.id, +goal.goalValue + 15)
+                              else updateGoalValue(goal.id, goal.goalValue)
+                        ***REMOVED***} />
+                          : goal.goalType === "Eating" ?
+                            <IoIosArrowUp id="upIcon"
+                              onClick={() => {
+                                if (goal.goalValue < 5) updateGoalValue(goal.id, +goal.goalValue + 1)
+                                else updateGoalValue(goal.id, goal.goalValue)
+                          ***REMOVED***} />
+                            : goal.goalType === "Screentime" ?
+                              <IoIosArrowUp id="upIcon"
+                                onClick={() => {
+                                  if (goal.goalValue < 5) updateGoalValue(goal.id, +goal.goalValue + 1)
+                                  else updateGoalValue(goal.id, goal.goalValue)
+                            ***REMOVED***} />
+                              : goal.goalType === "Sleep" ?
+                                <IoIosArrowUp id="upIcon"
+                                  onClick={() => {
+                                    if (goal.goalValue < 12) updateGoalValue(goal.id, +goal.goalValue + 1)
+                                    else updateGoalValue(goal.id, goal.goalValue)
+                              ***REMOVED***} />
+                                :
+                                <IoIosArrowUp id="upIcon"
+                                  onClick={() => {
+                                    updateGoalValue(goal.id, +goal.goalValue + 1)
+                              ***REMOVED***} />
+                    ***REMOVED***
+
+                        <h2 onClick={() => setInputGoalValue(true)}
+                          className="number-text">
                           {inputGoalValue === true ?
-                          <input type="number" name="goalValue" value={goal.goalValue} onBlur={handleBlur}
-                          onChange={(e) => updateGoalValue(goal.id, e.target.value)}
-                          onKeyDown={handleEnter}
-                          />
-                          : 
-                          <div>{goal.goalValue}</div>
+                            <input type="number" name="goalValue" value={goal.goalValue} onBlur={handleBlur}
+                              onChange={(e) => updateGoalValue(goal.id, e.target.value)}
+                              onKeyDown={handleEnter}
+                            />
+                            :
+                            <div>{goal.goalValue}</div>
                       ***REMOVED***
                         </h2>
-                        <IoIosArrowDown id="downIcon" 
-                          onClick={() => {if (goal.goalValue > 0) updateGoalValue(goal.id, +goal.goalValue - 1)
-                          else updateGoalValue(goal.id, goal.goalValue)}} />
+                        {goal.goalType === "Activity" ?
+                          <IoIosArrowDown id="downIcon"
+                            onClick={() => {
+                              if (goal.goalValue > 30) updateGoalValue(goal.id, +goal.goalValue - 15)
+                              else updateGoalValue(goal.id, goal.goalValue)
+                        ***REMOVED***} />
+                          : goal.goalType === "Eating" ?
+                            <IoIosArrowDown id="downIcon"
+                              onClick={() => {
+                                if (goal.goalValue > 1) updateGoalValue(goal.id, +goal.goalValue - 1)
+                                else updateGoalValue(goal.id, goal.goalValue)
+                          ***REMOVED***} />
+                            : goal.goalType === "Screentime" ?
+                              <IoIosArrowDown id="downIcon"
+                                onClick={() => {
+                                  if (goal.goalValue > 1) updateGoalValue(goal.id, +goal.goalValue - 1)
+                                  else updateGoalValue(goal.id, goal.goalValue)
+                            ***REMOVED***} />
+                              : goal.goalType === "Sleep" ?
+                                <IoIosArrowDown id="downIcon"
+                                  onClick={() => {
+                                    if (goal.goalValue > 8) updateGoalValue(goal.id, +goal.goalValue - 1)
+                                    else updateGoalValue(goal.id, goal.goalValue)
+                              ***REMOVED***} />
+                                :
+                                <IoIosArrowDown id="downIcon"
+                                  onClick={() => {
+                                    updateGoalValue(goal.id, +goal.goalValue - 1)
+                              ***REMOVED***} />
+                    ***REMOVED***
                       </div>
                     </div>
 
@@ -523,8 +618,8 @@ const JournalScreen = () => {
                             <div className="modal">
                               <div className="inside-modal">
                                 <h2>Reflect on Your Goal</h2>
-                                <h4>Rate progress towards your goal this week 1-10. 1 being the lowest 
-                                  (no progress), 10 being the highest (surpassed goal and feel great 
+                                <h4>Rate progress towards your goal this week 1-10. 1 being the lowest
+                                  (no progress), 10 being the highest (surpassed goal and feel great
                                   about it).</h4>
                                 <Slider
                                   aria-label="Reflection Meter"
@@ -568,30 +663,54 @@ const JournalScreen = () => {
                         open={goalOpen}
                         onClose={handleCloseGoalModal}
                       >
-                        <div className="modal">
-                          <h2>Edit Your Goal Progress</h2>
-                          <h4>Goal Name</h4>
-                          <input className="modal-input" type="text" name="goal" onChange={(e) => updateGoal(goal.id, e.target.value)} value={goal.divInfo1} />
-                          <h4>How much have you progressed towards your goal this week?</h4>
-                          <input className="modal-input" type="number" name="goal" onChange={(e) => updateGoalValue(goal.id, e.target.value)} value={goal.goalValue} />
-                          <Button style={{
-                            backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                            borderRadius: '20px'
-                      ***REMOVED***}
-                            onClick={() => { handleCloseGoalModal() }}
-                          >
-                            Log Progress
-                          </Button>
-                        </div>
+                        {editPage === 'General' ?
+                          <div className="modal">
+                            <h2>Edit Your Goal Progress</h2>
+                            <h4>Goal Name</h4>
+                            <input className="modal-input" type="text" name="goal" onChange={(e) => updateGoal(goal.id, e.target.value)} value={goal.divInfo1} />
+                            <h4>How much have you progressed towards your goal this week?</h4>
+                            <input className="modal-input" type="number" name="goal" onChange={(e) => updateGoalValue(goal.id, e.target.value)} value={goal.goalValue} />
+                            <Button style={{
+                              backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                              borderRadius: '20px'
+                        ***REMOVED***}
+                              onClick={() => { setEditPage('Calendar') }}
+                            >
+                              Next
+                            </Button>
+                          </div>
+                          :
+                          <div className="modal">
+                            {console.log(goal.startDateUnformatted.getDate())};
+                            <Calendar 
+                              startDate={new Date(goal.startDateUnformatted.getFullYear(),
+                              goal.startDateUnformatted.getDate(),
+                              goal.startDateUnformatted.getMonth())}
+
+                              endDate={new Date(goal.endDateUnformatted.getFullYear(),
+                              goal.endDateUnformatted.getDate(),
+                              goal.endDateUnformatted.getMonth())}
+
+                              onChange={() => updateGoalDates(goal.id, goal.startDate, goal.endDate)}
+                            />
+
+                            <Button style={{
+                              backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                              borderRadius: '20px'
+                        ***REMOVED***}
+                              onClick={() => { updateGoalDates(goal.id, goal.startDateUnformatted, goal.endDateUnformatted); handleCloseGoalModal(); }}
+                            >
+                              Log Progress
+                            </Button>
+                          </div>
+                    ***REMOVED***
                       </Modal>
                     </div>
                   </div>
                 ))}
               </div>
         ***REMOVED***
-
             <CSV />
-
           </div>
           <img className="rightpage1" src={require('../../components/images/journal/left_page.png')}
             alt="First right-side page" />
@@ -609,5 +728,4 @@ export default JournalScreen;
 
 // percentage of progress from survey questions (multiple modals)
 // incorporate AI for reflections on virtual coach
-// incorporate progress button instead of update progress at the bottom
 // check during morning, day
