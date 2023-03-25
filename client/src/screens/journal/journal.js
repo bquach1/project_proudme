@@ -78,6 +78,74 @@ const JournalScreen = () => {
     )
 ***REMOVED***
 
+  function addGoal(type) {
+    var dateToday = new Date(),
+      month = dateToday.getMonth(),
+      day = dateToday.getDate(),
+      year = dateToday.getFullYear(),
+      date = (month + 1) + '/' + day + '/' + year;
+
+    var defaultEndDate = new Date();
+    defaultEndDate.setDate(defaultEndDate.getDate() + 14);
+    console.log(defaultEndDate);
+
+    if (defaultEndDate.getMonth != dateToday.getMonth) {
+      var defaultEndDay = (defaultEndDate.getMonth() + 2) + '/' + defaultEndDate.getDate() + '/' + year;
+***REMOVED***
+    else {
+      var defaultEndDay = (defaultEndDate.getMonth() + 1) + '/' + defaultEndDate.getDate() + '/' + year;
+***REMOVED***
+
+    const newGoal = {
+      id: goalCount,
+      goalType: type,
+      goalValue: 5,
+      divInfo1: "Eat 5 or more servings of fruits and/or vegetables",
+      divInfo2: "Reach target increments for servings of healthy foods.",
+      reflection: "",
+      reflectionValue: 0,
+      startDate: date,
+      endDate: defaultEndDay,
+      startDateUnformatted: dateToday,
+      endDateUnformatted: defaultEndDate
+***REMOVED***
+
+    switch (type) {
+      case "Eating":
+      newGoal.goalValue = 5;
+      newGoal.divInfo1 = "Eat 5 or more servings of fruits and/or vegetables a day";
+      newGoal.divInfo2 = "Reach target increments for servings of healthy foods.";
+        break;
+      case "Activity":
+      newGoal.goalValue = 60; 
+      newGoal.divInfo1 = "Get at least 60 minutes of physical activity per day";
+      newGoal.divInfo2 = "Do exercises like running or playing sports for at least an hour a day.";
+        break;
+      case "Screentime":
+      newGoal.goalValue = 2; 
+      newGoal.divInfo1 = "Limit screentime to 2 hours a day";
+      newGoal.divInfo2 = "Use devices like phones, laptops, and TV's less.";
+        break;
+      case "Sleep":
+      newGoal.goalValue = 9;
+      newGoal.divInfo1 = "Sleep at least 9 hours a night";
+      newGoal.divInfo2 = "Get anywhere from 9-11 hours of sleep a night to feel the best.";
+        break;
+***REMOVED***
+
+    setGoalArray([...goalArray, newGoal]);
+    handleGoalCountChange();
+    setRightScreenMode("Goal Selected Mode");
+
+    const newData = [...dataList, {
+      "goalDataId": newGoal.id,
+      "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
+      "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
+      "goalType": "Eating", "startDate": newGoal.startDate, "endDate": newGoal.endDate
+***REMOVED***];
+    setDataList(newData);
+***REMOVED***
+
   function updateGoalValue(id, newQuantity) {
     setGoalArray(prevGoals =>
       prevGoals.map(goal => {
@@ -114,126 +182,6 @@ const JournalScreen = () => {
         return goal;
   ***REMOVED***)
     );
-***REMOVED***
-
-  function addEatingGoal() {
-
-    var dateToday = new Date(),
-      month = dateToday.getMonth(),
-      day = dateToday.getDate(),
-      year = dateToday.getFullYear(),
-      date = (month + 1) + '/' + day + '/' + year;
-
-    var defaultEndDate = new Date();
-    defaultEndDate.setDate(defaultEndDate.getDate() + 14);
-    console.log(defaultEndDate);
-
-    if (defaultEndDate.getMonth != dateToday.getMonth) {
-      var defaultEndDay = (defaultEndDate.getMonth() + 2) + '/' + defaultEndDate.getDate() + '/' + year;
-***REMOVED***
-    else {
-      var defaultEndDay = (defaultEndDate.getMonth() + 1) + '/' + defaultEndDate.getDate() + '/' + year;
-***REMOVED***
-
-    const newGoal = {
-      id: goalCount,
-      goalType: "Eating",
-      goalValue: 5,
-      divInfo1: "Eat 5 or more servings of fruits and/or vegetables",
-      divInfo2: "Reach target increments for servings of fruit (1-5).",
-      reflection: "",
-      reflectionValue: 0,
-      startDate: date,
-      endDate: defaultEndDay,
-      startDateUnformatted: dateToday,
-      endDateUnformatted: defaultEndDate
-***REMOVED***
-
-    setGoalArray([...goalArray, newGoal]);
-    handleGoalCountChange();
-    setRightScreenMode("Goal Selected Mode");
-
-    const newData = [...dataList, {
-      "goalDataId": newGoal.id,
-      "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
-      "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
-      "goalType": "Eating", "startDate": newGoal.startDate, "endDate": newGoal.endDate
-***REMOVED***];
-    setDataList(newData);
-***REMOVED***
-
-  function addActivityGoal() {
-    const newGoal = {
-      id: goalCount,
-      goalType: "Activity",
-      goalValue: 60,
-      divInfo1: "Get at least 60 minutes of physical activity per day",
-      divInfo2: "Do exercises like running or playing sports for at least an hour a day.",
-      reflection: "",
-      reflectionValue: 0
-***REMOVED***
-
-    console.log(newGoal);
-
-    setGoalArray([...goalArray, newGoal]);
-    handleGoalCountChange();
-    setRightScreenMode("Goal Selected Mode");
-
-    const newData = [...dataList, {
-      "goalDataId": newGoal.id,
-      "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
-      "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
-      "goalType": "Activity"
-***REMOVED***];
-    setDataList(newData);
-***REMOVED***
-
-  function addScreentimeGoal() {
-    const newGoal = {
-      id: goalCount,
-      goalType: "Screentime",
-      goalValue: 2,
-      divInfo1: "Limit screentime to 2 hours a day",
-      divInfo2: "Use devices like phones, laptops, and TV's less.",
-      reflection: "",
-      reflectionValue: 0
-***REMOVED***
-
-    setGoalArray([...goalArray, newGoal]);
-    handleGoalCountChange();
-    setRightScreenMode("Goal Selected Mode");
-
-    const newData = [...dataList, {
-      "goalDataId": newGoal.id,
-      "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
-      "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
-      "goalType": "Screentime"
-***REMOVED***];
-    setDataList(newData);
-***REMOVED***
-
-  function addSleepGoal() {
-    const newGoal = {
-      id: goalCount,
-      goalType: "Sleep",
-      goalValue: 9,
-      divInfo1: "Sleep at least 9 hours a night",
-      divInfo2: "Get anywhere from 9-11 hours of sleep a night to feel the best.",
-      reflection: "",
-      reflectionValue: 0
-***REMOVED***
-
-    setGoalArray([...goalArray, newGoal]);
-    handleGoalCountChange();
-    setRightScreenMode("Goal Selected Mode");
-
-    const newData = [...dataList, {
-      "goalDataId": newGoal.id,
-      "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
-      "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
-      "goalType": "Sleep"
-***REMOVED***];
-    setDataList(newData);
 ***REMOVED***
 
   function updateGoalReflection(id, newReflection) {
@@ -358,7 +306,7 @@ const JournalScreen = () => {
                       backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
                       borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'
                 ***REMOVED***}
-                      onClick={() => { addEatingGoal() }}
+                      onClick={() => { addGoal('Eating') }}
                     >
                       Add to My Goals
                     </Button>
@@ -393,7 +341,7 @@ const JournalScreen = () => {
                       backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
                       borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'
                 ***REMOVED***}
-                      onClick={() => { addActivityGoal() }}
+                      onClick={() => { addGoal('Activity') }}
                     >
                       Add to My Goals
                     </Button>
@@ -428,7 +376,7 @@ const JournalScreen = () => {
                       backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
                       borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'
                 ***REMOVED***}
-                      onClick={() => { addScreentimeGoal() }}
+                      onClick={() => { addGoal('Screentime') }}
                     >
                       Add to My Goals
                     </Button>
@@ -463,7 +411,7 @@ const JournalScreen = () => {
                       backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
                       borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'
                 ***REMOVED***}
-                      onClick={() => { addSleepGoal() }}
+                      onClick={() => { addGoal('Sleep') }}
                     >
                       Add to My Goals
                     </Button>
