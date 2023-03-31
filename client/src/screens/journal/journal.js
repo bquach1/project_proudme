@@ -3,7 +3,6 @@ import '../../css/journal.css';
 
 import Button from '@material-ui/core/Button';
 import Modal from '@mui/material/Modal';
-import { Slider } from '@mui/material';
 import { CSVLink } from 'react-csv';
 import Calendar from "../../components/calendar.js";
 
@@ -25,6 +24,12 @@ const JournalScreen = () => {
 
   const [dataList, setDataList] = useState([]);
 
+  var renderedDate = new Date(),
+      renderedMonth = renderedDate.getMonth(),
+      renderedDay = renderedDate.getDate(),
+      renderedYear = renderedDate.getFullYear(),
+      renderedDateToday = (renderedMonth + 1) + '/' + renderedDay + '/' + renderedYear;
+
   const handleEnter = (event) => {
     if (event.key === "Enter") {
       setInputGoalValue(false);
@@ -33,7 +38,6 @@ const JournalScreen = () => {
 
   const handleBlur = (event) => {
     setInputGoalValue(false);
-    console.log(event.target.value);
 ***REMOVED***
 
   const handleOpenGoalModal = () => {
@@ -59,7 +63,7 @@ const JournalScreen = () => {
     setGoalCount(goalCount + 1);
 ***REMOVED***
 
-  const CSV = () => {
+  const GoalCSV = () => {
     const headers = [
       { label: "Goal Data ID", key: "goalDataId" },
       { label: "Goal Details", key: "goalDetails" },
@@ -78,6 +82,14 @@ const JournalScreen = () => {
     )
 ***REMOVED***
 
+  const BehaviorTrackingCSV = () => {
+    const headers = [
+      { label: "Goal Data ID", key: "goalDataId" },
+      { label: "Date", key: "currentDate" },
+      { label: "Behavior Quantity", key: "behaviorAmount" },
+    ]
+***REMOVED***
+
   function addGoal(type) {
     var dateToday = new Date(),
       month = dateToday.getMonth(),
@@ -89,11 +101,11 @@ const JournalScreen = () => {
     defaultEndDate.setDate(defaultEndDate.getDate() + 14);
     console.log(defaultEndDate);
 
-    if (defaultEndDate.getMonth != dateToday.getMonth) {
+    if (defaultEndDate.getMonth !== dateToday.getMonth) {
       var defaultEndDay = (defaultEndDate.getMonth() + 2) + '/' + defaultEndDate.getDate() + '/' + year;
 ***REMOVED***
     else {
-      var defaultEndDay = (defaultEndDate.getMonth() + 1) + '/' + defaultEndDate.getDate() + '/' + year;
+      defaultEndDay = (defaultEndDate.getMonth() + 1) + '/' + defaultEndDate.getDate() + '/' + year;
 ***REMOVED***
 
     const newGoal = {
@@ -112,25 +124,26 @@ const JournalScreen = () => {
 
     switch (type) {
       case "Eating":
-      newGoal.goalValue = 5;
-      newGoal.divInfo1 = "Eat 5 or more servings of fruits and/or vegetables a day";
-      newGoal.divInfo2 = "Reach target increments for servings of healthy foods.";
+        newGoal.goalValue = 5;
+        newGoal.divInfo1 = "Eat 5 or more servings of fruits and/or vegetables";
+        newGoal.divInfo2 = "Reach target increments for servings of healthy foods.";
         break;
       case "Activity":
-      newGoal.goalValue = 60; 
-      newGoal.divInfo1 = "Get at least 60 minutes of physical activity per day";
-      newGoal.divInfo2 = "Do exercises like running or playing sports for at least an hour a day.";
+        newGoal.goalValue = 60;
+        newGoal.divInfo1 = "Get at least 60 minutes of physical activity per day";
+        newGoal.divInfo2 = "Do exercises like running or playing sports for at least an hour a day.";
         break;
       case "Screentime":
-      newGoal.goalValue = 2; 
-      newGoal.divInfo1 = "Limit screentime to 2 hours a day";
-      newGoal.divInfo2 = "Use devices like phones, laptops, and TV's less.";
+        newGoal.goalValue = 2;
+        newGoal.divInfo1 = "Limit screentime to 2 hours a day";
+        newGoal.divInfo2 = "Use devices like phones, laptops, and TV's less.";
         break;
       case "Sleep":
-      newGoal.goalValue = 9;
-      newGoal.divInfo1 = "Sleep at least 9 hours a night";
-      newGoal.divInfo2 = "Get anywhere from 9-11 hours of sleep a night to feel the best.";
+        newGoal.goalValue = 9;
+        newGoal.divInfo1 = "Sleep at least 9 hours a night";
+        newGoal.divInfo2 = "Get anywhere from 9-11 hours of sleep a night to feel the best.";
         break;
+      default:
 ***REMOVED***
 
     setGoalArray([...goalArray, newGoal]);
@@ -294,18 +307,12 @@ const JournalScreen = () => {
                     <Button variant="contained"
                       startIcon={<img src={require("../../components/images/journal/brain.png")}
                         alt="Brain for learn more button" />}
-                      style={{
-                        backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                        borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'
-                  ***REMOVED***}
+                      style={styles.learnMoreButton}
                       onClick={() => console.log('l')}
                     >
                       Learn More
                     </Button>
-                    <Button style={{
-                      backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                      borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'
-                ***REMOVED***}
+                    <Button style={styles.addGoalButton}
                       onClick={() => { addGoal('Eating') }}
                     >
                       Add to My Goals
@@ -329,18 +336,12 @@ const JournalScreen = () => {
                     <Button variant="contained"
                       startIcon={<img src={require("../../components/images/journal/brain.png")}
                         alt="Brain for learn more button" />}
-                      style={{
-                        backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                        borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'
-                  ***REMOVED***}
+                      style={styles.learnMoreButton}
                       onClick={() => { setRightScreenMode('Other Goal Mode') }}
                     >
                       Learn More
                     </Button>
-                    <Button style={{
-                      backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                      borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'
-                ***REMOVED***}
+                    <Button style={styles.addGoalButton}
                       onClick={() => { addGoal('Activity') }}
                     >
                       Add to My Goals
@@ -364,18 +365,12 @@ const JournalScreen = () => {
                     <Button variant="contained"
                       startIcon={<img src={require("../../components/images/journal/brain.png")}
                         alt="Brain for learn more button" />}
-                      style={{
-                        backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                        borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'
-                  ***REMOVED***}
+                      style={styles.learnMoreButton}
                       onClick={() => { setRightScreenMode('Other Goal Mode') }}
                     >
                       Learn More
                     </Button>
-                    <Button style={{
-                      backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                      borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'
-                ***REMOVED***}
+                    <Button style={styles.addGoalButton}
                       onClick={() => { addGoal('Screentime') }}
                     >
                       Add to My Goals
@@ -399,18 +394,12 @@ const JournalScreen = () => {
                     <Button variant="contained"
                       startIcon={<img src={require("../../components/images/journal/brain.png")}
                         alt="Brain for learn more button" />}
-                      style={{
-                        backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                        borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'
-                  ***REMOVED***}
+                      style={styles.learnMoreButton}
                       onClick={() => { setRightScreenMode('Other Goal Mode') }}
                     >
                       Learn More
                     </Button>
-                    <Button style={{
-                      backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                      borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'
-                ***REMOVED***}
+                    <Button style={styles.addGoalButton}
                       onClick={() => { addGoal('Sleep') }}
                     >
                       Add to My Goals
@@ -476,12 +465,15 @@ const JournalScreen = () => {
                               ***REMOVED***} />
                     ***REMOVED***
 
-                        <h2 onClick={() => setInputGoalValue(true)}
+                        <h2 onClick={() => {setInputGoalValue(true)}}
                           className="number-text">
-                          {inputGoalValue === true ?
+                          {inputGoalValue === true ?                            
                             <input type="number" name="goalValue" value={goal.goalValue} onBlur={handleBlur}
-                              onChange={(e) => updateGoalValue(goal.id, e.target.value)}
+                              id="goalValueInputBox"
+                              onChange={(e) => {updateGoalValue(goal.id, e.target.value); console.log(e.target.value);}}                        
                               onKeyDown={handleEnter}
+                              style={styles.goalValueInput}
+                              autoComplete="off"
                             />
                             :
                             <div>{goal.goalValue}</div>
@@ -565,28 +557,17 @@ const JournalScreen = () => {
                             :
                             <div className="modal">
                               <div className="inside-modal">
-                                <h2>Reflect on Your Goal</h2>
-                                <h4>Rate progress towards your goal this week 1-10. 1 being the lowest
-                                  (no progress), 10 being the highest (surpassed goal and feel great
-                                  about it).</h4>
-                                <Slider
-                                  aria-label="Reflection Meter"
-                                  defaultValue={1}
-                                  valueLabelDisplay="auto"
-                                  step={1}
-                                  marks
-                                  min={1}
-                                  max={10}
-                                  value={goalArray[selectedGoalReflectionIndex].reflectionValue}
-                                  onChange={(e) => { updateGoalReflectionValue(selectedGoalReflectionIndex, e.target.value); }}
+                                <h6>{renderedDateToday}</h6>
+                                <h2>Track Behaviors</h2>
+                                <h4>Enter how much of your goal (servings, hours, etc.) you achieved for today</h4>
+                                <input type="number" name="goalValue" value={goal.goalReflectionValue}
+                                  style={styles.behaviorInput}
+                                  onChange={(e) => updateGoalReflectionValue(goal.id, e.target.value)}
                                 />
                               </div>
 
                               <div className="nav-options">
-                                <Button style={{
-                                  backgroundColor: '#D9D9D9', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                                  borderRadius: '20px'
-                            ***REMOVED***}
+                                <Button style={styles.cancelButton}
                                   onClick={() => { handleCloseReflectModal(); }}
                                 >
                                   Cancel
@@ -616,8 +597,6 @@ const JournalScreen = () => {
                             <h2>Edit Your Goal Progress</h2>
                             <h4>Goal Name</h4>
                             <input className="modal-input" type="text" name="goal" onChange={(e) => updateGoal(goal.id, e.target.value)} value={goal.divInfo1} />
-                            <h4>How much have you progressed towards your goal this week?</h4>
-                            <input className="modal-input" type="number" name="goal" onChange={(e) => updateGoalValue(goal.id, e.target.value)} value={goal.goalValue} />
                             <Button style={{
                               backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                               borderRadius: '20px'
@@ -629,15 +608,14 @@ const JournalScreen = () => {
                           </div>
                           :
                           <div className="modal">
-                            {console.log(goal.startDateUnformatted.getDate())};
-                            <Calendar 
+                            <Calendar
                               startDate={new Date(goal.startDateUnformatted.getFullYear(),
-                              goal.startDateUnformatted.getDate(),
-                              goal.startDateUnformatted.getMonth())}
+                                goal.startDateUnformatted.getDate(),
+                                goal.startDateUnformatted.getMonth())}
 
                               endDate={new Date(goal.endDateUnformatted.getFullYear(),
-                              goal.endDateUnformatted.getDate(),
-                              goal.endDateUnformatted.getMonth())}
+                                goal.endDateUnformatted.getDate(),
+                                goal.endDateUnformatted.getMonth())}
 
                               onChange={() => updateGoalDates(goal.id, goal.startDate, goal.endDate)}
                             />
@@ -658,7 +636,7 @@ const JournalScreen = () => {
                 ))}
               </div>
         ***REMOVED***
-            <CSV />
+            <GoalCSV />
           </div>
           <img className="rightpage1" src={require('../../components/images/journal/left_page.png')}
             alt="First right-side page" />
@@ -674,6 +652,23 @@ const JournalScreen = () => {
 
 export default JournalScreen;
 
-// percentage of progress from survey questions (multiple modals)
-// incorporate AI for reflections on virtual coach
-// check during morning, day
+let styles = {
+  addGoalButton: {
+    backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+    borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'
+***REMOVED***,
+  learnMoreButton: {
+    backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+    borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'
+***REMOVED***,
+  cancelButton: {
+    backgroundColor: '#D9D9D9', width: '45%', textTransform: 'none', fontWeight: 'bold',
+    fontSize: '18px', borderRadius: '20px'
+***REMOVED***,
+  behaviorInput: {
+    width: '80%'
+***REMOVED***,
+  goalValueInput: {
+    width: '100%'
+***REMOVED***,
+}
