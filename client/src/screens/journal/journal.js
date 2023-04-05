@@ -22,13 +22,16 @@ const JournalScreen = () => {
   const [goalCount, setGoalCount] = useState(0);
   const [inputGoalValue, setInputGoalValue] = useState(false);
 
+  const [behaviorValues, setBehaviorValues] = useState([]);
+
+  const [behaviorData, setBehaviorData] = useState([]);
   const [dataList, setDataList] = useState([]);
 
   var renderedDate = new Date(),
-      renderedMonth = renderedDate.getMonth(),
-      renderedDay = renderedDate.getDate(),
-      renderedYear = renderedDate.getFullYear(),
-      renderedDateToday = (renderedMonth + 1) + '/' + renderedDay + '/' + renderedYear;
+    renderedMonth = renderedDate.getMonth(),
+    renderedDay = renderedDate.getDate(),
+    renderedYear = renderedDate.getFullYear(),
+    renderedDateToday = (renderedMonth + 1) + '/' + renderedDay + '/' + renderedYear;
 
   const handleEnter = (event) => {
     if (event.key === "Enter") {
@@ -69,7 +72,6 @@ const JournalScreen = () => {
       { label: "Goal Details", key: "goalDetails" },
       { label: "Goal Quantity", key: "goalQuantity" },
       { label: "Goal Reflection", key: "goalReflection" },
-      { label: "Goal Reflection Value", key: "goalReflectionValue" },
       { label: "Type of Goal", key: "goalType" },
       { label: "Start Date", key: "startDate" },
       { label: "End Date", key: "endDate" }
@@ -83,11 +85,18 @@ const JournalScreen = () => {
 ***REMOVED***
 
   const BehaviorTrackingCSV = () => {
-    const headers = [
-      { label: "Goal Data ID", key: "goalDataId" },
-      { label: "Date", key: "currentDate" },
-      { label: "Behavior Quantity", key: "behaviorAmount" },
-    ]
+    const behaviorHeaders = [
+      { label: "Goal Data ID", key: "behaviorDataId" },
+      { label: "Date", key: "loggedDate" },
+      { label: "Behavior Quantity", key: "behaviorValue" },
+    ];
+
+    return (
+      <div>
+        <CSVLink data={behaviorData} headers={behaviorHeaders} 
+        filename='behaviordata.csv'>Download Behavior Tracking Data</CSVLink>
+      </div>
+    )
 ***REMOVED***
 
   function addGoal(type) {
@@ -99,7 +108,6 @@ const JournalScreen = () => {
 
     var defaultEndDate = new Date();
     defaultEndDate.setDate(defaultEndDate.getDate() + 14);
-    console.log(defaultEndDate);
 
     if (defaultEndDate.getMonth !== dateToday.getMonth) {
       var defaultEndDay = (defaultEndDate.getMonth() + 2) + '/' + defaultEndDate.getDate() + '/' + year;
@@ -115,11 +123,16 @@ const JournalScreen = () => {
       divInfo1: "Eat 5 or more servings of fruits and/or vegetables",
       divInfo2: "Reach target increments for servings of healthy foods.",
       reflection: "",
-      reflectionValue: 0,
       startDate: date,
       endDate: defaultEndDay,
       startDateUnformatted: dateToday,
       endDateUnformatted: defaultEndDate
+***REMOVED***
+
+    const newBehavior = {
+      goalId: goalCount,
+      behaviorValue: 0,
+      loggedDate: date
 ***REMOVED***
 
     switch (type) {
@@ -147,16 +160,24 @@ const JournalScreen = () => {
 ***REMOVED***
 
     setGoalArray([...goalArray, newGoal]);
+    setBehaviorValues([...behaviorValues, newBehavior]);
     handleGoalCountChange();
     setRightScreenMode("Goal Selected Mode");
 
     const newData = [...dataList, {
       "goalDataId": newGoal.id,
       "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
-      "goalReflection": newGoal.reflection, "goalReflectionValue": newGoal.reflectionValue,
-      "goalType": "Eating", "startDate": newGoal.startDate, "endDate": newGoal.endDate
+      "goalReflection": newGoal.reflection, "goalType": "Eating", "startDate": newGoal.startDate, 
+      "endDate": newGoal.endDate
 ***REMOVED***];
+
+    const newBehaviorData = [...behaviorData, {
+      "behaviorDataId": newBehavior.goalId, "behaviorValue": newBehavior.behaviorValue,
+      "loggedDate": newBehavior.loggedDate
+***REMOVED***]
+
     setDataList(newData);
+    setBehaviorData(newBehaviorData);
 ***REMOVED***
 
   function updateGoalValue(id, newQuantity) {
@@ -209,7 +230,6 @@ const JournalScreen = () => {
     setDataList(prevGoals =>
       prevGoals.map(goal => {
         if (goal.goalDataId === id) {
-          console.log(dataList);
           return { ...goal, "goalReflection": newReflection };
     ***REMOVED***
         return goal;
@@ -217,22 +237,28 @@ const JournalScreen = () => {
     );
 ***REMOVED***
 
-  function updateGoalReflectionValue(id, newReflectionValue) {
-    setGoalArray(prevGoals =>
-      prevGoals.map(goal => {
-        if (goal.id === id) {
-          return { ...goal, reflectionValue: +newReflectionValue };
+  function updateBehaviorValue(id, newBehaviorValue) {
+
+    var loggingDate = new Date(),
+      month = loggingDate.getMonth(),
+      day = loggingDate.getDate(),
+      year = loggingDate.getFullYear(),
+      date = (month + 1) + '/' + day + '/' + year;
+    
+    setBehaviorValues(prevBehaviorVals =>
+      prevBehaviorVals.map(behavior => {
+        if (behavior.id === selectedGoalReflectionIndex) {
+          return { ...behavior, behaviorValue: +newBehaviorValue };
     ***REMOVED***
-        return goal;
+        return behavior;
   ***REMOVED***)
     );
-    setDataList(prevGoals =>
-      prevGoals.map(goal => {
-        if (goal.goalDataId === id) {
-          console.log(dataList);
-          return { ...goal, "goalReflectionValue": +newReflectionValue };
+    setBehaviorData(prevBehaviorVals =>
+      prevBehaviorVals.map(behavior => {
+        if (behavior.behaviorDataId === selectedGoalReflectionIndex) {
+          return { ...behavior, "behaviorValue": +newBehaviorValue };
     ***REMOVED***
-        return goal;
+        return behavior;
   ***REMOVED***)
     );
 ***REMOVED***
@@ -252,7 +278,6 @@ const JournalScreen = () => {
     setDataList(prevGoals =>
       prevGoals.map(goal => {
         if (goal.goalDataId === id) {
-          console.log(dataList);
           return { ...goal, "startDate": newStartDate, "endDate": newEndDate };
     ***REMOVED***
         return goal;
@@ -465,12 +490,12 @@ const JournalScreen = () => {
                               ***REMOVED***} />
                     ***REMOVED***
 
-                        <h2 onClick={() => {setInputGoalValue(true)}}
+                        <h2 onClick={() => { setInputGoalValue(true) }}
                           className="number-text">
-                          {inputGoalValue === true ?                            
+                          {inputGoalValue === true ?
                             <input type="number" name="goalValue" value={goal.goalValue} onBlur={handleBlur}
                               id="goalValueInputBox"
-                              onChange={(e) => {updateGoalValue(goal.id, e.target.value); console.log(e.target.value);}}                        
+                              onChange={(e) => { updateGoalValue(goal.id, e.target.value); }}
                               onKeyDown={handleEnter}
                               style={styles.goalValueInput}
                               autoComplete="off"
@@ -558,12 +583,24 @@ const JournalScreen = () => {
                             <div className="modal">
                               <div className="inside-modal">
                                 <h6>{renderedDateToday}</h6>
-                                <h2>Track Behaviors</h2>
+                                <h2>Track Behaviors {selectedGoalReflectionIndex}</h2>
                                 <h4>Enter how much of your goal (servings, hours, etc.) you achieved for today</h4>
-                                <input type="number" name="goalValue" value={goal.goalReflectionValue}
-                                  style={styles.behaviorInput}
-                                  onChange={(e) => updateGoalReflectionValue(goal.id, e.target.value)}
-                                />
+                                <div className="behaviorInput">
+                                  <input type="number" name="goalValue" value={behaviorValues.behaviorValue}
+                                    style={styles.behaviorInput}
+                                    onChange={(e) => { updateBehaviorValue(goal.id, e.target.value) }}
+                                  />
+                                  <Button style={{
+                                    backgroundColor: '#8054C9', width: '25%', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                    borderRadius: '20px', color: 'white', height: '10%', marginLeft: 'auto', marginTop: '4%'
+                              ***REMOVED***}
+                                    onClick={() => {
+                                      alert('Behavior logged for ' + renderedDateToday);
+                                ***REMOVED***}
+                                  >
+                                    Log
+                                  </Button>
+                                </div>
                               </div>
 
                               <div className="nav-options">
@@ -637,6 +674,7 @@ const JournalScreen = () => {
               </div>
         ***REMOVED***
             <GoalCSV />
+            <BehaviorTrackingCSV />
           </div>
           <img className="rightpage1" src={require('../../components/images/journal/left_page.png')}
             alt="First right-side page" />
@@ -666,7 +704,8 @@ let styles = {
     fontSize: '18px', borderRadius: '20px'
 ***REMOVED***,
   behaviorInput: {
-    width: '80%'
+    width: '50%',
+    height: '50%'
 ***REMOVED***,
   goalValueInput: {
     width: '100%'

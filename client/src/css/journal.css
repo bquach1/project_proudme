@@ -375,3 +375,7 @@
 .goal-description {
     cursor: pointer;
 }
+
+.behaviorInput {
+    display: flex;
+}
