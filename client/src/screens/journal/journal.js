@@ -119,7 +119,7 @@ const JournalScreen = () => {
     const newGoal = {
       id: goalCount,
       goalType: type,
-      goalValue: 5,
+      goalValue: 0,
       divInfo1: "Eat 5 or more servings of fruits and/or vegetables",
       divInfo2: "Reach target increments for servings of healthy foods.",
       reflection: "",
@@ -244,18 +244,42 @@ const JournalScreen = () => {
       day = loggingDate.getDate(),
       year = loggingDate.getFullYear(),
       date = (month + 1) + '/' + day + '/' + year;
-    
+
     setBehaviorValues(prevBehaviorVals =>
       prevBehaviorVals.map(behavior => {
-        if (behavior.id === selectedGoalReflectionIndex) {
-          return { ...behavior, behaviorValue: +newBehaviorValue };
+        var updatedBehavior = behavior;
+        // if (behavior.goalId === 2) {
+        //   updatedBehavior = { ...behavior, loggedDate: new Date(2023, 3, 7).toLocaleDateString() };
+        //   behavior = updatedBehavior;
+        // }
+        console.log(behavior.goalId);
+        if (date === behavior.loggedDate) {
+          console.log("same date")
+          if (behavior.goalId === id) {
+            return { ...behavior, behaviorValue: +newBehaviorValue };
+      ***REMOVED***
+          return behavior;
     ***REMOVED***
-        return behavior;
+        else {
+          console.log("different date")
+          console.log(behaviorValues);
+          const newBehavior = {
+            goalId: behavior.goalId,
+            behaviorValue: +newBehaviorValue,
+            loggedDate: new Date(2023, 3, 7).toLocaleDateString()
+      ***REMOVED***
+          if (behavior.goalId === id) {
+            return { ...behavior, 
+              goalId: newBehavior.goalId, 
+              behaviorValue: +newBehaviorValue,
+              loggedDate: newBehavior.loggedDate };            
+      ***REMOVED***
+    ***REMOVED***
   ***REMOVED***)
     );
     setBehaviorData(prevBehaviorVals =>
       prevBehaviorVals.map(behavior => {
-        if (behavior.behaviorDataId === selectedGoalReflectionIndex) {
+        if (behavior.behaviorDataId === id) {
           return { ...behavior, "behaviorValue": +newBehaviorValue };
     ***REMOVED***
         return behavior;
@@ -489,7 +513,6 @@ const JournalScreen = () => {
                                     updateGoalValue(goal.id, +goal.goalValue + 1)
                               ***REMOVED***} />
                     ***REMOVED***
-
                         <h2 onClick={() => { setInputGoalValue(true) }}
                           className="number-text">
                           {inputGoalValue === true ?
@@ -586,9 +609,13 @@ const JournalScreen = () => {
                                 <h2>Track Behaviors {selectedGoalReflectionIndex}</h2>
                                 <h4>Enter how much of your goal (servings, hours, etc.) you achieved for today</h4>
                                 <div className="behaviorInput">
-                                  <input type="number" name="goalValue" value={behaviorValues.behaviorValue}
+                                  <input type="text" name="goalValue" 
+                                    placeholder="0"
+                                    value={behaviorValues[selectedGoalReflectionIndex].behaviorValue}
                                     style={styles.behaviorInput}
-                                    onChange={(e) => { updateBehaviorValue(goal.id, e.target.value) }}
+                                    onChange={(e) => { 
+                                      updateBehaviorValue(selectedGoalReflectionIndex, e.target.value) 
+                                ***REMOVED***}
                                   />
                                   <Button style={{
                                     backgroundColor: '#8054C9', width: '25%', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
