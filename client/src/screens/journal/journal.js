@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import '../../css/journal.css';
 
 import Button from '@material-ui/core/Button';
-import Modal from '@mui/material/Modal';
 import { CSVLink } from 'react-csv';
 import Calendar from "../../components/calendar.js";
+import { Modal, LinearProgress } from '@mui/material';
 
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 
@@ -20,6 +20,7 @@ const JournalScreen = () => {
 
   const [goalArray, setGoalArray] = useState([]);
   const [goalCount, setGoalCount] = useState(0);
+  const [behaviorCount, setBehaviorCount] = useState(0);
   const [inputGoalValue, setInputGoalValue] = useState(false);
 
   const [behaviorValues, setBehaviorValues] = useState([]);
@@ -66,6 +67,10 @@ const JournalScreen = () => {
     setGoalCount(goalCount + 1);
 ***REMOVED***
 
+  const handleBehaviorCountChange = () => {
+    setBehaviorCount(behaviorCount + 1);
+***REMOVED***
+
   const GoalCSV = () => {
     const headers = [
       { label: "Goal Data ID", key: "goalDataId" },
@@ -86,6 +91,7 @@ const JournalScreen = () => {
 
   const BehaviorTrackingCSV = () => {
     const behaviorHeaders = [
+      { label: "Behavior ID", key: "behaviorId" },
       { label: "Goal Data ID", key: "behaviorDataId" },
       { label: "Date", key: "loggedDate" },
       { label: "Behavior Quantity", key: "behaviorValue" },
@@ -93,8 +99,8 @@ const JournalScreen = () => {
 
     return (
       <div>
-        <CSVLink data={behaviorData} headers={behaviorHeaders} 
-        filename='behaviordata.csv'>Download Behavior Tracking Data</CSVLink>
+        <CSVLink data={behaviorData} headers={behaviorHeaders}
+          filename='behaviordata.csv'>Download Behavior Tracking Data</CSVLink>
       </div>
     )
 ***REMOVED***
@@ -130,8 +136,9 @@ const JournalScreen = () => {
 ***REMOVED***
 
     const newBehavior = {
+      behaviorId: behaviorCount,
       goalId: goalCount,
-      behaviorValue: 0,
+      behaviorValue: "",
       loggedDate: date
 ***REMOVED***
 
@@ -162,17 +169,20 @@ const JournalScreen = () => {
     setGoalArray([...goalArray, newGoal]);
     setBehaviorValues([...behaviorValues, newBehavior]);
     handleGoalCountChange();
+    handleBehaviorCountChange();
     setRightScreenMode("Goal Selected Mode");
 
     const newData = [...dataList, {
       "goalDataId": newGoal.id,
       "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
-      "goalReflection": newGoal.reflection, "goalType": "Eating", "startDate": newGoal.startDate, 
+      "goalReflection": newGoal.reflection, "goalType": "Eating", "startDate": newGoal.startDate,
       "endDate": newGoal.endDate
 ***REMOVED***];
 
     const newBehaviorData = [...behaviorData, {
-      "behaviorDataId": newBehavior.goalId, "behaviorValue": newBehavior.behaviorValue,
+      "behaviorId": newBehavior.behaviorId,
+      "behaviorDataId": newBehavior.goalId,
+      "behaviorValue": newBehavior.behaviorValue,
       "loggedDate": newBehavior.loggedDate
 ***REMOVED***]
 
@@ -245,46 +255,55 @@ const JournalScreen = () => {
       year = loggingDate.getFullYear(),
       date = (month + 1) + '/' + day + '/' + year;
 
-    setBehaviorValues(prevBehaviorVals =>
-      prevBehaviorVals.map(behavior => {
-        var updatedBehavior = behavior;
-        // if (behavior.goalId === 2) {
-        //   updatedBehavior = { ...behavior, loggedDate: new Date(2023, 3, 7).toLocaleDateString() };
-        //   behavior = updatedBehavior;
-        // }
-        console.log(behavior.goalId);
-        if (date === behavior.loggedDate) {
-          console.log("same date")
-          if (behavior.goalId === id) {
-            return { ...behavior, behaviorValue: +newBehaviorValue };
-      ***REMOVED***
-          return behavior;
+    behaviorValues.map(updatedBehavior => {
+      if (updatedBehavior.loggedDate === date) {
+        if (updatedBehavior.goalId === id) {
+          var overridenBehavior = { ...updatedBehavior, behaviorValue: +newBehaviorValue };
+          setBehaviorValues(behaviorValues.map((behavior) => behavior.loggedDate === date
+            && behavior.goalId === id ? overridenBehavior : behavior));
     ***REMOVED***
-        else {
-          console.log("different date")
+        return updatedBehavior;
+  ***REMOVED***
+      else {
+        handleBehaviorCountChange();
+        const newBehavior = {
+          behaviorId: behaviorCount,
+          goalId: updatedBehavior.goalId,
+          behaviorValue: +newBehaviorValue,
+          loggedDate: date
+    ***REMOVED***
+        if (updatedBehavior.goalId === id) {
+          setBehaviorValues([...behaviorValues, newBehavior]);
+    ***REMOVED***
+  ***REMOVED***
+      return updatedBehavior;
+    ***REMOVED***
+
+    behaviorValues.map(updatedBehavior => {
+      if (updatedBehavior.loggedDate === date) {
+        if (updatedBehavior.goalId === id) {
+          var overridenBehavior = { ...updatedBehavior, "behaviorValue": +newBehaviorValue };
+          setBehaviorData(behaviorData.map((behavior) => behavior.loggedDate === date
+            && behavior.goalId === id ? overridenBehavior : behavior));
+    ***REMOVED***
+        return updatedBehavior;
+  ***REMOVED***
+      else {
+        handleBehaviorCountChange();
+        const newBehavior = {
+          "behaviorId": behaviorCount,
+          "behaviorDataId": updatedBehavior.goalId,
+          "behaviorValue": +newBehaviorValue,
+          "loggedDate": date
+    ***REMOVED***
+        if (updatedBehavior.goalId === id) {
           console.log(behaviorValues);
-          const newBehavior = {
-            goalId: behavior.goalId,
-            behaviorValue: +newBehaviorValue,
-            loggedDate: new Date(2023, 3, 7).toLocaleDateString()
-      ***REMOVED***
-          if (behavior.goalId === id) {
-            return { ...behavior, 
-              goalId: newBehavior.goalId, 
-              behaviorValue: +newBehaviorValue,
-              loggedDate: newBehavior.loggedDate };            
-      ***REMOVED***
+          console.log(newBehavior.loggedDate);
+          setBehaviorData([...behaviorData, newBehavior]);
     ***REMOVED***
-  ***REMOVED***)
-    );
-    setBehaviorData(prevBehaviorVals =>
-      prevBehaviorVals.map(behavior => {
-        if (behavior.behaviorDataId === id) {
-          return { ...behavior, "behaviorValue": +newBehaviorValue };
+  ***REMOVED***
+      return updatedBehavior;
     ***REMOVED***
-        return behavior;
-  ***REMOVED***)
-    );
 ***REMOVED***
 
   function updateGoalDates(id, newStartDate, newEndDate) {
@@ -319,8 +338,6 @@ const JournalScreen = () => {
           alt="Achievements bookmark tab" />
         <img onClick={() => setRightScreenMode("")} className="goals-tab" src={require('../../components/images/journal/goals_tab.png')}
           alt="Goals bookmark tab" />
-        <img className="gallery-tab" src={require('../../components/images/journal/gallery_tab.png')}
-          alt="Gallery bookmark tab" onClick={() => console.log(dataList)} />
         <div className="leftPageWrapper">
           {rightScreenMode === "Goal Selected Mode" ?
             <div className="goal-box">
@@ -353,18 +370,10 @@ const JournalScreen = () => {
                   </div>
 
                   <div className="button-container">
-                    <Button variant="contained"
-                      startIcon={<img src={require("../../components/images/journal/brain.png")}
-                        alt="Brain for learn more button" />}
-                      style={styles.learnMoreButton}
-                      onClick={() => console.log('l')}
-                    >
-                      Learn More
-                    </Button>
                     <Button style={styles.addGoalButton}
                       onClick={() => { addGoal('Eating') }}
                     >
-                      Add to My Goals
+                      Set My Goal
                     </Button>
                   </div>
                 </div>
@@ -382,18 +391,10 @@ const JournalScreen = () => {
                   </div>
 
                   <div className="button-container">
-                    <Button variant="contained"
-                      startIcon={<img src={require("../../components/images/journal/brain.png")}
-                        alt="Brain for learn more button" />}
-                      style={styles.learnMoreButton}
-                      onClick={() => { setRightScreenMode('Other Goal Mode') }}
-                    >
-                      Learn More
-                    </Button>
                     <Button style={styles.addGoalButton}
                       onClick={() => { addGoal('Activity') }}
                     >
-                      Add to My Goals
+                      Set My Goal
                     </Button>
                   </div>
                 </div>
@@ -411,18 +412,10 @@ const JournalScreen = () => {
                   </div>
 
                   <div className="button-container">
-                    <Button variant="contained"
-                      startIcon={<img src={require("../../components/images/journal/brain.png")}
-                        alt="Brain for learn more button" />}
-                      style={styles.learnMoreButton}
-                      onClick={() => { setRightScreenMode('Other Goal Mode') }}
-                    >
-                      Learn More
-                    </Button>
                     <Button style={styles.addGoalButton}
                       onClick={() => { addGoal('Screentime') }}
                     >
-                      Add to My Goals
+                      Set My Goal
                     </Button>
                   </div>
                 </div>
@@ -440,18 +433,10 @@ const JournalScreen = () => {
                   </div>
 
                   <div className="button-container">
-                    <Button variant="contained"
-                      startIcon={<img src={require("../../components/images/journal/brain.png")}
-                        alt="Brain for learn more button" />}
-                      style={styles.learnMoreButton}
-                      onClick={() => { setRightScreenMode('Other Goal Mode') }}
-                    >
-                      Learn More
-                    </Button>
                     <Button style={styles.addGoalButton}
                       onClick={() => { addGoal('Sleep') }}
                     >
-                      Add to My Goals
+                      Set My Goal
                     </Button>
                   </div>
                 </div>
@@ -609,12 +594,12 @@ const JournalScreen = () => {
                                 <h2>Track Behaviors {selectedGoalReflectionIndex}</h2>
                                 <h4>Enter how much of your goal (servings, hours, etc.) you achieved for today</h4>
                                 <div className="behaviorInput">
-                                  <input type="text" name="goalValue" 
+                                  <input type="text" name="goalValue"
                                     placeholder="0"
                                     value={behaviorValues[selectedGoalReflectionIndex].behaviorValue}
                                     style={styles.behaviorInput}
-                                    onChange={(e) => { 
-                                      updateBehaviorValue(selectedGoalReflectionIndex, e.target.value) 
+                                    onChange={(e) => {
+                                      updateBehaviorValue(selectedGoalReflectionIndex, e.target.value)
                                 ***REMOVED***}
                                   />
                                   <Button style={{
@@ -720,7 +705,8 @@ export default JournalScreen;
 let styles = {
   addGoalButton: {
     backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-    borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%'
+    borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%', 
+    marginLeft: 'auto', marginRight: 'auto'
 ***REMOVED***,
   learnMoreButton: {
     backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',

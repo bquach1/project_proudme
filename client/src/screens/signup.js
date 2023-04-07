@@ -19,7 +19,7 @@ const SignUpScreen = () => {
       lastName: "",
       gender: "",
       schoolYear: "",
-      schoolAttended: "",
+      schoolAttending: "",
       password: "",
       birthMonth: "",
       birthYear: "",
@@ -77,8 +77,8 @@ const SignUpScreen = () => {
                 <input className="dropdown" onChange={(e) => updateForm({lastName: e.target.value})} type="text" value={form.lastName} required />
               </div>
               <div className="row-container">
-              <label>School Attended: </label>
-                <input className="dropdown" placeholder="Full school name" onChange={(e) => updateForm({schoolAttended: e.target.value})} type="text" value={form.schoolAttended} required />
+              <label>School Attending: </label>
+                <input className="dropdown" placeholder="Full school name" onChange={(e) => updateForm({schoolAttending: e.target.value})} type="text" value={form.schoolAttending} required />
               </div>
             </div>
             <div className="line-container">
