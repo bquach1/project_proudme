@@ -1,5 +1,5 @@
 import './App.css';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, HashRouter } from 'react-router-dom';
 
 import LoginScreen from './screens/login.js';
@@ -11,14 +11,19 @@ import PetScreen from './screens/pet/pet.js';
 import PEScreen from './screens/pe/pe.js';
 import CSVScreen from './screens/journal/csv.js';
 
+import useToken from './components/auxiliary/useToken';
 import Header from './components/header';
 
-class App extends Component {
+function App() {
 
-  render() {
+  const { token, setToken } = useToken();
+
+  if (!token) {
+    return <LoginScreen setToken={setToken} />
+***REMOVED***
+
   return (
     <div className="App">
-      <HashRouter>
         <Header />
         <Routes>
           <Route path='/' element={<LoginScreen />} />
@@ -32,10 +37,9 @@ class App extends Component {
           <Route path='/pe' element={<PEScreen />} />
           <Route path='/csv' element={<CSVScreen />} />
         </Routes>
-      </HashRouter>
     </div>
   );
-***REMOVED***
+
 }
 
 export default App;

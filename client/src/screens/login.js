@@ -1,83 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 import '../css/login.css';
 
-const LoginScreen = () => {
+async function loginUser(credentials) {
+    return fetch('http://localhost:8080/login', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+    ***REMOVED***,
+        body: JSON.stringify(credentials)
+***REMOVED***)
+        .then(data => data.json())
+}
+
+const LoginScreen = ({ setToken }) => {
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
     const navigate = useNavigate();
 
-    const errors = {
-        usernameError: "invalid username",
-        passwordError: "invalid password"
-***REMOVED***;
-
-    const [errorMessages, setErrorMessages] = useState({***REMOVED***
-    const [isSubmitted, setIsSubmitted] = useState(false);
-
-    const renderErrorMessage = (name) => {
-        // window.alert("Incorrect login.");
-        name === errorMessages.name && (
-            <div className="popup">{errorMessages.message}</div>
-        )
-***REMOVED***;
-
-    const [records, setRecords] = useState([]);
- 
-    // This method fetches the records from the database.
-    useEffect(() => {
-      async function getRecords() {
-        const response = await fetch(`http://localhost:5000/record/`);
-    
-        if (!response.ok) {
-          const message = `An error occurred: ${response.statusText}`;
-          window.alert(message);
-          return;
-    ***REMOVED***
-    
-        const records = await response.json();
-        setRecords(records);
-  ***REMOVED***
-    
-      getRecords();
-    
-      return;
-***REMOVED***, [records.length]);
-    
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-
-        var { usernameError, passwordError } = document.forms[0];
-
-        const userData = records.find((user) => user.name === usernameError.value);
-
-        if (userData) {
-            if (userData.password !== passwordError.value) {
-                setErrorMessages({ name: "passwordError", message: errors.passwordError ***REMOVED***
-        ***REMOVED*** 
-            else {
-                setIsSubmitted(true);
+    const handleSubmit = async e => {
+        e.preventDefault();
+        const token = await loginUser({
+          email,
+          password
         ***REMOVED***
-    ***REMOVED***
-        else {
-            setErrorMessages({ name: "usernameError", message: errors.usernameError ***REMOVED***
-    ***REMOVED***
-***REMOVED***;
+        setToken(token);
+***REMOVED***
 
     const renderForm = (
         <div className="form">
           <form onSubmit={handleSubmit}>
             <div className="input-container">
-              <label>Username: </label>
-              <input type="text" name="usernameError" required />
-              {renderErrorMessage("usernameError")}
+              <label>Email: </label>
+              <input type="email" onChange={e => setEmail(e.target.value)} name="emailInput" required />
             </div>
             <div className="input-container">
               <label>Password: </label>
-              <input type="password" name="passwordError" required />
-              {renderErrorMessage("passwordError")}
+              <input type="password" onChange={e => setPassword(e.target.value)} name="passwordInput" required />
             </div>
             <div className="button-container">
               <Button 
@@ -100,21 +65,16 @@ const LoginScreen = () => {
         </div>
     );
 
-    function successfulLogin() {
-        setTimeout(() => {
-            navigate('/home');
-    ***REMOVED***, 3000);
-        return (
-            <div className="success-login">User successfully logged in!</div>
-        );
-***REMOVED***
-
     return (
         <div className="login">
             <h1 id="welcome">Welcome back to ProudME!</h1>
-            {isSubmitted ? successfulLogin() : renderForm}
+            {renderForm}
         </div>
     );
 };
 
 export default LoginScreen;
+
+LoginScreen.propTypes = {
+    setToken: PropTypes.func.isRequired
+}
