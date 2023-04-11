@@ -1,22 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import axios from 'axios';
 
 import '../css/login.css';
 
-async function loginUser(credentials) {
-    return fetch('http://localhost:8080/login', {
-        method: 'POST',
-        headers: {
-        'Content-Type': 'application/json'
-    ***REMOVED***,
-        body: JSON.stringify(credentials)
-***REMOVED***)
-        .then(data => data.json())
-}
-
-const LoginScreen = ({ setToken }) => {
+const LoginScreen = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -24,14 +13,20 @@ const LoginScreen = ({ setToken }) => {
 
     const navigate = useNavigate();
 
-    const handleSubmit = async e => {
-        e.preventDefault();
-        const token = await loginUser({
-          email,
-          password
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      
+      axios.post('http://localhost:3000/login', { 
+        email, 
+        password 
+  ***REMOVED***)
+        .then(response => {
+          console.log(response.data);
+    ***REMOVED***)
+        .catch(error => {
+      ***REMOVED***
         ***REMOVED***
-        setToken(token);
-***REMOVED***
+***REMOVED***;
 
     const renderForm = (
         <div className="form">
@@ -74,7 +69,3 @@ const LoginScreen = ({ setToken }) => {
 };
 
 export default LoginScreen;
-
-LoginScreen.propTypes = {
-    setToken: PropTypes.func.isRequired
-}

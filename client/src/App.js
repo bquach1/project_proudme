@@ -18,10 +18,6 @@ function App() {
 
   const { token, setToken } = useToken();
 
-  if (!token) {
-    return <LoginScreen setToken={setToken} />
-***REMOVED***
-
   return (
     <div className="App">
         <Header />
