@@ -11,12 +11,9 @@ import PetScreen from './screens/pet/pet.js';
 import PEScreen from './screens/pe/pe.js';
 import CSVScreen from './screens/journal/csv.js';
 
-import useToken from './components/auxiliary/useToken';
 import Header from './components/header';
 
 function App() {
-
-  const { token, setToken } = useToken();
 
   return (
     <div className="App">
