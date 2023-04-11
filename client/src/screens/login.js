@@ -15,12 +15,13 @@ const LoginScreen = () => {
 
     const handleSubmit = (event) => {
       event.preventDefault();
-      
+
       axios.post('http://localhost:3000/login', { 
         email, 
         password 
   ***REMOVED***)
         .then(response => {
+          setIsSubmitted(true);
           console.log(response.data);
     ***REMOVED***)
         .catch(error => {
@@ -60,10 +61,20 @@ const LoginScreen = () => {
         </div>
     );
 
+    function successfulLogin() {
+      setTimeout(() => {
+          navigate('/home');
+  ***REMOVED***, 3000);
+      return (
+          <div className="success-login">User successfully logged in!</div>
+      );
+***REMOVED***
+
+
     return (
         <div className="login">
             <h1 id="welcome">Welcome back to ProudME!</h1>
-            {renderForm}
+            {isSubmitted ? successfulLogin() : renderForm}
         </div>
     );
 };
