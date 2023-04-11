@@ -26,14 +26,14 @@ const SignUpScreen = () => {
     birthMonth: "",
     birthYear: "",
     email: ""
-  ***REMOVED***
+  });
 
   // These methods will update the state properties.
   function updateForm(value) {
     return setForm((prev) => {
       return { ...prev, ...value };
-    ***REMOVED***
-***REMOVED***
+    });
+  }
 
   // This function will handle the submission.
   const handleSubmit = (event) => {
@@ -41,11 +41,11 @@ const SignUpScreen = () => {
     axios.post('http://localhost:3000/signup', { email: form.email, password: form.password, confirmPassword: form.confirmPassword })
       .then(response => {
         console.log(response.data);
-  ***REMOVED***)
+      })
       .catch(error => {
-    ***REMOVED***
-      ***REMOVED***
-***REMOVED***;
+        console.error(error);
+      });
+  };
 
   const renderForm = (
     <div className="signup">
@@ -197,7 +197,7 @@ const SignUpScreen = () => {
               backgroundColor: '#EF9090', color: 'white', padding: '10px 50px 10px 50px',
               borderRadius: '20px', textTransform: 'none', marginTop: '2%', margin: 'auto', height: '60px',
               width: '25%', fontSize: '25px'
-        ***REMOVED***}
+            }}
             type="submit" value="Register user">
             Register
           </Button>
@@ -215,11 +215,11 @@ const SignUpScreen = () => {
         className="success"
         style={{
           display: submitted ? '' : 'none',
-    ***REMOVED***}>
+        }}>
         <h1>User {form.name} successfully registered!!</h1>
       </div>
     );
-***REMOVED***;
+  };
 
   // Showing error message if error is true
   const errorMessage = () => {
@@ -228,11 +228,11 @@ const SignUpScreen = () => {
         className="error"
         style={{
           display: error ? '' : 'none',
-    ***REMOVED***}>
+        }}>
         <h1>Please enter all the fields</h1>
       </div>
     );
-***REMOVED***;
+  };
 
   return (
     <div className="signup-page">

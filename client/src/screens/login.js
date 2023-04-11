@@ -19,15 +19,15 @@ const LoginScreen = () => {
       axios.post('http://localhost:3000/login', { 
         email, 
         password 
-  ***REMOVED***)
+      })
         .then(response => {
           setIsSubmitted(true);
           console.log(response.data);
-    ***REMOVED***)
+        })
         .catch(error => {
-      ***REMOVED***
-        ***REMOVED***
-***REMOVED***;
+          console.error(error);
+        });
+    };
 
     const renderForm = (
         <div className="form">
@@ -64,11 +64,11 @@ const LoginScreen = () => {
     function successfulLogin() {
       setTimeout(() => {
           navigate('/home');
-  ***REMOVED***, 3000);
+      }, 3000);
       return (
           <div className="success-login">User successfully logged in!</div>
       );
-***REMOVED***
+  }
 
 
     return (

@@ -21,8 +21,8 @@ recordRoutes.route("/record").get(function (req, res) {
    .toArray(function (err, result) {
      if (err) throw err;
      res.json(result);
-   ***REMOVED***
-***REMOVED***
+   });
+});
  
 // This section will help you get a single record by id
 recordRoutes.route("/record/:id").get(function (req, res) {
@@ -33,8 +33,8 @@ recordRoutes.route("/record/:id").get(function (req, res) {
    .findOne(myquery, function (err, result) {
      if (err) throw err;
      res.json(result);
-   ***REMOVED***
-***REMOVED***
+   });
+});
  
 // This section will help you create a new record.
 recordRoutes.route("/record/add").post(function (req, response) {
@@ -54,8 +54,8 @@ recordRoutes.route("/record/add").post(function (req, response) {
  db_connect.collection("records").insertOne(myobj, function (err, res) {
    if (err) throw err;
    response.json(res);
- ***REMOVED***
-***REMOVED***
+ });
+});
  
 // This section will help you update a record by id.
 recordRoutes.route("/update/:id").post(function (req, response) {
@@ -73,7 +73,7 @@ recordRoutes.route("/update/:id").post(function (req, response) {
     gradeLevel: req.body.gradeLevel,
     gender: req.body.gender,
     email: req.body.email
- ***REMOVED***,
+   },
  };
  db_connect
    .collection("records")
@@ -81,8 +81,8 @@ recordRoutes.route("/update/:id").post(function (req, response) {
      if (err) throw err;
      console.log("1 document updated");
      response.json(res);
-   ***REMOVED***
-***REMOVED***
+   });
+});
  
 // This section will help you delete a record
 recordRoutes.route("/:id").delete((req, response) => {
@@ -92,7 +92,7 @@ recordRoutes.route("/:id").delete((req, response) => {
    if (err) throw err;
    console.log("1 document deleted");
    response.json(obj);
- ***REMOVED***
-***REMOVED***
+ });
+});
  
 module.exports = recordRoutes;

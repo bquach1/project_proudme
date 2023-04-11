@@ -37,39 +37,39 @@ const JournalScreen = () => {
   const handleEnter = (event) => {
     if (event.key === "Enter") {
       setInputGoalValue(false);
-***REMOVED***
-***REMOVED***
+    }
+  }
 
   const handleBlur = (event) => {
     setInputGoalValue(false);
-***REMOVED***
+  }
 
   const handleOpenGoalModal = () => {
     setGoalOpen(true);
-***REMOVED***;
+  };
 
   const handleCloseGoalModal = () => {
     setGoalOpen(false);
-***REMOVED***;
+  };
 
   const handleReflectionClick = (index) => {
     setSelectedGoalReflectionIndex(index);
     setReflectOpen(true);
-***REMOVED***;
+  };
 
   const handleCloseReflectModal = () => {
     setSelectedGoalReflectionIndex(-1);
     setReflectOpen(false);
     setReflectionPage('');
-***REMOVED***;
+  };
 
   const handleGoalCountChange = () => {
     setGoalCount(goalCount + 1);
-***REMOVED***
+  }
 
   const handleBehaviorCountChange = () => {
     setBehaviorCount(behaviorCount + 1);
-***REMOVED***
+  }
 
   const GoalCSV = () => {
     const headers = [
@@ -87,7 +87,7 @@ const JournalScreen = () => {
         <CSVLink data={dataList} headers={headers} filename='goaldata.csv'>Download Goal Data</CSVLink>
       </div>
     )
-***REMOVED***
+  }
 
   const BehaviorTrackingCSV = () => {
     const behaviorHeaders = [
@@ -103,7 +103,7 @@ const JournalScreen = () => {
           filename='behaviordata.csv'>Download Behavior Tracking Data</CSVLink>
       </div>
     )
-***REMOVED***
+  }
 
   function addGoal(type) {
     var dateToday = new Date(),
@@ -117,10 +117,10 @@ const JournalScreen = () => {
 
     if (defaultEndDate.getMonth !== dateToday.getMonth) {
       var defaultEndDay = (defaultEndDate.getMonth() + 2) + '/' + defaultEndDate.getDate() + '/' + year;
-***REMOVED***
+    }
     else {
       defaultEndDay = (defaultEndDate.getMonth() + 1) + '/' + defaultEndDate.getDate() + '/' + year;
-***REMOVED***
+    }
 
     const newGoal = {
       id: goalCount,
@@ -133,14 +133,14 @@ const JournalScreen = () => {
       endDate: defaultEndDay,
       startDateUnformatted: dateToday,
       endDateUnformatted: defaultEndDate
-***REMOVED***
+    }
 
     const newBehavior = {
       behaviorId: behaviorCount,
       goalId: goalCount,
       behaviorValue: "",
       loggedDate: date
-***REMOVED***
+    }
 
     switch (type) {
       case "Eating":
@@ -164,7 +164,7 @@ const JournalScreen = () => {
         newGoal.divInfo2 = "Get anywhere from 9-11 hours of sleep a night to feel the best.";
         break;
       default:
-***REMOVED***
+    }
 
     setGoalArray([...goalArray, newGoal]);
     setBehaviorValues([...behaviorValues, newBehavior]);
@@ -177,75 +177,75 @@ const JournalScreen = () => {
       "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
       "goalReflection": newGoal.reflection, "goalType": "Eating", "startDate": newGoal.startDate,
       "endDate": newGoal.endDate
-***REMOVED***];
+    }];
 
     const newBehaviorData = [...behaviorData, {
       "behaviorId": newBehavior.behaviorId,
       "behaviorDataId": newBehavior.goalId,
       "behaviorValue": newBehavior.behaviorValue,
       "loggedDate": newBehavior.loggedDate
-***REMOVED***]
+    }]
 
     setDataList(newData);
     setBehaviorData(newBehaviorData);
-***REMOVED***
+  }
 
   function updateGoalValue(id, newQuantity) {
     setGoalArray(prevGoals =>
       prevGoals.map(goal => {
         if (goal.id === id) {
           return { ...goal, goalValue: newQuantity };
-    ***REMOVED***
+        }
         return goal;
-  ***REMOVED***)
+      })
     );
     setDataList(prevGoals =>
       prevGoals.map(goal => {
         if (goal.goalDataId === id) {
           return { ...goal, "goalQuantity": newQuantity };
-    ***REMOVED***
+        }
         return goal;
-  ***REMOVED***)
+      })
     );
-***REMOVED***
+  }
 
   function updateGoal(id, newDescription) {
     setGoalArray(prevGoals =>
       prevGoals.map(goal => {
         if (goal.id === id) {
           return { ...goal, divInfo1: newDescription };
-    ***REMOVED***
+        }
         return goal;
-  ***REMOVED***)
+      })
     );
     setDataList(prevGoals =>
       prevGoals.map(goal => {
         if (goal.goalDataId === id) {
           return { ...goal, "goal": newDescription };
-    ***REMOVED***
+        }
         return goal;
-  ***REMOVED***)
+      })
     );
-***REMOVED***
+  }
 
   function updateGoalReflection(id, newReflection) {
     setGoalArray(prevGoals =>
       prevGoals.map(goal => {
         if (goal.id === id) {
           return { ...goal, reflection: newReflection };
-    ***REMOVED***
+        }
         return goal;
-  ***REMOVED***)
+      })
     );
     setDataList(prevGoals =>
       prevGoals.map(goal => {
         if (goal.goalDataId === id) {
           return { ...goal, "goalReflection": newReflection };
-    ***REMOVED***
+        }
         return goal;
-  ***REMOVED***)
+      })
     );
-***REMOVED***
+  }
 
   function updateBehaviorValue(id, newBehaviorValue) {
 
@@ -261,9 +261,9 @@ const JournalScreen = () => {
           var overridenBehavior = { ...updatedBehavior, behaviorValue: +newBehaviorValue };
           setBehaviorValues(behaviorValues.map((behavior) => behavior.loggedDate === date
             && behavior.goalId === id ? overridenBehavior : behavior));
-    ***REMOVED***
+        }
         return updatedBehavior;
-  ***REMOVED***
+      }
       else {
         handleBehaviorCountChange();
         const newBehavior = {
@@ -271,13 +271,13 @@ const JournalScreen = () => {
           goalId: updatedBehavior.goalId,
           behaviorValue: +newBehaviorValue,
           loggedDate: date
-    ***REMOVED***
+        }
         if (updatedBehavior.goalId === id) {
           setBehaviorValues([...behaviorValues, newBehavior]);
-    ***REMOVED***
-  ***REMOVED***
+        }
+      }
       return updatedBehavior;
-    ***REMOVED***
+    });
 
     behaviorValues.map(updatedBehavior => {
       if (updatedBehavior.loggedDate === date) {
@@ -285,9 +285,9 @@ const JournalScreen = () => {
           var overridenBehavior = { ...updatedBehavior, "behaviorValue": +newBehaviorValue };
           setBehaviorData(behaviorData.map((behavior) => behavior.loggedDate === date
             && behavior.goalId === id ? overridenBehavior : behavior));
-    ***REMOVED***
+        }
         return updatedBehavior;
-  ***REMOVED***
+      }
       else {
         handleBehaviorCountChange();
         const newBehavior = {
@@ -295,16 +295,16 @@ const JournalScreen = () => {
           "behaviorDataId": updatedBehavior.goalId,
           "behaviorValue": +newBehaviorValue,
           "loggedDate": date
-    ***REMOVED***
+        }
         if (updatedBehavior.goalId === id) {
           console.log(behaviorValues);
           console.log(newBehavior.loggedDate);
           setBehaviorData([...behaviorData, newBehavior]);
-    ***REMOVED***
-  ***REMOVED***
+        }
+      }
       return updatedBehavior;
-    ***REMOVED***
-***REMOVED***
+    });
+  }
 
   function updateGoalDates(id, newStartDate, newEndDate) {
     setGoalArray(prevGoals =>
@@ -314,19 +314,19 @@ const JournalScreen = () => {
             ...goal,
             startDateUnformatted: newStartDate,
             endDateUnformatted: newEndDate
-      ***REMOVED***
-    ***REMOVED***
+          }
+        }
         return goal;
-  ***REMOVED***))
+      }))
     setDataList(prevGoals =>
       prevGoals.map(goal => {
         if (goal.goalDataId === id) {
           return { ...goal, "startDate": newStartDate, "endDate": newEndDate };
-    ***REMOVED***
+        }
         return goal;
-  ***REMOVED***)
+      })
     );
-***REMOVED***
+  }
 
   return (
     <div className="journal">
@@ -352,7 +352,7 @@ const JournalScreen = () => {
                     <h4>You're currently working on 1 goal.</h4>
                     :
                     <h4>You're currently working on {goalCount} goals.</h4>
-            ***REMOVED***
+                }
               </div>
               :
               <div className="goal-box">
@@ -441,7 +441,7 @@ const JournalScreen = () => {
                   </div>
                 </div>
               </div>
-      ***REMOVED***
+          }
 
           <img className="leftpage1" src={require('../../components/images/journal/right_page.png')}
             alt="First left-side page" />
@@ -473,31 +473,31 @@ const JournalScreen = () => {
                             onClick={() => {
                               if (goal.goalValue < 105) updateGoalValue(goal.id, +goal.goalValue + 15)
                               else updateGoalValue(goal.id, goal.goalValue)
-                        ***REMOVED***} />
+                            }} />
                           : goal.goalType === "Eating" ?
                             <IoIosArrowUp id="upIcon"
                               onClick={() => {
                                 if (goal.goalValue < 5) updateGoalValue(goal.id, +goal.goalValue + 1)
                                 else updateGoalValue(goal.id, goal.goalValue)
-                          ***REMOVED***} />
+                              }} />
                             : goal.goalType === "Screentime" ?
                               <IoIosArrowUp id="upIcon"
                                 onClick={() => {
                                   if (goal.goalValue < 5) updateGoalValue(goal.id, +goal.goalValue + 1)
                                   else updateGoalValue(goal.id, goal.goalValue)
-                            ***REMOVED***} />
+                                }} />
                               : goal.goalType === "Sleep" ?
                                 <IoIosArrowUp id="upIcon"
                                   onClick={() => {
                                     if (goal.goalValue < 12) updateGoalValue(goal.id, +goal.goalValue + 1)
                                     else updateGoalValue(goal.id, goal.goalValue)
-                              ***REMOVED***} />
+                                  }} />
                                 :
                                 <IoIosArrowUp id="upIcon"
                                   onClick={() => {
                                     updateGoalValue(goal.id, +goal.goalValue + 1)
-                              ***REMOVED***} />
-                    ***REMOVED***
+                                  }} />
+                        }
                         <h2 onClick={() => { setInputGoalValue(true) }}
                           className="number-text">
                           {inputGoalValue === true ?
@@ -510,38 +510,38 @@ const JournalScreen = () => {
                             />
                             :
                             <div>{goal.goalValue}</div>
-                      ***REMOVED***
+                          }
                         </h2>
                         {goal.goalType === "Activity" ?
                           <IoIosArrowDown id="downIcon"
                             onClick={() => {
                               if (goal.goalValue > 30) updateGoalValue(goal.id, +goal.goalValue - 15)
                               else updateGoalValue(goal.id, goal.goalValue)
-                        ***REMOVED***} />
+                            }} />
                           : goal.goalType === "Eating" ?
                             <IoIosArrowDown id="downIcon"
                               onClick={() => {
                                 if (goal.goalValue > 1) updateGoalValue(goal.id, +goal.goalValue - 1)
                                 else updateGoalValue(goal.id, goal.goalValue)
-                          ***REMOVED***} />
+                              }} />
                             : goal.goalType === "Screentime" ?
                               <IoIosArrowDown id="downIcon"
                                 onClick={() => {
                                   if (goal.goalValue > 1) updateGoalValue(goal.id, +goal.goalValue - 1)
                                   else updateGoalValue(goal.id, goal.goalValue)
-                            ***REMOVED***} />
+                                }} />
                               : goal.goalType === "Sleep" ?
                                 <IoIosArrowDown id="downIcon"
                                   onClick={() => {
                                     if (goal.goalValue > 8) updateGoalValue(goal.id, +goal.goalValue - 1)
                                     else updateGoalValue(goal.id, goal.goalValue)
-                              ***REMOVED***} />
+                                  }} />
                                 :
                                 <IoIosArrowDown id="downIcon"
                                   onClick={() => {
                                     updateGoalValue(goal.id, +goal.goalValue - 1)
-                              ***REMOVED***} />
-                    ***REMOVED***
+                                  }} />
+                        }
                       </div>
                     </div>
 
@@ -571,7 +571,7 @@ const JournalScreen = () => {
                                 <Button style={{
                                   backgroundColor: '#D9D9D9', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                                   borderRadius: '20px'
-                            ***REMOVED***}
+                                }}
                                   onClick={() => { setReflectionPage(''); }}
                                 >
                                   Back
@@ -580,7 +580,7 @@ const JournalScreen = () => {
                                 <Button style={{
                                   backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                                   borderRadius: '20px'
-                            ***REMOVED***}
+                                }}
                                   onClick={() => { handleCloseReflectModal(); }}
                                 >
                                   Reflect
@@ -600,15 +600,15 @@ const JournalScreen = () => {
                                     style={styles.behaviorInput}
                                     onChange={(e) => {
                                       updateBehaviorValue(selectedGoalReflectionIndex, e.target.value)
-                                ***REMOVED***}
+                                    }}
                                   />
                                   <Button style={{
                                     backgroundColor: '#8054C9', width: '25%', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
                                     borderRadius: '20px', color: 'white', height: '10%', marginLeft: 'auto', marginTop: '4%'
-                              ***REMOVED***}
+                                  }}
                                     onClick={() => {
                                       alert('Behavior logged for ' + renderedDateToday);
-                                ***REMOVED***}
+                                    }}
                                   >
                                     Log
                                   </Button>
@@ -625,14 +625,14 @@ const JournalScreen = () => {
                                 <Button style={{
                                   backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                                   borderRadius: '20px'
-                            ***REMOVED***}
+                                }}
                                   onClick={() => { setReflectionPage('Text') }}
                                 >
                                   Next
                                 </Button>
                               </div>
                             </div>
-                      ***REMOVED***
+                          }
                         </Modal>
                       )}
                       <Modal
@@ -649,7 +649,7 @@ const JournalScreen = () => {
                             <Button style={{
                               backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                               borderRadius: '20px'
-                        ***REMOVED***}
+                            }}
                               onClick={() => { setEditPage('Calendar') }}
                             >
                               Next
@@ -672,19 +672,19 @@ const JournalScreen = () => {
                             <Button style={{
                               backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
                               borderRadius: '20px'
-                        ***REMOVED***}
+                            }}
                               onClick={() => { updateGoalDates(goal.id, goal.startDateUnformatted, goal.endDateUnformatted); handleCloseGoalModal(); }}
                             >
                               Log Progress
                             </Button>
                           </div>
-                    ***REMOVED***
+                        }
                       </Modal>
                     </div>
                   </div>
                 ))}
               </div>
-        ***REMOVED***
+            }
             <GoalCSV />
             <BehaviorTrackingCSV />
           </div>
@@ -707,20 +707,20 @@ let styles = {
     backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
     borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%', 
     marginLeft: 'auto', marginRight: 'auto'
-***REMOVED***,
+  },
   learnMoreButton: {
     backgroundColor: '#9B8EEB', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
     borderRadius: '25px', color: 'white', width: '150px', marginTop: '5%'
-***REMOVED***,
+  },
   cancelButton: {
     backgroundColor: '#D9D9D9', width: '45%', textTransform: 'none', fontWeight: 'bold',
     fontSize: '18px', borderRadius: '20px'
-***REMOVED***,
+  },
   behaviorInput: {
     width: '50%',
     height: '50%'
-***REMOVED***,
+  },
   goalValueInput: {
     width: '100%'
-***REMOVED***,
+  },
 }

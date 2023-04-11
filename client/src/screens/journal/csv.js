@@ -30,12 +30,12 @@ const CSVScreen = () => {
                 if (!allowedExtensions.includes(fileExtension)) {
                     setError("Please input a csv file");
                     return;
-            ***REMOVED***
+                }
      
                 // If input type is correct set the state
                 setFile(inputFile);
-        ***REMOVED***
-    ***REMOVED***;
+            }
+        };
         const handleParse = () => {
              
             // If user clicks the parse button without
@@ -49,13 +49,13 @@ const CSVScreen = () => {
             // Event listener on reader when the file
             // loads, we parse it and set the data.
             reader.onload = async ({ target }) => {
-                const csv = Papa.parse(target.result, { header: true ***REMOVED***
+                const csv = Papa.parse(target.result, { header: true });
                 const parsedData = csv?.data;
                 const columns = Object.keys(parsedData[0]);
                 setData(columns);
-        ***REMOVED***;
+            };
             reader.readAsText(file);
-    ***REMOVED***;
+        };
      
         return (
             <div>

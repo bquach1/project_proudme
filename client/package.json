@@ -41,7 +41,7 @@
     "redux-thunk": "^2.4.2",
     "validator": "^13.9.0",
     "web-vitals": "^2.1.4"
-***REMOVED***,
+  },
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
@@ -54,13 +54,13 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-***REMOVED***,
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
     ]
-***REMOVED***,
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -72,12 +72,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-***REMOVED***,
+  },
   "devDependencies": {
     "@types/validator": "^13.7.12",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "gh-pages": "^4.0.0",
     "nodemon": "^2.0.20"
-***REMOVED***
+  }
 }

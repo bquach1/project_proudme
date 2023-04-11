@@ -12,7 +12,7 @@ const LogPopover = (props) => {
         anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'left',
-    ***REMOVED***}
+        }}
     >
         {children}
     </Popover>

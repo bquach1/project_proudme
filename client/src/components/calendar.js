@@ -8,7 +8,7 @@ const CalendarComponent = ({ startDate, endDate }) => {
   function handleDateChange(range) {
     setDateRange(range);
     console.log(dateRange);
-***REMOVED***;
+  };
 
   return (
     <Calendar
