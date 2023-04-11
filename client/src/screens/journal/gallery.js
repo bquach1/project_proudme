@@ -1,4 +1,5 @@
 import React from 'react';
+import withAuth from '../../components/auth/withAuth';
 
 const GalleryScreen = () => {
     return (
@@ -8,4 +9,4 @@ const GalleryScreen = () => {
     );
 };
 
-export default GalleryScreen;
+export default withAuth(GalleryScreen);

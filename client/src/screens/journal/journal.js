@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../../css/journal.css';
+import withAuth from '../../components/auth/withAuth';
 
 import Button from '@material-ui/core/Button';
 import { CSVLink } from 'react-csv';
@@ -700,7 +701,7 @@ const JournalScreen = () => {
   );
 };
 
-export default JournalScreen;
+export default withAuth(JournalScreen);
 
 let styles = {
   addGoalButton: {

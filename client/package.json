@@ -1,7 +1,7 @@
 {
   "name": "project_proudme",
   "version": "0.1.0",
-  "homepage": "https://bquach1.github.io/project-proudme/#",
+  "homepage": "https://bquach1.github.io/project_proudme/#",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -34,7 +34,7 @@
     "react-icons": "^4.7.1",
     "react-redux": "^8.0.5",
     "react-router": "^6.4.5",
-    "react-router-dom": "^6.8.1",
+    "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
     "react-validation": "^3.0.7",
     "redux": "^4.2.1",

@@ -1,6 +1,7 @@
 import React from "react";
 import '../../css/pe.css';
 import YoutubeEmbed from "../../components/YoutubeEmbed.js";
+import withAuth from '../../components/auth/withAuth';
 
 const PEScreen = () => {
     return (
@@ -13,4 +14,4 @@ const PEScreen = () => {
     )
 }
 
-export default PEScreen;
+export default withAuth(PEScreen);

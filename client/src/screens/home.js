@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import '../css/home.css';
 import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
+import withAuth from '../components/auth/withAuth';
 
 const HomeScreen = () => {
 
@@ -49,4 +50,4 @@ const HomeScreen = () => {
     );
 };
 
-export default HomeScreen;
+export default withAuth(HomeScreen);

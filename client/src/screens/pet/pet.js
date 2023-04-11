@@ -1,4 +1,5 @@
 import React from 'react';
+import withAuth from '../../components/auth/withAuth';
 
 const PetScreen = () => {
     return (
@@ -8,4 +9,4 @@ const PetScreen = () => {
     );
 };
 
-export default PetScreen;
+export default withAuth(PetScreen);

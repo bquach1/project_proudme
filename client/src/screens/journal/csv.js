@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Papa from "papaparse";
+import withAuth from '../../components/auth/withAuth';
 
 const allowedExtensions = ["csv"];
 
@@ -79,4 +80,4 @@ const CSVScreen = () => {
         );
 };
 
-export default CSVScreen;
+export default withAuth(CSVScreen);
