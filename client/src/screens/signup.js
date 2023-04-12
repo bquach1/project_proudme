@@ -194,16 +194,16 @@ const SignUpScreen = () => {
         <div className="button-container">
           <Button
             style={{
-              backgroundColor: '#EF9090', color: 'white', padding: '10px 50px 10px 50px',
-              borderRadius: '20px', textTransform: 'none', marginTop: '2%', margin: 'auto', height: '60px',
+              backgroundColor: '#D7A746', color: 'white', padding: '10px 50px 10px 50px',
+              borderRadius: '20px', textTransform: 'none', marginTop: '3%', margin: 'auto', height: '60px',
               width: '25%', fontSize: '25px'
             }}
             type="submit" value="Register user">
             Register
           </Button>
         </div>
-        <div className="registration">
-          <h2>Already have an account? <a className="nav-link" onClick={() => navigate('/login')}>Sign In!</a></h2>
+        <div className="signup-registration">
+          <h2>Already have an account? <a className="nav-select" onClick={() => navigate('/login')}>Sign In!</a></h2>
         </div>
       </form>
     </div>

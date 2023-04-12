@@ -8,6 +8,8 @@ const Header = () => {
 
     let navigate = useNavigate();
 
+    const token = localStorage.getItem('authToken');
+
     return (
         <nav>
             <div className="left-nav">
@@ -38,7 +40,12 @@ const Header = () => {
             </div>
 
             <div className="right-nav">
+                {token === null ?
                 <p className="nav-link" onClick={() => navigate('/login')}>Sign In</p>
+                : 
+                <p className="nav-link" 
+                onClick={() => {navigate('/login'); localStorage.removeItem('authToken')}}>Sign Out</p>
+                }                
                 <div className="nav-text">|</div>
                 <p className="nav-link" onClick={() => navigate('/pet')}>For Grown-Ups</p>
             </div>

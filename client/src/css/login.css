@@ -1,6 +1,5 @@
 .form {
-    display: flex;
-    background-color: #FFFBD6;
+    background-color: #B2C5CB;
     width: 50%;
     margin: auto;
     border-radius: 10px;
@@ -15,7 +14,7 @@ form {
 }
 
 label {
-    color: #A87B06;
+    color: #2C4F74;
     font-weight: bold;
     font-size: 20px;
     display: flex;
@@ -45,7 +44,6 @@ input {
     font-weight: bold;
 }
 
-a:link { color: #8054C9; }
 
 .button-container {
     display: flex;
@@ -55,28 +53,30 @@ a:link { color: #8054C9; }
     margin-left: 2%;
 }
 
-.nav-link {
-    color: #8054C9;
-    display: flex;
-    margin-left: auto;
-    margin-right: auto;
+.nav-select {
+    color: #2C4F74;
+    margin-left: 1%; 
 }
 
-.nav-link:hover {
+.nav-select:hover {
     color: #8054C9;
     cursor: pointer;
 }
 
 h2 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 150%;
 }
 
-a {
+.registration {
+    margin-top: 5%;
+    margin-bottom: 2%;
+}
+
+.registration-link {
     display: flex;
-    margin-left: auto;
-    margin-right: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Popup container */
