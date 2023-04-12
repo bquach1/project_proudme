@@ -5,7 +5,7 @@ import withAuth from '../../components/auth/withAuth';
 import Button from '@material-ui/core/Button';
 import { CSVLink } from 'react-csv';
 import Calendar from "../../components/calendar.js";
-import { Modal, LinearProgress } from '@mui/material';
+import { Modal, LinearProgress, CircularProgress } from '@mui/material';
 
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 
@@ -18,6 +18,7 @@ const JournalScreen = () => {
   const [rightScreenMode, setRightScreenMode] = useState('');
   const [reflectionPage, setReflectionPage] = useState('Default');
   const [editPage, setEditPage] = useState('General');
+  const [formCompletion, setFormCompletion] = useState(33);
 
   const [goalArray, setGoalArray] = useState([]);
   const [goalCount, setGoalCount] = useState(0);
@@ -329,7 +330,7 @@ const JournalScreen = () => {
     );
   }
 
-  return (
+  return (    
     <div className="journal">
       <h1 className="title">My Journal</h1>
       <div className="journalWrapper">
@@ -684,10 +685,11 @@ const JournalScreen = () => {
                     </div>
                   </div>
                 ))}
+                <LinearProgress style={{ margin: 'auto' }} color='success' variant="determinate" value={formCompletion} />   
               </div>
-            }
-            <GoalCSV />
-            <BehaviorTrackingCSV />
+            }            
+            <GoalCSV />              
+            <BehaviorTrackingCSV />                 
           </div>
           <img className="rightpage1" src={require('../../components/images/journal/left_page.png')}
             alt="First right-side page" />
@@ -695,8 +697,8 @@ const JournalScreen = () => {
             alt="Second right-side page" />
           <img className="rightpage3" src={require('../../components/images/journal/left_page3.png')}
             alt="Third right-side page" />
-        </div>
-      </div>
+        </div>        
+      </div>      
     </div>
   );
 };
