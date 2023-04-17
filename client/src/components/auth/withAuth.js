@@ -7,7 +7,6 @@ const withAuth = (Component) => {
     const isAuthenticated = localStorage.getItem('authToken') !== null;
 
     useEffect(() => {
-      console.log(localStorage.getItem('authToken'));
       if (!isAuthenticated) {
         navigate('/login');
       }

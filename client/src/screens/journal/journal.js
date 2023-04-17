@@ -18,7 +18,7 @@ const JournalScreen = () => {
   const [rightScreenMode, setRightScreenMode] = useState('');
   const [reflectionPage, setReflectionPage] = useState('Default');
   const [editPage, setEditPage] = useState('General');
-  const [formCompletion, setFormCompletion] = useState(33);
+  const [formCompletion, setFormCompletion] = useState(50);
 
   const [goalArray, setGoalArray] = useState([]);
   const [goalCount, setGoalCount] = useState(0);
@@ -330,7 +330,7 @@ const JournalScreen = () => {
     );
   }
 
-  return (    
+  return (
     <div className="journal">
       <h1 className="title">My Journal</h1>
       <div className="journalWrapper">
@@ -457,239 +457,306 @@ const JournalScreen = () => {
           <img className="bookmark" src={require('../../components/images/journal/bookmark.png')} alt="Yellow bookmark icon" />
           <div className="goal-box">
             <h1 className="journal-title">My Goals</h1>
+            <h4>{renderedDateToday}</h4>
             {goalCount === 0 ?
               <div className="goal-text">You don't have any goals added yet. Add some recommended behaviors from the left page to start!</div>
               :
               <div>
                 {goalArray.map((goal) => (
                   <div className="current-goal" key={goal.id}>
-                    <div className="goal-container">
-                      <div className="goal-description" onClick={() => handleOpenGoalModal()}>
-                        <h3 className="goal-text">{goal.divInfo1}</h3>
-                        <h6 className="goal-text">{goal.divInfo2}</h6>
-                      </div>
+                    {reflectOpen === false ?
+                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div className="goal-container">
+                          <div className="goal-description" onClick={() => handleOpenGoalModal()}>
+                            <h3 className="goal-text">{goal.divInfo1}</h3>
+                            <h6 className="goal-text">{goal.divInfo2}</h6>
+                          </div>
 
-                      <div className="selection-container">
-                        {goal.goalType === "Activity" ?
-                          <IoIosArrowUp id="upIcon"
-                            onClick={() => {
-                              if (goal.goalValue < 105) updateGoalValue(goal.id, +goal.goalValue + 15)
-                              else updateGoalValue(goal.id, goal.goalValue)
-                            }} />
-                          : goal.goalType === "Eating" ?
-                            <IoIosArrowUp id="upIcon"
-                              onClick={() => {
-                                if (goal.goalValue < 5) updateGoalValue(goal.id, +goal.goalValue + 1)
-                                else updateGoalValue(goal.id, goal.goalValue)
-                              }} />
-                            : goal.goalType === "Screentime" ?
+                          <Modal
+                            aria-labelledby="goal-modal"
+                            aria-describedby="modal-to-create-new-goal"
+                            open={goalOpen}
+                            onClose={handleCloseGoalModal}
+                          >
+                            {editPage === 'General' ?
+                              <div className="modal">
+                                <h2>Edit Your Goal Progress</h2>
+                                <h4>Goal Name</h4>
+                                <input className="modal-input" type="text" name="goal" onChange={(e) => updateGoal(goal.id, e.target.value)} value={goal.divInfo1} />
+                                <Button style={{
+                                  backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                                  borderRadius: '20px'
+                                }}
+                                  onClick={() => { setEditPage('Calendar') }}
+                                >
+                                  Next
+                                </Button>
+                              </div>
+                              :
+                              <div className="modal">
+                                <Calendar
+                                  startDate={new Date(goal.startDateUnformatted.getFullYear(),
+                                    goal.startDateUnformatted.getDate(),
+                                    goal.startDateUnformatted.getMonth())}
+
+                                  endDate={new Date(goal.endDateUnformatted.getFullYear(),
+                                    goal.endDateUnformatted.getDate(),
+                                    goal.endDateUnformatted.getMonth())}
+
+                                  onChange={() => updateGoalDates(goal.id, goal.startDate, goal.endDate)}
+                                />
+
+                                <Button style={{
+                                  backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                                  borderRadius: '20px'
+                                }}
+                                  onClick={() => { updateGoalDates(goal.id, goal.startDateUnformatted, goal.endDateUnformatted); handleCloseGoalModal(); }}
+                                >
+                                  Log Progress
+                                </Button>
+                              </div>
+                            }
+                          </Modal>
+
+                          <div className="selection-container">
+                            {goal.goalType === "Activity" ?
                               <IoIosArrowUp id="upIcon"
                                 onClick={() => {
-                                  if (goal.goalValue < 5) updateGoalValue(goal.id, +goal.goalValue + 1)
+                                  if (goal.goalValue < 105) updateGoalValue(goal.id, +goal.goalValue + 15)
                                   else updateGoalValue(goal.id, goal.goalValue)
                                 }} />
-                              : goal.goalType === "Sleep" ?
+                              : goal.goalType === "Eating" ?
                                 <IoIosArrowUp id="upIcon"
                                   onClick={() => {
-                                    if (goal.goalValue < 12) updateGoalValue(goal.id, +goal.goalValue + 1)
+                                    if (goal.goalValue < 5) updateGoalValue(goal.id, +goal.goalValue + 1)
                                     else updateGoalValue(goal.id, goal.goalValue)
                                   }} />
+                                : goal.goalType === "Screentime" ?
+                                  <IoIosArrowUp id="upIcon"
+                                    onClick={() => {
+                                      if (goal.goalValue < 5) updateGoalValue(goal.id, +goal.goalValue + 1)
+                                      else updateGoalValue(goal.id, goal.goalValue)
+                                    }} />
+                                  : goal.goalType === "Sleep" ?
+                                    <IoIosArrowUp id="upIcon"
+                                      onClick={() => {
+                                        if (goal.goalValue < 12) updateGoalValue(goal.id, +goal.goalValue + 1)
+                                        else updateGoalValue(goal.id, goal.goalValue)
+                                      }} />
+                                    :
+                                    <IoIosArrowUp id="upIcon"
+                                      onClick={() => {
+                                        updateGoalValue(goal.id, +goal.goalValue + 1)
+                                      }} />
+                            }
+                            <h2 onClick={() => { setInputGoalValue(true) }}
+                              className="number-text">
+                              {inputGoalValue === true ?
+                                <input type="number" name="goalValue" value={goal.goalValue} onBlur={handleBlur}
+                                  id="goalValueInputBox"
+                                  onChange={(e) => { updateGoalValue(goal.id, e.target.value); }}
+                                  onKeyDown={handleEnter}
+                                  style={styles.goalValueInput}
+                                  autoComplete="off"
+                                />
                                 :
-                                <IoIosArrowUp id="upIcon"
-                                  onClick={() => {
-                                    updateGoalValue(goal.id, +goal.goalValue + 1)
-                                  }} />
-                        }
-                        <h2 onClick={() => { setInputGoalValue(true) }}
-                          className="number-text">
-                          {inputGoalValue === true ?
-                            <input type="number" name="goalValue" value={goal.goalValue} onBlur={handleBlur}
-                              id="goalValueInputBox"
-                              onChange={(e) => { updateGoalValue(goal.id, e.target.value); }}
-                              onKeyDown={handleEnter}
-                              style={styles.goalValueInput}
-                              autoComplete="off"
-                            />
-                            :
-                            <div>{goal.goalValue}</div>
-                          }
-                        </h2>
-                        {goal.goalType === "Activity" ?
-                          <IoIosArrowDown id="downIcon"
-                            onClick={() => {
-                              if (goal.goalValue > 30) updateGoalValue(goal.id, +goal.goalValue - 15)
-                              else updateGoalValue(goal.id, goal.goalValue)
-                            }} />
-                          : goal.goalType === "Eating" ?
-                            <IoIosArrowDown id="downIcon"
-                              onClick={() => {
-                                if (goal.goalValue > 1) updateGoalValue(goal.id, +goal.goalValue - 1)
-                                else updateGoalValue(goal.id, goal.goalValue)
-                              }} />
-                            : goal.goalType === "Screentime" ?
+                                <div>{goal.goalValue}</div>
+                              }
+                            </h2>
+                            {goal.goalType === "Activity" ?
                               <IoIosArrowDown id="downIcon"
                                 onClick={() => {
-                                  if (goal.goalValue > 1) updateGoalValue(goal.id, +goal.goalValue - 1)
+                                  if (goal.goalValue > 30) updateGoalValue(goal.id, +goal.goalValue - 15)
                                   else updateGoalValue(goal.id, goal.goalValue)
                                 }} />
-                              : goal.goalType === "Sleep" ?
+                              : goal.goalType === "Eating" ?
                                 <IoIosArrowDown id="downIcon"
                                   onClick={() => {
-                                    if (goal.goalValue > 8) updateGoalValue(goal.id, +goal.goalValue - 1)
+                                    if (goal.goalValue > 1) updateGoalValue(goal.id, +goal.goalValue - 1)
                                     else updateGoalValue(goal.id, goal.goalValue)
                                   }} />
-                                :
-                                <IoIosArrowDown id="downIcon"
-                                  onClick={() => {
-                                    updateGoalValue(goal.id, +goal.goalValue - 1)
-                                  }} />
-                        }
-                      </div>
-                    </div>
+                                : goal.goalType === "Screentime" ?
+                                  <IoIosArrowDown id="downIcon"
+                                    onClick={() => {
+                                      if (goal.goalValue > 1) updateGoalValue(goal.id, +goal.goalValue - 1)
+                                      else updateGoalValue(goal.id, goal.goalValue)
+                                    }} />
+                                  : goal.goalType === "Sleep" ?
+                                    <IoIosArrowDown id="downIcon"
+                                      onClick={() => {
+                                        if (goal.goalValue > 8) updateGoalValue(goal.id, +goal.goalValue - 1)
+                                        else updateGoalValue(goal.id, goal.goalValue)
+                                      }} />
+                                    :
+                                    <IoIosArrowDown id="downIcon"
+                                      onClick={() => {
+                                        updateGoalValue(goal.id, +goal.goalValue - 1)
+                                      }} />
+                            }
+                          </div>
 
-                    <div className="reflect-wrapper" key={goal.id}>
-                      <img className="reflect-image"
-                        src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon"
-                        onClick={() => handleReflectionClick(goal.id)} />
-                      <p style={{ fontWeight: 'bold' }}>Reflect</p>
-                      {selectedGoalReflectionIndex !== -1 && (
-                        <Modal
-                          aria-labelledby="reflect-modal"
-                          aria-describedby="modal-to-reflect-on-goal"
-                          open={reflectOpen}
-                          onClose={handleCloseReflectModal}
-                          key={goal.id}
-                        >
-                          {reflectionPage === 'Text' ?
-                            <div className="modal">
+                        </div>
+                        <div className="reflect-wrapper" key={goal.id}>
+                          <img className="reflect-image"
+                            src={require('../../components/images/journal/reflect.png')} alt="Temporary reflection icon"
+                            onClick={() => handleReflectionClick(goal.id)} />
+                          <p style={{ fontWeight: 'bold' }}>Reflect</p>
+                        </div>
+                      </div>
+                      :
+                      <div key={goal.id}>
+                        {selectedGoalReflectionIndex !== -1 && (
+                          <div className="page-modal" key={goal.id}>
+                            <div className="inside-modal">
+                              <h2>Goal</h2>
+                              <div className="feedback-page" onClick={() => console.log('work')}>
+                                <div className='feedback-text'>
+                                  <h3 className="goal-text">{goal.divInfo1}</h3>
+                                </div>
+                                <div className="feedback-num">
+                                  {goal.goalType === "Activity" ?
+                                    <IoIosArrowUp id="upIcon"
+                                      onClick={() => {
+                                        if (goal.goalValue < 105) updateGoalValue(goal.id, +goal.goalValue + 15)
+                                        else updateGoalValue(goal.id, goal.goalValue)
+                                      }} />
+                                    : goal.goalType === "Eating" ?
+                                      <IoIosArrowUp id="upIcon"
+                                        onClick={() => {
+                                          if (goal.goalValue < 5) updateGoalValue(goal.id, +goal.goalValue + 1)
+                                          else updateGoalValue(goal.id, goal.goalValue)
+                                        }} />
+                                      : goal.goalType === "Screentime" ?
+                                        <IoIosArrowUp id="upIcon"
+                                          onClick={() => {
+                                            if (goal.goalValue < 5) updateGoalValue(goal.id, +goal.goalValue + 1)
+                                            else updateGoalValue(goal.id, goal.goalValue)
+                                          }} />
+                                        : goal.goalType === "Sleep" ?
+                                          <IoIosArrowUp id="upIcon"
+                                            onClick={() => {
+                                              if (goal.goalValue < 12) updateGoalValue(goal.id, +goal.goalValue + 1)
+                                              else updateGoalValue(goal.id, goal.goalValue)
+                                            }} />
+                                          :
+                                          <IoIosArrowUp id="upIcon"
+                                            onClick={() => {
+                                              updateGoalValue(goal.id, +goal.goalValue + 1)
+                                            }} />
+                                  }
+                                  <h2 onClick={() => { setInputGoalValue(true) }}
+                                    className="number-text">
+                                    {inputGoalValue === true ?
+                                      <input type="number" name="goalValue" value={goal.goalValue} onBlur={handleBlur}
+                                        id="goalValueInputBox"
+                                        onChange={(e) => { updateGoalValue(goal.id, e.target.value); }}
+                                        onKeyDown={handleEnter}
+                                        style={styles.goalValueInput}
+                                        autoComplete="off"
+                                      />
+                                      :
+                                      <div>{goal.goalValue}</div>
+                                    }
+                                  </h2>
+                                  {goal.goalType === "Activity" ?
+                                    <IoIosArrowDown id="downIcon"
+                                      onClick={() => {
+                                        if (goal.goalValue > 30) updateGoalValue(goal.id, +goal.goalValue - 15)
+                                        else updateGoalValue(goal.id, goal.goalValue)
+                                      }} />
+                                    : goal.goalType === "Eating" ?
+                                      <IoIosArrowDown id="downIcon"
+                                        onClick={() => {
+                                          if (goal.goalValue > 1) updateGoalValue(goal.id, +goal.goalValue - 1)
+                                          else updateGoalValue(goal.id, goal.goalValue)
+                                        }} />
+                                      : goal.goalType === "Screentime" ?
+                                        <IoIosArrowDown id="downIcon"
+                                          onClick={() => {
+                                            if (goal.goalValue > 1) updateGoalValue(goal.id, +goal.goalValue - 1)
+                                            else updateGoalValue(goal.id, goal.goalValue)
+                                          }} />
+                                        : goal.goalType === "Sleep" ?
+                                          <IoIosArrowDown id="downIcon"
+                                            onClick={() => {
+                                              if (goal.goalValue > 8) updateGoalValue(goal.id, +goal.goalValue - 1)
+                                              else updateGoalValue(goal.id, goal.goalValue)
+                                            }} />
+                                          :
+                                          <IoIosArrowDown id="downIcon"
+                                            onClick={() => {
+                                              updateGoalValue(goal.id, +goal.goalValue - 1)
+                                            }} />
+                                  }
+                                </div>
+                              </div>
+                            </div>
+
+                            <hr className="line-break" />
+
+                            <div className="inside-modal">
+                              <h2>Track Behaviors {goal.id}</h2>
+                              <h4>Enter how much of your goal (servings, hours, etc.) you achieved for today</h4>
+                              <div className="behaviorInput">
+                                <input type="text" name="goalValue"
+                                  placeholder="0"
+                                  value={behaviorValues[selectedGoalReflectionIndex].behaviorValue}
+                                  style={styles.behaviorInput}
+                                  onChange={(e) => {
+                                    updateBehaviorValue(selectedGoalReflectionIndex, e.target.value)
+                                  }}
+                                />
+                                <Button style={{
+                                  backgroundColor: '#8054C9', width: '25%', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
+                                  borderRadius: '20px', color: 'white', height: '10%', marginLeft: 'auto', marginTop: '4%'
+                                }}
+                                  onClick={() => {
+                                    alert('Behavior logged for ' + renderedDateToday);
+                                  }}
+                                >
+                                  Log
+                                </Button>
+                              </div>
+                              {/* <LinearProgress style={{ margin: 'auto', }} color='success' variant="determinate" value={formCompletion} /> */}
+                            </div>
+
+                            <hr className="line-break" />
+
                               <div className="inside-modal">
                                 <h2>Reflect on Your Goal</h2>
                                 <h4>Feel free to type some insights into your goal here; it will be recorded for your own tracking.</h4>
                                 <input className="modal-input" type="text" name="reflection" placeholder="Reflection thoughts"
                                   value={goalArray[selectedGoalReflectionIndex].reflection} onChange={(e) => { updateGoalReflection(selectedGoalReflectionIndex, e.target.value); }} />
                               </div>
-
-                              <div className="nav-options">
+                              
+                              <div className="button-container">
                                 <Button style={{
-                                  backgroundColor: '#D9D9D9', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                                  borderRadius: '20px'
-                                }}
-                                  onClick={() => { setReflectionPage(''); }}
-                                >
-                                  Back
-                                </Button>
-
-                                <Button style={{
-                                  backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                                  borderRadius: '20px'
-                                }}
-                                  onClick={() => { handleCloseReflectModal(); }}
-                                >
-                                  Reflect
-                                </Button>
-                              </div>
-                            </div>
-                            :
-                            <div className="modal">
-                              <div className="inside-modal">
-                                <h6>{renderedDateToday}</h6>
-                                <h2>Track Behaviors {selectedGoalReflectionIndex}</h2>
-                                <h4>Enter how much of your goal (servings, hours, etc.) you achieved for today</h4>
-                                <div className="behaviorInput">
-                                  <input type="text" name="goalValue"
-                                    placeholder="0"
-                                    value={behaviorValues[selectedGoalReflectionIndex].behaviorValue}
-                                    style={styles.behaviorInput}
-                                    onChange={(e) => {
-                                      updateBehaviorValue(selectedGoalReflectionIndex, e.target.value)
-                                    }}
-                                  />
-                                  <Button style={{
-                                    backgroundColor: '#8054C9', width: '25%', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-                                    borderRadius: '20px', color: 'white', height: '10%', marginLeft: 'auto', marginTop: '4%'
+                                    backgroundColor: '#9F9F9F', width: '30%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                                    borderRadius: '20px'
                                   }}
-                                    onClick={() => {
-                                      alert('Behavior logged for ' + renderedDateToday);
-                                    }}
+                                    onClick={() => { handleCloseReflectModal(); }}
                                   >
-                                    Log
-                                  </Button>
-                                </div>
-                              </div>
-
-                              <div className="nav-options">
-                                <Button style={styles.cancelButton}
-                                  onClick={() => { handleCloseReflectModal(); }}
-                                >
-                                  Cancel
+                                    Cancel
                                 </Button>
-
                                 <Button style={{
-                                  backgroundColor: '#ADF083', width: '45%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                                  borderRadius: '20px'
-                                }}
-                                  onClick={() => { setReflectionPage('Text') }}
-                                >
-                                  Next
+                                    backgroundColor: '#ADF083', width: '30%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
+                                    borderRadius: '20px'
+                                  }}
+                                    onClick={() => { handleCloseReflectModal(); alert("Reflection/behavior successfully logged for " + renderedDateToday)}}
+                                  >
+                                    Reflect
                                 </Button>
                               </div>
                             </div>
-                          }
-                        </Modal>
-                      )}
-                      <Modal
-                        aria-labelledby="goal-modal"
-                        aria-describedby="modal-to-create-new-goal"
-                        open={goalOpen}
-                        onClose={handleCloseGoalModal}
-                      >
-                        {editPage === 'General' ?
-                          <div className="modal">
-                            <h2>Edit Your Goal Progress</h2>
-                            <h4>Goal Name</h4>
-                            <input className="modal-input" type="text" name="goal" onChange={(e) => updateGoal(goal.id, e.target.value)} value={goal.divInfo1} />
-                            <Button style={{
-                              backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                              borderRadius: '20px'
-                            }}
-                              onClick={() => { setEditPage('Calendar') }}
-                            >
-                              Next
-                            </Button>
-                          </div>
-                          :
-                          <div className="modal">
-                            <Calendar
-                              startDate={new Date(goal.startDateUnformatted.getFullYear(),
-                                goal.startDateUnformatted.getDate(),
-                                goal.startDateUnformatted.getMonth())}
-
-                              endDate={new Date(goal.endDateUnformatted.getFullYear(),
-                                goal.endDateUnformatted.getDate(),
-                                goal.endDateUnformatted.getMonth())}
-
-                              onChange={() => updateGoalDates(goal.id, goal.startDate, goal.endDate)}
-                            />
-
-                            <Button style={{
-                              backgroundColor: '#ADF083', width: '80%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
-                              borderRadius: '20px'
-                            }}
-                              onClick={() => { updateGoalDates(goal.id, goal.startDateUnformatted, goal.endDateUnformatted); handleCloseGoalModal(); }}
-                            >
-                              Log Progress
-                            </Button>
-                          </div>
-                        }
-                      </Modal>
-                    </div>
+                        )}
+                      </div>
+                    }
                   </div>
                 ))}
-                <LinearProgress style={{ margin: 'auto' }} color='success' variant="determinate" value={formCompletion} />   
               </div>
-            }            
-            <GoalCSV />              
-            <BehaviorTrackingCSV />                 
+            }
+            <GoalCSV />
+            <BehaviorTrackingCSV />
           </div>
           <img className="rightpage1" src={require('../../components/images/journal/left_page.png')}
             alt="First right-side page" />
@@ -697,8 +764,8 @@ const JournalScreen = () => {
             alt="Second right-side page" />
           <img className="rightpage3" src={require('../../components/images/journal/left_page3.png')}
             alt="Third right-side page" />
-        </div>        
-      </div>      
+        </div>
+      </div>
     </div>
   );
 };
@@ -708,7 +775,7 @@ export default withAuth(JournalScreen);
 let styles = {
   addGoalButton: {
     backgroundColor: '#78C648', textTransform: 'none', fontWeight: 'bold', fontSize: '14px',
-    borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%', 
+    borderRadius: '25px', color: 'white', width: '175px', marginTop: '5%',
     marginLeft: 'auto', marginRight: 'auto'
   },
   learnMoreButton: {
