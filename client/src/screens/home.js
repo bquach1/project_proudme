@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import '../css/home.css';
 import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,19 @@ import withAuth from '../components/auth/withAuth';
 const HomeScreen = () => {
 
     let navigate = useNavigate();
+
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        async function fetchData() {
+        const response = await fetch('/login');
+        const data = await response.json();
+        setData(data);
+        }
+        fetchData();
+        console.log(data);
+    }, []);
+
 
     var dateToday = new Date(),
     date = "Today's date is " + (dateToday.getMonth() + 1)+ '/' + dateToday.getDate()  + '/' +  dateToday.getFullYear() + ".";

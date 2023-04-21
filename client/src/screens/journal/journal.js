@@ -338,8 +338,8 @@ const JournalScreen = () => {
           alt="Journal cover screen wrapper" />
         <img onClick={() => setRightScreenMode("Progress Mode")} className="achievements-tab" src={require('../../components/images/journal/achievements_tab.png')}
           alt="Achievements bookmark tab" />
-        <img onClick={() => setRightScreenMode("")} className="goals-tab" src={require('../../components/images/journal/goals_tab.png')}
-          alt="Goals bookmark tab" />
+        {/* <img onClick={() => setRightScreenMode("")} className="goals-tab" src={require('../../components/images/journal/goals_tab.png')}
+          alt="Goals bookmark tab" /> */}
         <div className="leftPageWrapper">
           {rightScreenMode === "Goal Selected Mode" ?
             <div className="goal-box">
@@ -604,9 +604,9 @@ const JournalScreen = () => {
                         </div>
                       </div>
                       :
-                      <div key={goal.id}>
+                      <div>
                         {selectedGoalReflectionIndex !== -1 && (
-                          <div className="page-modal" key={goal.id}>
+                          <div className="page-modal" key={selectedGoalReflectionIndex}>
                             <div className="inside-modal">
                               <h2>Goal</h2>
                               <div className="feedback-page" onClick={() => console.log('work')}>
@@ -695,7 +695,7 @@ const JournalScreen = () => {
                             <hr className="line-break" />
 
                             <div className="inside-modal">
-                              <h2>Track Behaviors {goal.id}</h2>
+                              <h2>Track Behaviors {selectedGoalReflectionIndex}</h2>
                               <h4>Enter how much of your goal (servings, hours, etc.) you achieved for today</h4>
                               <div className="behaviorInput">
                                 <input type="text" name="goalValue"
@@ -728,7 +728,7 @@ const JournalScreen = () => {
                                 <input className="modal-input" type="text" name="reflection" placeholder="Reflection thoughts"
                                   value={goalArray[selectedGoalReflectionIndex].reflection} onChange={(e) => { updateGoalReflection(selectedGoalReflectionIndex, e.target.value); }} />
                               </div>
-                              
+
                               <div className="button-container">
                                 <Button style={{
                                     backgroundColor: '#9F9F9F', width: '30%', textTransform: 'none', fontWeight: 'bold', fontSize: '18px',
