@@ -17,7 +17,6 @@ const JournalScreen = () => {
   const [rightScreenMode, setRightScreenMode] = useState('');
   const [reflectionPage, setReflectionPage] = useState('Default');
   const [editPage, setEditPage] = useState('General');
-  const [formCompletion, setFormCompletion] = useState(0);
 
   var dateToday = new Date(),
     month = dateToday.getMonth(),
@@ -460,7 +459,7 @@ const JournalScreen = () => {
                   :
                   <h2>{goalArray[0].goalValue}</h2>
                 }
-                <TextField style={styles.inputBox} placeholder="Daily progress"
+                <TextField style={styles.inputBox} placeholder="Daily #"
                   type="number"
                   onChange={(e) => {
                     updateBehaviorValue(0, e.target.value);
@@ -482,7 +481,7 @@ const JournalScreen = () => {
                   <h2>{goalArray[1].goalValue}</h2>
                 }
 
-                <TextField style={styles.inputBox} placeholder="Daily progress"
+                <TextField style={styles.inputBox} placeholder="Daily #"
                   type="number"
                   onChange={(e) => {
                     updateBehaviorValue(1, e.target.value);
@@ -505,7 +504,7 @@ const JournalScreen = () => {
                   <h2>{goalArray[2].goalValue}</h2>
                 }
 
-                <TextField style={styles.inputBox} placeholder="Daily progress"
+                <TextField style={styles.inputBox} placeholder="Daily #"
                   type="number"
                   onChange={(e) => {
                     updateBehaviorValue(2, e.target.value);
@@ -529,7 +528,7 @@ const JournalScreen = () => {
                   <h2>{goalArray[3].goalValue}</h2>
                 }
 
-                <TextField style={styles.inputBox} placeholder="Daily progress"
+                <TextField style={styles.inputBox} placeholder="Daily #"
                   type="number"
                   onChange={(e) => {
                     updateBehaviorValue(3, e.target.value);
@@ -759,13 +758,14 @@ let styles = {
   goalRow: {
     display: 'flex',
     justifyContent: 'space-between',
-    width: '100%'
+    alignItems:  'center',
+    width: 'auto',
   },
   goalLabel: {
     width: '30%'
   },
   inputBox: {
-    width: '30%',
+    width: '20%',
     marginLeft: 'auto',
     marginRight: 'auto',
   },
@@ -785,13 +785,13 @@ let styles = {
     width: '30px'
   },
   sleepIcon: {
-    width: '30px'
+    width: '30px',
   },
   titleGroup: {
     display: 'flex',
     margin: 'auto',
     flexDirection: 'row',
-    width: '15%',
+    width: '10%',
     justifyContent: 'space-between',
     alignItems: 'center'
   },
