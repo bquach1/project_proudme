@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 const uri = process.env.REACT_APP_MONGODB_URI;
 
