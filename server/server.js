@@ -1,15 +1,13 @@
+require('dotenv').config({ path: '../.env' })
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-require('dotenv').config();
 
 const app = express();
-const port = 3001;
+const port = 3000;
 
 const uri = process.env.REACT_APP_MONGODB_URI;
-
-console.log(uri);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -22,7 +20,7 @@ mongoose.connect(uri, {
 }).then(() => {
   console.log('Connected to MongoDB');
 }).catch((err) => {
-  console.error(uri);
+  console.error(err);
 });
 
 // Define user schema and model
