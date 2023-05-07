@@ -38,7 +38,7 @@ const SignUpScreen = () => {
   // This function will handle the submission.
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios.post('http://localhost:3000/signup', { email: form.email, password: form.password, confirmPassword: form.confirmPassword })
+    axios.post('https://project-proudme.onrender.com/signup', { email: form.email, password: form.password, confirmPassword: form.confirmPassword })
       .then(response => {
         console.log(response.data);
       })
