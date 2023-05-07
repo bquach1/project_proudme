@@ -346,9 +346,8 @@
 
 .achievements-tab {
     position: absolute;
-    margin-right: 71%;
     margin-top: 15%;
-    z-index: 150;
+    z-index: 125;
 }
 
 .achievements-tab:hover {

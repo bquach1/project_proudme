@@ -10,13 +10,7 @@ import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 
 const JournalScreen = () => {
 
-  const [goalOpen, setGoalOpen] = useState(false);
-  const [reflectOpen, setReflectOpen] = useState(false);
   const [selectedGoalReflectionIndex, setSelectedGoalReflectionIndex] = useState(-1);
-
-  const [rightScreenMode, setRightScreenMode] = useState('');
-  const [reflectionPage, setReflectionPage] = useState('Default');
-  const [editPage, setEditPage] = useState('General');
 
   var dateToday = new Date(),
     month = dateToday.getMonth(),
@@ -51,8 +45,8 @@ const JournalScreen = () => {
       id: 1,
       goalType: "screentime",
       goalValue: 0,
-      divInfo1: "Get at least 60 minutes of physical activity per day",
-      divInfo2: "Do exercises like running or playing sports for at least an hour a day.",
+      divInfo1: "Limit screentime to 2 hours a day",
+      divInfo2: "Go outside instead of using tech like laptops, phones, and televisions.",
       reflection: "",
       startDate: date,
       endDate: defaultEndDay,
@@ -73,10 +67,10 @@ const JournalScreen = () => {
     },
     {
       id: 3,
-      goalType: "activity",
+      goalType: "sleep",
       goalValue: 0,
-      divInfo1: "Get at least 60 minutes of physical activity per day",
-      divInfo2: "Do exercises like running or playing sports for at least an hour a day.",
+      divInfo1: "Get at least 9 hours of sleep a night",
+      divInfo2: "Sleep at least 9-11 hours a night to feel the best and most productive.",
       reflection: "",
       startDate: date,
       endDate: defaultEndDay,
@@ -112,7 +106,7 @@ const JournalScreen = () => {
   ]);
 
   const [behaviorData, setBehaviorData] = useState([]);
-  const [dataList, setDataList] = useState([]);
+  const [dataList, setDataList] = useState(goalArray);
 
   var renderedDate = new Date(),
     renderedMonth = renderedDate.getMonth(),
@@ -130,25 +124,6 @@ const JournalScreen = () => {
     setInputGoalValue(false);
   }
 
-  const handleOpenGoalModal = () => {
-    setGoalOpen(true);
-  };
-
-  const handleCloseGoalModal = () => {
-    setGoalOpen(false);
-  };
-
-  const handleReflectionClick = (index) => {
-    setSelectedGoalReflectionIndex(index);
-    setReflectOpen(true);
-  };
-
-  const handleCloseReflectModal = () => {
-    setSelectedGoalReflectionIndex(-1);
-    setReflectOpen(false);
-    setReflectionPage('');
-  };
-
   const handleGoalCountChange = () => {
     setGoalCount(goalCount + 1);
   }
@@ -159,10 +134,10 @@ const JournalScreen = () => {
 
   const GoalCSV = () => {
     const headers = [
-      { label: "Goal Data ID", key: "goalDataId" },
-      { label: "Goal Details", key: "goalDetails" },
-      { label: "Goal Quantity", key: "goalQuantity" },
-      { label: "Goal Reflection", key: "goalReflection" },
+      { label: "Goal Data ID", key: "id" },
+      { label: "Goal Details", key: "divInfo1" },
+      { label: "Goal Quantity", key: "goalValue" },
+      { label: "Goal Reflection", key: "reflection" },
       { label: "Type of Goal", key: "goalType" },
       { label: "Start Date", key: "startDate" },
       { label: "End Date", key: "endDate" }
@@ -170,7 +145,10 @@ const JournalScreen = () => {
 
     return (
       <div>
-        <CSVLink data={dataList} headers={headers} filename='goaldata.csv'>Download Goal Data</CSVLink>
+        <CSVLink data={dataList} headers={headers} filename='goaldata.csv'>
+          <img className="achievements-tab" src={require('../../components/images/journal/achievements_tab.png')}
+          alt="Achievements bookmark tab" />
+        </CSVLink>
       </div>
     )
   }
@@ -189,91 +167,6 @@ const JournalScreen = () => {
           filename='behaviordata.csv'>Download Behavior Tracking Data</CSVLink>
       </div>
     )
-  }
-
-  function addGoal(type) {
-    var dateToday = new Date(),
-      month = dateToday.getMonth(),
-      day = dateToday.getDate(),
-      year = dateToday.getFullYear(),
-      date = (month + 1) + '/' + day + '/' + year;
-
-    var defaultEndDate = new Date();
-    defaultEndDate.setDate(defaultEndDate.getDate() + 14);
-
-    if (defaultEndDate.getMonth !== dateToday.getMonth) {
-      var defaultEndDay = (defaultEndDate.getMonth() + 2) + '/' + defaultEndDate.getDate() + '/' + year;
-    }
-    else {
-      defaultEndDay = (defaultEndDate.getMonth() + 1) + '/' + defaultEndDate.getDate() + '/' + year;
-    }
-
-    const newGoal = {
-      id: goalCount,
-      goalType: type,
-      goalValue: 0,
-      divInfo1: "Eat 5 or more servings of fruits and/or vegetables",
-      divInfo2: "Reach target increments for servings of healthy foods.",
-      reflection: "",
-      startDate: date,
-      endDate: defaultEndDay,
-      startDateUnformatted: dateToday,
-      endDateUnformatted: defaultEndDate
-    }
-
-    const newBehavior = {
-      behaviorId: behaviorCount,
-      goalId: goalCount,
-      behaviorValue: "",
-      loggedDate: date
-    }
-
-    switch (type) {
-      case "Eating":
-        newGoal.goalValue = 5;
-        newGoal.divInfo1 = "Eat 5 or more servings of fruits and/or vegetables";
-        newGoal.divInfo2 = "Reach target increments for servings of healthy foods.";
-        break;
-      case "Activity":
-        newGoal.goalValue = 60;
-        newGoal.divInfo1 = "Get at least 60 minutes of physical activity per day";
-        newGoal.divInfo2 = "Do exercises like running or playing sports for at least an hour a day.";
-        break;
-      case "Screentime":
-        newGoal.goalValue = 2;
-        newGoal.divInfo1 = "Limit screentime to 2 hours a day";
-        newGoal.divInfo2 = "Use devices like phones, laptops, and TV's less.";
-        break;
-      case "Sleep":
-        newGoal.goalValue = 9;
-        newGoal.divInfo1 = "Sleep at least 9 hours a night";
-        newGoal.divInfo2 = "Get anywhere from 9-11 hours of sleep a night to feel the best.";
-        break;
-      default:
-    }
-
-    setGoalArray([...goalArray, newGoal]);
-    setBehaviorValues([...behaviorValues, newBehavior]);
-    handleGoalCountChange();
-    handleBehaviorCountChange();
-    setRightScreenMode("Goal Selected Mode");
-
-    const newData = [...dataList, {
-      "goalDataId": newGoal.id,
-      "goalDetails": newGoal.divInfo1, "goalQuantity": newGoal.goalValue,
-      "goalReflection": newGoal.reflection, "goalType": "Eating", "startDate": newGoal.startDate,
-      "endDate": newGoal.endDate
-    }];
-
-    const newBehaviorData = [...behaviorData, {
-      "behaviorId": newBehavior.behaviorId,
-      "behaviorDataId": newBehavior.goalId,
-      "behaviorValue": newBehavior.behaviorValue,
-      "loggedDate": newBehavior.loggedDate
-    }]
-
-    setDataList(newData);
-    setBehaviorData(newBehaviorData);
   }
 
   function updateGoalValue(id, newQuantity) {
@@ -295,25 +188,6 @@ const JournalScreen = () => {
     );
   }
 
-  function updateGoal(id, newDescription) {
-    setGoalArray(prevGoals =>
-      prevGoals.map(goal => {
-        if (goal.id === id) {
-          return { ...goal, divInfo1: newDescription };
-        }
-        return goal;
-      })
-    );
-    setDataList(prevGoals =>
-      prevGoals.map(goal => {
-        if (goal.goalDataId === id) {
-          return { ...goal, "goal": newDescription };
-        }
-        return goal;
-      })
-    );
-  }
-
   function updateGoalReflection(id, newReflection) {
     setGoalArray(prevGoals =>
       prevGoals.map(goal => {
@@ -326,7 +200,7 @@ const JournalScreen = () => {
     setDataList(prevGoals =>
       prevGoals.map(goal => {
         if (goal.goalDataId === id) {
-          return { ...goal, "goalReflection": newReflection };
+          return { ...goal, "reflection": newReflection };
         }
         return goal;
       })
@@ -426,12 +300,10 @@ const JournalScreen = () => {
     <div className="journal">
       <h1 className="title">My Journal</h1>
       <div className="journalWrapper">
+        <GoalCSV />
         <img className="journalCover" src={require('../../components/images/journal/journal_cover.png')}
-          alt="Journal cover screen wrapper" />
-        <img onClick={() => setRightScreenMode("")} className="achievements-tab" src={require('../../components/images/journal/achievements_tab.png')}
-          alt="Achievements bookmark tab" />
-        <div className="leftPageWrapper">
-          {rightScreenMode === "Goal Selected Mode" ?
+          alt="Journal cover screen wrapper" />      
+        <div className="leftPageWrapper">        
             <div style={styles.goalScreen}>
 
               <div style={styles.goalRow}>
@@ -441,13 +313,11 @@ const JournalScreen = () => {
               </div>
 
               <div style={styles.goalRow}>
-                <div style={styles.leftBox}>
                   <div style={styles.titleGroup}>
                     <img style={styles.activityIcon} src={require('../../components/images/journal/activity_goals.png')} alt="Activity goals icon on activity goals page" />
                     <h2 style={styles.goalLabel}>Do</h2>
                   </div>
                   {/* <p>Exercise, do chores, play sports, and other physical activities.</p> */}
-                </div>
                 {inputGoalValue === false ?
                   <TextField style={styles.inputBox} placeholder="Target amount"
                     type="number"
@@ -534,106 +404,7 @@ const JournalScreen = () => {
                     updateBehaviorValue(3, e.target.value);
                   }} />
               </div>
-            </div>
-            : rightScreenMode === "Progress Mode" ?
-              <div className="goal-box">
-                <h1>Progress Checking Mode</h1>
-                {goalCount === 0 ?
-                  <h4>You're not currently working on any goals. Add some from the goal page!</h4>
-                  : goalCount === 1 ?
-                    <h4>You're currently working on 1 goal.</h4>
-                    :
-                    <h4>You're currently working on {goalCount} goals.</h4>
-                }
-              </div>
-              :
-              <div className="goal-box">
-                <h1 className="journal-title">My</h1>
-                <div className="recommendation-container">
-                  <div className="text-container">
-                    <div className="eating-goal-image">
-                      <img src={require('../../components/images/journal/apple.png')} alt="Apple for servings goal" />
-                    </div>
-
-                    <div className="selection-container">
-                      <h3 className="eating-goal-header">Eat 5 servings of fruits/vegetables</h3>
-                      <p>Eat fruits and vegetables for a more balanced diet.</p>
-                    </div>
-                  </div>
-
-                  <div className="button-container">
-                    <Button style={styles.addGoalButton}
-                      onClick={() => { addGoal('Eating') }}
-                    >
-                      Set My Goal
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="recommendation-container">
-                  <div className="text-container">
-                    <div className="eating-goal-image">
-                      <img className="activity" src={require('../../components/images/journal/activity_goals.png')} alt="Activity goals icon on activity goals page" />
-                    </div>
-
-                    <div className="selection-container">
-                      <h3 className="eating-goal-header">Get an hour of physical activity a day</h3>
-                      <p>Exercise to keep your body fit and healthy.</p>
-                    </div>
-                  </div>
-
-                  <div className="button-container">
-                    <Button style={styles.addGoalButton}
-                      onClick={() => { addGoal('Activity') }}
-                    >
-                      Set My Goal
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="recommendation-container">
-                  <div className="text-container">
-                    <div className="eating-goal-image">
-                      <img src={require('../../components/images/journal/tablet_icon.png')} alt="Apple for servings goal" />
-                    </div>
-
-                    <div className="selection-container">
-                      <h3 className="eating-goal-header">Limit screen time to 2 hours a day</h3>
-                      <p>Keep screen time low and go outside to help your mind and eyes.</p>
-                    </div>
-                  </div>
-
-                  <div className="button-container">
-                    <Button style={styles.addGoalButton}
-                      onClick={() => { addGoal('Screentime') }}
-                    >
-                      Set My Goal
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="recommendation-container">
-                  <div className="text-container">
-                    <div className="eating-goal-image">
-                      <img src={require('../../components/images/journal/pillow_icon.png')} alt="Crossed out candy icon for avoid sugary food" />
-                    </div>
-
-                    <div className="selection-container">
-                      <h3 className="eating-goal-header">Get 9 hours of sleep a day</h3>
-                      <p>Get good amounts of sleep to improve focus and lower health risks.</p>
-                    </div>
-                  </div>
-
-                  <div className="button-container">
-                    <Button style={styles.addGoalButton}
-                      onClick={() => { addGoal('Sleep') }}
-                    >
-                      Set My Goal
-                    </Button>
-                  </div>
-                </div>
-              </div>
-          }
+            </div>        
 
           <img className="leftpage1" src={require('../../components/images/journal/right_page.png')}
             alt="First left-side page" />
@@ -662,7 +433,8 @@ const JournalScreen = () => {
                       <h4 style={styles.feedback}>I'm not too far away from my goal!</h4>
                       :
                       <h4 style={styles.feedback}>I need to set a goal.</h4>}
-              <TextField type="text" placeholder="Type my thoughts" />
+              <TextField type="text" placeholder="Type my thoughts" 
+              onChange={(e) => {updateGoalReflection(0, e.target.value); console.log(goalArray[0].reflection)}}/>
             </div>
 
             <div style={styles.goalRow}>
@@ -676,7 +448,8 @@ const JournalScreen = () => {
                       <h4 style={styles.feedback}>I'm not too far away from my goal!</h4>
                       :
                       <h4 style={styles.feedback}>I need to set a goal.</h4>}
-              <TextField type="text" placeholder="Type my thoughts" />
+              <TextField type="text" placeholder="Type my thoughts" 
+              onChange={(e) => updateGoalReflection(1, e.target.value)}/>
             </div>
 
             <div style={styles.goalRow}>
@@ -690,7 +463,8 @@ const JournalScreen = () => {
                       <h4 style={styles.feedback}>I'm not too far away from my goal!</h4>
                       :
                       <h4 style={styles.feedback}>I need to set a goal.</h4>}
-              <TextField type="text" placeholder="Type my thoughts" />
+              <TextField type="text" placeholder="Type my thoughts" 
+              onChange={(e) => updateGoalReflection(2, e.target.value)}/>
             </div>
 
             <div style={styles.goalRow}>
@@ -704,10 +478,10 @@ const JournalScreen = () => {
                       <h4 style={styles.feedback}>I'm not too far away from my goal!</h4>
                       :
                       <h4 style={styles.feedback}>I need to set a goal.</h4>}
-              <TextField type="text" placeholder="Type my thoughts" />
+              <TextField type="text" placeholder="Type my thoughts" 
+              onChange={(e) => updateGoalReflection(3, e.target.value)}/>
             </div>
-          </div>
-          {/* <GoalCSV /> */}
+          </div>               
           {/* <BehaviorTrackingCSV /> */}
           <img className="rightpage1" src={require('../../components/images/journal/left_page.png')}
             alt="First right-side page" />
@@ -800,8 +574,4 @@ let styles = {
     color: 'blue',
     marginLeft: 'auto'
   },
-  leftBox: {
-    display: 'flex',
-    flexDirection: 'column'
-  }
 }
