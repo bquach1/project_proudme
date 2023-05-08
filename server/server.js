@@ -27,6 +27,14 @@ mongoose.connect(uri, {
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  name: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  schoolName: { type: String, required: true },
+  birthMonth: { type: String, required: true },
+  birthYear: { type: String, required: true },
+  gradeLevel: { type: String, required: true },
+  gender: { type: String, required: true },
 });
 
 const User = mongoose.model('User', userSchema);
@@ -58,6 +66,14 @@ app.post('/signup', async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
+  const name = req.body.name;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const schoolName = req.body.schoolName;
+  const birthMonth = req.body.birthMonth;
+  const birthYear = req.body.birthYear;
+  const gradeLevel = req.body.gradeLevel;
+  const gender = req.body.gender;
 
   try {
     // Check email against database to ensure it is not already in use
@@ -71,12 +87,23 @@ app.post('/signup', async (req, res) => {
       res.status(400).send('Passwords do not match');
     } else {
       // Create new user and save to database
-      const newUser = new User({ email, password });
+      const newUser = new User({ email, password, name, firstName, lastName, schoolName, birthMonth, birthYear, gradeLevel, gender });
       await newUser.save();
 
       // Return a success response
-      res.status(200).send('Signup successful');
+      res.status(200).send(newUser);
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+// User endpoint
+app.get('/users', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal server error');

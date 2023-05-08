@@ -3,23 +3,20 @@ import '../css/home.css';
 import Button from '@material-ui/core/Button';
 import { useNavigate } from 'react-router-dom';
 import withAuth from '../components/auth/withAuth';
+import axios from 'axios';
 
-const HomeScreen = () => {
+const HomeScreen = (props) => {
 
     let navigate = useNavigate();
 
-    const [data, setData] = useState([]);
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        async function fetchData() {
-        const response = await fetch('/login');
-        const data = await response.json();
-        setData(data);
-        }
-        fetchData();
-        console.log(data);
+        fetch('http://localhost:3001/users')
+          .then(response => response.json())
+          .then(data => setUsers(data))
+          .catch(error => console.error(error));
     }, []);
-
 
     var dateToday = new Date(),
     date = "Today's date is " + (dateToday.getMonth() + 1)+ '/' + dateToday.getDate()  + '/' +  dateToday.getFullYear() + ".";
@@ -28,7 +25,7 @@ const HomeScreen = () => {
 
     return (
         <div className="home">
-            <h1 className="title">Hello Username!</h1>
+            <h1 className="title">Hello {users.map(user => (<div key={user._id}>{user.email}</div>))}!</h1>
             <h4>{date}</h4>
             <h4>{currentTime}</h4>
             <div className="imageWrapper">

@@ -17,7 +17,6 @@ function App() {
 
   return (
     <div className="App">
-      {console.log(process.env.REACT_APP_MONGODB_URI)}
         <Header />
         <Routes>
           <Route path='/' element={<LoginScreen />} />
