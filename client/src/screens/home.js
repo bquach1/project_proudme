@@ -9,13 +9,19 @@ const HomeScreen = (props) => {
 
     let navigate = useNavigate();
 
-    const [users, setUsers] = useState([]);
+    const [user, setUser] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3001/users')
-          .then(response => response.json())
-          .then(data => setUsers(data))
-          .catch(error => console.error(error));
+        const token = localStorage.getItem('authToken');
+        console.log(token);
+        fetch(`http://localhost:3001/users`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+        .then(response => response.json())
+        .then(data => setUser(data))
+        .catch(error => console.error(error));
     }, []);
 
     var dateToday = new Date(),
@@ -25,7 +31,7 @@ const HomeScreen = (props) => {
 
     return (
         <div className="home">
-            <h1 className="title">Hello {users.map(user => (<div key={user._id}>{user.email}</div>))}!</h1>
+            <h1 className="title">Hello {user.name}!</h1>
             <h4>{date}</h4>
             <h4>{currentTime}</h4>
             <div className="imageWrapper">
@@ -53,9 +59,7 @@ const HomeScreen = (props) => {
                     <img className="journalIcon" src={require('../components/images/home/journal_icon.png')} />
                 </a>
             </div>
-            </div>
-
-            
+            </div>        
         </div>
     );
 };

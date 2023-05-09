@@ -1,8 +1,10 @@
 require('dotenv').config({ path: '../.env' })
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const authMiddleware = require('./authMiddleware');
 
 const app = express();
 const port = 3001;
@@ -48,13 +50,15 @@ app.post('/login', async (req, res) => {
     // Check email and password against database
     const user = await User.findOne({ email, password });
 
-    if (user) {
-      // If login is successful, return a success response
-      res.status(200).send('Login successful');
-    } else {
+    if (!user) {
       // If login fails, return an error response
       res.status(401).send('Incorrect email or password');
-    }
+    } 
+    
+    // If login is successful, return a success response
+    const token = jwt.sign({ userId: user._id }, 'secret_key');
+    res.send(token); 
+
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal server error');
@@ -100,15 +104,25 @@ app.post('/signup', async (req, res) => {
 });
 
 // User endpoint
-app.get('/users', async (req, res) => {
+app.get('/users', authMiddleware.verifyToken, authMiddleware.attachUserId, async (req, res) => {
   try {
-    const users = await User.find();
-    res.json(users);
+    const user = await User.findById(req._id);
+    res.json(user);
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal server error');
   }
 });
+
+// app.get('/users/:userId/profile', authMiddleware.verifyToken, authMiddleware.attachUserId, async (req, res) => {
+//   try {
+//     const user = await User.findById(req._id);
+//     res.json(user);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send('Internal server error');
+//   }
+// });
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

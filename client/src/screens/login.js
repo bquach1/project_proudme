@@ -21,8 +21,7 @@ const LoginScreen = () => {
       password
     })
       .then(response => {
-        const { authToken } = response.data;
-        localStorage.setItem('authToken', authToken);
+        localStorage.setItem('authToken', response.data);
         setIsSubmitted(true);
         console.log(response.data);
       })
