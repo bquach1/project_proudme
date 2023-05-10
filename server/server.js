@@ -39,6 +39,42 @@ const userSchema = new mongoose.Schema({
   gender: { type: String, required: true },
 });
 
+const goalSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  goalType: {
+    type: String,
+  },
+  goalValue: {
+    type: Number,
+  },
+  divInfo1: {
+    type: String,
+  },
+  divInfo2: {
+    type: String,
+  },
+  reflection: {
+    type: String,
+  },
+  startDate: {
+    type: Date,
+  },
+  endDate: {
+    type: Date,
+  },
+  startDateUnformatted: {
+    type: String,
+  },
+  endDateUnformatted: {
+    type: String,
+  }
+});
+
+const Goal = mongoose.model('Goal', goalSchema);
 const User = mongoose.model('User', userSchema);
 
 // Login endpoint
@@ -63,6 +99,66 @@ app.post('/login', async (req, res) => {
     console.error(error);
     res.status(500).send('Internal server error');
   }
+});
+
+// Add goals endpoint
+app.post('/goals', async(req, res) => {
+  try {
+    const goal = new Goal({
+      user: req.body.user,
+      goalType: req.body.goalType,
+      goalValue: req.body.goalValue,
+      divInfo1: req.body.divInfo1,
+      divInfo2: req.body.divInfo2,
+      reflection: req.body.reflection,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      startDateUnformatted: req.body.startDateUnformatted,
+      endDateUnformatted: req.body.endDateUnformatted,
+    });
+    const savedGoal = await goal.save();
+    res.status(201).json(savedGoal);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+  // try {
+  //   const existingGoalMaker = await Goal.findOne(req._id);
+
+  //   // if (existingGoalMaker) {
+  //     const goalId = req._id; // Assuming the goal ID is passed in the request params
+
+  //   // goal = Goal.findByIdAndUpdate(goalId, {
+  //   //   user: req.body._id,
+  //   //   goalType: req.body.goalType,
+  //   //   goalValue: req.body.goalValue,
+  //   //   divInfo1: req.body.divInfo1,
+  //   //   divInfo2: req.body.divInfo2,
+  //   //   reflection: req.body.reflection,
+  //   //   startDate: req.body.startDate,
+  //   //   endDate: req.body.endDate,
+  //   //   startDateUnformatted: req.body.startDateUnformatted,
+  //   //   endDateUnformatted: req.body.endDateUnformatted,
+  //   // }, { new: true })
+  //   // }
+
+  //   // else {
+  //     const goal = new Goal({
+  //       user: req.body._id,
+  //       goalType: req.body.goalType,
+  //       goalValue: req.body.goalValue,
+  //       divInfo1: req.body.divInfo1,
+  //       divInfo2: req.body.divInfo2,
+  //       reflection: req.body.reflection,
+  //       startDate: req.body.startDate,
+  //       endDate: req.body.endDate,
+  //       startDateUnformatted: req.body.startDateUnformatted,
+  //       endDateUnformatted: req.body.endDateUnformatted,
+  //     });    
+  //   const savedGoal = await goal.save();
+  //   res.status(201).json(savedGoal);
+  // } catch (err) {
+  //   res.status(400).json({ message: err.message });
+  // }
 });
 
 // Signup endpoint
@@ -114,15 +210,16 @@ app.get('/users', authMiddleware.verifyToken, authMiddleware.attachUserId, async
   }
 });
 
-// app.get('/users/:userId/profile', authMiddleware.verifyToken, authMiddleware.attachUserId, async (req, res) => {
-//   try {
-//     const user = await User.findById(req._id);
-//     res.json(user);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send('Internal server error');
-//   }
-// });
+// Get goals endpoint
+app.get('/goals/:userId', authMiddleware.verifyToken, authMiddleware.attachUserId, async (req, res) => {
+  try {
+    const goals = await Goal.find({ user: req.params.userId });
+    res.json(goals);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal server error');
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

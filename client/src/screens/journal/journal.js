@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../css/journal.css';
 import withAuth from '../../components/auth/withAuth';
+import axios from 'axios';
 
 import { CSVLink } from 'react-csv';
 import Calendar from "../../components/calendar.js";
@@ -9,6 +10,33 @@ import { Modal, LinearProgress, CircularProgress, Input, Button, TextField } fro
 import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
 
 const JournalScreen = () => {
+
+  const [user, setUser] = useState([]);
+
+  useEffect(() => {
+      const token = localStorage.getItem('authToken');
+      fetch(`https://project-proudme.onrender.com/users`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(response => response.json())
+      .then(data => setUser(data))
+      .catch(error => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    axios.post('https://project-proudme.onrender.com/goals', { 
+      user: user._id,
+      goalType: "eating"
+    })
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  })
 
   const [selectedGoalReflectionIndex, setSelectedGoalReflectionIndex] = useState(-1);
 
@@ -78,6 +106,7 @@ const JournalScreen = () => {
       endDateUnformatted: defaultEndDate
     }
   ]);
+  
   const [goalCount, setGoalCount] = useState(0);
   const [behaviorCount, setBehaviorCount] = useState(0);
   const [inputGoalValue, setInputGoalValue] = useState(false);

@@ -13,8 +13,7 @@ const HomeScreen = (props) => {
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
-        console.log(token);
-        fetch(`http://localhost:3001/users`, {
+        fetch(`https://project-proudme.onrender.com/users`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -31,7 +30,7 @@ const HomeScreen = (props) => {
 
     return (
         <div className="home">
-            <h1 className="title">Hello {user.name}!</h1>
+            <h1 className="title">Hello {user.firstName}!</h1>
             <h4>{date}</h4>
             <h4>{currentTime}</h4>
             <div className="imageWrapper">
