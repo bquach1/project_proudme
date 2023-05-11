@@ -16,7 +16,7 @@ const LoginScreen = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    axios.post('https://project-proudme.onrender.com/login', {
+    axios.post('http://localhost:3001/login', {
       email,
       password
     })
