@@ -15,7 +15,7 @@ const JournalScreen = () => {
 
   useEffect(() => {
       const token = localStorage.getItem('authToken');
-      fetch(`https://project-proudme.onrender.com/users`, {
+      fetch(`http://localhost:3001/users`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -26,7 +26,7 @@ const JournalScreen = () => {
   }, []);
 
   useEffect(() => {
-    axios.post('https://project-proudme.onrender.com/goals', { 
+    axios.post('http://localhost:3001/goals', { 
       user: user._id,
       goalType: "eating"
     })

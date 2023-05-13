@@ -1,6 +1,7 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, HashRouter } from 'react-router-dom';
+import withAuth from './components/auth/withAuth';
 
 import LoginScreen from './screens/login.js';
 import HomeScreen from './screens/home.js';
