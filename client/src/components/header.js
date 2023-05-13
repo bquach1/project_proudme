@@ -42,8 +42,6 @@ const Header = () => {
                 <p className="nav-link" 
                 onClick={() => {navigate('/login'); localStorage.removeItem('authToken')}}>Sign Out</p>
                 }                
-                <div className="nav-text">|</div>
-                <p className="nav-link" onClick={() => navigate('/pet')}>For Grown-Ups</p>
             </div>
         </nav>
     );

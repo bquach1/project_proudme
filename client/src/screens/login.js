@@ -73,7 +73,6 @@ const LoginScreen = () => {
     );
   }
 
-
   return (
     <div className="login">
       <h1 id="welcome">Welcome back to ProudME!</h1>

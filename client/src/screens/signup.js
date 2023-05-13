@@ -51,7 +51,8 @@ const SignUpScreen = () => {
       gradeLevel: form.gradeLevel,
       gender: form.gender
     })
-      .then(response => {
+      .then(response => {        
+        setSubmitted(true);
         console.log(response.data);
       })
       .catch(error => {
@@ -92,7 +93,7 @@ const SignUpScreen = () => {
           <div className="row-container">
             <label>Birth Month: </label>
             <select className="dropdown" name="month" onChange={(e) => updateForm({ birthMonth: e.target.value })} required>
-              <option value="" selected disabled hidden>Select an option</option>
+              <option defaultValue="" disabled hidden>Select an option</option>
               <option value="January">January</option>
               <option value="February">February</option>
               <option value="March">March</option>
@@ -109,7 +110,7 @@ const SignUpScreen = () => {
           <div className="row-container">
             <label>Birth Year: </label>
             <select className="dropdown" name="year" onChange={(e) => updateForm({ birthYear: e.target.value })} required>
-              <option value="" selected disabled hidden>Select an option</option>
+              <option defaultValue="" disabled hidden>Select an option</option>
               <option value="1980">1980</option>
               <option value="1981">1981</option>
               <option value="1982">1982</option>
@@ -158,7 +159,7 @@ const SignUpScreen = () => {
           <div className="row-container">
             <label>Grade Level: </label>
             <select className="dropdown" name="grade" onChange={(e) => updateForm({ gradeLevel: e.target.value })} required>
-              <option value="" selected disabled hidden>Select an option</option>
+              <option defaultValue="" disabled hidden>Select an option</option>
               <option value="prek">Pre-K</option>
               <option value="kindergarten">Kindergarten</option>
               <option value="first">1st</option>
@@ -181,7 +182,7 @@ const SignUpScreen = () => {
           <div className="input-container">
             <label>Gender: </label>
             <select className="dropdown" name="gender" onChange={(e) => updateForm({ gender: e.target.value })} required>
-              <option value="" selected disabled hidden>Select an option</option>
+              <option defaultValue="" disabled hidden>Select an option</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="other">Other</option>
@@ -221,27 +222,17 @@ const SignUpScreen = () => {
     </div>
   );
 
-  const successMessage = () => {
+  function successMessage() {
+    setTimeout(() => {
+      navigate('/');
+    }, 3000);
     return (
       <div
         className="success"
         style={{
           display: submitted ? '' : 'none',
         }}>
-        <h1>User {form.name} successfully registered!!</h1>
-      </div>
-    );
-  };
-
-  // Showing error message if error is true
-  const errorMessage = () => {
-    return (
-      <div
-        className="error"
-        style={{
-          display: error ? '' : 'none',
-        }}>
-        <h1>Please enter all the fields</h1>
+        User {form.name} successfully registered!
       </div>
     );
   };
@@ -249,7 +240,7 @@ const SignUpScreen = () => {
   return (
     <div className="signup-page">
       <h1 id="welcome">Thanks for joining ProudME!</h1>
-      {submitted ? successMessage : renderForm}
+      {submitted ? successMessage() : renderForm}
     </div>
   );
 };
