@@ -28,7 +28,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/goals', { 
+        const response = await axios.get('https://project-proudme.onrender.com/goals', { 
           params: {
             user: user
           }
@@ -187,7 +187,7 @@ const JournalScreen = () => {
     setGoalArray(prevGoals =>
       prevGoals.map(goal => {
         if (goal.id === id) {
-          axios.post('http://localhost:3001/goals', { 
+          axios.post('https://project-proudme.onrender.com/goals', { 
             user: user._id,
             goalType: goal.goalType,
             goalValue: newQuantity,
@@ -221,7 +221,7 @@ const JournalScreen = () => {
     setGoalArray(prevGoals =>
       prevGoals.map(goal => {
         if (goal.id === id) {
-          axios.post('http://localhost:3001/goals', { 
+          axios.post('https://project-proudme.onrender.com/goals', { 
             user: user._id,
             goalType: goal.goalType,
             reflection: newReflection
