@@ -229,9 +229,7 @@ const SignUpScreen = () => {
     return (
       <div
         className="success"
-        style={{
-          display: submitted ? '' : 'none',
-        }}>
+        style={styles.messageText}>
         User {form.name} successfully registered!
       </div>
     );
@@ -249,3 +247,10 @@ export default SignUpScreen;
 
 // have left page recommended goals removed after child adds a goal to the right page.
 // automated feedback, move right page to left page after goal added, reflection on right page after click (blank at first).
+
+const styles = {
+  messageText: {
+    fontSize: '30px',
+    fontWeight: 'bold'
+  }
+}

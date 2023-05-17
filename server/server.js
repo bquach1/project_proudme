@@ -47,6 +47,7 @@ const goalSchema = new mongoose.Schema({
   },
   goalType: {
     type: String,
+    required: true
   },
   goalValue: {
     type: Number,
@@ -60,17 +61,8 @@ const goalSchema = new mongoose.Schema({
   reflection: {
     type: String,
   },
-  startDate: {
+  date: {
     type: Date,
-  },
-  endDate: {
-    type: Date,
-  },
-  startDateUnformatted: {
-    type: String,
-  },
-  endDateUnformatted: {
-    type: String,
   }
 });
 
@@ -89,11 +81,11 @@ app.post('/login', async (req, res) => {
     if (!user) {
       // If login fails, return an error response
       res.status(401).send('Incorrect email or password');
-    } 
-    
+    }
+
     // If login is successful, return a success response
     const token = jwt.sign({ userId: user._id }, 'secret_key');
-    res.send(token); 
+    res.send(token);
 
   } catch (error) {
     console.error(error);
@@ -102,63 +94,43 @@ app.post('/login', async (req, res) => {
 });
 
 // Add goals endpoint
-app.post('/goals', async(req, res) => {
+app.post('/goals', async (req, res) => {
   try {
-    const goal = new Goal({
-      user: req.body.user,
-      goalType: req.body.goalType,
-      goalValue: req.body.goalValue,
-      divInfo1: req.body.divInfo1,
-      divInfo2: req.body.divInfo2,
-      reflection: req.body.reflection,
-      startDate: req.body.startDate,
-      endDate: req.body.endDate,
-      startDateUnformatted: req.body.startDateUnformatted,
-      endDateUnformatted: req.body.endDateUnformatted,
-    });
-    const savedGoal = await goal.save();
-    res.status(201).json(savedGoal);
+    const existingGoalMaker = await Goal.findOne({ user: req.body.user, goalType: req.body.goalType });
+    if (existingGoalMaker) {
+      const goal = await Goal.findOneAndUpdate({
+        user: req.body.user,
+        goalType: req.body.goalType
+      }, {
+        $set: {
+          goalType: req.body.goalType,
+          goalValue: req.body.goalValue,
+          divInfo1: req.body.divInfo1,
+          divInfo2: req.body.divInfo2,
+          reflection: req.body.reflection,
+          date: req.body.date
+        },
+      }, {
+        new: true
+      });
+      res.status(200).json(goal);
+    }
+    else {
+      const goal = new Goal({
+        user: req.body.user,
+        goalType: req.body.goalType,
+        goalValue: req.body.goalValue,
+        divInfo1: req.body.divInfo1,
+        divInfo2: req.body.divInfo2,
+        reflection: req.body.reflection,
+        date: req.body.date
+      });
+      const savedGoal = await goal.save();
+      res.status(201).json(savedGoal);
+    }
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
-  // try {
-  //   const existingGoalMaker = await Goal.findOne(req._id);
-
-  //   // if (existingGoalMaker) {
-  //     const goalId = req._id; // Assuming the goal ID is passed in the request params
-
-  //   // goal = Goal.findByIdAndUpdate(goalId, {
-  //   //   user: req.body._id,
-  //   //   goalType: req.body.goalType,
-  //   //   goalValue: req.body.goalValue,
-  //   //   divInfo1: req.body.divInfo1,
-  //   //   divInfo2: req.body.divInfo2,
-  //   //   reflection: req.body.reflection,
-  //   //   startDate: req.body.startDate,
-  //   //   endDate: req.body.endDate,
-  //   //   startDateUnformatted: req.body.startDateUnformatted,
-  //   //   endDateUnformatted: req.body.endDateUnformatted,
-  //   // }, { new: true })
-  //   // }
-
-  //   // else {
-  //     const goal = new Goal({
-  //       user: req.body._id,
-  //       goalType: req.body.goalType,
-  //       goalValue: req.body.goalValue,
-  //       divInfo1: req.body.divInfo1,
-  //       divInfo2: req.body.divInfo2,
-  //       reflection: req.body.reflection,
-  //       startDate: req.body.startDate,
-  //       endDate: req.body.endDate,
-  //       startDateUnformatted: req.body.startDateUnformatted,
-  //       endDateUnformatted: req.body.endDateUnformatted,
-  //     });    
-  //   const savedGoal = await goal.save();
-  //   res.status(201).json(savedGoal);
-  // } catch (err) {
-  //   res.status(400).json({ message: err.message });
-  // }
 });
 
 // Signup endpoint
@@ -211,15 +183,25 @@ app.get('/users', authMiddleware.verifyToken, authMiddleware.attachUserId, async
 });
 
 // Get goals endpoint
-app.get('/goals/:userId', authMiddleware.verifyToken, authMiddleware.attachUserId, async (req, res) => {
+app.get('/goals', async (req, res) => {
   try {
-    const goals = await Goal.find({ user: req.params.userId });
-    res.json(goals);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal server error');
+    const goals = await Goal.find({ user: req.query.user });
+    res.status(200).json(goals);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 });
+
+// Get goals endpoint
+// app.get('/goals/:userId', authMiddleware.verifyToken, authMiddleware.attachUserId, async (req, res) => {
+//   try {
+//     const goals = await Goal.find({ user: req.params.userId });
+//     res.json(goals);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send('Internal server error');
+//   }
+// });
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

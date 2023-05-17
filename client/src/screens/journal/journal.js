@@ -4,41 +4,43 @@ import withAuth from '../../components/auth/withAuth';
 import axios from 'axios';
 
 import { CSVLink } from 'react-csv';
-import Calendar from "../../components/calendar.js";
-import { Modal, LinearProgress, CircularProgress, Input, Button, TextField } from '@mui/material';
-
-import { IoIosArrowUp, IoIosArrowDown } from 'react-icons/io';
+import { TextField } from '@mui/material';
 
 const JournalScreen = () => {
 
   const [user, setUser] = useState([]);
+  const [goalData, setGoalData] = useState([]);
 
   useEffect(() => {
-      const token = localStorage.getItem('authToken');
-      fetch(`http://localhost:3001/users`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
+    const token = localStorage.getItem('authToken');
+    fetch(`http://localhost:3001/users`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(response => response.json())
-      .then(data => setUser(data))
+      .then(data => {
+        setUser(data);
+      })
       .catch(error => console.error(error));
   }, []);
-
+  
   useEffect(() => {
-    axios.post('http://localhost:3001/goals', { 
-      user: user._id,
-      goalType: "eating"
-    })
-      .then(response => {
+    const fetchGoals = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/goals', { 
+          params: {
+            user: user
+          }
+         });
+        setGoalData(response.data);
         console.log(response.data);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error(error);
-      });
-  })
-
-  const [selectedGoalReflectionIndex, setSelectedGoalReflectionIndex] = useState(-1);
+      }
+    };  
+    fetchGoals();
+  }, [user]);
 
   var dateToday = new Date(),
     month = dateToday.getMonth(),
@@ -60,50 +62,38 @@ const JournalScreen = () => {
     {
       id: 0,
       goalType: "activity",
-      goalValue: 0,
+      goalValue: null,
       divInfo1: "Get at least 60 minutes of physical activity per day",
       divInfo2: "Do exercises like running or playing sports for at least an hour a day.",
       reflection: "",
-      startDate: date,
-      endDate: defaultEndDay,
-      startDateUnformatted: dateToday,
-      endDateUnformatted: defaultEndDate
+      date: date
     },
     {
       id: 1,
       goalType: "screentime",
-      goalValue: 0,
+      goalValue: null,
       divInfo1: "Limit screentime to 2 hours a day",
       divInfo2: "Go outside instead of using tech like laptops, phones, and televisions.",
       reflection: "",
-      startDate: date,
-      endDate: defaultEndDay,
-      startDateUnformatted: dateToday,
-      endDateUnformatted: defaultEndDate
+      date: date
     },
     {
       id: 2,
       goalType: "eating",
-      goalValue: 0,
+      goalValue: null,
       divInfo1: "Eat 5 or more servings of fruits and/or vegetables",
       divInfo2: "Reach target increments for servings of healthy foods.",
       reflection: "",
-      startDate: date,
-      endDate: defaultEndDay,
-      startDateUnformatted: dateToday,
-      endDateUnformatted: defaultEndDate
+      date: date
     },
     {
       id: 3,
       goalType: "sleep",
-      goalValue: 0,
+      goalValue: null,
       divInfo1: "Get at least 9 hours of sleep a night",
       divInfo2: "Sleep at least 9-11 hours a night to feel the best and most productive.",
       reflection: "",
-      startDate: date,
-      endDate: defaultEndDay,
-      startDateUnformatted: dateToday,
-      endDateUnformatted: defaultEndDate
+      date: date
     }
   ]);
   
@@ -135,7 +125,7 @@ const JournalScreen = () => {
   ]);
 
   const [behaviorData, setBehaviorData] = useState([]);
-  const [dataList, setDataList] = useState(goalArray);
+  const [dataList, setDataList] = useState(goalData);
 
   var renderedDate = new Date(),
     renderedMonth = renderedDate.getMonth(),
@@ -153,28 +143,22 @@ const JournalScreen = () => {
     setInputGoalValue(false);
   }
 
-  const handleGoalCountChange = () => {
-    setGoalCount(goalCount + 1);
-  }
-
-  const handleBehaviorCountChange = () => {
-    setBehaviorCount(behaviorCount + 1);
-  }
-
   const GoalCSV = () => {
     const headers = [
-      { label: "Goal Data ID", key: "id" },
+      { label: "_id", key: "_id" },
+      { label: "User", key: "user" },
       { label: "Goal Details", key: "divInfo1" },
+      { label: "Goal Description", key: "divInfo2" },
       { label: "Goal Quantity", key: "goalValue" },
-      { label: "Goal Reflection", key: "reflection" },
       { label: "Type of Goal", key: "goalType" },
-      { label: "Start Date", key: "startDate" },
-      { label: "End Date", key: "endDate" }
+      { label: "Date", key: "date" },
+      { label: "Goal Reflection", key: "reflection" },
+      { label: "__v", key: "__v"}
     ];
 
     return (
       <div>
-        <CSVLink data={dataList} headers={headers} filename='goaldata.csv'>
+        <CSVLink data={goalData} headers={headers} filename='goaldata.csv'>
           <img className="achievements-tab" src={require('../../components/images/journal/achievements_tab.png')}
           alt="Achievements bookmark tab" />
         </CSVLink>
@@ -199,13 +183,29 @@ const JournalScreen = () => {
   }
 
   function updateGoalValue(id, newQuantity) {
+    console.log(goalData);
     setGoalArray(prevGoals =>
       prevGoals.map(goal => {
         if (goal.id === id) {
+          axios.post('http://localhost:3001/goals', { 
+            user: user._id,
+            goalType: goal.goalType,
+            goalValue: newQuantity,
+            divInfo1: goal.divInfo1,
+            divInfo2: goal.divInfo2,
+            date: date,
+            reflection: goal.reflection
+          })
+            .then(response => {
+              console.log(response.data);
+            })
+            .catch(error => {
+              console.error(error);
+          })
           return { ...goal, goalValue: +newQuantity };
         }
         return goal;
-      })
+      }),
     );
     setDataList(prevGoals =>
       prevGoals.map(goal => {
@@ -221,6 +221,17 @@ const JournalScreen = () => {
     setGoalArray(prevGoals =>
       prevGoals.map(goal => {
         if (goal.id === id) {
+          axios.post('http://localhost:3001/goals', { 
+            user: user._id,
+            goalType: goal.goalType,
+            reflection: newReflection
+          })
+            .then(response => {
+              console.log(response.data);
+            })
+            .catch(error => {
+              console.error(error);
+          })
           return { ...goal, reflection: newReflection };
         }
         return goal;
@@ -249,7 +260,7 @@ const JournalScreen = () => {
           if (behavior.behaviorId === id) {
             return { ...behavior, behaviorValue: +newBehaviorValue };
           }
-          console.log(behaviorValues);
+          // console.log(behaviorValues);
           return behavior;
         })
       );
@@ -303,28 +314,6 @@ const JournalScreen = () => {
     // });
   };
 
-  function updateGoalDates(id, newStartDate, newEndDate) {
-    setGoalArray(prevGoals =>
-      prevGoals.map(goal => {
-        if (goal.id === id) {
-          return {
-            ...goal,
-            startDateUnformatted: newStartDate,
-            endDateUnformatted: newEndDate
-          }
-        }
-        return goal;
-      }))
-    setDataList(prevGoals =>
-      prevGoals.map(goal => {
-        if (goal.goalDataId === id) {
-          return { ...goal, "startDate": newStartDate, "endDate": newEndDate };
-        }
-        return goal;
-      })
-    );
-  }
-
   return (
     <div className="journal">
       <h1 className="title">My Journal</h1>
@@ -348,20 +337,21 @@ const JournalScreen = () => {
                   </div>
                   {/* <p>Exercise, do chores, play sports, and other physical activities.</p> */}
                 {inputGoalValue === false ?
-                  <TextField style={styles.inputBox} placeholder="Target amount"
+                  <TextField style={styles.inputBox} label="minutes/day"
                     type="number"
                     onBlur={handleBlur}
                     onKeyDown={handleEnter}
+                    
                     onChange={(e) => {
-                      updateGoalValue(0, e.target.value);
+                      updateGoalValue(0, +e.target.value);
                     }} />
                   :
                   <h2>{goalArray[0].goalValue}</h2>
                 }
-                <TextField style={styles.inputBox} placeholder="Daily #"
+                <TextField style={styles.inputBox} label="minutes/day"
                   type="number"
                   onChange={(e) => {
-                    updateBehaviorValue(0, e.target.value);
+                    updateBehaviorValue(0, +e.target.value);
                   }} />
               </div>
 
@@ -371,19 +361,19 @@ const JournalScreen = () => {
                   <h2 style={styles.goalLabel}>View</h2>
                 </div>
                 {inputGoalValue === false ?
-                  <TextField style={styles.inputBox} placeholder="Target amount"
+                  <TextField style={styles.inputBox} label="minutes/day"
                     type="number"
                     onChange={(e) => {
-                      updateGoalValue(1, e.target.value);
+                      updateGoalValue(1, +e.target.value);
                     }} />
                   :
                   <h2>{goalArray[1].goalValue}</h2>
                 }
 
-                <TextField style={styles.inputBox} placeholder="Daily #"
+                <TextField style={styles.inputBox} label="minutes/day"
                   type="number"
                   onChange={(e) => {
-                    updateBehaviorValue(1, e.target.value);
+                    updateBehaviorValue(1, +e.target.value);
                   }} />
               </div>
 
@@ -394,19 +384,19 @@ const JournalScreen = () => {
                 </div>
 
                 {inputGoalValue === false ?
-                  <TextField style={styles.inputBox} placeholder="Target amount"
+                  <TextField style={styles.inputBox} label="servings/day"
                     type="number"
                     onChange={(e) => {
-                      updateGoalValue(2, e.target.value);
+                      updateGoalValue(2, +e.target.value);
                     }} />
                   :
                   <h2>{goalArray[2].goalValue}</h2>
                 }
 
-                <TextField style={styles.inputBox} placeholder="Daily #"
+                <TextField style={styles.inputBox} label="servings/day"
                   type="number"
                   onChange={(e) => {
-                    updateBehaviorValue(2, e.target.value);
+                    updateBehaviorValue(2, +e.target.value);
                   }} />
               </div>
 
@@ -418,19 +408,19 @@ const JournalScreen = () => {
                 </div>
 
                 {inputGoalValue === false ?
-                  <TextField style={styles.inputBox} placeholder="Target amount"
+                  <TextField style={styles.inputBox} label="hours/day"
                     type="number"
                     onChange={(e) => {
-                      updateGoalValue(3, e.target.value);
+                      updateGoalValue(3, +e.target.value);
                     }} />
                   :
                   <h2>{goalArray[3].goalValue}</h2>
                 }
 
-                <TextField style={styles.inputBox} placeholder="Daily #"
+                <TextField style={styles.inputBox} label="hours/day"
                   type="number"
                   onChange={(e) => {
-                    updateBehaviorValue(3, e.target.value);
+                    updateBehaviorValue(3, +e.target.value);
                   }} />
               </div>
             </div>        
@@ -461,7 +451,7 @@ const JournalScreen = () => {
                     : behaviorValues[0].behaviorValue < goalArray[0].goalValue ?
                       <h4 style={styles.feedback}>I'm not too far away from my goal!</h4>
                       :
-                      <h4 style={styles.feedback}>I need to set a goal.</h4>}
+                      <h4 style={styles.feedback}>...</h4>}
               <TextField type="text" placeholder="Type my thoughts" 
               onChange={(e) => {updateGoalReflection(0, e.target.value); console.log(goalArray[0].reflection)}}/>
             </div>
@@ -476,7 +466,7 @@ const JournalScreen = () => {
                     : behaviorValues[1].behaviorValue < goalArray[1].goalValue ?
                       <h4 style={styles.feedback}>I'm not too far away from my goal!</h4>
                       :
-                      <h4 style={styles.feedback}>I need to set a goal.</h4>}
+                      <h4 style={styles.feedback}>...</h4>}
               <TextField type="text" placeholder="Type my thoughts" 
               onChange={(e) => updateGoalReflection(1, e.target.value)}/>
             </div>
@@ -491,7 +481,7 @@ const JournalScreen = () => {
                     : behaviorValues[2].behaviorValue < goalArray[2].goalValue ?
                       <h4 style={styles.feedback}>I'm not too far away from my goal!</h4>
                       :
-                      <h4 style={styles.feedback}>I need to set a goal.</h4>}
+                      <h4 style={styles.feedback}>...</h4>}
               <TextField type="text" placeholder="Type my thoughts" 
               onChange={(e) => updateGoalReflection(2, e.target.value)}/>
             </div>
@@ -506,7 +496,7 @@ const JournalScreen = () => {
                     : behaviorValues[3].behaviorValue < goalArray[3].goalValue ?
                       <h4 style={styles.feedback}>I'm not too far away from my goal!</h4>
                       :
-                      <h4 style={styles.feedback}>I need to set a goal.</h4>}
+                      <h4 style={styles.feedback}>...</h4>}
               <TextField type="text" placeholder="Type my thoughts" 
               onChange={(e) => updateGoalReflection(3, e.target.value)}/>
             </div>
@@ -571,6 +561,7 @@ let styles = {
     width: '20%',
     marginLeft: 'auto',
     marginRight: 'auto',
+    size: '10px'
   },
   goalHeader: {
     display: 'flex',
