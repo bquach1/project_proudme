@@ -13,7 +13,7 @@ const HomeScreen = (props) => {
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
-        fetch(`http://localhost:3001/users`, {
+        fetch(`https://project-proudme.onrender.com/users`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
