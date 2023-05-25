@@ -49,6 +49,9 @@ const goalSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  behaviorValue: {
+    type: Number,
+  },
   goalValue: {
     type: Number,
   },
@@ -63,6 +66,9 @@ const goalSchema = new mongoose.Schema({
   },
   date: {
     type: Date,
+  },
+  goalStatus: {
+    type: String,
   }
 });
 
@@ -100,15 +106,17 @@ app.post('/goals', async (req, res) => {
     if (existingGoalMaker) {
       const goal = await Goal.findOneAndUpdate({
         user: req.body.user,
-        goalType: req.body.goalType
+        goalType: req.body.goalType,        
       }, {
         $set: {
           goalType: req.body.goalType,
           goalValue: req.body.goalValue,
+          behaviorValue: req.body.behaviorValue,
           divInfo1: req.body.divInfo1,
           divInfo2: req.body.divInfo2,
           reflection: req.body.reflection,
-          date: req.body.date
+          date: req.body.date,
+          goalStatus: req.body.behaviorValue >= req.body.goalValue ? 'yes' : 'no'
         },
       }, {
         new: true
@@ -116,14 +124,17 @@ app.post('/goals', async (req, res) => {
       res.status(200).json(goal);
     }
     else {
+      console.log('nah');
       const goal = new Goal({
         user: req.body.user,
         goalType: req.body.goalType,
         goalValue: req.body.goalValue,
+        behaviorValue: req.body.behaviorValue,
         divInfo1: req.body.divInfo1,
         divInfo2: req.body.divInfo2,
         reflection: req.body.reflection,
-        date: req.body.date
+        date: req.body.date,
+        goalStatus: req.body.behaviorValue >= req.body.goalValue ? 'yes' : 'no'
       });
       const savedGoal = await goal.save();
       res.status(201).json(savedGoal);
@@ -182,6 +193,16 @@ app.get('/users', authMiddleware.verifyToken, authMiddleware.attachUserId, async
   }
 });
 
+// Get all goals endpoint
+app.get('/allGoals', async (req, res) => {
+  try {
+    const goals = await Goal.find();
+    res.status(200).json(goals);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
 // Get goals endpoint
 app.get('/goals', async (req, res) => {
   try {
@@ -192,16 +213,15 @@ app.get('/goals', async (req, res) => {
   }
 });
 
-// Get goals endpoint
-// app.get('/goals/:userId', authMiddleware.verifyToken, authMiddleware.attachUserId, async (req, res) => {
-//   try {
-//     const goals = await Goal.find({ user: req.params.userId });
-//     res.json(goals);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send('Internal server error');
-//   }
-// });
+// Get specific goal by goal type endpoint
+app.get('/goalType', async (req, res) => {
+  try {
+    const goals = await Goal.find({ user: req.query.user, goalType: req.query.goalType });
+    res.status(200).json(goals);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

@@ -10,53 +10,11 @@ const JournalScreen = () => {
 
   const [user, setUser] = useState([]);
   const [goalData, setGoalData] = useState([]);
-
-  useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    fetch(`https://project-proudme.onrender.com/users`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        setUser(data);
-      })
-      .catch(error => console.error(error));
-  }, []);
-  
-  useEffect(() => {
-    const fetchGoals = async () => {
-      try {
-        const response = await axios.get('https://project-proudme.onrender.com/goals', { 
-          params: {
-            user: user
-          }
-         });
-        setGoalData(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };  
-    fetchGoals();
-  }, [user]);
-
-  var dateToday = new Date(),
-    month = dateToday.getMonth(),
-    day = dateToday.getDate(),
-    year = dateToday.getFullYear(),
-    date = (month + 1) + '/' + day + '/' + year;
-
-  var defaultEndDate = new Date();
-  defaultEndDate.setDate(defaultEndDate.getDate() + 14);
-
-  if (defaultEndDate.getMonth !== dateToday.getMonth) {
-    var defaultEndDay = (defaultEndDate.getMonth() + 2) + '/' + defaultEndDate.getDate() + '/' + year;
-  }
-  else {
-    defaultEndDay = (defaultEndDate.getMonth() + 1) + '/' + defaultEndDate.getDate() + '/' + year;
-  }
+  const [allGoalData, setAllGoalData] = useState([]);
+  const [eatingGoal, setEatingGoal] = useState({});
+  const [activityGoal, setActivityGoal] = useState({});
+  const [sleepGoal, setSleepGoal] = useState({});
+  const [screentimeGoal, setScreentimeGoal] = useState({});
 
   const [goalArray, setGoalArray] = useState([
     {
@@ -96,9 +54,128 @@ const JournalScreen = () => {
       date: date
     }
   ]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    fetch(`/users`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        setUser(data);
+      })
+      .catch(error => console.error(error));
+  }, []);
   
-  const [goalCount, setGoalCount] = useState(0);
-  const [behaviorCount, setBehaviorCount] = useState(0);
+  useEffect(() => {
+    const fetchGoals = async () => {
+      try {
+        const response = await axios.get('https://project-proudme.onrender.com/goals', { 
+          params: {
+            user: user
+          }
+         });
+        setGoalData(response.data); 
+      } catch (error) {
+        console.error(error);
+      }
+    };  
+
+    const fetchAllGoals = async () => {
+      try {
+        const response = await axios.get('https://project-proudme.onrender.com/allGoals', { 
+         });
+        setAllGoalData(response.data); 
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchGoals();
+    fetchAllGoals();   
+  }, [user]);
+
+  useEffect(() => {
+    const fetchEatingGoals = async () => {
+      try {
+        const response = await axios.get('https://project-proudme.onrender.com/goalType', { 
+          params: {
+            user: user,
+            goalType: "eating"
+          }
+         });
+        setEatingGoal(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };  
+
+    const fetchActivityGoals = async () => {
+      try {
+        const response = await axios.get('https://project-proudme.onrender.com/goalType', { 
+          params: {
+            user: user,
+            goalType: "activity"
+          }
+         });
+        setActivityGoal(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchSleepGoals = async () => {
+      try {
+        const response = await axios.get('https://project-proudme.onrender.com/goalType', { 
+          params: {
+            user: user,
+            goalType: "sleep"
+          }
+         });
+        setSleepGoal(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchScreentimeGoals = async () => {
+      try {
+        const response = await axios.get('https://project-proudme.onrender.com/goalType', { 
+          params: {
+            user: user,
+            goalType: "screentime"
+          }
+         });
+        setScreentimeGoal(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchEatingGoals();
+    fetchActivityGoals();
+    fetchSleepGoals();
+    fetchScreentimeGoals();
+  }, [goalData]);
+
+  var dateToday = new Date(),
+    month = dateToday.getMonth(),
+    day = dateToday.getDate(),
+    year = dateToday.getFullYear(),
+    date = (month + 1) + '/' + day + '/' + year;
+
+  var defaultEndDate = new Date();
+  defaultEndDate.setDate(defaultEndDate.getDate() + 14);
+
+  if (defaultEndDate.getMonth !== dateToday.getMonth) {
+    var defaultEndDay = (defaultEndDate.getMonth() + 2) + '/' + defaultEndDate.getDate() + '/' + year;
+  }
+  else {
+    defaultEndDay = (defaultEndDate.getMonth() + 1) + '/' + defaultEndDate.getDate() + '/' + year;
+  }
+  
   const [inputGoalValue, setInputGoalValue] = useState(false);
 
   const [behaviorValues, setBehaviorValues] = useState([
@@ -125,7 +202,6 @@ const JournalScreen = () => {
   ]);
 
   const [behaviorData, setBehaviorData] = useState([]);
-  const [dataList, setDataList] = useState(goalData);
 
   var renderedDate = new Date(),
     renderedMonth = renderedDate.getMonth(),
@@ -150,15 +226,17 @@ const JournalScreen = () => {
       { label: "Goal Details", key: "divInfo1" },
       { label: "Goal Description", key: "divInfo2" },
       { label: "Goal Quantity", key: "goalValue" },
+      { label: "Daily Value", key: "behaviorValue" },
       { label: "Type of Goal", key: "goalType" },
       { label: "Date", key: "date" },
       { label: "Goal Reflection", key: "reflection" },
+      { label: "Goal Met?", key: "goalStatus" },
       { label: "__v", key: "__v"}
     ];
 
     return (
       <div>
-        <CSVLink data={goalData} headers={headers} filename='goaldata.csv'>
+        <CSVLink data={allGoalData} headers={headers} filename='goaldata.csv'>
           <img className="achievements-tab" src={require('../../components/images/journal/achievements_tab.png')}
           alt="Achievements bookmark tab" />
         </CSVLink>
@@ -183,77 +261,77 @@ const JournalScreen = () => {
   }
 
   function updateGoalValue(id, newQuantity) {
-    console.log(goalData);
     setGoalArray(prevGoals =>
       prevGoals.map(goal => {
         if (goal.id === id) {
-          axios.post('https://project-proudme.onrender.com/goals', { 
-            user: user._id,
-            goalType: goal.goalType,
-            goalValue: newQuantity,
-            divInfo1: goal.divInfo1,
-            divInfo2: goal.divInfo2,
-            date: date,
-            reflection: goal.reflection
-          })
+          const updatedGoal = { ...goal, goalValue: +newQuantity };
+  
+          // Update goal value based on goal type
+          switch (goal.goalType) {
+            case 'eatingGoal':
+              setEatingGoal(updatedGoal);
+              break;
+            case 'activityGoal':
+              setActivityGoal(updatedGoal);
+              break;
+            case 'sleepGoal':
+              setSleepGoal(updatedGoal);
+              break;
+            case 'screentimeGoal':
+              setScreentimeGoal(updatedGoal);
+              break;
+            default:
+              break;
+          }
+  
+          axios.post('https://project-proudme.onrender.com/goals', {
+              user: user._id,
+              goalType: goal.goalType,
+              goalValue: newQuantity,
+              behaviorValue: goal.behaviorValue,
+              divInfo1: goal.divInfo1,
+              divInfo2: goal.divInfo2,
+              date: date,
+              reflection: goal.reflection,
+              goalStatus: goal.behaviorValue >= goal.goalValue ? 'yes' : 'no',
+            })
             .then(response => {
               console.log(response.data);
             })
             .catch(error => {
               console.error(error);
-          })
-          return { ...goal, goalValue: +newQuantity };
-        }
-        return goal;
-      }),
-    );
-    setDataList(prevGoals =>
-      prevGoals.map(goal => {
-        if (goal.goalDataId === id) {
-          return { ...goal, "goalQuantity": +newQuantity };
+            });
+  
+          return updatedGoal;
         }
         return goal;
       })
     );
-  }
-
-  function updateGoalReflection(id, newReflection) {
-    setGoalArray(prevGoals =>
-      prevGoals.map(goal => {
-        if (goal.id === id) {
-          axios.post('https://project-proudme.onrender.com/goals', { 
-            user: user._id,
-            goalType: goal.goalType,
-            reflection: newReflection
-          })
-            .then(response => {
-              console.log(response.data);
-            })
-            .catch(error => {
-              console.error(error);
-          })
-          return { ...goal, reflection: newReflection };
-        }
-        return goal;
-      })
-    );
-    setDataList(prevGoals =>
-      prevGoals.map(goal => {
-        if (goal.goalDataId === id) {
-          return { ...goal, "reflection": newReflection };
-        }
-        return goal;
-      })
-    );
-  }
+  }  
 
   function updateBehaviorValue(id, newBehaviorValue) {
-
-    var loggingDate = new Date(),
-      month = loggingDate.getMonth(),
-      day = loggingDate.getDate(),
-      year = loggingDate.getFullYear(),
-      date = (month + 1) + '/' + day + '/' + year;
+    setGoalArray(prevGoals =>
+      prevGoals.map(goal => {
+        if (goal.id === id) {      
+          console.log(goal.behaviorValue);    
+          axios.post('https://project-proudme.onrender.com/goals', { 
+            user: user._id,
+            goalType: goal.goalType,
+            goalValue: goal.goalValue,
+            behaviorValue: newBehaviorValue,
+            goalStatus: (goal.behaviorValue >= goal.goalValue) ? 'yes' : 'no'
+          })
+            .then(response => {
+              console.log(response.data);
+            })
+            .catch(error => {
+              console.error(error); 
+          })
+          return { ...goal, behaviorValue: +newBehaviorValue };
+        }
+        return goal;
+      })
+    );
 
       setBehaviorValues(prevBehaviors =>
         prevBehaviors.map(behavior => {
@@ -314,6 +392,28 @@ const JournalScreen = () => {
     // });
   };
 
+  function updateGoalReflection(id, newReflection) {
+    setGoalArray(prevGoals =>
+      prevGoals.map(goal => {
+        if (goal.id === id) {
+          axios.post('https://project-proudme.onrender.com/goals', { 
+            user: user._id,
+            goalType: goal.goalType,
+            reflection: newReflection
+          })
+            .then(response => {
+              console.log(response.data);
+            })
+            .catch(error => {
+              console.error(error);
+          })
+          return { ...goal, reflection: newReflection };
+        }
+        return goal;
+      })
+    );
+  }
+
   return (
     <div className="journal">
       <h1 className="title">My Journal</h1>
@@ -338,15 +438,16 @@ const JournalScreen = () => {
                   {/* <p>Exercise, do chores, play sports, and other physical activities.</p> */}
                 {inputGoalValue === false ?
                   <TextField style={styles.inputBox} label="minutes/day"
+                    id="input"
                     type="number"
                     onBlur={handleBlur}
-                    onKeyDown={handleEnter}
-                    
+                    onKeyDown={handleEnter}                    
+                    value={activityGoal.length ? activityGoal[0].goalValue : ''}
                     onChange={(e) => {
                       updateGoalValue(0, +e.target.value);
                     }} />
                   :
-                  <h2>{goalArray[0].goalValue}</h2>
+                  <h2>{activityGoal.goalValue}</h2>
                 }
                 <TextField style={styles.inputBox} label="minutes/day"
                   type="number"
@@ -363,11 +464,12 @@ const JournalScreen = () => {
                 {inputGoalValue === false ?
                   <TextField style={styles.inputBox} label="minutes/day"
                     type="number"
+                    value={screentimeGoal.length ? screentimeGoal[0].goalValue : ''}
                     onChange={(e) => {
                       updateGoalValue(1, +e.target.value);
                     }} />
                   :
-                  <h2>{goalArray[1].goalValue}</h2>
+                  <h2>{screentimeGoal[0].goalValue}</h2>
                 }
 
                 <TextField style={styles.inputBox} label="minutes/day"
@@ -386,11 +488,12 @@ const JournalScreen = () => {
                 {inputGoalValue === false ?
                   <TextField style={styles.inputBox} label="servings/day"
                     type="number"
+                    value={eatingGoal.length ? eatingGoal[0].goalValue : ''}
                     onChange={(e) => {
                       updateGoalValue(2, +e.target.value);
                     }} />
                   :
-                  <h2>{goalArray[2].goalValue}</h2>
+                  <h2>{eatingGoal[0].goalValue}</h2>
                 }
 
                 <TextField style={styles.inputBox} label="servings/day"
@@ -410,11 +513,12 @@ const JournalScreen = () => {
                 {inputGoalValue === false ?
                   <TextField style={styles.inputBox} label="hours/day"
                     type="number"
+                    value={sleepGoal.length ? sleepGoal[0].goalValue : ''}
                     onChange={(e) => {
                       updateGoalValue(3, +e.target.value);
                     }} />
                   :
-                  <h2>{goalArray[3].goalValue}</h2>
+                  <h2>{sleepGoal[0].goalValue}</h2>
                 }
 
                 <TextField style={styles.inputBox} label="hours/day"
