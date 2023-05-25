@@ -57,7 +57,7 @@ const JournalScreen = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('authToken');
-    fetch(`/users`, {
+    fetch(`https://project-proudme.onrender.com/users`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
