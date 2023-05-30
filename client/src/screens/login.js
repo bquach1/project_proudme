@@ -16,14 +16,13 @@ const LoginScreen = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    axios.post('https://project-proudme.onrender.com/login', {
+    axios.post('http://localhost:3001/login', {
       email,
       password
     })
       .then(response => {
         localStorage.setItem('authToken', response.data);
         setIsSubmitted(true);
-        console.log(response.data);
       })
       .catch(error => {
         console.error(error);
