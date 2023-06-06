@@ -10,6 +10,7 @@ const HomeScreen = (props) => {
     let navigate = useNavigate();
 
     const [user, setUser] = useState([]);
+    const [exactTime, setExactTime] = useState("");
 
     useEffect(() => {
         const token = localStorage.getItem('authToken');
@@ -21,6 +22,8 @@ const HomeScreen = (props) => {
         .then(response => response.json())
         .then(data => setUser(data))
         .catch(error => console.error(error));
+        
+        setExactTime(date);
     }, []);
 
     var dateToday = new Date(),
@@ -31,7 +34,7 @@ const HomeScreen = (props) => {
     return (
         <div className="home">
             <h1 className="title">Hello {user.firstName}!</h1>
-            <h4>{date}</h4>
+            <h4>{exactTime}</h4>
             <h4>{currentTime}</h4>
             <div className="imageWrapper">
             <div className="left-icons">

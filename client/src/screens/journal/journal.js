@@ -5,6 +5,7 @@ import axios from "axios";
 
 import { CSVLink } from "react-csv";
 import { TextField, CircularProgress } from "@mui/material";
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 
 const JournalScreen = () => {
   const [user, setUser] = useState([]);
@@ -186,7 +187,10 @@ const JournalScreen = () => {
 
     const fetchAllBehaviors = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/allBehaviors", {});
+        const response = await axios.get(
+          "http://localhost:3001/allBehaviors",
+          {}
+        );
         setAllBehaviorData(response.data);
       } catch (error) {
         console.error(error);
@@ -270,14 +274,9 @@ const JournalScreen = () => {
     );
   };
 
-  function updateGoalValue(id, newQuantity) {
+  function updateGoalValue(id, newQuantity) {    
     if (id === 0) {
       setActivityGoal((prevActivityGoal) => {
-        // If prevActivityGoal is empty, initialize it with a default value
-        // if (prevActivityGoal.length === 0) {
-        //   prevActivityGoal = /* Initialize with default value */;
-        // }
-
         const updatedActivityGoal = prevActivityGoal.map((goal) => {
           const updatedGoal = { ...goal, goalValue: +newQuantity };
           axios
@@ -289,7 +288,7 @@ const JournalScreen = () => {
               divInfo1: goal.divInfo1,
               divInfo2: goal.divInfo2,
               date: date,
-              goalStatus: goal.behaviorValue >= goal.goalValue ? "yes" : "no",
+              goalStatus: goal.behaviorValue >= newQuantity ? "yes" : "no",
             })
             .catch((error) => {
               console.error(error);
@@ -311,7 +310,7 @@ const JournalScreen = () => {
               divInfo1: goal.divInfo1,
               divInfo2: goal.divInfo2,
               date: date,
-              goalStatus: goal.behaviorValue >= goal.goalValue ? "yes" : "no",
+              goalStatus: goal.behaviorValue >= newQuantity ? "yes" : "no",
             })
             .then((response) => {
               console.log(response.data);
@@ -336,7 +335,7 @@ const JournalScreen = () => {
               divInfo1: goal.divInfo1,
               divInfo2: goal.divInfo2,
               date: date,
-              goalStatus: goal.behaviorValue >= goal.goalValue ? "yes" : "no",
+              goalStatus: goal.behaviorValue >= newQuantity ? "yes" : "no",
             })
             .then((response) => {
               console.log(response.data);
@@ -361,7 +360,7 @@ const JournalScreen = () => {
               divInfo1: goal.divInfo1,
               divInfo2: goal.divInfo2,
               date: date,
-              goalStatus: goal.behaviorValue >= goal.goalValue ? "yes" : "no",
+              goalStatus: goal.behaviorValue >= newQuantity ? "yes" : "no",
             })
             .then((response) => {
               console.log(response.data);
@@ -403,9 +402,9 @@ const JournalScreen = () => {
               date: date,
               formattedDate: date,
               goalValue: activityData[0].goalValue,
-              behaviorValue: newBehaviorValue,     
+              behaviorValue: newBehaviorValue,
               goalStatus:
-                newBehaviorValue >= activityData[0].goalValue ? "yes" : "no",        
+                newBehaviorValue >= activityData[0].goalValue ? "yes" : "no",
             })
             .then((response) => {
               console.log(response.data);
@@ -443,9 +442,9 @@ const JournalScreen = () => {
               date: date,
               formattedDate: date,
               goalValue: screentimeData[0].goalValue,
-              behaviorValue: newBehaviorValue,          
+              behaviorValue: newBehaviorValue,
               goalStatus:
-                newBehaviorValue >= screentimeData[0].goalValue ? "yes" : "no",    
+                newBehaviorValue >= screentimeData[0].goalValue ? "yes" : "no",
             })
             .then((response) => {
               console.log(response.data);
@@ -483,7 +482,7 @@ const JournalScreen = () => {
               date: date,
               formattedDate: date,
               goalValue: eatingData[0].goalValue,
-              behaviorValue: newBehaviorValue,              
+              behaviorValue: newBehaviorValue,
               goalStatus:
                 newBehaviorValue >= eatingData[0].goalValue ? "yes" : "no",
             })
@@ -523,7 +522,7 @@ const JournalScreen = () => {
               date: date,
               formattedDate: date,
               goalValue: sleepData[0].goalValue,
-              behaviorValue: newBehaviorValue,              
+              behaviorValue: newBehaviorValue,
               goalStatus:
                 newBehaviorValue >= sleepData[0].goalValue ? "yes" : "no",
             })
@@ -651,8 +650,8 @@ const JournalScreen = () => {
                   alt="Activity goals icon on activity goals page"
                 />
                 <h2 style={styles.goalLabel}>Do</h2>
+                <HelpOutlineIcon fontSize="small"/>
               </div>
-              {/* <p>Exercise, do chores, play sports, and other physical activities.</p> */}
               {inputGoalValue === true ? (
                 <TextField
                   style={styles.inputBox}
@@ -841,7 +840,7 @@ const JournalScreen = () => {
                     : "..."}
                 </h4>
               ) : (
-                <CircularProgress style={{margin: 'auto'}}/>
+                <CircularProgress style={{ margin: "auto" }} />
               )}
               <TextField
                 type="text"
@@ -870,7 +869,7 @@ const JournalScreen = () => {
                     : "..."}
                 </h4>
               ) : (
-                <CircularProgress style={{margin: 'auto'}}/>
+                <CircularProgress style={{ margin: "auto" }} />
               )}
               <TextField
                 type="text"
@@ -896,7 +895,7 @@ const JournalScreen = () => {
                     : "..."}
                 </h4>
               ) : (
-                <CircularProgress style={{margin: 'auto'}}/>
+                <CircularProgress style={{ margin: "auto" }} />
               )}
               <TextField
                 type="text"
@@ -920,7 +919,7 @@ const JournalScreen = () => {
                     : "..."}
                 </h4>
               ) : (
-                <CircularProgress style={{margin: 'auto'}}/>
+                <CircularProgress style={{ margin: "auto" }} />
               )}
               <TextField
                 type="text"
