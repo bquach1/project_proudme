@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import '../css/home.css';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import withAuth from '../components/auth/withAuth';
 import axios from 'axios';

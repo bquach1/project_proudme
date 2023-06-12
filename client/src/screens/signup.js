@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import { Checkbox, FormGroup, FormControlLabel, Typography } from '@material-ui/core';
+import { Checkbox, FormGroup, FormControlLabel, Typography } from '@mui/material';
 import axios from 'axios';
 
 import '../css/signup.css';
