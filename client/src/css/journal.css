@@ -2,11 +2,6 @@
     color: #2E6AA1;
 }
 
-.journal {
-    margin-top: 1%;
-    padding-bottom: 5%;
-}
-
 .journalWrapper {
     display: flex;
     align-items: center;
@@ -29,8 +24,6 @@
     margin-right: 32%;
     position: absolute;
     background-image: "../components/images/journal/left_page.png";
-    background-attachment: scroll;
-    overflow-y: scroll;
 }
 
 .leftpage1 {
@@ -73,7 +66,6 @@
     margin-top: auto;
     margin-left: 32%;
     position: absolute;
-    overflow-y: scroll;
 }
 
 .rightpage1 {

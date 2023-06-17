@@ -4,8 +4,32 @@ import withAuth from "../../components/auth/withAuth";
 import axios from "axios";
 
 import { CSVLink } from "react-csv";
-import { TextField, CircularProgress } from "@mui/material";
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
+import { TextField, CircularProgress, Tooltip } from "@mui/material";
+import styled from "styled-components";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import EditIcon from "@mui/icons-material/Edit";
+
+const Wrapper = styled.div`
+  margin-top: 1%;
+  padding-bottom: 5%;
+`;
+
+const ReflectionContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .edit-icon {
+    margin-left: 2%;
+
+    &:hover {
+      cursor: pointer;
+      transition: 0.5s;
+      color: green;
+    }
+  }
+`;
 
 const JournalScreen = () => {
   const [user, setUser] = useState([]);
@@ -13,6 +37,9 @@ const JournalScreen = () => {
   const [allGoalData, setAllGoalData] = useState([]);
   const [behaviorData, setBehaviorData] = useState([]);
   const [allBehaviorData, setAllBehaviorData] = useState([]);
+
+  const [goalReflection, setGoalReflection] = useState(["", "", "", ""]);
+  const [editingReflectionId, setEditingReflectionId] = useState(-1);
 
   const [activityGoal, setActivityGoal] = useState([
     {
@@ -69,7 +96,7 @@ const JournalScreen = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    fetch(`https://project-proudme.onrender.com/users`, {
+    fetch(`http://localhost:3001/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -84,7 +111,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goals", {
+        const response = await axios.get("http://localhost:3001/goals", {
           params: {
             user: user,
           },
@@ -97,7 +124,7 @@ const JournalScreen = () => {
 
     const fetchAllGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/allGoals", {});
+        const response = await axios.get("http://localhost:3001/allGoals", {});
         setAllGoalData(response.data);
       } catch (error) {
         console.error(error);
@@ -111,7 +138,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
+        const response = await axios.get("http://localhost:3001/goalType", {
           params: {
             user: user,
             goalType: "eating",
@@ -122,10 +149,13 @@ const JournalScreen = () => {
         console.error(error);
       }
     };
+    fetchEatingGoals();
+  }, [goalData, eatingGoal]);
 
+  useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
+        const response = await axios.get("http://localhost:3001/goalType", {
           params: {
             user: user,
             goalType: "activity",
@@ -136,10 +166,13 @@ const JournalScreen = () => {
         console.error(error);
       }
     };
+    fetchActivityGoals();
+  }, [goalData, activityGoal]);
 
+  useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
+        const response = await axios.get("http://localhost:3001/goalType", {
           params: {
             user: user,
             goalType: "sleep",
@@ -150,10 +183,13 @@ const JournalScreen = () => {
         console.error(error);
       }
     };
+    fetchSleepGoals();
+  }, [goalData, sleepGoal]);
 
+  useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
+        const response = await axios.get("http://localhost:3001/goalType", {
           params: {
             user: user,
             goalType: "screentime",
@@ -165,16 +201,13 @@ const JournalScreen = () => {
       }
     };
 
-    fetchEatingGoals();
-    fetchActivityGoals();
-    fetchSleepGoals();
     fetchScreentimeGoals();
-  }, [goalData, activityGoal, screentimeGoal, eatingGoal, sleepGoal]);
+  }, [goalData, screentimeGoal]);
 
   useEffect(() => {
     const fetchBehaviors = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/behaviors", {
+        const response = await axios.get("http://localhost:3001/behaviors", {
           params: {
             user: user,
           },
@@ -188,7 +221,7 @@ const JournalScreen = () => {
     const fetchAllBehaviors = async () => {
       try {
         const response = await axios.get(
-          "https://project-proudme.onrender.com/allBehaviors",
+          "http://localhost:3001/allBehaviors",
           {}
         );
         setAllBehaviorData(response.data);
@@ -274,13 +307,13 @@ const JournalScreen = () => {
     );
   };
 
-  function updateGoalValue(id, newQuantity) {    
+  function updateGoalValue(id, newQuantity) {
     if (id === 0) {
       setActivityGoal((prevActivityGoal) => {
         const updatedActivityGoal = prevActivityGoal.map((goal) => {
           const updatedGoal = { ...goal, goalValue: +newQuantity };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: goal.goalType,
               goalValue: newQuantity,
@@ -302,7 +335,7 @@ const JournalScreen = () => {
         const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
           const updatedGoal = { ...goal, goalValue: +newQuantity };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: goal.goalType,
               goalValue: newQuantity,
@@ -327,7 +360,7 @@ const JournalScreen = () => {
         const updatedEatingGoal = prevEatingGoal.map((goal) => {
           const updatedGoal = { ...goal, goalValue: +newQuantity };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: goal.goalType,
               goalValue: newQuantity,
@@ -352,7 +385,7 @@ const JournalScreen = () => {
         const updatedSleepGoal = prevSleepGoal.map((goal) => {
           const updatedGoal = { ...goal, goalValue: +newQuantity };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: goal.goalType,
               goalValue: newQuantity,
@@ -381,7 +414,7 @@ const JournalScreen = () => {
         const updatedActivityGoal = prevActivityGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: "activity",
               goalValue: activityData[0].goalValue,
@@ -396,7 +429,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("https://project-proudme.onrender.com/behaviors", {
+            .post("http://localhost:3001/behaviors", {
               user: user._id,
               goalType: "activity",
               date: date,
@@ -421,7 +454,7 @@ const JournalScreen = () => {
         const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: "screentime",
               goalValue: screentimeData[0].goalValue,
@@ -436,7 +469,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("https://project-proudme.onrender.com/behaviors", {
+            .post("http://localhost:3001/behaviors", {
               user: user._id,
               goalType: "screentime",
               date: date,
@@ -461,7 +494,7 @@ const JournalScreen = () => {
         const updatedEatingGoal = prevEatingGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: "eating",
               goalValue: eatingData[0].goalValue,
@@ -476,7 +509,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("https://project-proudme.onrender.com/behaviors", {
+            .post("http://localhost:3001/behaviors", {
               user: user._id,
               goalType: "eating",
               date: date,
@@ -501,7 +534,7 @@ const JournalScreen = () => {
         const updatedSleepGoal = prevSleepGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: "sleep",
               goalValue: sleepData[0].goalValue,
@@ -516,7 +549,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("https://project-proudme.onrender.com/behaviors", {
+            .post("http://localhost:3001/behaviors", {
               user: user._id,
               goalType: "sleep",
               date: date,
@@ -545,7 +578,7 @@ const JournalScreen = () => {
         const updatedActivityGoal = prevActivityGoal.map((goal) => {
           const updatedGoal = { ...goal, reflection: newReflection };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: "activity",
               reflection: newReflection,
@@ -565,7 +598,7 @@ const JournalScreen = () => {
         const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
           const updatedGoal = { ...goal, reflection: newReflection };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: "screentime",
               reflection: newReflection,
@@ -585,7 +618,7 @@ const JournalScreen = () => {
         const updatedEatingGoal = prevEatingGoal.map((goal) => {
           const updatedGoal = { ...goal, reflection: newReflection };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: "eating",
               reflection: newReflection,
@@ -605,7 +638,7 @@ const JournalScreen = () => {
         const updatedSleepGoal = prevSleepGoal.map((goal) => {
           const updatedGoal = { ...goal, reflection: newReflection };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: "sleep",
               reflection: newReflection,
@@ -624,8 +657,8 @@ const JournalScreen = () => {
   }
 
   return (
-    <div className="journal">
-      <h1 className="title">My Journal</h1>
+    <Wrapper className="journal">
+      <h1 style={{ color: "#2E6AA1" }}>My Journal</h1>
       <div className="journalWrapper">
         <GoalCSV />
         <BehaviorTrackingCSV />
@@ -842,14 +875,28 @@ const JournalScreen = () => {
               ) : (
                 <CircularProgress style={{ margin: "auto" }} />
               )}
-              <TextField
-                type="text"
-                placeholder="Type my thoughts"
-                value={activityData.length ? activityData[0].reflection : ""}
-                onChange={(e) => {
-                  updateGoalReflection(0, e.target.value);
-                }}
-              />
+              <ReflectionContainer>
+                {editingReflectionId === 0 ?                     
+                <TextField
+                  type="text"
+                  placeholder="Type my thoughts"
+                  style={{width: "100%"}}
+                  value={goalReflection[0]}
+                  // value={activityData.length ? activityData[0].reflection : ""}
+                  onChange={(e) => {
+                    let newArray = [...goalReflection];
+                    newArray[0] = e.target.value;
+                    setGoalReflection(newArray);
+                  }}
+                /> 
+                : <span style={{width: "auto", margin: "auto"}}>{activityData.length ? activityData[0].reflection : ""}</span>}                    
+                <Tooltip title={editingReflectionId === 0 ? "Save Reflection" : "Edit Reflection"} >
+                  <EditIcon
+                    className="edit-icon"
+                    onClick={() => {editingReflectionId === 0 ? setEditingReflectionId(-1) : setEditingReflectionId(0); updateGoalReflection(0, goalReflection)}}
+                  />
+                </Tooltip>
+              </ReflectionContainer>
             </div>
 
             <div style={styles.goalRow}>
@@ -871,14 +918,24 @@ const JournalScreen = () => {
               ) : (
                 <CircularProgress style={{ margin: "auto" }} />
               )}
-              <TextField
-                type="text"
-                placeholder="Type my thoughts"
-                value={
-                  screentimeData.length ? screentimeData[0].reflection : ""
+              <ReflectionContainer>
+                {editingReflectionId === 1 ?
+                <TextField
+                  type="text"
+                  placeholder="Type my thoughts"
+                  value={goalReflection[1]}
+                  onChange={(e) => updateGoalReflection(1, e.target.value)}
+                />
+                :
+                <span style={{width: "auto", margin: "auto"}}>{screentimeData.length ? screentimeData[0].reflection : ""}</span>
                 }
-                onChange={(e) => updateGoalReflection(1, e.target.value)}
-              />
+                <Tooltip title="Edit Reflection">
+                  <EditIcon
+                    className="edit-icon"
+                    onClick={() => updateGoalReflection(1, goalReflection)}
+                  />
+                </Tooltip>
+              </ReflectionContainer>
             </div>
 
             <div style={styles.goalRow}>
@@ -897,12 +954,20 @@ const JournalScreen = () => {
               ) : (
                 <CircularProgress style={{ margin: "auto" }} />
               )}
-              <TextField
-                type="text"
-                placeholder="Type my thoughts"
-                value={eatingData.length ? eatingData[0].reflection : ""}
-                onChange={(e) => updateGoalReflection(2, e.target.value)}
-              />
+              <ReflectionContainer>
+                <TextField
+                  type="text"
+                  placeholder="Type my thoughts"
+                  value={eatingData.length ? eatingData[0].reflection : ""}
+                  onChange={(e) => updateGoalReflection(2, e.target.value)}
+                />
+                <Tooltip title="Edit Reflection">
+                  <EditIcon
+                    className="edit-icon"
+                    onClick={() => updateGoalReflection(2, goalReflection)}
+                  />
+                </Tooltip>
+              </ReflectionContainer>
             </div>
 
             <div style={styles.goalRow}>
@@ -921,12 +986,20 @@ const JournalScreen = () => {
               ) : (
                 <CircularProgress style={{ margin: "auto" }} />
               )}
-              <TextField
-                type="text"
-                placeholder="Type my thoughts"
-                value={sleepData.length ? sleepData[0].reflection : ""}
-                onChange={(e) => updateGoalReflection(3, e.target.value)}
-              />
+              <ReflectionContainer>
+                <TextField
+                  type="text"
+                  placeholder="Type my thoughts"
+                  value={sleepData.length ? sleepData[0].reflection : ""}
+                  onChange={(e) => updateGoalReflection(3, e.target.value)}
+                />
+                <Tooltip title="Edit Reflection">
+                  <EditIcon
+                    className="edit-icon"
+                    onClick={() => updateGoalReflection(3, goalReflection)}
+                  />
+                </Tooltip>
+              </ReflectionContainer>
             </div>
           </div>
           <img
@@ -946,7 +1019,7 @@ const JournalScreen = () => {
           />
         </div>
       </div>
-    </div>
+    </Wrapper>
   );
 };
 
@@ -1043,7 +1116,7 @@ let styles = {
     alignItems: "center",
   },
   feedback: {
-    width: "40%",
+    width: "35%",
     color: "blue",
     marginLeft: "auto",
   },

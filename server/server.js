@@ -121,6 +121,7 @@ app.post("/login", async (req, res) => {
     if (!user) {
       // If login fails, return an error response
       res.status(401).send("Incorrect email or password");
+      return;
     }
 
     // If login is successful, return a success response
@@ -277,8 +278,8 @@ app.post("/signup", async (req, res) => {
       res.status(200).send(newUser);
     }
   } catch (error) {
-    console.error(error);
     res.status(500).send("Internal server error");
+    console.error(error);
   }
 });
 
@@ -292,8 +293,8 @@ app.get(
       const user = await User.findById(req._id);
       res.json(user);
     } catch (error) {
-      console.error(error);
       res.status(500).send("Internal server error");
+      console.error(error);
     }
   }
 );
