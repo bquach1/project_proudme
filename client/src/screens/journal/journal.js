@@ -38,7 +38,6 @@ const JournalScreen = () => {
   const [behaviorData, setBehaviorData] = useState([]);
   const [allBehaviorData, setAllBehaviorData] = useState([]);
 
-  const [goalReflection, setGoalReflection] = useState(["", "", "", ""]);
   const [editingReflectionId, setEditingReflectionId] = useState(-1);
 
   const [activityGoal, setActivityGoal] = useState([
@@ -881,19 +880,27 @@ const JournalScreen = () => {
                   type="text"
                   placeholder="Type my thoughts"
                   style={{width: "100%"}}
-                  value={goalReflection[0]}
+                  value={activityGoal.reflection}
                   // value={activityData.length ? activityData[0].reflection : ""}
                   onChange={(e) => {
-                    let newArray = [...goalReflection];
-                    newArray[0] = e.target.value;
-                    setGoalReflection(newArray);
+                    setActivityGoal((prevActivityGoal) => {
+                      const updatedActivityGoal = prevActivityGoal.map((goal) => {
+                        const newActivityReflection = { ...goal, reflection: e.target.value};
+                        return newActivityReflection;
+                      });
+                      return updatedActivityGoal;
+                    });
                   }}
                 /> 
                 : <span style={{width: "auto", margin: "auto"}}>{activityData.length ? activityData[0].reflection : ""}</span>}                    
                 <Tooltip title={editingReflectionId === 0 ? "Save Reflection" : "Edit Reflection"} >
                   <EditIcon
                     className="edit-icon"
-                    onClick={() => {editingReflectionId === 0 ? setEditingReflectionId(-1) : setEditingReflectionId(0); updateGoalReflection(0, goalReflection)}}
+                    onClick={() => {
+                      console.log(activityGoal.reflection);
+                      editingReflectionId !== 0 
+                      ? setEditingReflectionId(0)
+                      : setEditingReflectionId(-1); updateGoalReflection(0, activityGoal.reflection); }}
                   />
                 </Tooltip>
               </ReflectionContainer>
@@ -923,7 +930,7 @@ const JournalScreen = () => {
                 <TextField
                   type="text"
                   placeholder="Type my thoughts"
-                  value={goalReflection[1]}
+                  value={activityData.reflection}
                   onChange={(e) => updateGoalReflection(1, e.target.value)}
                 />
                 :
@@ -932,7 +939,7 @@ const JournalScreen = () => {
                 <Tooltip title="Edit Reflection">
                   <EditIcon
                     className="edit-icon"
-                    onClick={() => updateGoalReflection(1, goalReflection)}
+                    onClick={() => updateGoalReflection(1, activityGoal.reflection)}
                   />
                 </Tooltip>
               </ReflectionContainer>
@@ -964,7 +971,7 @@ const JournalScreen = () => {
                 <Tooltip title="Edit Reflection">
                   <EditIcon
                     className="edit-icon"
-                    onClick={() => updateGoalReflection(2, goalReflection)}
+                    onClick={() => updateGoalReflection(2, activityGoal.reflection)}
                   />
                 </Tooltip>
               </ReflectionContainer>
@@ -996,7 +1003,7 @@ const JournalScreen = () => {
                 <Tooltip title="Edit Reflection">
                   <EditIcon
                     className="edit-icon"
-                    onClick={() => updateGoalReflection(3, goalReflection)}
+                    onClick={() => updateGoalReflection(3, activityGoal.reflection)}
                   />
                 </Tooltip>
               </ReflectionContainer>
