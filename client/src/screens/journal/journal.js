@@ -730,7 +730,9 @@ const JournalScreen = () => {
                   alt="Activity goals icon on activity goals page"
                 />
                 <h2 style={styles.goalLabel}>Do</h2>
-                <HelpOutlineIcon />
+                <Tooltip title="Exercise, do chores, play sports, and go out and do other physical activities.">
+                  <HelpOutlineIcon style={{fontSize: "16px"}} />
+                </Tooltip> 
               </div>
               {inputGoalValue === true ? (
                 <TextField
@@ -769,6 +771,9 @@ const JournalScreen = () => {
                   alt="Tablet for screentime goals"
                 />
                 <h2 style={styles.goalLabel}>View</h2>
+                <Tooltip title="Limit time using phones, laptops, and other screens every day.">
+                  <HelpOutlineIcon style={{fontSize: "16px"}} />
+                </Tooltip> 
               </div>
               {inputGoalValue === true ? (
                 <TextField
@@ -809,6 +814,9 @@ const JournalScreen = () => {
                   alt="Apple for servings goal"
                 />
                 <h2 style={styles.goalLabel}>Chew</h2>
+                <Tooltip title="Eat recommended daily servings of fruits and vegetables for a healthier diet.">
+                  <HelpOutlineIcon style={{fontSize: "16px"}} />
+                </Tooltip> 
               </div>
 
               {inputGoalValue === true ? (
@@ -844,6 +852,9 @@ const JournalScreen = () => {
                   alt="Pillow icon for sleep"
                 />
                 <h2 style={styles.goalLabel}>Sleep</h2>
+                <Tooltip title="Get a good night's rest to be productive and healthy.">
+                  <HelpOutlineIcon style={{fontSize: "16px"}} />
+                </Tooltip> 
               </div>
 
               {inputGoalValue === true ? (
@@ -1318,7 +1329,7 @@ let styles = {
     display: "flex",
     margin: "auto",
     flexDirection: "row",
-    width: "10%",
+    width: "30%",
     justifyContent: "space-between",
     alignItems: "center",
   },
