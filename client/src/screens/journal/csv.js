@@ -1,83 +1,60 @@
-import React, { useState } from 'react';
-import Papa from "papaparse";
-import withAuth from '../../components/auth/withAuth';
+import React from "react";
 
-const allowedExtensions = ["csv"];
+import { CSVLink } from "react-csv";
 
-const CSVScreen = () => {
-        // This state will store the parsed data
-        const [data, setData] = useState([]);
-     
-        // It state will contain the error when
-        // correct file extension is not used
-        const [error, setError] = useState("");
-         
-        // It will store the file uploaded by the user
-        const [file, setFile] = useState("");
-     
-        // This function will be called when
-        // the file input changes
-        const handleFileChange = (e) => {
-            setError("");
-             
-            // Check if user has entered the file
-            if (e.target.files.length) {
-                const inputFile = e.target.files[0];
-                 
-                // Check the file extensions, if it not
-                // included in the allowed extensions
-                // we show the error
-                const fileExtension = inputFile?.type.split("/")[1];
-                if (!allowedExtensions.includes(fileExtension)) {
-                    setError("Please input a csv file");
-                    return;
-                }
-     
-                // If input type is correct set the state
-                setFile(inputFile);
-            }
-        };
-        const handleParse = () => {
-             
-            // If user clicks the parse button without
-            // a file we show a error
-            if (!file) return setError("Enter a valid file");
-     
-            // Initialize a reader which allows user
-            // to read any file or blob.
-            const reader = new FileReader();
-             
-            // Event listener on reader when the file
-            // loads, we parse it and set the data.
-            reader.onload = async ({ target }) => {
-                const csv = Papa.parse(target.result, { header: true });
-                const parsedData = csv?.data;
-                const columns = Object.keys(parsedData[0]);
-                setData(columns);
-            };
-            reader.readAsText(file);
-        };
-     
-        return (
-            <div>
-                <label htmlFor="csvInput" style={{ display: "block" }}>
-                    Enter CSV File
-                </label>
-                <input
-                    onChange={handleFileChange}
-                    id="csvInput"
-                    name="file"
-                    type="File"
-                />
-                <div>
-                    <button onClick={handleParse}>Parse</button>
-                </div>
-                <div style={{ marginTop: "3rem" }}>
-                    {error ? error : data.map((col,
-                      idx) => <div key={idx}>{col}</div>)}
-                </div>
-            </div>
-        );
+export const GoalCSV = ({ allGoalData }) => {
+  const headers = [
+    { label: "_id", key: "_id" },
+    { label: "User", key: "user" },
+    { label: "Goal Details", key: "divInfo1" },
+    { label: "Goal Description", key: "divInfo2" },
+    { label: "Goal Quantity", key: "goalValue" },
+    { label: "Daily Value", key: "behaviorValue" },
+    { label: "Type of Goal", key: "goalType" },
+    { label: "Date", key: "date" },
+    { label: "Goal Reflection", key: "reflection" },
+    { label: "Goal Met?", key: "goalStatus" },
+    { label: "__v", key: "__v" },
+  ];
+
+  return (
+    <div>
+      {allGoalData && (
+        <CSVLink data={allGoalData} headers={headers} filename="goaldata.csv">
+          <img
+            className="achievements-tab"
+            src={require("../../components/images/journal/achievements_tab.png")}
+            alt="Achievements bookmark tab"
+          />
+        </CSVLink>
+      )}
+    </div>
+  );
 };
 
-export default withAuth(CSVScreen);
+export const BehaviorTrackingCSV = ({ allBehaviorData }) => {
+  const behaviorHeaders = [
+    { label: "User", key: "user" },
+    { label: "Type of Goal", key: "goalType" },
+    { label: "Goal Quantity", key: "goalValue" },
+    { label: "Date", key: "date" },
+    { label: "Daily Value", key: "behaviorValue" },
+    { label: "Goal Met?", key: "goalStatus" },
+  ];
+
+  return (
+    <div>
+      <CSVLink
+        data={allBehaviorData}
+        headers={behaviorHeaders}
+        filename="behaviordata.csv"
+      >
+        <img
+          className="gallery-tab"
+          src={require("../../components/images/journal/gallery_tab.png")}
+          alt="Achievements bookmark tab"
+        />
+      </CSVLink>
+    </div>
+  );
+};
