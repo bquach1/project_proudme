@@ -3,11 +3,12 @@ import "../../css/journal.css";
 import withAuth from "../../components/auth/withAuth";
 import axios from "axios";
 
-import { CSVLink } from "react-csv";
 import { TextField, CircularProgress, Tooltip } from "@mui/material";
 import styled from "styled-components";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
+import CheckIcon from "@mui/icons-material/Check";
+
 import { BehaviorTrackingCSV, GoalCSV } from "./csv";
 
 const Wrapper = styled.div`
@@ -23,7 +24,7 @@ const JournalWrapper = styled.div`
   justify-content: center;
   position: relative;
   margin-top: 1%;
-`
+`;
 
 const ReflectionContainer = styled.div`
   display: flex;
@@ -44,6 +45,15 @@ const ReflectionContainer = styled.div`
     &.save:hover {
       color: green;
     }
+  }
+`;
+
+const SubmitCheckIcon = styled(CheckIcon)`
+  margin-left: -15px;
+
+  &:hover {
+    cursor: pointer;
+    color: green;
   }
 `;
 
@@ -708,7 +718,7 @@ const JournalScreen = () => {
       <h1 style={{ color: "#2E6AA1" }}>My Journal</h1>
       <JournalWrapper>
         <GoalCSV allGoalData={allGoalData} />
-        <BehaviorTrackingCSV allBehaviorData={allBehaviorData}/>
+        <BehaviorTrackingCSV allBehaviorData={allBehaviorData} />
         <img
           className="journalCover"
           src={require("../../components/images/journal/journal_cover.png")}
@@ -731,27 +741,33 @@ const JournalScreen = () => {
                 />
                 <h2 style={styles.goalLabel}>Do</h2>
                 <Tooltip title="Exercise, do chores, play sports, and go out and do other physical activities.">
-                  <HelpOutlineIcon style={{fontSize: "16px"}} />
-                </Tooltip> 
+                  <HelpOutlineIcon style={{ fontSize: "16px" }} />
+                </Tooltip>
               </div>
               {inputGoalValue === true ? (
-                <TextField
-                  style={styles.inputBox}
-                  label="minutes/day"
-                  id="input"
-                  type="number"
-                  onBlur={handleBlur}
-                  onKeyDown={handleEnter}
-                  value={activityData.length ? activityData[0].goalValue : ""}
-                  onChange={(e) => {
-                    updateGoalValue(0, +e.target.value);
-                  }}
-                />
+                <>
+                  <TextField
+                    style={styles.inputBox}
+                    label="minutes/day"
+                    id="input"
+                    type="number"
+                    onBlur={handleBlur}
+                    onKeyDown={handleEnter}
+                    value={activityData.length ? activityData[0].goalValue : ""}
+                    onChange={(e) => {
+                      updateGoalValue(0, +e.target.value);
+                    }}
+                  />
+                  <Tooltip title="Log Goal Value">
+                    <SubmitCheckIcon />
+                  </Tooltip>
+                </>
               ) : (
                 <h2 onClick={setInputGoalValue(true)}>
                   {activityData.length ? activityData.goalValue : ""}
                 </h2>
               )}
+
               <TextField
                 style={styles.inputBox}
                 label="minutes/day"
@@ -761,6 +777,9 @@ const JournalScreen = () => {
                   updateBehaviorValue(0, +e.target.value);
                 }}
               />
+              <Tooltip title="Log Daily Behavior Value">
+                <SubmitCheckIcon />
+              </Tooltip>
             </div>
 
             <div style={styles.goalRow}>
@@ -772,21 +791,26 @@ const JournalScreen = () => {
                 />
                 <h2 style={styles.goalLabel}>View</h2>
                 <Tooltip title="Limit time using phones, laptops, and other screens every day.">
-                  <HelpOutlineIcon style={{fontSize: "16px"}} />
-                </Tooltip> 
+                  <HelpOutlineIcon style={{ fontSize: "16px" }} />
+                </Tooltip>
               </div>
               {inputGoalValue === true ? (
-                <TextField
-                  style={styles.inputBox}
-                  label="minutes/day"
-                  type="number"
-                  value={
-                    screentimeData.length ? screentimeData[0].goalValue : ""
-                  }
-                  onChange={(e) => {
-                    updateGoalValue(1, +e.target.value);
-                  }}
-                />
+                <>
+                  <TextField
+                    style={styles.inputBox}
+                    label="minutes/day"
+                    type="number"
+                    value={
+                      screentimeData.length ? screentimeData[0].goalValue : ""
+                    }
+                    onChange={(e) => {
+                      updateGoalValue(1, +e.target.value);
+                    }}
+                  />
+                  <Tooltip title="Log Goal Value">
+                    <SubmitCheckIcon />
+                  </Tooltip>
+                </>
               ) : (
                 <h2>
                   {screentimeData.length ? screentimeData[0].goalValue : ""}
@@ -804,6 +828,9 @@ const JournalScreen = () => {
                   updateBehaviorValue(1, +e.target.value);
                 }}
               />
+              <Tooltip title="Log Daily Behavior Value">
+                <SubmitCheckIcon />
+              </Tooltip>
             </div>
 
             <div style={styles.goalRow}>
@@ -815,20 +842,25 @@ const JournalScreen = () => {
                 />
                 <h2 style={styles.goalLabel}>Chew</h2>
                 <Tooltip title="Eat recommended daily servings of fruits and vegetables for a healthier diet.">
-                  <HelpOutlineIcon style={{fontSize: "16px"}} />
-                </Tooltip> 
+                  <HelpOutlineIcon style={{ fontSize: "16px" }} />
+                </Tooltip>
               </div>
 
               {inputGoalValue === true ? (
-                <TextField
-                  style={styles.inputBox}
-                  label="servings/day"
-                  type="number"
-                  value={eatingData.length ? eatingData[0].goalValue : ""}
-                  onChange={(e) => {
-                    updateGoalValue(2, +e.target.value);
-                  }}
-                />
+                <>
+                  <TextField
+                    style={styles.inputBox}
+                    label="servings/day"
+                    type="number"
+                    value={eatingData.length ? eatingData[0].goalValue : ""}
+                    onChange={(e) => {
+                      updateGoalValue(2, +e.target.value);
+                    }}
+                  />
+                  <Tooltip title="Log Goal Value">
+                    <SubmitCheckIcon />
+                  </Tooltip>
+                </>
               ) : (
                 <h2>{eatingData.length ? eatingData[0].goalValue : ""}</h2>
               )}
@@ -842,6 +874,9 @@ const JournalScreen = () => {
                   updateBehaviorValue(2, +e.target.value);
                 }}
               />
+              <Tooltip title="Log Daily Behavior Value">
+                <SubmitCheckIcon />
+              </Tooltip>
             </div>
 
             <div style={styles.goalRow}>
@@ -853,20 +888,25 @@ const JournalScreen = () => {
                 />
                 <h2 style={styles.goalLabel}>Sleep</h2>
                 <Tooltip title="Get a good night's rest to be productive and healthy.">
-                  <HelpOutlineIcon style={{fontSize: "16px"}} />
-                </Tooltip> 
+                  <HelpOutlineIcon style={{ fontSize: "16px" }} />
+                </Tooltip>
               </div>
 
               {inputGoalValue === true ? (
-                <TextField
-                  style={styles.inputBox}
-                  label="hours/day"
-                  type="number"
-                  value={sleepData.length ? sleepData[0].goalValue : ""}
-                  onChange={(e) => {
-                    updateGoalValue(3, +e.target.value);
-                  }}
-                />
+                <>
+                  <TextField
+                    style={styles.inputBox}
+                    label="hours/day"
+                    type="number"
+                    value={sleepData.length ? sleepData[0].goalValue : ""}
+                    onChange={(e) => {
+                      updateGoalValue(3, +e.target.value);
+                    }}
+                  />
+                  <Tooltip title="Log Goal Value">
+                    <SubmitCheckIcon />
+                  </Tooltip>
+                </>
               ) : (
                 <h2>{sleepData.length ? sleepData[0].goalValue : ""}</h2>
               )}
@@ -880,6 +920,9 @@ const JournalScreen = () => {
                   updateBehaviorValue(3, +e.target.value);
                 }}
               />
+              <Tooltip title="Log Daily Behavior Value">
+                <SubmitCheckIcon />
+              </Tooltip>
             </div>
           </div>
 
