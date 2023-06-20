@@ -76,6 +76,7 @@ const JournalScreen = () => {
       divInfo2:
         "Do exercises like running or playing sports for at least an hour a day.",
       reflection: "",
+      behaviorValue: 0,
       date: date,
     },
   ]);
@@ -88,6 +89,7 @@ const JournalScreen = () => {
       divInfo2:
         "Go outside instead of using tech like laptops, phones, and televisions.",
       reflection: "",
+      behaviorValue: 0,
       date: date,
     },
   ]);
@@ -99,6 +101,7 @@ const JournalScreen = () => {
       divInfo1: "Eat 5 or more servings of fruits and/or vegetables",
       divInfo2: "Reach target increments for servings of healthy foods.",
       reflection: "",
+      behaviorValue: 0,
       date: date,
     },
   ]);
@@ -111,6 +114,7 @@ const JournalScreen = () => {
       divInfo2:
         "Sleep at least 9-11 hours a night to feel the best and most productive.",
       reflection: "",
+      behaviorValue: 0,
       date: date,
     },
   ]);
@@ -231,7 +235,6 @@ const JournalScreen = () => {
         } else {
           setActivityGoal(response.data);
         }
-        console.log(activityGoal);
       } catch (error) {
         console.error(error);
       }
@@ -753,13 +756,24 @@ const JournalScreen = () => {
                     type="number"
                     onBlur={handleBlur}
                     onKeyDown={handleEnter}
-                    value={activityData.length ? activityData[0].goalValue : ""}
+                    value={activityGoal.length ? activityGoal[0].goalValue : ""}
                     onChange={(e) => {
-                      updateGoalValue(0, +e.target.value);
+                      setActivityGoal((prevActivityGoal) => {
+                        const updatedActivityGoal = prevActivityGoal.map(
+                          (goal) => {
+                            const newActivityGoalValue = {
+                              ...goal,
+                              goalValue: e.target.value,
+                            };
+                            return newActivityGoalValue;
+                          }
+                        );
+                        return updatedActivityGoal;
+                      });
                     }}
                   />
                   <Tooltip title="Log Goal Value">
-                    <SubmitCheckIcon />
+                    <SubmitCheckIcon onClick={() => updateGoalValue(0, activityGoal[0].goalValue)}/>
                   </Tooltip>
                 </>
               ) : (
@@ -772,13 +786,24 @@ const JournalScreen = () => {
                 style={styles.inputBox}
                 label="minutes/day"
                 type="number"
-                value={activityData.length ? activityData[0].behaviorValue : ""}
+                value={activityGoal.length ? activityGoal[0].behaviorValue : ""}
                 onChange={(e) => {
-                  updateBehaviorValue(0, +e.target.value);
+                  setActivityGoal((prevActivityGoal) => {
+                    const updatedActivityGoal = prevActivityGoal.map(
+                      (goal) => {
+                        const newActivityGoalValue = {
+                          ...goal,
+                          behaviorValue: e.target.value,
+                        };
+                        return newActivityGoalValue;
+                      }
+                    );
+                    return updatedActivityGoal;
+                  });
                 }}
               />
               <Tooltip title="Log Daily Behavior Value">
-                <SubmitCheckIcon />
+                <SubmitCheckIcon onClick={() => updateBehaviorValue(0, activityGoal[0].behaviorValue)}/>
               </Tooltip>
             </div>
 
@@ -801,14 +826,25 @@ const JournalScreen = () => {
                     label="minutes/day"
                     type="number"
                     value={
-                      screentimeData.length ? screentimeData[0].goalValue : ""
+                      screentimeGoal.length ? screentimeGoal[0].goalValue : ""
                     }
                     onChange={(e) => {
-                      updateGoalValue(1, +e.target.value);
+                      setScreentimeGoal((prevScreentimeGoal) => {
+                        const updatedScreentimeGoal = prevScreentimeGoal.map(
+                          (goal) => {
+                            const newScreentimeGoalValue = {
+                              ...goal,
+                              goalValue: e.target.value,
+                            };
+                            return newScreentimeGoalValue;
+                          }
+                        );
+                        return updatedScreentimeGoal;
+                      });
                     }}
                   />
                   <Tooltip title="Log Goal Value">
-                    <SubmitCheckIcon />
+                    <SubmitCheckIcon onClick={() => updateGoalValue(1, screentimeGoal[0].goalValue)}/>
                   </Tooltip>
                 </>
               ) : (
