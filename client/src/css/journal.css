@@ -1,5 +1,11 @@
-.title {
-    color: #2E6AA1;
+.journalWrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: auto;
+    justify-content: center;
+    position: relative;
+    margin-top: 1%;
 }
 
 .journalCover {

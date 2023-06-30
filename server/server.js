@@ -360,7 +360,7 @@ app.get("/dailyBehavior", async (req, res) => {
     const behaviorToday = await Behavior.find({
       user: req.query.user,
       goalType: req.query.goalType,
-      date: req.query.date
+      formattedDate: req.query.formattedDate
     });
     res.status(200).json(behaviorToday);
   } catch (err) {
