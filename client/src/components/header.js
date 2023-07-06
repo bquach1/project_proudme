@@ -33,6 +33,10 @@ const Header = () => {
                     style={{backgroundColor: "transparent", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
                     onClick={() => navigate('/pe')}
                     >ProudME PE</Button>
+                <Button 
+                    style={{backgroundColor: "transparent", padding: "5px 15px 5px 15px", borderRadius: "25px", color: "white", fontWeight: "bold", textTransform: "none", fontSize: "16px"}}
+                    onClick={() => navigate('/tracking')}
+                    >Track Behaviors (Admin)</Button>
             </div>
 
             <div className="right-nav">

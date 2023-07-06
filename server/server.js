@@ -344,6 +344,19 @@ app.get("/behaviors", async (req, res) => {
   }
 });
 
+// Get specific goal by goal type endpoint
+app.get("/behaviorType", async (req, res) => {
+  try {
+    const behaviors = await Behavior.find({
+      user: req.query.user,
+      goalType: req.query.goalType,
+    });
+    res.status(200).json(behaviors);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
 // Get all behaviors endpoint
 app.get("/allBehaviors", async (req, res) => {
   try {

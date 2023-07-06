@@ -405,7 +405,6 @@ const JournalScreen = () => {
           },
         });
         setBehaviorData(response.data);
-        console.log(behaviorData);
       } catch (error) {
         console.error(error);
       }
@@ -906,6 +905,7 @@ const JournalScreen = () => {
                               activityGoal[0].behaviorValue
                             );
                             setEditingBehaviorId(-1);
+                            setLoggedActivityToday(true);
                           }
                         }}
                       />
@@ -914,12 +914,13 @@ const JournalScreen = () => {
                     <>
                       <Tooltip title="Log Daily Behavior Value">
                         <SubmitCheckIcon
-                          onClick={() =>
+                          onClick={() => {
                             updateBehaviorValue(
                               0,
                               activityGoal[0].behaviorValue
                             )
-                          }
+                            setLoggedActivityToday(true);
+                          }}
                         />
                       </Tooltip>
                     </>
@@ -1026,6 +1027,7 @@ const JournalScreen = () => {
                               screentimeGoal[0].behaviorValue
                             );
                             setEditingBehaviorId(-1);
+                            setLoggedScreentimeToday(true);
                           }
                         }}
                       />
@@ -1034,11 +1036,13 @@ const JournalScreen = () => {
                     <>
                       <Tooltip title="Log Daily Behavior Value">
                         <SubmitCheckIcon
-                          onClick={() =>
+                          onClick={() => {
                             updateBehaviorValue(
                               1,
                               screentimeGoal[0].behaviorValue
                             )
+                            setLoggedScreentimeToday(true);
+                          }
                           }
                         />
                       </Tooltip>
@@ -1123,7 +1127,7 @@ const JournalScreen = () => {
                     }}
                   />
                   {loggedEatingToday ? (
-                    <Tooltip title="You've already logged an activity behavior for today, but you can change it if you'd like!">
+                    <Tooltip title="You've already logged an eating behavior for today, but you can change it if you'd like!">
                       <EditIcon
                         className="save edit-icon"
                         onClick={() => {
@@ -1132,6 +1136,7 @@ const JournalScreen = () => {
                           } else {
                             updateBehaviorValue(2, eatingGoal[0].behaviorValue);
                             setEditingBehaviorId(-1);
+                            setLoggedEatingToday(true);
                           }
                         }}
                       />
@@ -1140,9 +1145,10 @@ const JournalScreen = () => {
                     <>
                       <Tooltip title="Log Daily Behavior Value">
                         <SubmitCheckIcon
-                          onClick={() =>
-                            updateBehaviorValue(2, eatingGoal[0].behaviorValue)
-                          }
+                          onClick={() => {
+                            updateBehaviorValue(2, eatingGoal[0].behaviorValue);
+                            setLoggedEatingToday(true);
+                          }}
                         />
                       </Tooltip>
                     </>

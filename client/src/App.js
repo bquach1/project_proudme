@@ -10,6 +10,7 @@ import JournalScreen from './screens/journal/journal.js';
 import GalleryScreen from './screens/journal/gallery.js';
 import PetScreen from './screens/pet/pet.js';
 import PEScreen from './screens/pe/pe.js';
+import TrackingScreen from './screens/tracking/tracking';
 
 import Header from './components/header';
 
@@ -28,6 +29,7 @@ function App() {
           <Route path='/gallery' element={<GalleryScreen />} />
           <Route path='/pet' element={<PetScreen />} />
           <Route path='/pe' element={<PEScreen />} />
+          <Route path='/tracking' element={<TrackingScreen />} />
         </Routes>
     </div>
   );
