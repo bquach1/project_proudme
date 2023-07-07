@@ -52,16 +52,10 @@ const TrackingScreen = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [userInput, setUserInput] = useState("");
 
-  const [behaviorData, setBehaviorData] = useState([]);
   const [activityBehaviorData, setActivityBehaviorData] = useState([]);
   const [screentimeBehaviorData, setScreentimeBehaviorData] = useState([]);
   const [eatingBehaviorData, setEatingBehaviorData] = useState([]);
   const [sleepBehaviorData, setSleepBehaviorData] = useState([]);
-  const [allBehaviorData, setAllBehaviorData] = useState([]);
-
-  useEffect(() => {
-    console.log(shownUser);
-  });
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -83,21 +77,12 @@ const TrackingScreen = () => {
       })
       .catch((error) => console.error(error));
   }, []);
-  
-  useEffect(() => {
-    const fetchBehaviors = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/behaviors", {
-          params: {
-            user: shownUser,
-          },
-        });
-        setBehaviorData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
 
+  useEffect(() => {
+    setShownUser(user);
+  }, [user]);
+
+  useEffect(() => {
     const fetchActivityBehaviors = async () => {
       try {
         const response = await axios.get("http://localhost:3001/behaviorType", {
@@ -154,24 +139,11 @@ const TrackingScreen = () => {
       }
     };
 
-    const fetchAllBehaviors = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:3001/allBehaviors",
-          {}
-        );
-        setAllBehaviorData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchBehaviors();
     fetchActivityBehaviors();
     fetchScreentimeBehaviors();
     fetchEatingBehaviors();
     fetchSleepBehaviors();
-    fetchAllBehaviors();
   }, [shownUser]);
 
   return (
