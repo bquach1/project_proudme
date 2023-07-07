@@ -51,15 +51,20 @@ const TrackingScreen = () => {
   const [shownUser, setShownUser] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [userInput, setUserInput] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const [activityBehaviorData, setActivityBehaviorData] = useState([]);
   const [screentimeBehaviorData, setScreentimeBehaviorData] = useState([]);
   const [eatingBehaviorData, setEatingBehaviorData] = useState([]);
   const [sleepBehaviorData, setSleepBehaviorData] = useState([]);
 
+useEffect(() => {
+    console.log(shownUser.name);
+})
+
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    fetch(`http://localhost:3001/users`, {
+    fetch(`https://project-proudme.onrender.com/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -67,10 +72,13 @@ const TrackingScreen = () => {
       .then((response) => response.json())
       .then((data) => {
         setUser(data);
+        setShownUser(data);
+        setUserInput(data.name);
       })
+      .then(() => setLoading(false))
       .catch((error) => console.error(error));
 
-    fetch(`http://localhost:3001/allUsers`)
+    fetch(`https://project-proudme.onrender.com/allUsers`)
       .then((response) => response.json())
       .then((data) => {
         setAllUsers(data);
@@ -79,13 +87,9 @@ const TrackingScreen = () => {
   }, []);
 
   useEffect(() => {
-    setShownUser(user);
-  }, [user]);
-
-  useEffect(() => {
     const fetchActivityBehaviors = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/behaviorType", {
+        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
           params: {
             user: shownUser,
             goalType: "activity",
@@ -99,7 +103,7 @@ const TrackingScreen = () => {
 
     const fetchScreentimeBehaviors = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/behaviorType", {
+        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
           params: {
             user: shownUser,
             goalType: "screentime",
@@ -113,7 +117,7 @@ const TrackingScreen = () => {
 
     const fetchEatingBehaviors = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/behaviorType", {
+        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
           params: {
             user: shownUser,
             goalType: "eating",
@@ -127,7 +131,7 @@ const TrackingScreen = () => {
 
     const fetchSleepBehaviors = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/behaviorType", {
+        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
           params: {
             user: shownUser,
             goalType: "sleep",
@@ -153,7 +157,7 @@ const TrackingScreen = () => {
           id="input"
           type="text"
           label="Search for user's behavior chart"
-          defaultValue=""
+          value={loading ? "" : userInput}
           style={{ width: "200px" }}
           onChange={(e) => {
             setUserInput(e.target.value);
