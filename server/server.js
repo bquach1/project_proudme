@@ -299,6 +299,20 @@ app.get(
   }
 );
 
+// User endpoint
+app.get(
+  "/allUsers",
+  async (req, res) => {
+    try {
+      const allUsers = await User.find();
+      res.json(allUsers);
+    } catch (error) {
+      res.status(500).send("Internal server error");
+      console.error(error);
+    }
+  }
+);
+
 // Get all goals endpoint
 app.get("/allGoals", async (req, res) => {
   try {

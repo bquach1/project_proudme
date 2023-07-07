@@ -10,7 +10,7 @@ import {
 } from "recharts";
 import axios from "axios";
 import styled from "styled-components";
-import { TextField, Button } from "@mui/material";
+import { Select, Button, MenuItem } from "@mui/material";
 
 const FilterWrapper = styled.div`
   display: flex;
@@ -48,6 +48,7 @@ const BehaviorLineChart = ({ data }) => {
 // Render the chart component
 const TrackingScreen = () => {
   const [user, setUser] = useState([]);
+  const [shownUser, setShownUser] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [userInput, setUserInput] = useState("");
 
@@ -59,22 +60,7 @@ const TrackingScreen = () => {
   const [allBehaviorData, setAllBehaviorData] = useState([]);
 
   useEffect(() => {
-    console.log(allUsers);
-  });
-
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    fetch(`http://localhost:3001/users`),
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-        .then((response) => response.json())
-        .then((data) => {
-          setAllUsers(data);
-        })
-        .catch((error) => console.error(error));
+    console.log(shownUser);
   });
 
   useEffect(() => {
@@ -89,14 +75,21 @@ const TrackingScreen = () => {
         setUser(data);
       })
       .catch((error) => console.error(error));
-  }, []);
 
+    fetch(`http://localhost:3001/allUsers`)
+      .then((response) => response.json())
+      .then((data) => {
+        setAllUsers(data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+  
   useEffect(() => {
     const fetchBehaviors = async () => {
       try {
         const response = await axios.get("http://localhost:3001/behaviors", {
           params: {
-            user: user,
+            user: shownUser,
           },
         });
         setBehaviorData(response.data);
@@ -109,7 +102,7 @@ const TrackingScreen = () => {
       try {
         const response = await axios.get("http://localhost:3001/behaviorType", {
           params: {
-            user: user,
+            user: shownUser,
             goalType: "activity",
           },
         });
@@ -123,7 +116,7 @@ const TrackingScreen = () => {
       try {
         const response = await axios.get("http://localhost:3001/behaviorType", {
           params: {
-            user: user,
+            user: shownUser,
             goalType: "screentime",
           },
         });
@@ -137,7 +130,7 @@ const TrackingScreen = () => {
       try {
         const response = await axios.get("http://localhost:3001/behaviorType", {
           params: {
-            user: user,
+            user: shownUser,
             goalType: "eating",
           },
         });
@@ -151,7 +144,7 @@ const TrackingScreen = () => {
       try {
         const response = await axios.get("http://localhost:3001/behaviorType", {
           params: {
-            user: user,
+            user: shownUser,
             goalType: "sleep",
           },
         });
@@ -179,22 +172,32 @@ const TrackingScreen = () => {
     fetchEatingBehaviors();
     fetchSleepBehaviors();
     fetchAllBehaviors();
-  }, [user]);
+  }, [shownUser]);
 
   return (
     <>
       <FilterWrapper>
-        <TextField
-          label="Search for user"
+        <Select
+          placeholder="Search for user"
           id="input"
           type="text"
-          value={userInput}
+          label="Search for user's behavior chart"
+          defaultValue=""
+          style={{ width: "200px" }}
           onChange={(e) => {
             setUserInput(e.target.value);
           }}
-        />
+        >
+          {allUsers.map((user, index) => (
+            <MenuItem key={index} value={user.name}>
+              {user.name}
+            </MenuItem>
+          ))}
+        </Select>
         <Button
-          onClick={() => console.log(userInput)}
+          onClick={() => {
+            setShownUser(allUsers.find((user) => user.name === userInput));
+          }}
           style={{ backgroundColor: "green", color: "white" }}
         >
           Submit
@@ -208,13 +211,13 @@ const TrackingScreen = () => {
           alignItems: "center",
         }}
       >
-        <h1>{user.name}'s Activity Behavior Data</h1>
+        <h1>{shownUser.name}'s Activity Behavior Data</h1>
         <BehaviorLineChart data={activityBehaviorData} />
-        <h1>{user.name}'s Screentime Behavior Data</h1>
+        <h1>{shownUser.name}'s Screentime Behavior Data</h1>
         <BehaviorLineChart data={screentimeBehaviorData} />
-        <h1>{user.name}'s Eating Behavior Data</h1>
+        <h1>{shownUser.name}'s Eating Behavior Data</h1>
         <BehaviorLineChart data={eatingBehaviorData} />
-        <h1>{user.name}'s Sleep Behavior Data</h1>
+        <h1>{shownUser.name}'s Sleep Behavior Data</h1>
         <BehaviorLineChart data={sleepBehaviorData} />
       </div>
     </>
