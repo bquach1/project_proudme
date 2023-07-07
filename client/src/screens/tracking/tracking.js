@@ -139,7 +139,6 @@ const TrackingScreen = () => {
       }
     };
 
-    fetchBehaviors();
     fetchActivityBehaviors();
     fetchScreentimeBehaviors();
     fetchEatingBehaviors();
