@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const authMiddleware = require("./authMiddleware");
+const bcrypt = require('bcrypt');
 
 const app = express();
 const port = 3001;
@@ -116,9 +117,9 @@ app.post("/login", async (req, res) => {
 
   try {
     // Check email and password against database
-    const user = await User.findOne({ email, password });
+    const user = await User.findOne({ email, hashedComparePassword });
 
-    if (!user) {
+    if (!user || !bcrypt.compareSync(password, user.password)) {
       // If login fails, return an error response
       res.status(401).send("Incorrect email or password");
       return;
@@ -237,8 +238,8 @@ app.post("/behaviors", async (req, res) => {
 // Signup endpoint
 app.post("/signup", async (req, res) => {
   const email = req.body.email;
-  const password = req.body.password;
-  const confirmPassword = req.body.confirmPassword;
+  let password = req.body.password;
+  let confirmPassword = req.body.confirmPassword;
   const name = req.body.name;
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
@@ -248,6 +249,12 @@ app.post("/signup", async (req, res) => {
   const gradeLevel = req.body.gradeLevel;
   const gender = req.body.gender;
 
+  const salt = bcrypt.genSaltSync(10);
+
+  const hashedPassword = bcrypt.hashSync(password, salt);
+  password = hashedPassword;
+  const hashedConfirmPassword = bcrypt.hashSync(confirmPassword, salt);
+
   try {
     // Check email against database to ensure it is not already in use
     const existingUser = await User.findOne({ email });
@@ -255,7 +262,7 @@ app.post("/signup", async (req, res) => {
     if (existingUser) {
       // If email is already in use, return an error response
       res.status(400).send("Email is already in use");
-    } else if (password !== confirmPassword) {
+    } else if (password !== hashedConfirmPassword) {
       // If password and confirmPassword do not match, return an error response
       res.status(400).send("Passwords do not match");
     } else {

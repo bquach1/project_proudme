@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
-import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router-dom';
-import { Checkbox, FormGroup, FormControlLabel, Typography } from '@mui/material';
-import axios from 'axios';
+import React, { useState } from "react";
+import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
+import {
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+  Typography,
+} from "@mui/material";
+import axios from "axios";
+import {CircularProgress} from "@mui/material";
 
-import '../css/signup.css';
+import "../css/signup.css";
 
 const SignUpScreen = () => {
-
   const navigate = useNavigate();
 
   // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -25,7 +31,7 @@ const SignUpScreen = () => {
     confirmPassword: "",
     birthMonth: "",
     birthYear: "",
-    email: ""
+    email: "",
   });
 
   // These methods will update the state properties.
@@ -37,25 +43,28 @@ const SignUpScreen = () => {
 
   // This function will handle the submission.
   const handleSubmit = (event) => {
+    setLoading(true);
     event.preventDefault();
-    axios.post('https://project-proudme.onrender.com/signup', { 
-      email: form.email, 
-      password: form.password, 
-      confirmPassword: form.confirmPassword,
-      name: form.name,
-      firstName: form.firstName,
-      lastName: form.lastName,
-      schoolName: form.schoolAttending,
-      birthMonth: form.birthMonth,
-      birthYear: form.birthYear,
-      gradeLevel: form.gradeLevel,
-      gender: form.gender
-    })
-      .then(response => {        
+    axios
+      .post("https://project-proudme.onrender.com/signup", {
+        email: form.email,
+        password: form.password,
+        confirmPassword: form.confirmPassword,
+        name: form.name,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        schoolName: form.schoolAttending,
+        birthMonth: form.birthMonth,
+        birthYear: form.birthYear,
+        gradeLevel: form.gradeLevel,
+        gender: form.gender,
+      })
+      .then((response) => {
+        setLoading(false);
         setSubmitted(true);
         console.log(response.data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   };
@@ -65,35 +74,79 @@ const SignUpScreen = () => {
       <form className="signup-form" onSubmit={handleSubmit}>
         <div className="input-container">
           <label>Username: </label>
-          <input className="input" onChange={(e) => updateForm({ name: e.target.value })} type="text" value={form.name} required />
+          <input
+            className="input"
+            onChange={(e) => updateForm({ name: e.target.value })}
+            type="text"
+            value={form.name}
+            required
+          />
         </div>
         <div className="input-container">
           <label>Password: </label>
-          <input className="input" onChange={(e) => updateForm({ password: e.target.value })} type="password" value={form.password} required />
+          <input
+            className="input"
+            onChange={(e) => updateForm({ password: e.target.value })}
+            type="password"
+            value={form.password}
+            required
+          />
         </div>
         <div className="input-container">
           <label>Confirm Password: </label>
-          <input className="input" onChange={(e) => updateForm({ confirmPassword: e.target.value })} type="password" value={form.confirmPassword} required />
+          <input
+            className="input"
+            onChange={(e) => updateForm({ confirmPassword: e.target.value })}
+            type="password"
+            value={form.confirmPassword}
+            required
+          />
         </div>
         <div className="line-container">
           <div className="row-container">
             <label>First Name: </label>
-            <input className="dropdown" onChange={(e) => updateForm({ firstName: e.target.value })} type="text" value={form.firstName} required />
+            <input
+              className="dropdown"
+              onChange={(e) => updateForm({ firstName: e.target.value })}
+              type="text"
+              value={form.firstName}
+              required
+            />
           </div>
           <div className="row-container">
             <label>Last Name: </label>
-            <input className="dropdown" onChange={(e) => updateForm({ lastName: e.target.value })} type="text" value={form.lastName} required />
+            <input
+              className="dropdown"
+              onChange={(e) => updateForm({ lastName: e.target.value })}
+              type="text"
+              value={form.lastName}
+              required
+            />
           </div>
           <div className="row-container">
             <label>School Attending: </label>
-            <input className="dropdown" placeholder="Full school name" onChange={(e) => updateForm({ schoolAttending: e.target.value })} type="text" value={form.schoolAttending} required />
+            <input
+              className="dropdown"
+              placeholder="Full school name"
+              onChange={(e) => updateForm({ schoolAttending: e.target.value })}
+              type="text"
+              value={form.schoolAttending}
+              required
+            />
           </div>
         </div>
         <div className="line-container">
           <div className="row-container">
             <label>Birth Month: </label>
-            <select className="dropdown" name="month" onChange={(e) => updateForm({ birthMonth: e.target.value })} required>
-              <option defaultValue="" disabled hidden>Select an option</option>
+            <select
+              className="dropdown"
+              name="month"
+              onChange={(e) => updateForm({ birthMonth: e.target.value })}
+              required
+            >
+              <option defaultValue="" disabled hidden>
+                Select an option
+              </option>
               <option value="January">January</option>
               <option value="February">February</option>
               <option value="March">March</option>
@@ -109,8 +162,15 @@ const SignUpScreen = () => {
           </div>
           <div className="row-container">
             <label>Birth Year: </label>
-            <select className="dropdown" name="year" onChange={(e) => updateForm({ birthYear: e.target.value })} required>
-              <option defaultValue="" disabled hidden>Select an option</option>
+            <select
+              className="dropdown"
+              name="year"
+              onChange={(e) => updateForm({ birthYear: e.target.value })}
+              required
+            >
+              <option defaultValue="" disabled hidden>
+                Select an option
+              </option>
               <option value="1980">1980</option>
               <option value="1981">1981</option>
               <option value="1982">1982</option>
@@ -158,8 +218,15 @@ const SignUpScreen = () => {
           </div>
           <div className="row-container">
             <label>Grade Level: </label>
-            <select className="dropdown" name="grade" onChange={(e) => updateForm({ gradeLevel: e.target.value })} required>
-              <option defaultValue="" disabled hidden>Select an option</option>
+            <select
+              className="dropdown"
+              name="grade"
+              onChange={(e) => updateForm({ gradeLevel: e.target.value })}
+              required
+            >
+              <option defaultValue="" disabled hidden>
+                Select an option
+              </option>
               <option value="prek">Pre-K</option>
               <option value="kindergarten">Kindergarten</option>
               <option value="first">1st</option>
@@ -181,8 +248,15 @@ const SignUpScreen = () => {
         <div className="line-container">
           <div className="input-container">
             <label>Gender: </label>
-            <select className="dropdown" name="gender" onChange={(e) => updateForm({ gender: e.target.value })} required>
-              <option defaultValue="" disabled hidden>Select an option</option>
+            <select
+              className="dropdown"
+              name="gender"
+              onChange={(e) => updateForm({ gender: e.target.value })}
+              required
+            >
+              <option defaultValue="" disabled hidden>
+                Select an option
+              </option>
               <option value="male">Male</option>
               <option value="female">Female</option>
               <option value="other">Other</option>
@@ -191,32 +265,64 @@ const SignUpScreen = () => {
           </div>
           <div className="input-container">
             <label>Email Address: </label>
-            <input className="input" type="text" onChange={(e) => updateForm({ email: e.target.value })} value={form.email} required />
+            <input
+              className="input"
+              type="text"
+              onChange={(e) => updateForm({ email: e.target.value })}
+              value={form.email}
+              required
+            />
           </div>
         </div>
         <div className="row-container">
           <div className="checkbox-container">
             <FormGroup>
-              <FormControlLabel control={<Checkbox />} label={<Typography style={{ color: 'black' }}>
-                I agree to the Terms of Use & Privacy Policy.</Typography>} />
-              <FormControlLabel control={<Checkbox />} label={<Typography style={{ color: 'black' }}>
-                I agree to receive news ad updates by email from ProudME.</Typography>} />
+              <FormControlLabel
+                control={<Checkbox />}
+                label={
+                  <Typography style={{ color: "black" }}>
+                    I agree to the Terms of Use & Privacy Policy.
+                  </Typography>
+                }
+              />
+              <FormControlLabel
+                control={<Checkbox />}
+                label={
+                  <Typography style={{ color: "black" }}>
+                    I agree to receive news ad updates by email from ProudME.
+                  </Typography>
+                }
+              />
             </FormGroup>
           </div>
         </div>
         <div className="button-container">
           <Button
             style={{
-              backgroundColor: '#D7A746', color: 'white', padding: '10px 50px 10px 50px',
-              borderRadius: '20px', textTransform: 'none', marginTop: '3%', margin: 'auto', height: '60px',
-              width: '25%', fontSize: '25px'
+              backgroundColor: "#D7A746",
+              color: "white",
+              padding: "10px 50px 10px 50px",
+              borderRadius: "20px",
+              textTransform: "none",
+              marginTop: "3%",
+              margin: "auto",
+              height: "60px",
+              width: "25%",
+              fontSize: "25px",
             }}
-            type="submit" value="Register user">
+            type="submit"
+            value="Register user"
+          >
             Register
           </Button>
         </div>
         <div className="signup-registration">
-          <h2>Already have an account? <a className="nav-select" onClick={() => navigate('/login')}>Sign In!</a></h2>
+          <h2>
+            Already have an account?{" "}
+            <a className="nav-select" onClick={() => navigate("/login")}>
+              Sign In!
+            </a>
+          </h2>
         </div>
       </form>
     </div>
@@ -224,21 +330,19 @@ const SignUpScreen = () => {
 
   function successMessage() {
     setTimeout(() => {
-      navigate('/');
+      navigate("/");
     }, 3000);
     return (
-      <div
-        className="success"
-        style={styles.messageText}>
+      <div className="success" style={styles.messageText}>
         User {form.name} successfully registered!
       </div>
     );
-  };
+  }
 
   return (
     <div className="signup-page">
       <h1 id="welcome">Thanks for joining ProudME!</h1>
-      {submitted ? successMessage() : renderForm}
+      {submitted ? successMessage() : loading ? <CircularProgress /> : renderForm}
     </div>
   );
 };
@@ -250,7 +354,7 @@ export default SignUpScreen;
 
 const styles = {
   messageText: {
-    fontSize: '30px',
-    fontWeight: 'bold'
-  }
-}
+    fontSize: "30px",
+    fontWeight: "bold",
+  },
+};
