@@ -117,7 +117,7 @@ app.post("/login", async (req, res) => {
 
   try {
     // Check email and password against database
-    const user = await User.findOne({ email, hashedComparePassword });
+    const user = await User.findOne({ email });
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
       // If login fails, return an error response
