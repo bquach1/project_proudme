@@ -6,9 +6,13 @@ import {
   FormGroup,
   FormControlLabel,
   Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel
 } from "@mui/material";
 import axios from "axios";
-import {CircularProgress} from "@mui/material";
+import { CircularProgress } from "@mui/material";
 
 import "../css/signup.css";
 
@@ -17,7 +21,7 @@ const SignUpScreen = () => {
 
   // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
@@ -46,7 +50,7 @@ const SignUpScreen = () => {
     setLoading(true);
     event.preventDefault();
     axios
-      .post("https://project-proudme.onrender.com/signup", {
+      .post("http://localhost:3001/signup", {
         email: form.email,
         password: form.password,
         confirmPassword: form.confirmPassword,
@@ -66,6 +70,11 @@ const SignUpScreen = () => {
       })
       .catch((error) => {
         console.error(error);
+        if (error.message.data === "Email is already in use") {
+          setError("Email in use");
+        }
+        setLoading(false);
+        alert("Email is already registered. Try signing in or using a different email!");
       });
   };
 
@@ -248,20 +257,22 @@ const SignUpScreen = () => {
         <div className="line-container">
           <div className="input-container">
             <label>Gender: </label>
-            <select
-              className="dropdown"
-              name="gender"
-              onChange={(e) => updateForm({ gender: e.target.value })}
-              required
-            >
-              <option defaultValue="" disabled hidden>
-                Select an option
-              </option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-              <option value="none">Prefer not to tell</option>
-            </select>
+            <FormControl>
+              <Select
+                className="dropdown"
+                defaultValue={"none"}
+                name="gender"
+                onChange={(e) => updateForm({ gender: e.target.value })}
+                required
+                style={{width: 200, backgroundColor: "white"}}
+              >
+                <MenuItem value="none" disabled>Select an Option</MenuItem>
+                <MenuItem value="male">Male</MenuItem>
+                <MenuItem value="female">Female</MenuItem>
+                <MenuItem value="other">Other</MenuItem>
+                <MenuItem value="none">Prefer not to tell</MenuItem>
+              </Select>
+            </FormControl>
           </div>
           <div className="input-container">
             <label>Email Address: </label>
@@ -342,7 +353,13 @@ const SignUpScreen = () => {
   return (
     <div className="signup-page">
       <h1 id="welcome">Thanks for joining ProudME!</h1>
-      {submitted ? successMessage() : loading ? <CircularProgress /> : renderForm}
+      {submitted ? (
+        successMessage()
+      ) : loading ? (
+        <CircularProgress />
+      ) : (
+        renderForm
+      )}
     </div>
   );
 };
