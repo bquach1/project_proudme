@@ -227,31 +227,36 @@ const SignUpScreen = () => {
           </div>
           <div className="row-container">
             <label>Grade Level: </label>
-            <select
+            <FormControl>
+            <Select
               className="dropdown"
               name="grade"
               onChange={(e) => updateForm({ gradeLevel: e.target.value })}
+              style={{width: "auto", backgroundColor: "white"}}
+              value={form.schoolYear}
               required
+              displayEmpty
             >
-              <option defaultValue="" disabled hidden>
-                Select an option
-              </option>
-              <option value="prek">Pre-K</option>
-              <option value="kindergarten">Kindergarten</option>
-              <option value="first">1st</option>
-              <option value="second">2nd</option>
-              <option value="third">3rd</option>
-              <option value="fourth">4th</option>
-              <option value="fifth">5th</option>
-              <option value="sixth">6th</option>
-              <option value="seventh">7th</option>
-              <option value="eighth">8th</option>
-              <option value="ninth">9th</option>
-              <option value="tenth">10th</option>
-              <option value="eleventh">11th</option>
-              <option value="twelfth">12th</option>
-              <option value="other">Other</option>
-            </select>
+              <MenuItem disabled value="">
+                <div style={{opacity: 0.6}}>Select an Option</div>
+              </MenuItem>
+              <MenuItem value="prek">Pre-K</MenuItem>
+              <MenuItem value="kindergarten">Kindergarten</MenuItem>
+              <MenuItem value="first">1st</MenuItem>
+              <MenuItem value="second">2nd</MenuItem>
+              <MenuItem value="third">3rd</MenuItem>
+              <MenuItem value="fourth">4th</MenuItem>
+              <MenuItem value="fifth">5th</MenuItem>
+              <MenuItem value="sixth">6th</MenuItem>
+              <MenuItem value="seventh">7th</MenuItem>
+              <MenuItem value="eighth">8th</MenuItem>
+              <MenuItem value="ninth">9th</MenuItem>
+              <MenuItem value="tenth">10th</MenuItem>
+              <MenuItem value="eleventh">11th</MenuItem>
+              <MenuItem value="twelfth">12th</MenuItem>
+              <MenuItem value="other">Other</MenuItem>
+            </Select>
+            </FormControl>
           </div>
         </div>
         <div className="line-container">
@@ -260,13 +265,14 @@ const SignUpScreen = () => {
             <FormControl>
               <Select
                 className="dropdown"
-                defaultValue={"none"}
+                value={form.gender}
                 name="gender"
                 onChange={(e) => updateForm({ gender: e.target.value })}
                 required
+                displayEmpty
                 style={{width: 200, backgroundColor: "white"}}
               >
-                <MenuItem value="none" disabled>Select an Option</MenuItem>
+                <MenuItem disabled value=""><div style={{opacity: 0.6}}>Select an Option</div></MenuItem>
                 <MenuItem value="male">Male</MenuItem>
                 <MenuItem value="female">Female</MenuItem>
                 <MenuItem value="other">Other</MenuItem>
