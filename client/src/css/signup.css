@@ -62,15 +62,15 @@ input {
 }
 
 .input-container {
-    padding: 10px 10px 10px 10px;
+    padding: 5px;
     display: flex;
     flex-direction: column;
 }
 
 .line-container {
-    padding: 10px 10px 10px 10px;
+    padding: 10px;
     display: flex;
-    justify-content:space-evenly;
+    justify-content: space-evenly;
 }
 
 .signup-registration {
