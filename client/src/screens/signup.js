@@ -8,8 +8,6 @@ import {
   Typography,
   Select,
   MenuItem,
-  FormControl,
-  InputLabel,
 } from "@mui/material";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
@@ -29,7 +27,7 @@ const SignUpScreen = () => {
     firstName: "",
     lastName: "",
     gender: "",
-    schoolYear: "",
+    gradeLevel: "",
     schoolAttending: "",
     password: "",
     confirmPassword: "",
@@ -70,17 +68,19 @@ const SignUpScreen = () => {
       })
       .catch((error) => {
         console.error(error);
-        if (error.response.data == "Email is already in use") {
+        if (error.response.data === "Email is already in use") {
           console.log('t');
           setLoginError("Email is already registered. Try signing in or using a different email!");
-        } else if (error.response.data == "Username is already in use!") {
+        } else if (error.response.data === "Username is already in use!") {
           setLoginError("Username is already registered. Try signing in or using a different username!")
         }
-        setLoading(false);
+      }).then(() => {
+        if (loginError.length) {
+          alert(loginError);
+          setLoginError("");
+          setLoading(false);
+        }
       })
-      .then(() => {
-        alert(loginError);
-      });
   };
 
   const renderForm = (
@@ -232,9 +232,9 @@ const SignUpScreen = () => {
             <Select
               className="dropdown"
               name="grade"
-              onChange={(e) => updateForm({ schoolYear: e.target.value })}
+              onChange={(e) => updateForm({ gradeLevel: e.target.value })}
               style={{ width: 190, backgroundColor: "white" }}
-              value={form.schoolYear}
+              value={form.gradeLevel}
               required
               displayEmpty
             >

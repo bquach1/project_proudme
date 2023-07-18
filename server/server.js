@@ -258,10 +258,13 @@ app.post("/signup", async (req, res) => {
   try {
     // Check email against database to ensure it is not already in use
     const existingUser = await User.findOne({ email });
+    const existingUsername = await User.findOne({ name });
 
     if (existingUser) {
       // If email is already in use, return an error response
       res.status(400).send("Email is already in use");
+    } else if (existingUsername) {
+      res.status(400).send("Username is already in use");
     } else if (password !== hashedConfirmPassword) {
       // If password and confirmPassword do not match, return an error response
       res.status(400).send("Passwords do not match");
