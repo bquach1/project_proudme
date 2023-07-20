@@ -8,7 +8,10 @@ import {
   Tooltip,
   Legend,
   BarChart,
-  Bar
+  Bar,
+  ScatterChart,
+  Scatter,
+  Label,
 } from "recharts";
 import axios from "axios";
 import styled from "styled-components";
@@ -35,17 +38,22 @@ const FilterWrapper = styled.div`
 const BehaviorLineChart = ({ data }) => {
   return (
     <LineChart
-      width={600}
-      height={400}
+      width={800}
+      height={600}
       data={data}
-      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-      title={"Activity Data Graph"}
+      margin={{ top: 55, right: 80, left: 70, bottom: 70 }}
     >
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="formattedDate" label="Time" />
-      <YAxis label="minutes/day" />
+
+      <XAxis dataKey="formattedDate">
+        <Label value="Date" position="bottom" />
+      </XAxis>
+
+      <YAxis>
+        <Label value="minutes/day" position="insideLeft" offset={-70} />
+      </YAxis>
+
       <Tooltip />
-      <Legend />
       <Line
         type="monotone"
         dataKey="behaviorValue"
@@ -59,22 +67,46 @@ const BehaviorLineChart = ({ data }) => {
 const BehaviorBarChart = ({ data }) => {
   return (
     <BarChart
-      width={600}
-      height={400}
+      width={800}
+      height={600}
       data={data}
-      margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-      title={"Activity Data Graph"}
+      margin={{ top: 55, right: 80, left: 70, bottom: 70 }}
     >
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="formattedDate" label="Time" />
-      <YAxis label="minutes/day" />
+
+      <XAxis dataKey="formattedDate">
+        <Label value="Date" position="bottom" />
+      </XAxis>
+
+      <YAxis>
+        <Label value="minutes/day" position="insideLeft" offset={-70} />
+      </YAxis>
       <Tooltip />
-      <Legend />
-      <Bar
-        dataKey="behaviorValue"
-        fill="#8884d8"
-      />
+      <Bar dataKey="behaviorValue" fill="#8884d8" />
     </BarChart>
+  );
+};
+
+const BehaviorScatterChart = ({ data }) => {
+  return (
+    <ScatterChart
+      width={800}
+      height={600}
+      data={data}
+      margin={{ top: 55, right: 80, left: 70, bottom: 70 }}
+    >
+      <CartesianGrid strokeDasharray="3 3" />
+
+      <XAxis dataKey="formattedDate">
+        <Label value="Date" position="bottom" />
+      </XAxis>
+
+      <YAxis>
+        <Label value="minutes/day" position="insideLeft" offset={-70} />
+      </YAxis>
+      <Tooltip />
+      <Scatter dataKey="behaviorValue" fill="#8884d8" />
+    </ScatterChart>
   );
 };
 
@@ -193,17 +225,17 @@ const TrackingScreen = () => {
           >
             <FormControlLabel
               value="line"
-              control={<Radio onClick={(e) => setChartType(e.target.value)}/>}
+              control={<Radio onClick={(e) => setChartType(e.target.value)} />}
               label="Line Chart"
             />
             <FormControlLabel
               value="bar"
-              control={<Radio onClick={(e) => setChartType(e.target.value)}/>}
+              control={<Radio onClick={(e) => setChartType(e.target.value)} />}
               label="Bar Chart"
             />
             <FormControlLabel
               value="scatter"
-              control={<Radio onClick={(e) => setChartType(e.target.value)}/>}
+              control={<Radio onClick={(e) => setChartType(e.target.value)} />}
               label="Scatterplot"
             />
           </RadioGroup>
@@ -250,19 +282,37 @@ const TrackingScreen = () => {
         }}
       >
         <h1>{shownUser.name}'s Activity Behavior Data</h1>
-        {chartType === "line" ?
-        <BehaviorLineChart data={activityBehaviorData} />
-        : chartType === "bar" ?
-        <BehaviorBarChart data={activityBehaviorData} />
-        : 
-        <BehaviorLineChart data={activityBehaviorData} />
-        }
+        {chartType === "line" ? (
+          <BehaviorLineChart data={activityBehaviorData} />
+        ) : chartType === "bar" ? (
+          <BehaviorBarChart data={activityBehaviorData} />
+        ) : (
+          <BehaviorScatterChart data={activityBehaviorData} />
+        )}
         <h1>{shownUser.name}'s Screentime Behavior Data</h1>
-        <BehaviorLineChart data={screentimeBehaviorData} />
+        {chartType === "line" ? (
+          <BehaviorLineChart data={screentimeBehaviorData} />
+        ) : chartType === "bar" ? (
+          <BehaviorBarChart data={screentimeBehaviorData} />
+        ) : (
+          <BehaviorScatterChart data={screentimeBehaviorData} />
+        )}
         <h1>{shownUser.name}'s Eating Behavior Data</h1>
-        <BehaviorLineChart data={eatingBehaviorData} />
+        {chartType === "line" ? (
+          <BehaviorLineChart data={eatingBehaviorData} />
+        ) : chartType === "bar" ? (
+          <BehaviorBarChart data={eatingBehaviorData} />
+        ) : (
+          <BehaviorScatterChart data={eatingBehaviorData} />
+        )}
         <h1>{shownUser.name}'s Sleep Behavior Data</h1>
-        <BehaviorLineChart data={sleepBehaviorData} />
+        {chartType === "line" ? (
+          <BehaviorLineChart data={sleepBehaviorData} />
+        ) : chartType === "bar" ? (
+          <BehaviorBarChart data={sleepBehaviorData} />
+        ) : (
+          <BehaviorScatterChart data={sleepBehaviorData} />
+        )}
       </div>
     </>
   );

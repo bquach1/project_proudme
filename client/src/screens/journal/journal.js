@@ -75,7 +75,6 @@ const JournalScreen = () => {
   const [user, setUser] = useState([]);
   const [goalData, setGoalData] = useState([]);
   const [allGoalData, setAllGoalData] = useState([]);
-  const [behaviorData, setBehaviorData] = useState([]);
   const [allBehaviorData, setAllBehaviorData] = useState([]);
   const [loggedActivityToday, setLoggedActivityToday] = useState(false);
   const [loggedScreentimeToday, setLoggedScreentimeToday] = useState(false);
@@ -397,19 +396,6 @@ const JournalScreen = () => {
   }, [user]);
 
   useEffect(() => {
-    const fetchBehaviors = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/behaviors", {
-          params: {
-            user: user,
-          },
-        });
-        setBehaviorData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     const fetchAllBehaviors = async () => {
       try {
         const response = await axios.get(
@@ -422,7 +408,6 @@ const JournalScreen = () => {
       }
     };
 
-    fetchBehaviors();
     fetchAllBehaviors();
   }, [user]);
 
