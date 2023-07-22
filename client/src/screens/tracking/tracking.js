@@ -6,7 +6,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   BarChart,
   Bar,
   ScatterChart,
@@ -127,7 +126,7 @@ const TrackingScreen = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    fetch(`http://localhost:3001/users`, {
+    fetch(`https://project-proudme.onrender.com/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -141,7 +140,7 @@ const TrackingScreen = () => {
       .then(() => setLoading(false))
       .catch((error) => console.error(error));
 
-    fetch(`http://localhost:3001/allUsers`)
+    fetch(`https://project-proudme.onrender.com/allUsers`)
       .then((response) => response.json())
       .then((data) => {
         setAllUsers(data);
@@ -152,7 +151,7 @@ const TrackingScreen = () => {
   useEffect(() => {
     const fetchActivityBehaviors = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/behaviorType", {
+        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
           params: {
             user: shownUser,
             goalType: "activity",
@@ -166,7 +165,7 @@ const TrackingScreen = () => {
 
     const fetchScreentimeBehaviors = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/behaviorType", {
+        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
           params: {
             user: shownUser,
             goalType: "screentime",
@@ -180,7 +179,7 @@ const TrackingScreen = () => {
 
     const fetchEatingBehaviors = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/behaviorType", {
+        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
           params: {
             user: shownUser,
             goalType: "eating",
@@ -194,7 +193,7 @@ const TrackingScreen = () => {
 
     const fetchSleepBehaviors = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/behaviorType", {
+        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
           params: {
             user: shownUser,
             goalType: "sleep",
