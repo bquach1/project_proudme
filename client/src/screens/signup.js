@@ -19,7 +19,6 @@ const SignUpScreen = () => {
 
   // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
-  const [loginError, setLoginError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
@@ -68,19 +67,7 @@ const SignUpScreen = () => {
       })
       .catch((error) => {
         console.error(error);
-        if (error.response.data === "Email is already in use") {
-          console.log('t');
-          setLoginError("Email is already registered. Try signing in or using a different email!");
-        } else if (error.response.data === "Username is already in use!") {
-          setLoginError("Username is already registered. Try signing in or using a different username!")
-        }
-      }).then(() => {
-        if (loginError.length) {
-          alert(loginError);
-          setLoginError("");
-          setLoading(false);
-        }
-      })
+      });
   };
 
   const renderForm = (

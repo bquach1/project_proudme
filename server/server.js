@@ -54,7 +54,7 @@ const goalSchema = new mongoose.Schema({
     required: true,
   },
   behaviorValue: {
-    type: Number,
+    type: Number, default: 0,
   },
   goalValue: {
     type: Number,
@@ -99,7 +99,7 @@ const behaviorSchema = new mongoose.Schema({
     type: Number,
   },
   behaviorValue: {
-    type: Number,
+    type: Number, default: 0,
   },
   goalStatus: {
     type: String,
@@ -263,11 +263,11 @@ app.post("/signup", async (req, res) => {
     if (existingUser) {
       // If email is already in use, return an error response
       res.status(400).send("Email is already in use");
-    } else if (existingUsername) {
-      res.status(400).send("Username is already in use");
     } else if (password !== hashedConfirmPassword) {
       // If password and confirmPassword do not match, return an error response
       res.status(400).send("Passwords do not match");
+    } else if (existingUsername) {
+      res.status(400).send("Username is already in use!");
     } else {
       // Create new user and save to database
       const newUser = new User({

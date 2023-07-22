@@ -3,11 +3,12 @@ import "../../css/journal.css";
 import withAuth from "../../components/auth/withAuth";
 import axios from "axios";
 
-import { TextField, CircularProgress, Tooltip } from "@mui/material";
+import { TextField, Tooltip, CircularProgress } from "@mui/material";
 import styled from "styled-components";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
+import LockIcon from "@mui/icons-material/Lock";
 
 import { BehaviorTrackingCSV, GoalCSV } from "./csv";
 
@@ -24,6 +25,12 @@ const JournalWrapper = styled.div`
   justify-content: center;
   position: relative;
   margin-top: 1%;
+
+  .lock-icon {
+    &:hover {
+      color: #800000;
+    }
+  }
 `;
 
 const GoalContainer = styled.div`
@@ -903,7 +910,7 @@ const JournalScreen = () => {
                             updateBehaviorValue(
                               0,
                               activityGoal[0].behaviorValue
-                            )
+                            );
                             setLoggedActivityToday(true);
                           }}
                         />
@@ -912,9 +919,9 @@ const JournalScreen = () => {
                   )}
                 </>
               ) : (
-                <div style={{ width: "30%" }}>
-                  Set a goal value to log behaviors!
-                </div>
+                <Tooltip title="Set a goal value to log behaviors!">
+                  <LockIcon style={{ width: "30%", }} className="lock-icon" />
+                </Tooltip>
               )}
             </GoalContainer>
 
@@ -1025,19 +1032,18 @@ const JournalScreen = () => {
                             updateBehaviorValue(
                               1,
                               screentimeGoal[0].behaviorValue
-                            )
+                            );
                             setLoggedScreentimeToday(true);
-                          }
-                          }
+                          }}
                         />
                       </Tooltip>
                     </>
                   )}
                 </>
               ) : (
-                <div style={{ width: "30%" }}>
-                  Set a goal value to log behaviors!
-                </div>
+                <Tooltip title="Set a goal value to log behaviors!">
+                  <LockIcon style={{ width: "30%", }} className="lock-icon" />
+                </Tooltip>
               )}
             </GoalContainer>
 
@@ -1140,9 +1146,9 @@ const JournalScreen = () => {
                   )}
                 </>
               ) : (
-                <div style={{ width: "30%" }}>
-                  Set a goal value to log behaviors!
-                </div>
+                <Tooltip title="Set a goal value to log behaviors!">
+                  <LockIcon style={{ width: "30%", }} className="lock-icon" />
+                </Tooltip>
               )}
             </GoalContainer>
 
@@ -1240,9 +1246,9 @@ const JournalScreen = () => {
                   )}
                 </>
               ) : (
-                <div style={{ width: "30%" }}>
-                  Set a goal value to log behaviors!
-                </div>
+                <Tooltip title="Set a goal value to log behaviors!">
+                  <LockIcon style={{ width: "30%" }} className="lock-icon" />
+                </Tooltip>
               )}
             </GoalContainer>
           </div>
@@ -1283,7 +1289,9 @@ const JournalScreen = () => {
               {activityData.length ? (
                 <h4 style={styles.feedback}>{renderFeedback(activityData)}</h4>
               ) : (
-                <CircularProgress style={{ margin: "auto" }} />
+                <Tooltip title="Set a goal value to see feedback!">
+                  <LockIcon style={{ margin: "auto", width: "30%" }} className="lock-icon" />
+                </Tooltip>
               )}
               <ReflectionContainer>
                 {editingReflectionId === 0 ? (
@@ -1349,7 +1357,9 @@ const JournalScreen = () => {
                   {renderFeedback(screentimeData)}
                 </h4>
               ) : (
-                <CircularProgress style={{ margin: "auto" }} />
+                <Tooltip title="Set a goal value to see feedback!">
+                  <LockIcon style={{ margin: "auto", width: "30%" }} className="lock-icon" />
+                </Tooltip>
               )}
               <ReflectionContainer>
                 {editingReflectionId === 1 ? (
@@ -1419,7 +1429,9 @@ const JournalScreen = () => {
               {eatingData.length ? (
                 <h4 style={styles.feedback}>{renderFeedback(eatingData)}</h4>
               ) : (
-                <CircularProgress style={{ margin: "auto" }} />
+                <Tooltip title="Set a goal value to see feedback!">
+                  <LockIcon style={{ margin: "auto", width: "30%" }} className="lock-icon" />
+                </Tooltip>
               )}
               <ReflectionContainer>
                 {editingReflectionId === 2 ? (
@@ -1483,7 +1495,9 @@ const JournalScreen = () => {
               {sleepData.length ? (
                 <h4 style={styles.feedback}>{renderFeedback(sleepData)}</h4>
               ) : (
-                <CircularProgress style={{ margin: "auto" }} />
+                <Tooltip title="Set a goal value to see feedback!">
+                  <LockIcon style={{ margin: "auto", width: "30%" }} className="lock-icon" />
+                </Tooltip>
               )}
               <ReflectionContainer>
                 {editingReflectionId === 3 ? (

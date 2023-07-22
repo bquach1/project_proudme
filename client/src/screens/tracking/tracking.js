@@ -35,7 +35,7 @@ const FilterWrapper = styled.div`
   margin-bottom: 1%;
 `;
 
-const BehaviorLineChart = ({ data }) => {
+const BehaviorLineChart = ({ data, chartType }) => {
   return (
     <LineChart
       width={800}
@@ -50,7 +50,7 @@ const BehaviorLineChart = ({ data }) => {
       </XAxis>
 
       <YAxis>
-        <Label value="minutes/day" position="insideLeft" offset={-70} />
+        <Label value={chartType === "sleep" ? "hours/day" : chartType === "eating" ? "servings/day" : "minutes/day"} position="insideLeft" offset={-70} />
       </YAxis>
 
       <Tooltip />
@@ -64,7 +64,7 @@ const BehaviorLineChart = ({ data }) => {
   );
 };
 
-const BehaviorBarChart = ({ data }) => {
+const BehaviorBarChart = ({ data, chartType }) => {
   return (
     <BarChart
       width={800}
@@ -79,7 +79,7 @@ const BehaviorBarChart = ({ data }) => {
       </XAxis>
 
       <YAxis>
-        <Label value="minutes/day" position="insideLeft" offset={-70} />
+      <Label value={chartType === "sleep" ? "hours/day" : chartType === "eating" ? "servings/day" : "minutes/day"} position="insideLeft" offset={-70} />
       </YAxis>
       <Tooltip />
       <Bar dataKey="behaviorValue" fill="#8884d8" />
@@ -87,7 +87,7 @@ const BehaviorBarChart = ({ data }) => {
   );
 };
 
-const BehaviorScatterChart = ({ data }) => {
+const BehaviorScatterChart = ({ data, chartType }) => {
   return (
     <ScatterChart
       width={800}
@@ -102,7 +102,7 @@ const BehaviorScatterChart = ({ data }) => {
       </XAxis>
 
       <YAxis>
-        <Label value="minutes/day" position="insideLeft" offset={-70} />
+        <Label value={chartType === "sleep" ? "hours/day" : chartType === "eating" ? "servings/day" : "minutes/day"} position="insideLeft" offset={-70} />
       </YAxis>
       <Tooltip />
       <Scatter dataKey="behaviorValue" fill="#8884d8" />
@@ -283,35 +283,35 @@ const TrackingScreen = () => {
       >
         <h1>{shownUser.name}'s Activity Behavior Data</h1>
         {chartType === "line" ? (
-          <BehaviorLineChart data={activityBehaviorData} />
+          <BehaviorLineChart data={activityBehaviorData} chartType={"activity"} />
         ) : chartType === "bar" ? (
-          <BehaviorBarChart data={activityBehaviorData} />
+          <BehaviorBarChart data={activityBehaviorData} chartType={"activity"} />
         ) : (
-          <BehaviorScatterChart data={activityBehaviorData} />
+          <BehaviorScatterChart data={activityBehaviorData} chartType={"activity"} />
         )}
         <h1>{shownUser.name}'s Screentime Behavior Data</h1>
         {chartType === "line" ? (
-          <BehaviorLineChart data={screentimeBehaviorData} />
+          <BehaviorLineChart data={screentimeBehaviorData} chartType={"screentime"} />
         ) : chartType === "bar" ? (
-          <BehaviorBarChart data={screentimeBehaviorData} />
+          <BehaviorBarChart data={screentimeBehaviorData} chartType={"screentime"} />
         ) : (
-          <BehaviorScatterChart data={screentimeBehaviorData} />
+          <BehaviorScatterChart data={screentimeBehaviorData} chartType={"screentime"} />
         )}
         <h1>{shownUser.name}'s Eating Behavior Data</h1>
         {chartType === "line" ? (
-          <BehaviorLineChart data={eatingBehaviorData} />
+          <BehaviorLineChart data={eatingBehaviorData} chartType={"eating"} />
         ) : chartType === "bar" ? (
-          <BehaviorBarChart data={eatingBehaviorData} />
+          <BehaviorBarChart data={eatingBehaviorData} chartType={"eating"} />
         ) : (
-          <BehaviorScatterChart data={eatingBehaviorData} />
+          <BehaviorScatterChart data={eatingBehaviorData} chartType={"eating"} />
         )}
         <h1>{shownUser.name}'s Sleep Behavior Data</h1>
         {chartType === "line" ? (
-          <BehaviorLineChart data={sleepBehaviorData} />
+          <BehaviorLineChart data={sleepBehaviorData} chartType={"sleep"} />
         ) : chartType === "bar" ? (
-          <BehaviorBarChart data={sleepBehaviorData} />
+          <BehaviorBarChart data={sleepBehaviorData} chartType={"sleep"} />
         ) : (
-          <BehaviorScatterChart data={sleepBehaviorData} />
+          <BehaviorScatterChart data={sleepBehaviorData} chartType={"sleep"} />
         )}
       </div>
     </>
