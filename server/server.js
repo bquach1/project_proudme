@@ -49,6 +49,9 @@ const goalSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  name: {
+    type: String,
+  },
   goalType: {
     type: String,
     required: true,
@@ -85,14 +88,14 @@ const behaviorSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  name: {
+    type: String,
+  },
   goalType: {
     type: String,
     required: true,
   },
   date: {
-    type: Date,
-  },
-  formattedDate: {
     type: String,
   },
   goalValue: {
@@ -187,12 +190,12 @@ app.post("/goals", async (req, res) => {
 
 // Add behaviors endpoint
 app.post("/behaviors", async (req, res) => {
+  console.log(req.body);
   try {
     const existingBehavior = await Behavior.findOne({
       user: req.body.user,
       goalType: req.body.goalType,
       date: req.body.date,
-      formattedDate: req.body.formattedDate,
       goalValue: req.body.goalValue,
     });
     if (existingBehavior) {
@@ -201,7 +204,6 @@ app.post("/behaviors", async (req, res) => {
           user: req.body.user,
           goalType: req.body.goalType,
           date: req.body.date,
-          formattedDate: req.body.formattedDate,
           goalValue: req.body.goalValue,      
         },
         {
@@ -219,11 +221,11 @@ app.post("/behaviors", async (req, res) => {
     } else {
       const behavior = new Behavior({
         user: req.body.user,
+        name: req.body.name,
         goalType: req.body.goalType,
-        date: req.body.date,
         goalValue: req.body.goalValue,
         behaviorValue: req.body.behaviorValue,
-        formattedDate: req.body.formattedDate,
+        date: req.body.date,
         goalStatus:
           req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
       });
@@ -397,7 +399,7 @@ app.get("/dailyBehavior", async (req, res) => {
     const behaviorToday = await Behavior.find({
       user: req.query.user,
       goalType: req.query.goalType,
-      formattedDate: req.query.formattedDate
+      date: req.query.date
     });
     res.status(200).json(behaviorToday);
   } catch (err) {

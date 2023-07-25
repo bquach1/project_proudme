@@ -12,7 +12,7 @@ import {
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
 
-import "../css/signup.css";
+import "../../css/signup.css";
 
 const SignUpScreen = () => {
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ const SignUpScreen = () => {
     setLoading(true);
     event.preventDefault();
     axios
-      .post("https://project-proudme.onrender.com/signup", {
+      .post("http://localhost:3001/signup", {
         email: form.email,
         password: form.password,
         confirmPassword: form.confirmPassword,

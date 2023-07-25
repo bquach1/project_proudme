@@ -1,28 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import "../css/login.css";
+import "../../css/login.css";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    setLoading(true);
+
     axios
-      .post("https://project-proudme.onrender.com/login", {
+      .post("http://localhost:3001/login", {
         email,
         password,
       })
       .then((response) => {
         localStorage.setItem("authToken", response.data);
         setIsSubmitted(true);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
@@ -56,31 +60,38 @@ const LoginScreen = () => {
           />
         </div>
         <div className="button-container">
+          {loading ? 
+          <div style={{display: "flex", alignItems: "center", margin: "auto"}}>
+            <span style={{marginRight: "5%", fontWeight: "bold"}}>Loading...</span>
+            <CircularProgress style={{display: "flex"}}/>
+          </div>
+          :
           <Button
-            style={{
-              backgroundColor: "#D7A746",
-              color: "white",
-              padding: "10px 50px 10px 50px",
-              borderRadius: "20px",
-              textTransform: "none",
-              marginTop: "2%",
-              height: "60px",
-              width: "40%",
-              fontSize: "25px",
-              margin: "auto",
-              marginBottom: "0px",
-            }}
-            type="submit"
-          >
-            Log In
-          </Button>
+          style={{
+            backgroundColor: "#D7A746",
+            color: "white",
+            padding: "10px 50px 10px 50px",
+            borderRadius: "20px",
+            textTransform: "none",
+            marginTop: "2%",
+            height: "60px",
+            width: "40%",
+            fontSize: "25px",
+            margin: "auto",
+            marginBottom: "0px",
+          }}
+          type="submit"
+        >
+          Log In
+        </Button>
+          }
         </div>
         <div className="registration">
           <div className="registration-link">
             <h2>
               Forgot your
-              <a className="nav-select" onClick={() => navigate("/signup")}>
-                Username or Password
+              <a className="nav-select" onClick={() => navigate("/recovery")}>
+                Password
               </a>
               ?
             </h2>

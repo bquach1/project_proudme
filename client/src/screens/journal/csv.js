@@ -33,11 +33,12 @@ export const GoalCSV = ({ allGoalData }) => {
 };
 
 export const BehaviorTrackingCSV = ({ allBehaviorData }) => {
+  console.log(allBehaviorData);
   const behaviorHeaders = [
-    { label: "User", key: "user" },
+    { label: "User", key: "name" },
+    { label: "Date", key: "date" },
     { label: "Type of Goal", key: "goalType" },
     { label: "Goal Quantity", key: "goalValue" },
-    { label: "Date", key: "date" },
     { label: "Daily Value", key: "behaviorValue" },
     { label: "Goal Met?", key: "goalStatus" },
   ];
@@ -47,7 +48,7 @@ export const BehaviorTrackingCSV = ({ allBehaviorData }) => {
       <CSVLink
         data={allBehaviorData}
         headers={behaviorHeaders}
-        filename="behaviordata.csv"
+        filename={`behaviordata.csv`}
       >
         <img
           className="gallery-tab"
