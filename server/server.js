@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const authMiddleware = require("./authMiddleware");
 const bcrypt = require('bcrypt');
+const sgMail = require("@sendgrid/mail");
 
 const app = express();
 const port = 3001;
@@ -56,10 +57,10 @@ const goalSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  behaviorValue: {
-    type: Number, default: 0,
-  },
   goalValue: {
+    type: Number,
+  },
+  behaviorValue: {
     type: Number,
   },
   divInfo1: {
@@ -72,9 +73,6 @@ const goalSchema = new mongoose.Schema({
     type: String,
   },
   date: {
-    type: Date,
-  },
-  formattedDate: {
     type: String,
   },
   goalStatus: {
@@ -152,6 +150,7 @@ app.post("/goals", async (req, res) => {
         },
         {
           $set: {
+            name: req.body.name,
             goalType: req.body.goalType,
             goalValue: req.body.goalValue,
             behaviorValue: req.body.behaviorValue,
@@ -406,6 +405,26 @@ app.get("/dailyBehavior", async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 })
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+app.post('/send-email', (req, res) => {
+  const { to, subject, text } = req.body;
+
+  const msg = {
+    to,
+    from: 'quachbruce@gmail.com',
+    subject,
+    text,
+  };
+
+  sgMail
+    .send(msg)
+    .then(() => res.send('Email sent successfully'))
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send('Failed to send email');
+    });
+});
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

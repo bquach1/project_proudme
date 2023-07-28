@@ -3,7 +3,6 @@ import '../css/home.css';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
 import withAuth from '../components/auth/withAuth';
-import axios from 'axios';
 
 const HomeScreen = (props) => {
 
@@ -21,8 +20,8 @@ const HomeScreen = (props) => {
         })
         .then(response => response.json())
         .then(data => setUser(data))
-        .catch(error => console.error(error));
-        
+        .catch(error => console.error(error));        
+
         setExactTime(date);
     }, []);
 

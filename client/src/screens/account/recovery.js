@@ -1,31 +1,70 @@
-// PasswordReset.js
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom'; // if using React Router
+// In your React frontend
+import React, { useState } from "react";
+import axios from "axios";
+import { Button, TextField } from "@mui/material";
 
-const Recovery = () => {
-  const { token } = useParams(); // Get the token from the URL parameter
-  const [newPassword, setNewPassword] = useState('');
+const generateVerificationCode = () => {
+    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let code = '';
+    let length = 6;
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      code += charset[randomIndex];
+    }
+    return code;
+}
 
-  const handlePasswordChange = (e) => {
-    setNewPassword(e.target.value);
+const Recovery = () => {    
+
+  const verificationCode = generateVerificationCode();
+
+  const [emailData, setEmailData] = useState({
+    to: "",
+    subject: "test",
+    text: "Enter the confirmation code listed to reset your password: " + verificationCode,
+  });
+  const [confirming, setConfirming] = useState(false);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setEmailData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add the logic to send a request to the backend with the token and new password
-    // (you can use a service like sending an API request to your backend)
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setConfirming(true);
+    axios
+      .post("http://localhost:3001/send-email", emailData)
+      .then((response) => {
+        console.log(response.data);
+        // Handle success response
+      })
+      .catch((error) => {
+        console.error(error);
+        // Handle error response
+      });
   };
 
   return (
     <div>
-      <h2>Password Reset</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          New Password:
-          <input type="password" value={newPassword} onChange={handlePasswordChange} />
-        </label>
-        <button type="submit">Reset Password</button>
+      <h1>Recover Password</h1>
+      <form style={{display: "flex", justifyContent: "center"}} onSubmit={handleSubmit}>
+        <TextField
+          type="email"
+          name="to"
+          value={emailData.to}
+          onChange={handleChange}
+          placeholder="Your Email"
+          style={{ width: "70%" }}
+        />
+        <Button style={{backgroundColor: "green", textTransform: "none", color: "white"}} type="submit">Send Email</Button>
       </form>
+      {confirming &&
+        <div>Enter the confirmation code sent to your email to reset your password!</div>  
+      }    
     </div>
   );
 };

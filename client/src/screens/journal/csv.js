@@ -1,39 +1,44 @@
 import React from "react";
 
 import { CSVLink } from "react-csv";
+import { Button } from "@mui/material";
 
-export const GoalCSV = ({ allGoalData }) => {
+export const GoalCSV = ({ goalData, user }) => {
   const headers = [
-    { label: "_id", key: "_id" },
-    { label: "User", key: "user" },
-    { label: "Goal Details", key: "divInfo1" },
-    { label: "Goal Description", key: "divInfo2" },
+    { label: "User", key: "name" },
+    { label: "Type of Goal", key: "goalType" },
     { label: "Goal Quantity", key: "goalValue" },
     { label: "Daily Value", key: "behaviorValue" },
-    { label: "Type of Goal", key: "goalType" },
-    { label: "Date", key: "date" },
+    { label: "Last Logged Date", key: "date" },
+    { label: "Goal Details", key: "divInfo1" },
+    { label: "Goal Description", key: "divInfo2" },
     { label: "Goal Reflection", key: "reflection" },
     { label: "Goal Met?", key: "goalStatus" },
-    { label: "__v", key: "__v" },
   ];
 
   return (
     <div>
-      {allGoalData && (
-        <CSVLink data={allGoalData} headers={headers} filename="goaldata.csv">
-          <img
-            className="achievements-tab"
-            src={require("../../components/images/journal/achievements_tab.png")}
-            alt="Achievements bookmark tab"
-          />
+      {goalData && (
+        <CSVLink data={goalData} headers={headers} filename="goaldata.csv">
+          <Button
+            style={{
+              textTransform: "none",
+              backgroundColor: "#8054C9",
+              color: "white",
+              borderRadius: 10,
+              padding: "5px 10px 5px 10px",
+              margin: 10,
+            }}
+          >
+            Download {user}'s Goal Data
+          </Button>
         </CSVLink>
       )}
     </div>
   );
 };
 
-export const BehaviorTrackingCSV = ({ allBehaviorData }) => {
-  console.log(allBehaviorData);
+export const BehaviorTrackingCSV = ({ allBehaviorData, user }) => {
   const behaviorHeaders = [
     { label: "User", key: "name" },
     { label: "Date", key: "date" },
@@ -50,11 +55,18 @@ export const BehaviorTrackingCSV = ({ allBehaviorData }) => {
         headers={behaviorHeaders}
         filename={`behaviordata.csv`}
       >
-        <img
-          className="gallery-tab"
-          src={require("../../components/images/journal/gallery_tab.png")}
-          alt="Achievements bookmark tab"
-        />
+        <Button
+          style={{
+            textTransform: "none",
+            backgroundColor: "#8054C9",
+            color: "white",
+            borderRadius: 10,
+            padding: "5px 10px 5px 10px",
+            margin: 10,
+          }}
+        >
+          Download {user}'s Behavior Data
+        </Button>
       </CSVLink>
     </div>
   );

@@ -282,15 +282,15 @@ const SignUpScreen = () => {
           <div className="checkbox-container">
             <FormGroup>
               <FormControlLabel
-                control={<Checkbox />}
+                control={<Checkbox required />}
                 label={
                   <Typography style={{ color: "black" }}>
-                    I agree to the Terms of Use & Privacy Policy.
+                    I agree to the <a target="blank" href="https://www.freeprivacypolicy.com/live/2b89beef-a3ea-4d18-89c6-d6a1732b0ad7">Terms of Use & Privacy Policy.</a>
                   </Typography>
                 }
               />
               <FormControlLabel
-                control={<Checkbox />}
+                control={<Checkbox required />}
                 label={
                   <Typography style={{ color: "black" }}>
                     I agree to receive news ad updates by email from ProudME.

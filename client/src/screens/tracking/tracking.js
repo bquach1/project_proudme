@@ -25,6 +25,11 @@ import {
   Radio,
 } from "@mui/material";
 
+import { has } from "lodash";
+
+import withAuth from "../../components/auth/withAuth";
+import { BehaviorTrackingCSV, GoalCSV } from "../journal/csv";
+
 const FilterWrapper = styled.div`
   display: flex;
   flex-direction: row;
@@ -44,12 +49,22 @@ const BehaviorLineChart = ({ data, chartType }) => {
     >
       <CartesianGrid strokeDasharray="3 3" />
 
-      <XAxis dataKey="formattedDate">
+      <XAxis dataKey="date">
         <Label value="Date" position="bottom" />
       </XAxis>
 
       <YAxis>
-        <Label value={chartType === "sleep" ? "hours/day" : chartType === "eating" ? "servings/day" : "minutes/day"} position="insideLeft" offset={-70} />
+        <Label
+          value={
+            chartType === "sleep"
+              ? "hours/day"
+              : chartType === "eating"
+              ? "servings/day"
+              : "minutes/day"
+          }
+          position="insideLeft"
+          offset={-70}
+        />
       </YAxis>
 
       <Tooltip />
@@ -73,12 +88,22 @@ const BehaviorBarChart = ({ data, chartType }) => {
     >
       <CartesianGrid strokeDasharray="3 3" />
 
-      <XAxis dataKey="formattedDate">
+      <XAxis dataKey="date">
         <Label value="Date" position="bottom" />
       </XAxis>
 
       <YAxis>
-      <Label value={chartType === "sleep" ? "hours/day" : chartType === "eating" ? "servings/day" : "minutes/day"} position="insideLeft" offset={-70} />
+        <Label
+          value={
+            chartType === "sleep"
+              ? "hours/day"
+              : chartType === "eating"
+              ? "servings/day"
+              : "minutes/day"
+          }
+          position="insideLeft"
+          offset={-70}
+        />
       </YAxis>
       <Tooltip />
       <Bar dataKey="behaviorValue" fill="#8884d8" />
@@ -96,12 +121,22 @@ const BehaviorScatterChart = ({ data, chartType }) => {
     >
       <CartesianGrid strokeDasharray="3 3" />
 
-      <XAxis dataKey="formattedDate">
+      <XAxis dataKey="date">
         <Label value="Date" position="bottom" />
       </XAxis>
 
       <YAxis>
-        <Label value={chartType === "sleep" ? "hours/day" : chartType === "eating" ? "servings/day" : "minutes/day"} position="insideLeft" offset={-70} />
+        <Label
+          value={
+            chartType === "sleep"
+              ? "hours/day"
+              : chartType === "eating"
+              ? "servings/day"
+              : "minutes/day"
+          }
+          position="insideLeft"
+          offset={-70}
+        />
       </YAxis>
       <Tooltip />
       <Scatter dataKey="behaviorValue" fill="#8884d8" />
@@ -116,6 +151,9 @@ const TrackingScreen = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(true);
+  const [currentGoalData, setCurrentGoalData] = useState([]);
+  const [allGoalData, setAllGoalData] = useState([]);
+  const [allBehaviorData, setAllBehaviorData] = useState([]);
 
   const [chartType, setChartType] = useState("line");
 
@@ -211,8 +249,115 @@ const TrackingScreen = () => {
     fetchSleepBehaviors();
   }, [shownUser]);
 
+  useEffect(() => {
+    const fetchAllGoals = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/allGoals", {});
+        setAllGoalData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchSelectedUserGoals = async () => {
+      try {
+        const response = await axios.get("http://localhost:3001/goals", {
+          params: {
+            user: shownUser,
+          },
+        });
+        setCurrentGoalData(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchAllBehaviors = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/allBehaviors",
+          {}
+        );
+        setAllBehaviorData(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchAllGoals();
+    fetchSelectedUserGoals();
+    fetchAllBehaviors();
+  }, [user]);
+
   return (
     <>
+      {!has(user, "admin") ? (
+        <div
+          style={{
+            textAlign: "center",
+            fontSize: 30,
+            fontWeight: "bold",
+            margin: "1%",
+          }}
+        >
+          Behavior Tracking
+        </div>
+      ) : (
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: 30,
+              fontWeight: "bold",
+              margin: "1%",
+            }}
+          >
+            Behavior Tracking (Admin)
+          </div>
+      )}
+
+      {has(user, "admin") && (
+        <>
+          <Select
+            placeholder="Search for user"
+            id="input"
+            type="text"
+            label="Search"
+            value={loading ? "" : userInput}
+            style={{ width: "200px" }}
+            onChange={(e) => {
+              setUserInput(e.target.value);
+            }}
+          >
+            {allUsers.map((user, index) => (
+              <MenuItem key={index} value={user.name}>
+                {user.name}
+              </MenuItem>
+            ))}
+          </Select>          
+
+          <Button
+            onClick={() => {
+              setShownUser(allUsers.find((user) => user.name === userInput));
+            }}
+            style={{
+              backgroundColor: "green",
+              color: "white",
+              marginLeft: "1rem",
+              textTransform: "none",
+            }}
+          >
+            Submit
+          </Button>
+          <GoalCSV goalData={currentGoalData} user={shownUser.name} />
+          <BehaviorTrackingCSV
+            allBehaviorData={allBehaviorData}
+            user={shownUser.name}
+          />
+        </>
+      )}
+
       <FilterWrapper>
         <FormControl>
           <FormLabel id="demo-radio-buttons-group-label">Chart Type</FormLabel>
@@ -241,38 +386,6 @@ const TrackingScreen = () => {
         </FormControl>
       </FilterWrapper>
 
-      <Select
-        placeholder="Search for user"
-        id="input"
-        type="text"
-        label="Search"
-        value={loading ? "" : userInput}
-        style={{ width: "200px" }}
-        onChange={(e) => {
-          setUserInput(e.target.value);
-        }}
-      >
-        {allUsers.map((user, index) => (
-          <MenuItem key={index} value={user.name}>
-            {user.name}
-          </MenuItem>
-        ))}
-      </Select>
-
-      <Button
-        onClick={() => {
-          setShownUser(allUsers.find((user) => user.name === userInput));
-        }}
-        style={{
-          backgroundColor: "green",
-          color: "white",
-          marginLeft: "1rem",
-          textTransform: "none",
-        }}
-      >
-        Submit
-      </Button>
-
       <div
         style={{
           display: "flex",
@@ -282,19 +395,37 @@ const TrackingScreen = () => {
       >
         <h1>{shownUser.name}'s Activity Behavior Data</h1>
         {chartType === "line" ? (
-          <BehaviorLineChart data={activityBehaviorData} chartType={"activity"} />
+          <BehaviorLineChart
+            data={activityBehaviorData}
+            chartType={"activity"}
+          />
         ) : chartType === "bar" ? (
-          <BehaviorBarChart data={activityBehaviorData} chartType={"activity"} />
+          <BehaviorBarChart
+            data={activityBehaviorData}
+            chartType={"activity"}
+          />
         ) : (
-          <BehaviorScatterChart data={activityBehaviorData} chartType={"activity"} />
+          <BehaviorScatterChart
+            data={activityBehaviorData}
+            chartType={"activity"}
+          />
         )}
         <h1>{shownUser.name}'s Screentime Behavior Data</h1>
         {chartType === "line" ? (
-          <BehaviorLineChart data={screentimeBehaviorData} chartType={"screentime"} />
+          <BehaviorLineChart
+            data={screentimeBehaviorData}
+            chartType={"screentime"}
+          />
         ) : chartType === "bar" ? (
-          <BehaviorBarChart data={screentimeBehaviorData} chartType={"screentime"} />
+          <BehaviorBarChart
+            data={screentimeBehaviorData}
+            chartType={"screentime"}
+          />
         ) : (
-          <BehaviorScatterChart data={screentimeBehaviorData} chartType={"screentime"} />
+          <BehaviorScatterChart
+            data={screentimeBehaviorData}
+            chartType={"screentime"}
+          />
         )}
         <h1>{shownUser.name}'s Eating Behavior Data</h1>
         {chartType === "line" ? (
@@ -302,7 +433,10 @@ const TrackingScreen = () => {
         ) : chartType === "bar" ? (
           <BehaviorBarChart data={eatingBehaviorData} chartType={"eating"} />
         ) : (
-          <BehaviorScatterChart data={eatingBehaviorData} chartType={"eating"} />
+          <BehaviorScatterChart
+            data={eatingBehaviorData}
+            chartType={"eating"}
+          />
         )}
         <h1>{shownUser.name}'s Sleep Behavior Data</h1>
         {chartType === "line" ? (
@@ -317,4 +451,4 @@ const TrackingScreen = () => {
   );
 };
 
-export default TrackingScreen;
+export default withAuth(TrackingScreen);
