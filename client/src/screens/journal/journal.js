@@ -181,7 +181,7 @@ const JournalScreen = () => {
     const fetchDailyBehavior = async (goalType) => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/dailyBehavior",
+          "https://project-proudme.onrender.com/dailyBehavior",
           {
             params: {
               user: user,
@@ -217,7 +217,7 @@ const JournalScreen = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    fetch(`http://localhost:3001/users`, {
+    fetch(`https://project-proudme.onrender.com/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -232,7 +232,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goals", {
+        const response = await axios.get("https://project-proudme.onrender.com/goals", {
           params: {
             user: user,
           },
@@ -245,7 +245,7 @@ const JournalScreen = () => {
 
     const fetchAllGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/allGoals", {});
+        const response = await axios.get("https://project-proudme.onrender.com/allGoals", {});
         setAllGoalData(response.data);
       } catch (error) {
         console.error(error);
@@ -259,7 +259,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "eating",
@@ -276,7 +276,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "eating",
@@ -297,7 +297,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "activity",
@@ -314,7 +314,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "activity",
@@ -335,7 +335,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "sleep",
@@ -352,7 +352,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "sleep",
@@ -373,7 +373,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "screentime",
@@ -391,7 +391,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "screentime",
@@ -413,7 +413,7 @@ const JournalScreen = () => {
     const fetchAllBehaviors = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/allBehaviors",
+          "https://project-proudme.onrender.com/allBehaviors",
           {}
         );
         setAllBehaviorData(response.data);
@@ -450,7 +450,7 @@ const JournalScreen = () => {
         const updatedActivityGoal = prevActivityGoal.map((goal) => {
           const updatedGoal = { ...goal, goalValue: +newQuantity };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               name: user.name,
               goalType: goal.goalType,
@@ -473,7 +473,7 @@ const JournalScreen = () => {
         const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
           const updatedGoal = { ...goal, goalValue: +newQuantity };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               name: user.name,
               goalType: goal.goalType,
@@ -499,7 +499,7 @@ const JournalScreen = () => {
         const updatedEatingGoal = prevEatingGoal.map((goal) => {
           const updatedGoal = { ...goal, goalValue: +newQuantity };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               name: user.name,
               goalType: goal.goalType,
@@ -525,7 +525,7 @@ const JournalScreen = () => {
         const updatedSleepGoal = prevSleepGoal.map((goal) => {
           const updatedGoal = { ...goal, goalValue: +newQuantity };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               name: user.name,
               goalType: goal.goalType,
@@ -555,7 +555,7 @@ const JournalScreen = () => {
         const updatedActivityGoal = prevActivityGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               name: user.name,
               goalType: "activity",
@@ -571,7 +571,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("http://localhost:3001/behaviors", {
+            .post("https://project-proudme.onrender.com/behaviors", {
               user: user._id,
               name: user.name,
               goalType: "activity",
@@ -596,7 +596,7 @@ const JournalScreen = () => {
         const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               name: user.name,
               goalType: "screentime",
@@ -612,7 +612,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("http://localhost:3001/behaviors", {
+            .post("https://project-proudme.onrender.com/behaviors", {
               user: user._id,
               name: user.name,
               goalType: "screentime",
@@ -637,7 +637,7 @@ const JournalScreen = () => {
         const updatedEatingGoal = prevEatingGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               name: user.name,
               goalType: "eating",
@@ -653,7 +653,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("http://localhost:3001/behaviors", {
+            .post("https://project-proudme.onrender.com/behaviors", {
               user: user._id,
               name: user.name,
               goalType: "eating",
@@ -678,7 +678,7 @@ const JournalScreen = () => {
         const updatedSleepGoal = prevSleepGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               name: user.name,
               goalType: "sleep",
@@ -694,7 +694,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("http://localhost:3001/behaviors", {
+            .post("https://project-proudme.onrender.com/behaviors", {
               user: user._id,
               name: user.name,
               goalType: "sleep",
@@ -723,7 +723,7 @@ const JournalScreen = () => {
         const updatedActivityGoal = prevActivityGoal.map((goal) => {
           const updatedGoal = { ...goal, reflection: newReflection };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               goalType: "activity",
               reflection: newReflection,
@@ -743,7 +743,7 @@ const JournalScreen = () => {
         const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
           const updatedGoal = { ...goal, reflection: newReflection };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               goalType: "screentime",
               reflection: newReflection,
@@ -763,7 +763,7 @@ const JournalScreen = () => {
         const updatedEatingGoal = prevEatingGoal.map((goal) => {
           const updatedGoal = { ...goal, reflection: newReflection };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               goalType: "eating",
               reflection: newReflection,
@@ -783,7 +783,7 @@ const JournalScreen = () => {
         const updatedSleepGoal = prevSleepGoal.map((goal) => {
           const updatedGoal = { ...goal, reflection: newReflection };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               goalType: "sleep",
               reflection: newReflection,

@@ -37,7 +37,7 @@ const Recovery = () => {
     event.preventDefault();
     setConfirming(true);
     axios
-      .post("http://localhost:3001/send-email", emailData)
+      .post("https://project-proudme.onrender.com/send-email", emailData)
       .then((response) => {
         console.log(response.data);
         // Handle success response
