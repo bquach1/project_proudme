@@ -1148,7 +1148,7 @@ const JournalScreen = () => {
 
               {eatingData.length ? (
                 <>
-                  <Tooltip title="You've already logged an activity behavior for today, but you can change it if you'd like!">
+                  <Tooltip title="You've already logged this behavior today! You can change it by clicking the edit button to the right.">
                     <TextField
                       disabled={
                         loggedEatingToday && editingBehaviorId !== 2
@@ -1183,7 +1183,7 @@ const JournalScreen = () => {
                     />
                   </Tooltip>
                   {loggedEatingToday ? (
-                    <Tooltip title="You've already logged an eating behavior for today, but you can change it if you'd like!">
+                    <Tooltip title="Edit Existing Daily Behavior">
                       <EditIcon
                         className="save edit-icon"
                         onClick={() => {
@@ -1262,7 +1262,7 @@ const JournalScreen = () => {
 
               {sleepData.length ? (
                 <>
-                  <Tooltip title="You've already logged an activity behavior for today, but you can change it if you'd like!">
+                  <Tooltip title="You've already logged this behavior today! You can change it by clicking the edit button to the right.">
                     <TextField
                       disabled={
                         loggedSleepToday && editingBehaviorId !== 3
@@ -1293,7 +1293,7 @@ const JournalScreen = () => {
                     />
                   </Tooltip>
                   {loggedSleepToday ? (
-                    <Tooltip title="You've already logged an activity behavior for today, but you can change it if you'd like!">
+                    <Tooltip title="Edit Existing Daily Behavior">
                       <EditIcon
                         className="save edit-icon"
                         onClick={() => {
