@@ -8,8 +8,6 @@ import {
   Tooltip,
   BarChart,
   Bar,
-  ScatterChart,
-  Scatter,
   Label,
 } from "recharts";
 import axios from "axios";
@@ -111,39 +109,6 @@ const BehaviorBarChart = ({ data, chartType }) => {
   );
 };
 
-const BehaviorScatterChart = ({ data, chartType }) => {
-  return (
-    <ScatterChart
-      width={800}
-      height={600}
-      data={data}
-      margin={{ top: 55, right: 80, left: 70, bottom: 70 }}
-    >
-      <CartesianGrid strokeDasharray="3 3" />
-
-      <XAxis dataKey="date">
-        <Label value="Date" position="bottom" />
-      </XAxis>
-
-      <YAxis>
-        <Label
-          value={
-            chartType === "sleep"
-              ? "hours/day"
-              : chartType === "eating"
-              ? "servings/day"
-              : "minutes/day"
-          }
-          position="insideLeft"
-          offset={-70}
-        />
-      </YAxis>
-      <Tooltip />
-      <Scatter dataKey="behaviorValue" fill="#8884d8" />
-    </ScatterChart>
-  );
-};
-
 // Render the chart component
 const TrackingScreen = () => {
   const [user, setUser] = useState([]);
@@ -164,7 +129,7 @@ const TrackingScreen = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    fetch(`https://project-proudme.onrender.com/users`, {
+    fetch(`http://localhost:3001/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -178,7 +143,7 @@ const TrackingScreen = () => {
       .then(() => setLoading(false))
       .catch((error) => console.error(error));
 
-    fetch(`https://project-proudme.onrender.com/allUsers`)
+    fetch(`http://localhost:3001/allUsers`)
       .then((response) => response.json())
       .then((data) => {
         setAllUsers(data);
@@ -189,7 +154,7 @@ const TrackingScreen = () => {
   useEffect(() => {
     const fetchActivityBehaviors = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
+        const response = await axios.get("http://localhost:3001/behaviorType", {
           params: {
             user: shownUser,
             goalType: "activity",
@@ -203,7 +168,7 @@ const TrackingScreen = () => {
 
     const fetchScreentimeBehaviors = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
+        const response = await axios.get("http://localhost:3001/behaviorType", {
           params: {
             user: shownUser,
             goalType: "screentime",
@@ -217,7 +182,7 @@ const TrackingScreen = () => {
 
     const fetchEatingBehaviors = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
+        const response = await axios.get("http://localhost:3001/behaviorType", {
           params: {
             user: shownUser,
             goalType: "eating",
@@ -231,7 +196,7 @@ const TrackingScreen = () => {
 
     const fetchSleepBehaviors = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
+        const response = await axios.get("http://localhost:3001/behaviorType", {
           params: {
             user: shownUser,
             goalType: "sleep",
@@ -252,7 +217,7 @@ const TrackingScreen = () => {
   useEffect(() => {
     const fetchAllGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/allGoals", {});
+        const response = await axios.get("http://localhost:3001/allGoals", {});
         setAllGoalData(response.data);
       } catch (error) {
         console.error(error);
@@ -261,7 +226,7 @@ const TrackingScreen = () => {
 
     const fetchSelectedUserGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goals", {
+        const response = await axios.get("http://localhost:3001/goals", {
           params: {
             user: shownUser,
           },
@@ -276,7 +241,7 @@ const TrackingScreen = () => {
     const fetchAllBehaviors = async () => {
       try {
         const response = await axios.get(
-          "https://project-proudme.onrender.com/allBehaviors",
+          "http://localhost:3001/allBehaviors",
           {}
         );
         setAllBehaviorData(response.data);
@@ -377,11 +342,6 @@ const TrackingScreen = () => {
               control={<Radio onClick={(e) => setChartType(e.target.value)} />}
               label="Bar Chart"
             />
-            <FormControlLabel
-              value="scatter"
-              control={<Radio onClick={(e) => setChartType(e.target.value)} />}
-              label="Scatterplot"
-            />
           </RadioGroup>
         </FormControl>
       </FilterWrapper>
@@ -399,13 +359,8 @@ const TrackingScreen = () => {
             data={activityBehaviorData}
             chartType={"activity"}
           />
-        ) : chartType === "bar" ? (
-          <BehaviorBarChart
-            data={activityBehaviorData}
-            chartType={"activity"}
-          />
         ) : (
-          <BehaviorScatterChart
+          <BehaviorBarChart
             data={activityBehaviorData}
             chartType={"activity"}
           />
@@ -416,13 +371,8 @@ const TrackingScreen = () => {
             data={screentimeBehaviorData}
             chartType={"screentime"}
           />
-        ) : chartType === "bar" ? (
-          <BehaviorBarChart
-            data={screentimeBehaviorData}
-            chartType={"screentime"}
-          />
         ) : (
-          <BehaviorScatterChart
+          <BehaviorBarChart
             data={screentimeBehaviorData}
             chartType={"screentime"}
           />
@@ -430,21 +380,14 @@ const TrackingScreen = () => {
         <h1>{shownUser.name}'s Eating Behavior Data</h1>
         {chartType === "line" ? (
           <BehaviorLineChart data={eatingBehaviorData} chartType={"eating"} />
-        ) : chartType === "bar" ? (
-          <BehaviorBarChart data={eatingBehaviorData} chartType={"eating"} />
         ) : (
-          <BehaviorScatterChart
-            data={eatingBehaviorData}
-            chartType={"eating"}
-          />
+          <BehaviorBarChart data={eatingBehaviorData} chartType={"eating"} />
         )}
         <h1>{shownUser.name}'s Sleep Behavior Data</h1>
         {chartType === "line" ? (
           <BehaviorLineChart data={sleepBehaviorData} chartType={"sleep"} />
-        ) : chartType === "bar" ? (
-          <BehaviorBarChart data={sleepBehaviorData} chartType={"sleep"} />
         ) : (
-          <BehaviorScatterChart data={sleepBehaviorData} chartType={"sleep"} />
+          <BehaviorBarChart data={sleepBehaviorData} chartType={"sleep"} />
         )}
       </div>
     </>

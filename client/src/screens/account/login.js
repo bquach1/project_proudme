@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -19,7 +19,7 @@ const LoginScreen = () => {
     setLoading(true);
 
     axios
-      .post("https://project-proudme.onrender.com/login", {
+      .post("http://localhost:3001/login", {
         email,
         password,
       })
@@ -89,11 +89,11 @@ const LoginScreen = () => {
         <div className="registration">
           <div className="registration-link">
             <h2>
-              Forgot your
+              Having trouble logging in?
               <a className="nav-select" onClick={() => navigate("/recovery")}>
-                Password
-              </a>
-              ?
+                Click here
+              </a>      
+              !      
             </h2>
           </div>
           <div className="registration-link">

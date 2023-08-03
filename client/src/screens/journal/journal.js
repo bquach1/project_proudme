@@ -7,6 +7,7 @@ import { TextField, Tooltip } from "@mui/material";
 import styled from "styled-components";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
+import SaveIcon from "@mui/icons-material/Save";
 import CheckIcon from "@mui/icons-material/Check";
 import LockIcon from "@mui/icons-material/Lock";
 
@@ -54,11 +55,11 @@ const ReflectionContainer = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   width: 50%;
 
   .edit-icon {
-    margin-left: 2%;
+    margin-left: 3%;
 
     &:hover {
       cursor: pointer;
@@ -95,7 +96,6 @@ const JournalScreen = () => {
   const [loggedSleepToday, setLoggedSleepToday] = useState(false);
 
   const [editingBehaviorId, setEditingBehaviorId] = useState(-1);
-  const [editingReflectionId, setEditingReflectionId] = useState(-1);
 
   // Local states to manage event changes in React.
   const [activityGoal, setActivityGoal] = useState([
@@ -181,7 +181,7 @@ const JournalScreen = () => {
     const fetchDailyBehavior = async (goalType) => {
       try {
         const response = await axios.get(
-          "https://project-proudme.onrender.com/dailyBehavior",
+          "http://localhost:3001/dailyBehavior",
           {
             params: {
               user: user,
@@ -217,7 +217,7 @@ const JournalScreen = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    fetch(`https://project-proudme.onrender.com/users`, {
+    fetch(`http://localhost:3001/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -232,11 +232,14 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goals", {
-          params: {
-            user: user,
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:3001/goals",
+          {
+            params: {
+              user: user,
+            },
+          }
+        );
         setGoalData(response.data);
       } catch (error) {
         console.error(error);
@@ -245,7 +248,10 @@ const JournalScreen = () => {
 
     const fetchAllGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/allGoals", {});
+        const response = await axios.get(
+          "http://localhost:3001/allGoals",
+          {}
+        );
         setAllGoalData(response.data);
       } catch (error) {
         console.error(error);
@@ -259,12 +265,15 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
-          params: {
-            user: user,
-            goalType: "eating",
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:3001/goalType",
+          {
+            params: {
+              user: user,
+              goalType: "eating",
+            },
+          }
+        );
         setEatingData(response.data);
       } catch (error) {
         console.error(error);
@@ -276,12 +285,15 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
-          params: {
-            user: user,
-            goalType: "eating",
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:3001/goalType",
+          {
+            params: {
+              user: user,
+              goalType: "eating",
+            },
+          }
+        );
         if (response.data.length === 0) {
           setEatingGoal(eatingGoal);
         } else {
@@ -297,12 +309,15 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
-          params: {
-            user: user,
-            goalType: "activity",
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:3001/goalType",
+          {
+            params: {
+              user: user,
+              goalType: "activity",
+            },
+          }
+        );
         setActivityData(response.data);
       } catch (error) {
         console.error(error);
@@ -314,12 +329,15 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
-          params: {
-            user: user,
-            goalType: "activity",
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:3001/goalType",
+          {
+            params: {
+              user: user,
+              goalType: "activity",
+            },
+          }
+        );
         if (response.data.length === 0) {
           setActivityGoal(activityGoal);
         } else {
@@ -335,12 +353,15 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
-          params: {
-            user: user,
-            goalType: "sleep",
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:3001/goalType",
+          {
+            params: {
+              user: user,
+              goalType: "sleep",
+            },
+          }
+        );
         setSleepData(response.data);
       } catch (error) {
         console.error(error);
@@ -352,12 +373,15 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
-          params: {
-            user: user,
-            goalType: "sleep",
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:3001/goalType",
+          {
+            params: {
+              user: user,
+              goalType: "sleep",
+            },
+          }
+        );
         if (response.data.length === 0) {
           setSleepGoal(sleepGoal);
         } else {
@@ -373,12 +397,15 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
-          params: {
-            user: user,
-            goalType: "screentime",
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:3001/goalType",
+          {
+            params: {
+              user: user,
+              goalType: "screentime",
+            },
+          }
+        );
         setScreentimeData(response.data);
       } catch (error) {
         console.error(error);
@@ -391,12 +418,15 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
-          params: {
-            user: user,
-            goalType: "screentime",
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:3001/goalType",
+          {
+            params: {
+              user: user,
+              goalType: "screentime",
+            },
+          }
+        );
         if (response.data.length === 0) {
           setScreentimeGoal(screentimeGoal);
         } else {
@@ -413,7 +443,7 @@ const JournalScreen = () => {
     const fetchAllBehaviors = async () => {
       try {
         const response = await axios.get(
-          "https://project-proudme.onrender.com/allBehaviors",
+          "http://localhost:3001/allBehaviors",
           {}
         );
         setAllBehaviorData(response.data);
@@ -450,7 +480,7 @@ const JournalScreen = () => {
         const updatedActivityGoal = prevActivityGoal.map((goal) => {
           const updatedGoal = { ...goal, goalValue: +newQuantity };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               name: user.name,
               goalType: goal.goalType,
@@ -473,7 +503,7 @@ const JournalScreen = () => {
         const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
           const updatedGoal = { ...goal, goalValue: +newQuantity };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               name: user.name,
               goalType: goal.goalType,
@@ -499,7 +529,7 @@ const JournalScreen = () => {
         const updatedEatingGoal = prevEatingGoal.map((goal) => {
           const updatedGoal = { ...goal, goalValue: +newQuantity };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               name: user.name,
               goalType: goal.goalType,
@@ -525,7 +555,7 @@ const JournalScreen = () => {
         const updatedSleepGoal = prevSleepGoal.map((goal) => {
           const updatedGoal = { ...goal, goalValue: +newQuantity };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               name: user.name,
               goalType: goal.goalType,
@@ -555,7 +585,7 @@ const JournalScreen = () => {
         const updatedActivityGoal = prevActivityGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               name: user.name,
               goalType: "activity",
@@ -571,7 +601,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("https://project-proudme.onrender.com/behaviors", {
+            .post("http://localhost:3001/behaviors", {
               user: user._id,
               name: user.name,
               goalType: "activity",
@@ -596,7 +626,7 @@ const JournalScreen = () => {
         const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               name: user.name,
               goalType: "screentime",
@@ -612,7 +642,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("https://project-proudme.onrender.com/behaviors", {
+            .post("http://localhost:3001/behaviors", {
               user: user._id,
               name: user.name,
               goalType: "screentime",
@@ -637,7 +667,7 @@ const JournalScreen = () => {
         const updatedEatingGoal = prevEatingGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               name: user.name,
               goalType: "eating",
@@ -653,7 +683,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("https://project-proudme.onrender.com/behaviors", {
+            .post("http://localhost:3001/behaviors", {
               user: user._id,
               name: user.name,
               goalType: "eating",
@@ -678,7 +708,7 @@ const JournalScreen = () => {
         const updatedSleepGoal = prevSleepGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               name: user.name,
               goalType: "sleep",
@@ -694,7 +724,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("https://project-proudme.onrender.com/behaviors", {
+            .post("http://localhost:3001/behaviors", {
               user: user._id,
               name: user.name,
               goalType: "sleep",
@@ -723,7 +753,7 @@ const JournalScreen = () => {
         const updatedActivityGoal = prevActivityGoal.map((goal) => {
           const updatedGoal = { ...goal, reflection: newReflection };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: "activity",
               reflection: newReflection,
@@ -743,7 +773,7 @@ const JournalScreen = () => {
         const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
           const updatedGoal = { ...goal, reflection: newReflection };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: "screentime",
               reflection: newReflection,
@@ -763,7 +793,7 @@ const JournalScreen = () => {
         const updatedEatingGoal = prevEatingGoal.map((goal) => {
           const updatedGoal = { ...goal, reflection: newReflection };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: "eating",
               reflection: newReflection,
@@ -783,7 +813,7 @@ const JournalScreen = () => {
         const updatedSleepGoal = prevSleepGoal.map((goal) => {
           const updatedGoal = { ...goal, reflection: newReflection };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post("http://localhost:3001/goals", {
               user: user._id,
               goalType: "sleep",
               reflection: newReflection,
@@ -840,7 +870,15 @@ const JournalScreen = () => {
                   alt="Activity goals icon on activity goals page"
                 />
                 <h2 style={styles.goalLabel}>Do</h2>
-                <Tooltip title="Exercise, do chores, play sports, and go out and do other physical activities.">
+                <Tooltip
+                  title={
+                    <div>
+                      Exercise, do chores, play sports, and go out and do other
+                      physical activities.
+                      <br /> <strong>Recommended Level: 60 minutes/day</strong>
+                    </div>
+                  }
+                >
                   <HelpOutlineIcon style={{ fontSize: "16px" }} />
                 </Tooltip>
               </div>
@@ -974,7 +1012,19 @@ const JournalScreen = () => {
                   alt="Tablet for screentime goals"
                 />
                 <h2 style={styles.goalLabel}>View</h2>
-                <Tooltip title="Limit time using phones, laptops, and other screens every day. The only goal where a lower behavior value is better!">
+
+                <Tooltip
+                  title={
+                    <div>
+                      Limit time using phones, laptops, and other screens every
+                      day. The only goal where a lower behavior value is better!
+                      <br />{" "}
+                      <strong>
+                        Recommended Level: &lt; 2 hours (120 minutes)/day
+                      </strong>
+                    </div>
+                  }
+                >
                   <HelpOutlineIcon style={{ fontSize: "16px" }} />
                 </Tooltip>
               </div>
@@ -1032,7 +1082,7 @@ const JournalScreen = () => {
                           : false
                       }
                       className={
-                        loggedActivityToday && editingBehaviorId !== 0
+                        loggedScreentimeToday && editingBehaviorId !== 1
                           ? "disabled-behavior"
                           : "behavior"
                       }
@@ -1109,7 +1159,15 @@ const JournalScreen = () => {
                   alt="Apple for servings goal"
                 />
                 <h2 style={styles.goalLabel}>Chew</h2>
-                <Tooltip title="Eat recommended daily servings of fruits and vegetables for a healthier diet.">
+                <Tooltip
+                  title={
+                    <div>
+                      Eat more servings of fruits and vegetables for a healthier
+                      diet.
+                      <br /> <strong>Recommended Level: 5 servings/day</strong>
+                    </div>
+                  }
+                >
                   <HelpOutlineIcon style={{ fontSize: "16px" }} />
                 </Tooltip>
               </div>
@@ -1148,7 +1206,13 @@ const JournalScreen = () => {
 
               {eatingData.length ? (
                 <>
-                  <Tooltip title="You've already logged this behavior today! You can change it by clicking the edit button to the right.">
+                  <Tooltip
+                    title={
+                      loggedEatingToday && editingBehaviorId !== 2
+                        ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
+                        : ""
+                    }
+                  >
                     <TextField
                       disabled={
                         loggedEatingToday && editingBehaviorId !== 2
@@ -1156,7 +1220,7 @@ const JournalScreen = () => {
                           : false
                       }
                       className={
-                        loggedActivityToday && editingBehaviorId !== 0
+                        loggedEatingToday && editingBehaviorId !== 2
                           ? "disabled-behavior"
                           : "behavior"
                       }
@@ -1225,7 +1289,15 @@ const JournalScreen = () => {
                   alt="Pillow icon for sleep"
                 />
                 <h2 style={styles.goalLabel}>Sleep</h2>
-                <Tooltip title="Get a good night's rest to be productive and healthy.">
+                <Tooltip
+                  title={
+                    <div>
+                      Get a good night's rest to be productive and healthy.
+                      <br />{" "}
+                      <strong>Recommended Level: 9-11 hours/night</strong>
+                    </div>
+                  }
+                >
                   <HelpOutlineIcon style={{ fontSize: "16px" }} />
                 </Tooltip>
               </div>
@@ -1262,7 +1334,13 @@ const JournalScreen = () => {
 
               {sleepData.length ? (
                 <>
-                  <Tooltip title="You've already logged this behavior today! You can change it by clicking the edit button to the right.">
+                  <Tooltip
+                    title={
+                      loggedSleepToday && editingBehaviorId !== 3
+                        ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
+                        : ""
+                    }
+                  >
                     <TextField
                       disabled={
                         loggedSleepToday && editingBehaviorId !== 3
@@ -1270,7 +1348,7 @@ const JournalScreen = () => {
                           : false
                       }
                       className={
-                        loggedActivityToday && editingBehaviorId !== 0
+                        loggedSleepToday && editingBehaviorId !== 3
                           ? "disabled-behavior"
                           : "behavior"
                       }
@@ -1371,60 +1449,34 @@ const JournalScreen = () => {
                 </Tooltip>
               )}
               <ReflectionContainer>
-                {editingReflectionId === 0 ? (
-                  <>
-                    <TextField
-                      type="text"
-                      placeholder="Type my thoughts"
-                      style={{ width: "100%" }}
-                      value={activityGoal[0].reflection}
-                      onChange={(e) => {
-                        setActivityGoal((prevActivityGoal) => {
-                          const updatedActivityGoal = prevActivityGoal.map(
-                            (goal) => {
-                              const newActivityReflection = {
-                                ...goal,
-                                reflection: e.target.value,
-                              };
-                              return newActivityReflection;
-                            }
-                          );
-                          return updatedActivityGoal;
-                        });
-                      }}
-                    />
-                    <Tooltip title="Save Reflection">
-                      <EditIcon
-                        className="save edit-icon"
-                        onClick={() => {
-                          setEditingReflectionId(-1);
-                          updateGoalReflection(0, activityGoal[0].reflection);
-                        }}
-                      />
-                    </Tooltip>
-                  </>
-                ) : (
-                  <>
-                    <span
-                      style={{
-                        width: "100%",
-                        height: "60px",
-                        textOverflow: "ellipsis",
-                        overflowY: "scroll",
-                      }}
-                    >
-                      {activityData.length ? activityData[0].reflection : ""}
-                    </span>
-                    <Tooltip title="Edit Reflection">
-                      <EditIcon
-                        className="edit-icon"
-                        onClick={() => {
-                          setEditingReflectionId(0);
-                        }}
-                      />
-                    </Tooltip>
-                  </>
-                )}
+                <TextField
+                  type="text"
+                  placeholder="Type my thoughts"
+                  style={{ width: "80%" }}
+                  value={activityGoal[0].reflection}
+                  onChange={(e) => {
+                    setActivityGoal((prevActivityGoal) => {
+                      const updatedActivityGoal = prevActivityGoal.map(
+                        (goal) => {
+                          const newActivityReflection = {
+                            ...goal,
+                            reflection: e.target.value,
+                          };
+                          return newActivityReflection;
+                        }
+                      );
+                      return updatedActivityGoal;
+                    });
+                  }}
+                />
+                <Tooltip title="Save Reflection">
+                  <SaveIcon
+                    className="save edit-icon"
+                    onClick={() => {
+                      updateGoalReflection(0, activityGoal[0].reflection);
+                    }}
+                  />
+                </Tooltip>
               </ReflectionContainer>
             </div>
 
@@ -1442,66 +1494,36 @@ const JournalScreen = () => {
                 </Tooltip>
               )}
               <ReflectionContainer>
-                {editingReflectionId === 1 ? (
-                  <>
-                    <TextField
-                      type="text"
-                      placeholder="Type my thoughts"
-                      style={{ width: "100%" }}
-                      value={
-                        screentimeGoal.length
-                          ? screentimeGoal[0].reflection
-                          : ""
-                      }
-                      onChange={(e) => {
-                        setScreentimeGoal((prevScreentimeGoal) => {
-                          const updatedScreentimeGoal = prevScreentimeGoal.map(
-                            (goal) => {
-                              const newScreentimeReflection = {
-                                ...goal,
-                                reflection: e.target.value,
-                              };
-                              return newScreentimeReflection;
-                            }
-                          );
-                          return updatedScreentimeGoal;
-                        });
-                      }}
-                    />
-                    <Tooltip title="Save Reflection">
-                      <EditIcon
-                        className="save edit-icon"
-                        onClick={() => {
-                          setEditingReflectionId(-1);
-                          updateGoalReflection(1, screentimeGoal[0].reflection);
-                        }}
-                      />
-                    </Tooltip>
-                  </>
-                ) : (
-                  <>
-                    <span
-                      style={{
-                        width: "100%",
-                        height: "60px",
-                        textOverflow: "ellipsis",
-                        overflowY: "scroll",
-                      }}
-                    >
-                      {screentimeData.length
-                        ? screentimeData[0].reflection
-                        : ""}
-                    </span>
-                    <Tooltip title="Edit Reflection">
-                      <EditIcon
-                        className="edit-icon"
-                        onClick={() => {
-                          setEditingReflectionId(1);
-                        }}
-                      />
-                    </Tooltip>
-                  </>
-                )}
+                <TextField
+                  type="text"
+                  placeholder="Type my thoughts"
+                  style={{ width: "80%" }}
+                  value={
+                    screentimeGoal.length ? screentimeGoal[0].reflection : ""
+                  }
+                  onChange={(e) => {
+                    setScreentimeGoal((prevScreentimeGoal) => {
+                      const updatedScreentimeGoal = prevScreentimeGoal.map(
+                        (goal) => {
+                          const newScreentimeReflection = {
+                            ...goal,
+                            reflection: e.target.value,
+                          };
+                          return newScreentimeReflection;
+                        }
+                      );
+                      return updatedScreentimeGoal;
+                    });
+                  }}
+                />
+                <Tooltip title="Save Reflection">
+                  <SaveIcon
+                    className="save edit-icon"
+                    onClick={() => {
+                      updateGoalReflection(1, screentimeGoal[0].reflection);
+                    }}
+                  />
+                </Tooltip>
               </ReflectionContainer>
             </div>
 
@@ -1517,60 +1539,32 @@ const JournalScreen = () => {
                 </Tooltip>
               )}
               <ReflectionContainer>
-                {editingReflectionId === 2 ? (
-                  <>
-                    <TextField
-                      type="text"
-                      placeholder="Type my thoughts"
-                      style={{ width: "100%" }}
-                      value={eatingGoal.length ? eatingGoal[0].reflection : ""}
-                      onChange={(e) => {
-                        setEatingGoal((prevEatingGoal) => {
-                          const updatedEatingGoal = prevEatingGoal.map(
-                            (goal) => {
-                              const newEatingReflection = {
-                                ...goal,
-                                reflection: e.target.value,
-                              };
-                              return newEatingReflection;
-                            }
-                          );
-                          return updatedEatingGoal;
-                        });
-                      }}
-                    />
-                    <Tooltip title="Save Reflection">
-                      <EditIcon
-                        className="save edit-icon"
-                        onClick={() => {
-                          setEditingReflectionId(-1);
-                          updateGoalReflection(2, eatingGoal[0].reflection);
-                        }}
-                      />
-                    </Tooltip>
-                  </>
-                ) : (
-                  <>
-                    <span
-                      style={{
-                        width: "100%",
-                        height: "60px",
-                        textOverflow: "ellipsis",
-                        overflowY: "scroll",
-                      }}
-                    >
-                      {eatingData.length ? eatingData[0].reflection : ""}
-                    </span>
-                    <Tooltip title="Edit Reflection">
-                      <EditIcon
-                        className="edit-icon"
-                        onClick={() => {
-                          setEditingReflectionId(2);
-                        }}
-                      />
-                    </Tooltip>
-                  </>
-                )}
+                <TextField
+                  type="text"
+                  placeholder="Type my thoughts"
+                  style={{ width: "80%" }}
+                  value={eatingGoal.length ? eatingGoal[0].reflection : ""}
+                  onChange={(e) => {
+                    setEatingGoal((prevEatingGoal) => {
+                      const updatedEatingGoal = prevEatingGoal.map((goal) => {
+                        const newEatingReflection = {
+                          ...goal,
+                          reflection: e.target.value,
+                        };
+                        return newEatingReflection;
+                      });
+                      return updatedEatingGoal;
+                    });
+                  }}
+                />
+                <Tooltip title="Save Reflection">
+                  <SaveIcon
+                    className="save edit-icon"
+                    onClick={() => {
+                      updateGoalReflection(2, eatingGoal[0].reflection);
+                    }}
+                  />
+                </Tooltip>
               </ReflectionContainer>
             </div>
 
@@ -1586,58 +1580,32 @@ const JournalScreen = () => {
                 </Tooltip>
               )}
               <ReflectionContainer>
-                {editingReflectionId === 3 ? (
-                  <>
-                    <TextField
-                      type="text"
-                      placeholder="Type my thoughts"
-                      style={{ width: "100%" }}
-                      value={sleepGoal.length ? sleepGoal[0].reflection : ""}
-                      onChange={(e) => {
-                        setSleepGoal((prevSleepGoal) => {
-                          const updatedSleepGoal = prevSleepGoal.map((goal) => {
-                            const newSleepGoal = {
-                              ...goal,
-                              reflection: e.target.value,
-                            };
-                            return newSleepGoal;
-                          });
-                          return updatedSleepGoal;
-                        });
-                      }}
-                    />
-                    <Tooltip title="Save Reflection">
-                      <EditIcon
-                        className="save edit-icon"
-                        onClick={() => {
-                          setEditingReflectionId(-1);
-                          updateGoalReflection(3, sleepGoal[0].reflection);
-                        }}
-                      />
-                    </Tooltip>
-                  </>
-                ) : (
-                  <>
-                    <span
-                      style={{
-                        width: "100%",
-                        height: "60px",
-                        textOverflow: "ellipsis",
-                        overflowY: "scroll",
-                      }}
-                    >
-                      {sleepData.length ? sleepData[0].reflection : ""}
-                    </span>
-                    <Tooltip title="Edit Reflection">
-                      <EditIcon
-                        className="edit-icon"
-                        onClick={() => {
-                          setEditingReflectionId(3);
-                        }}
-                      />
-                    </Tooltip>
-                  </>
-                )}
+                <TextField
+                  type="text"
+                  placeholder="Type my thoughts"
+                  style={{ width: "80%" }}
+                  value={sleepGoal.length ? sleepGoal[0].reflection : ""}
+                  onChange={(e) => {
+                    setSleepGoal((prevSleepGoal) => {
+                      const updatedSleepGoal = prevSleepGoal.map((goal) => {
+                        const newSleepGoal = {
+                          ...goal,
+                          reflection: e.target.value,
+                        };
+                        return newSleepGoal;
+                      });
+                      return updatedSleepGoal;
+                    });
+                  }}
+                />
+                <Tooltip title="Save Reflection">
+                  <SaveIcon
+                    className="save edit-icon"
+                    onClick={() => {
+                      updateGoalReflection(3, sleepGoal[0].reflection);
+                    }}
+                  />
+                </Tooltip>
               </ReflectionContainer>
             </div>
           </div>
@@ -1665,44 +1633,6 @@ const JournalScreen = () => {
 export default withAuth(JournalScreen);
 
 let styles = {
-  addGoalButton: {
-    backgroundColor: "#78C648",
-    textTransform: "none",
-    fontWeight: "bold",
-    fontSize: "14px",
-    borderRadius: "25px",
-    color: "white",
-    width: "175px",
-    marginTop: "5%",
-    marginLeft: "auto",
-    marginRight: "auto",
-  },
-  learnMoreButton: {
-    backgroundColor: "#9B8EEB",
-    textTransform: "none",
-    fontWeight: "bold",
-    fontSize: "14px",
-    borderRadius: "25px",
-    color: "white",
-    width: "150px",
-    marginTop: "5%",
-  },
-  cancelButton: {
-    backgroundColor: "#D9D9D9",
-    width: "45%",
-    textTransform: "none",
-    fontWeight: "bold",
-    fontSize: "18px",
-    borderRadius: "20px",
-  },
-  behaviorInput: {
-    width: "50%",
-    height: "50%",
-  },
-  goalValueInput: {
-    display: "flex",
-    width: "20%",
-  },
   goalScreen: {
     position: "absolute",
     zIndex: "900",

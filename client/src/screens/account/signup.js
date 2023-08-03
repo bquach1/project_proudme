@@ -47,7 +47,7 @@ const SignUpScreen = () => {
     setLoading(true);
     event.preventDefault();
     axios
-      .post("https://project-proudme.onrender.com/signup", {
+      .post("http://localhost:3001/signup", {
         email: form.email,
         password: form.password,
         confirmPassword: form.confirmPassword,

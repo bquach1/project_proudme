@@ -35,20 +35,6 @@ const Header = () => {
             textTransform: "none",
             fontSize: "16px",
           }}
-          onClick={() => navigate("/pet")}
-        >
-          My Pet
-        </Button>
-        <Button
-          style={{
-            backgroundColor: "transparent",
-            padding: "5px 15px 5px 15px",
-            borderRadius: "25px",
-            color: "white",
-            fontWeight: "bold",
-            textTransform: "none",
-            fontSize: "16px",
-          }}
           onClick={() => navigate("/journal")}
         >
           My Journal
@@ -63,9 +49,9 @@ const Header = () => {
             textTransform: "none",
             fontSize: "16px",
           }}
-          onClick={() => navigate("/pet")}
+          onClick={() => navigate("/tracking")}
         >
-          Pet Store
+          Track Behaviors
         </Button>
         <Button
           style={{
@@ -90,10 +76,26 @@ const Header = () => {
             fontWeight: "bold",
             textTransform: "none",
             fontSize: "16px",
+            opacity: 0.4,
           }}
-          onClick={() => navigate("/tracking")}
+          onClick={() => navigate("/pet")}
         >
-          Track Behaviors
+          My Pet
+        </Button>
+        <Button
+          style={{
+            backgroundColor: "transparent",
+            padding: "5px 15px 5px 15px",
+            borderRadius: "25px",
+            color: "white",
+            fontWeight: "bold",
+            textTransform: "none",
+            fontSize: "16px",
+            opacity: 0.4,
+          }}
+          onClick={() => navigate("/pet")}
+        >
+          Pet Store
         </Button>
       </div>
 

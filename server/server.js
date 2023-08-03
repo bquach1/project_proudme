@@ -105,6 +105,15 @@ const behaviorSchema = new mongoose.Schema({
   goalStatus: {
     type: String,
   },
+  divInfo1: {
+    type: String,
+  },
+  divInfo2: {
+    type: String,
+  },
+  reflection: {
+    type: String,
+  },
 });
 
 const Goal = mongoose.model("Goal", goalSchema);
@@ -227,6 +236,9 @@ app.post("/behaviors", async (req, res) => {
         date: req.body.date,
         goalStatus:
           req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
+        divInfo1: req.body.divInfo1,
+        divInfo2: req.body.divInfo2,
+        reflection: req.body.reflection,
       });
       const savedBehavior = await behavior.save();
       res.status(201).json(savedBehavior);
@@ -309,6 +321,19 @@ app.get(
     }
   }
 );
+
+app.get(
+  "/user",
+  async (req, res) => {
+    try {
+      const user = await User.find({email: req.query.email});
+      res.json(user);
+    } catch (error) {
+      res.status(500).send("Internal server error");
+      console.error(error);
+    }
+  }
+)
 
 // User endpoint
 app.get(
