@@ -442,7 +442,12 @@ const JournalScreen = () => {
     setInputGoalValue(false);
   };
 
-  async function updateBehaviorValue(id, newBehaviorValue, newReflection) {
+  async function updateBehaviorValue(
+    id,
+    newGoalValue,
+    newBehaviorValue,
+    newReflection
+  ) {
     if (id === 0) {
       setActivityGoal((prevActivityGoal) => {
         const updatedActivityGoal = prevActivityGoal.map((goal) => {
@@ -452,9 +457,7 @@ const JournalScreen = () => {
               user: user._id,
               name: user.name,
               goalType: "activity",
-              goalValue: activityData.length
-                ? activityData[0].goalValue
-                : activityGoal[0].goalValue,
+              goalValue: newGoalValue,
               behaviorValue: newBehaviorValue,
               goalStatus: activityData.length
                 ? newBehaviorValue >= activityData[0].goalValue
@@ -511,9 +514,7 @@ const JournalScreen = () => {
               user: user._id,
               name: user.name,
               goalType: "screentime",
-              goalValue: screentimeData.length
-                ? screentimeData[0].goalValue
-                : screentimeGoal[0].goalValue,
+              goalValue: newGoalValue,
               behaviorValue: newBehaviorValue,
               goalStatus: screentimeData.length
                 ? newBehaviorValue >= screentimeData[0].goalValue
@@ -570,9 +571,7 @@ const JournalScreen = () => {
               user: user._id,
               name: user.name,
               goalType: "eating",
-              goalValue: eatingData.length
-                ? eatingData[0].goalValue
-                : eatingGoal[0].goalValue,
+              goalValue: newGoalValue,
               behaviorValue: newBehaviorValue,
               goalStatus: eatingData.length
                 ? newBehaviorValue >= eatingData[0].goalValue
@@ -629,9 +628,7 @@ const JournalScreen = () => {
               user: user._id,
               name: user.name,
               goalType: "sleep",
-              goalValue: sleepData.length
-                ? sleepData[0].goalValue
-                : sleepGoal[0].goalValue,
+              goalValue: newGoalValue,
               behaviorValue: newBehaviorValue,
               goalStatus: sleepData.length
                 ? newBehaviorValue >= sleepData[0].goalValue
@@ -1193,12 +1190,13 @@ const JournalScreen = () => {
                     });
                   }}
                 />
-                <Tooltip title="Save Today's Activity Goal">                  
+                <Tooltip title="Save Today's Activity Goal">
                   <SaveIcon
                     className="save edit-icon"
                     onClick={() => {
                       updateBehaviorValue(
                         0,
+                        activityGoal[0].goalValue,
                         activityGoal[0].behaviorValue,
                         activityGoal[0].reflection
                       );
@@ -1252,6 +1250,7 @@ const JournalScreen = () => {
                     onClick={() => {
                       updateBehaviorValue(
                         1,
+                        screentimeGoal[0].goalValue,
                         screentimeGoal[0].behaviorValue,
                         screentimeGoal[0].reflection
                       );
@@ -1299,6 +1298,7 @@ const JournalScreen = () => {
                     onClick={() => {
                       updateBehaviorValue(
                         2,
+                        eatingGoal[0].goalValue,
                         eatingGoal[0].behaviorValue,
                         eatingGoal[0].reflection
                       );
@@ -1346,6 +1346,7 @@ const JournalScreen = () => {
                     onClick={() => {
                       updateBehaviorValue(
                         3,
+                        sleepGoal[0].goalValue,
                         sleepGoal[0].behaviorValue,
                         sleepGoal[0].reflection
                       );
