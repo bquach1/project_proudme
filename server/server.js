@@ -217,8 +217,12 @@ app.post("/behaviors", async (req, res) => {
         {
           $set: {
             behaviorValue: req.body.behaviorValue,
+            name: req.body.name,
             goalStatus:
               req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
+            divInfo1: req.body.divInfo1,
+            divInfo2: req.body.divInfo2,
+            reflection: req.body.reflection,
           },
         },
         {

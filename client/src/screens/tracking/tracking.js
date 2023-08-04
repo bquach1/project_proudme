@@ -26,7 +26,7 @@ import {
 import { has } from "lodash";
 
 import withAuth from "../../components/auth/withAuth";
-import { BehaviorTrackingCSV, GoalCSV } from "../journal/csv";
+import { BehaviorTrackingCSV } from "../journal/csv";
 
 const FilterWrapper = styled.div`
   display: flex;
@@ -117,7 +117,6 @@ const TrackingScreen = () => {
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(true);
   const [currentGoalData, setCurrentGoalData] = useState([]);
-  const [allGoalData, setAllGoalData] = useState([]);
   const [allBehaviorData, setAllBehaviorData] = useState([]);
 
   const [chartType, setChartType] = useState("line");
@@ -215,15 +214,6 @@ const TrackingScreen = () => {
   }, [shownUser]);
 
   useEffect(() => {
-    const fetchAllGoals = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/allGoals", {});
-        setAllGoalData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     const fetchSelectedUserGoals = async () => {
       try {
         const response = await axios.get("http://localhost:3001/goals", {
@@ -250,8 +240,6 @@ const TrackingScreen = () => {
         console.error(error);
       }
     };
-
-    fetchAllGoals();
     fetchSelectedUserGoals();
     fetchAllBehaviors();
   }, [user]);
@@ -315,7 +303,6 @@ const TrackingScreen = () => {
           >
             Submit
           </Button>
-          <GoalCSV goalData={currentGoalData} user={shownUser.name} />
           <BehaviorTrackingCSV
             allBehaviorData={allBehaviorData}
             user={shownUser.name}

@@ -232,14 +232,11 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/goals",
-          {
-            params: {
-              user: user,
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:3001/goals", {
+          params: {
+            user: user,
+          },
+        });
         setGoalData(response.data);
       } catch (error) {
         console.error(error);
@@ -248,10 +245,7 @@ const JournalScreen = () => {
 
     const fetchAllGoals = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/allGoals",
-          {}
-        );
+        const response = await axios.get("http://localhost:3001/allGoals", {});
         setAllGoalData(response.data);
       } catch (error) {
         console.error(error);
@@ -265,15 +259,12 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/goalType",
-          {
-            params: {
-              user: user,
-              goalType: "eating",
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:3001/goalType", {
+          params: {
+            user: user,
+            goalType: "eating",
+          },
+        });
         setEatingData(response.data);
       } catch (error) {
         console.error(error);
@@ -285,15 +276,12 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/goalType",
-          {
-            params: {
-              user: user,
-              goalType: "eating",
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:3001/goalType", {
+          params: {
+            user: user,
+            goalType: "eating",
+          },
+        });
         if (response.data.length === 0) {
           setEatingGoal(eatingGoal);
         } else {
@@ -309,15 +297,12 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/goalType",
-          {
-            params: {
-              user: user,
-              goalType: "activity",
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:3001/goalType", {
+          params: {
+            user: user,
+            goalType: "activity",
+          },
+        });
         setActivityData(response.data);
       } catch (error) {
         console.error(error);
@@ -329,15 +314,12 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/goalType",
-          {
-            params: {
-              user: user,
-              goalType: "activity",
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:3001/goalType", {
+          params: {
+            user: user,
+            goalType: "activity",
+          },
+        });
         if (response.data.length === 0) {
           setActivityGoal(activityGoal);
         } else {
@@ -353,15 +335,12 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/goalType",
-          {
-            params: {
-              user: user,
-              goalType: "sleep",
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:3001/goalType", {
+          params: {
+            user: user,
+            goalType: "sleep",
+          },
+        });
         setSleepData(response.data);
       } catch (error) {
         console.error(error);
@@ -373,15 +352,12 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/goalType",
-          {
-            params: {
-              user: user,
-              goalType: "sleep",
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:3001/goalType", {
+          params: {
+            user: user,
+            goalType: "sleep",
+          },
+        });
         if (response.data.length === 0) {
           setSleepGoal(sleepGoal);
         } else {
@@ -397,15 +373,12 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/goalType",
-          {
-            params: {
-              user: user,
-              goalType: "screentime",
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:3001/goalType", {
+          params: {
+            user: user,
+            goalType: "screentime",
+          },
+        });
         setScreentimeData(response.data);
       } catch (error) {
         console.error(error);
@@ -418,15 +391,12 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3001/goalType",
-          {
-            params: {
-              user: user,
-              goalType: "screentime",
-            },
-          }
-        );
+        const response = await axios.get("http://localhost:3001/goalType", {
+          params: {
+            user: user,
+            goalType: "screentime",
+          },
+        });
         if (response.data.length === 0) {
           setScreentimeGoal(screentimeGoal);
         } else {
@@ -610,6 +580,8 @@ const JournalScreen = () => {
               behaviorValue: newBehaviorValue,
               goalStatus:
                 newBehaviorValue >= activityData[0].goalValue ? "yes" : "no",
+              divInfo1: activityGoal[0].divInfo1,
+              divInfo2: activityGoal[0].divInfo2,
             })
             .then((response) => {
               console.log(response.data);
@@ -651,6 +623,8 @@ const JournalScreen = () => {
               behaviorValue: newBehaviorValue,
               goalStatus:
                 newBehaviorValue >= screentimeData[0].goalValue ? "yes" : "no",
+              divInfo1: screentimeGoal[0].divInfo1,
+              divInfo2: screentimeGoal[0].divInfo2,
             })
             .then((response) => {
               console.log(response.data);
@@ -692,6 +666,8 @@ const JournalScreen = () => {
               behaviorValue: newBehaviorValue,
               goalStatus:
                 newBehaviorValue >= eatingData[0].goalValue ? "yes" : "no",
+              divInfo1: eatingGoal[0].divInfo1,
+              divInfo2: eatingGoal[0].divInfo2,
             })
             .then((response) => {
               console.log(response.data);
@@ -733,6 +709,8 @@ const JournalScreen = () => {
               behaviorValue: newBehaviorValue,
               goalStatus:
                 newBehaviorValue >= sleepData[0].goalValue ? "yes" : "no",
+              divInfo1: sleepGoal[0].divInfo1,
+              divInfo2: sleepGoal[0].divInfo2,
             })
             .then((response) => {
               console.log(response.data);
@@ -758,9 +736,6 @@ const JournalScreen = () => {
               goalType: "activity",
               reflection: newReflection,
             })
-            .then((response) => {
-              console.log(response.data);
-            })
             .catch((error) => {
               console.error(error);
             });
@@ -768,6 +743,23 @@ const JournalScreen = () => {
         });
         return updatedActivityGoal;
       });
+      axios
+        .post("http://localhost:3001/behaviors", {
+          user: user._id,
+          name: user.name,
+          goalType: "activity",
+          date: date,
+          goalValue: activityData[0].goalValue,
+          reflection: newReflection,
+          divInfo1: activityGoal[0].divInfo1,
+          divInfo2: activityGoal[0].divInfo2,
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     } else if (id === 1) {
       setScreentimeGoal((prevScreentimeGoal) => {
         const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
@@ -788,6 +780,23 @@ const JournalScreen = () => {
         });
         return updatedScreentimeGoal;
       });
+      axios
+        .post("http://localhost:3001/behaviors", {
+          user: user._id,
+          name: user.name,
+          goalType: "screentime",
+          date: date,
+          goalValue: screentimeData[0].goalValue,
+          reflection: newReflection,
+          divInfo1: screentimeGoal[0].divInfo1,
+          divInfo2: screentimeGoal[0].divInfo2,
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     } else if (id === 2) {
       setEatingGoal((prevEatingGoal) => {
         const updatedEatingGoal = prevEatingGoal.map((goal) => {
@@ -808,6 +817,23 @@ const JournalScreen = () => {
         });
         return updatedEatingGoal;
       });
+      axios
+        .post("http://localhost:3001/behaviors", {
+          user: user._id,
+          name: user.name,
+          goalType: "eating",
+          date: date,
+          goalValue: eatingData[0].goalValue,
+          reflection: newReflection,
+          divInfo1: eatingGoal[0].divInfo1,
+          divInfo2: eatingGoal[0].divInfo2,
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     } else if (id === 3) {
       setSleepGoal((prevSleepGoal) => {
         const updatedSleepGoal = prevSleepGoal.map((goal) => {
@@ -828,6 +854,23 @@ const JournalScreen = () => {
         });
         return updatedSleepGoal;
       });
+      axios
+        .post("http://localhost:3001/behaviors", {
+          user: user._id,
+          name: user.name,
+          goalType: "sleep",
+          date: date,
+          goalValue: sleepData[0].goalValue,
+          reflection: newReflection,
+          divInfo1: sleepGoal[0].divInfo1,
+          divInfo2: sleepGoal[0].divInfo2,
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   }
 
@@ -1469,10 +1512,11 @@ const JournalScreen = () => {
                     });
                   }}
                 />
-                <Tooltip title="Save Reflection">
+                <Tooltip title="Save Today's Activity Goal">
                   <SaveIcon
                     className="save edit-icon"
                     onClick={() => {
+                      updateGoalValue(0, activityGoal[0].goalValue);
                       updateGoalReflection(0, activityGoal[0].reflection);
                     }}
                   />
@@ -1516,7 +1560,7 @@ const JournalScreen = () => {
                     });
                   }}
                 />
-                <Tooltip title="Save Reflection">
+                <Tooltip title="Save Today's Screentime Goal">              
                   <SaveIcon
                     className="save edit-icon"
                     onClick={() => {
@@ -1557,7 +1601,7 @@ const JournalScreen = () => {
                     });
                   }}
                 />
-                <Tooltip title="Save Reflection">
+                <Tooltip title="Save Today's Eating Goal">              
                   <SaveIcon
                     className="save edit-icon"
                     onClick={() => {
@@ -1598,7 +1642,7 @@ const JournalScreen = () => {
                     });
                   }}
                 />
-                <Tooltip title="Save Reflection">
+                <Tooltip title="Save Today's Sleep Goal">              
                   <SaveIcon
                     className="save edit-icon"
                     onClick={() => {
