@@ -204,7 +204,6 @@ app.post("/behaviors", async (req, res) => {
       user: req.body.user,
       goalType: req.body.goalType,
       date: req.body.date,
-      goalValue: req.body.goalValue,
     });
     if (existingBehavior) {
       const behavior = await Behavior.findOneAndUpdate(
@@ -212,12 +211,12 @@ app.post("/behaviors", async (req, res) => {
           user: req.body.user,
           goalType: req.body.goalType,
           date: req.body.date,
-          goalValue: req.body.goalValue,      
         },
         {
           $set: {
             behaviorValue: req.body.behaviorValue,
             name: req.body.name,
+            goalValue: req.body.goalValue,
             goalStatus:
               req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
             divInfo1: req.body.divInfo1,

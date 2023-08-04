@@ -29,6 +29,7 @@ const LoginScreen = () => {
         setLoading(false);
       })
       .catch((error) => {
+        setLoading(false);
         console.error(error);
         error.code === "ERR_NETWORK"
           ? alert(
