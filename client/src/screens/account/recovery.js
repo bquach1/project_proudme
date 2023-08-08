@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Modal } from "@mui/material";
 import { styled } from "styled-components";
 
-const RecoveryWrapper = styled.div`
+const ButtonPageWrapper = styled.div`
   height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
   margin: auto;
 `;
+
+const RecoveryWrapper = styled.div`
+  margin-top: 2%;
+`
 
 const generateVerificationCode = () => {
   const charset =
@@ -44,7 +48,7 @@ const Recovery = () => {
     event.preventDefault();
     setConfirming(true);
     axios
-      .post("http://localhost:3001/send-email", emailData)
+      .post("https://project-proudme.onrender.com/send-email", emailData)
       .then((response) => {
         console.log(response.data);
         // Handle success response
@@ -60,7 +64,7 @@ const Recovery = () => {
 
     try {
       axios
-        .get("http://localhost:3001/user", {
+        .get("https://project-proudme.onrender.com/user", {
           params: {
             email: email,
           },
@@ -72,10 +76,11 @@ const Recovery = () => {
             subject: "Project ProudME Username Recovery",
             text:
               "The username associated with this email account is " +
-              response.data[0].name,
+              response.data[0].name +
+              ".",
           }));
           axios
-            .post("http://localhost:3001/send-email", emailData)
+            .post("https://project-proudme.onrender.com/send-email", emailData)
             .then((response) => {
               console.log(response.data);
               // Handle success response
@@ -93,7 +98,7 @@ const Recovery = () => {
   return (
     <>
       {resetMode === "password" ? (
-        <div>
+        <RecoveryWrapper>
           <h1>Recover Password</h1>
           <form
             style={{ display: "flex", justifyContent: "center" }}
@@ -124,9 +129,9 @@ const Recovery = () => {
               password!
             </div>
           )}
-        </div>
+        </RecoveryWrapper>
       ) : resetMode === "username" ? (
-        <div>
+        <RecoveryWrapper>
           <h1>Recover Username</h1>
           <form
             style={{ display: "flex", justifyContent: "center" }}
@@ -151,9 +156,9 @@ const Recovery = () => {
               Send Email
             </Button>
           </form>
-        </div>
+        </RecoveryWrapper>
       ) : (
-        <RecoveryWrapper>
+        <ButtonPageWrapper>
           <Button
             style={{
               backgroundColor: "#D7A746",
@@ -189,7 +194,7 @@ const Recovery = () => {
           >
             Forgot Username
           </Button>
-        </RecoveryWrapper>
+        </ButtonPageWrapper>
       )}
     </>
   );

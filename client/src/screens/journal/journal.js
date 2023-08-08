@@ -8,8 +8,9 @@ import styled from "styled-components";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
-import CheckIcon from "@mui/icons-material/Check";
 import LockIcon from "@mui/icons-material/Lock";
+
+import { SAVE_ICON_COLORS } from "./constants";
 
 const Wrapper = styled.div`
   margin-top: 1%;
@@ -73,20 +74,9 @@ const ReflectionContainer = styled.div`
   }
 `;
 
-const SubmitCheckIcon = styled(CheckIcon)`
-  margin-left: -15px;
-
-  &:hover {
-    cursor: pointer;
-    color: green;
-  }
-`;
-
 const JournalScreen = () => {
   const [user, setUser] = useState([]);
   const [goalData, setGoalData] = useState([]);
-  const [allGoalData, setAllGoalData] = useState([]);
-  const [allBehaviorData, setAllBehaviorData] = useState([]);
 
   const [loggedActivityToday, setLoggedActivityToday] = useState(false);
   const [loggedScreentimeToday, setLoggedScreentimeToday] = useState(false);
@@ -179,7 +169,7 @@ const JournalScreen = () => {
     const fetchDailyBehavior = async (goalType) => {
       try {
         const response = await axios.get(
-          "http://localhost:3001/dailyBehavior",
+          "https://project-proudme.onrender.com/dailyBehavior",
           {
             params: {
               user: user,
@@ -215,7 +205,7 @@ const JournalScreen = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    fetch(`http://localhost:3001/users`, {
+    fetch(`https://project-proudme.onrender.com/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -230,7 +220,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goals", {
+        const response = await axios.get("https://project-proudme.onrender.com/goals", {
           params: {
             user: user,
           },
@@ -241,23 +231,13 @@ const JournalScreen = () => {
       }
     };
 
-    const fetchAllGoals = async () => {
-      try {
-        const response = await axios.get("http://localhost:3001/allGoals", {});
-        setAllGoalData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchGoals();
-    fetchAllGoals();
   }, [user, activityGoal, screentimeGoal, eatingGoal, sleepGoal]);
 
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "eating",
@@ -274,7 +254,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "eating",
@@ -295,7 +275,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "activity",
@@ -312,7 +292,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "activity",
@@ -333,7 +313,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "sleep",
@@ -350,7 +330,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "sleep",
@@ -371,7 +351,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "screentime",
@@ -389,7 +369,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/goalType", {
+        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
           params: {
             user: user,
             goalType: "screentime",
@@ -405,23 +385,6 @@ const JournalScreen = () => {
       }
     };
     fetchScreentimeGoals();
-  }, [user]);
-
-  useEffect(() => {
-    const fetchAllBehaviors = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:3001/allBehaviors",
-          {}
-        );
-        setAllBehaviorData(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchAllBehaviors();
   }, [user]);
 
   var dateToday = new Date(),
@@ -453,7 +416,7 @@ const JournalScreen = () => {
         const updatedActivityGoal = prevActivityGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               name: user.name,
               goalType: "activity",
@@ -475,7 +438,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("http://localhost:3001/behaviors", {
+            .post("https://project-proudme.onrender.com/behaviors", {
               user: user._id,
               name: user.name,
               goalType: "activity",
@@ -510,7 +473,7 @@ const JournalScreen = () => {
         const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               name: user.name,
               goalType: "screentime",
@@ -532,7 +495,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("http://localhost:3001/behaviors", {
+            .post("https://project-proudme.onrender.com/behaviors", {
               user: user._id,
               name: user.name,
               goalType: "screentime",
@@ -567,7 +530,7 @@ const JournalScreen = () => {
         const updatedEatingGoal = prevEatingGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               name: user.name,
               goalType: "eating",
@@ -589,7 +552,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("http://localhost:3001/behaviors", {
+            .post("https://project-proudme.onrender.com/behaviors", {
               user: user._id,
               name: user.name,
               goalType: "eating",
@@ -624,7 +587,7 @@ const JournalScreen = () => {
         const updatedSleepGoal = prevSleepGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("http://localhost:3001/goals", {
+            .post("https://project-proudme.onrender.com/goals", {
               user: user._id,
               name: user.name,
               goalType: "sleep",
@@ -646,7 +609,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("http://localhost:3001/behaviors", {
+            .post("https://project-proudme.onrender.com/behaviors", {
               user: user._id,
               name: user.name,
               goalType: "sleep",
@@ -683,20 +646,6 @@ const JournalScreen = () => {
     <Wrapper>
       <h1 style={{ color: "#2E6AA1" }}>My Journal</h1>
       <JournalWrapper>
-        <div>
-          <img
-            className="achievements-tab"
-            src={require("../../components/images/journal/achievements_tab.png")}
-            alt="Achievements bookmark tab"
-          />
-        </div>
-        <div>
-          <img
-            className="gallery-tab"
-            src={require("../../components/images/journal/gallery_tab.png")}
-            alt="Achievements bookmark tab"
-          />
-        </div>
         <img
           className="journalCover"
           src={require("../../components/images/journal/journal_cover.png")}
@@ -727,7 +676,9 @@ const JournalScreen = () => {
                     </div>
                   }
                 >
-                  <HelpOutlineIcon style={{ fontSize: "16px" }} />
+                  <HelpOutlineIcon
+                    style={{ fontSize: "16px", cursor: "pointer" }}
+                  />
                 </Tooltip>
               </div>
               {inputGoalValue === true ? (
@@ -839,7 +790,9 @@ const JournalScreen = () => {
                     </div>
                   }
                 >
-                  <HelpOutlineIcon style={{ fontSize: "16px" }} />
+                  <HelpOutlineIcon
+                    style={{ fontSize: "16px", cursor: "pointer" }}
+                  />
                 </Tooltip>
               </div>
               {inputGoalValue === true ? (
@@ -948,7 +901,9 @@ const JournalScreen = () => {
                     </div>
                   }
                 >
-                  <HelpOutlineIcon style={{ fontSize: "16px" }} />
+                  <HelpOutlineIcon
+                    style={{ fontSize: "16px", cursor: "pointer" }}
+                  />
                 </Tooltip>
               </div>
 
@@ -1046,7 +1001,9 @@ const JournalScreen = () => {
                     </div>
                   }
                 >
-                  <HelpOutlineIcon style={{ fontSize: "16px" }} />
+                  <HelpOutlineIcon
+                    style={{ fontSize: "16px", cursor: "pointer" }}
+                  />
                 </Tooltip>
               </div>
 
@@ -1193,6 +1150,19 @@ const JournalScreen = () => {
                 <Tooltip title="Save Today's Activity Goal">
                   <SaveIcon
                     className="save edit-icon"
+                    style={{
+                      color: !activityData.length
+                        ? SAVE_ICON_COLORS.RED
+                        : activityData[0].goalValue -
+                            activityGoal[0].goalValue ===
+                          0
+                        ? SAVE_ICON_COLORS.GREEN
+                        : activityData[0].goalValue -
+                            activityGoal[0].goalValue !==
+                          0
+                        ? SAVE_ICON_COLORS.YELLOW
+                        : "auto",
+                    }}
                     onClick={() => {
                       updateBehaviorValue(
                         0,
@@ -1247,6 +1217,19 @@ const JournalScreen = () => {
                 <Tooltip title="Save Today's Screentime Goal">
                   <SaveIcon
                     className="save edit-icon"
+                    style={{
+                      color: !screentimeData.length
+                        ? SAVE_ICON_COLORS.RED
+                        : screentimeData[0].goalValue -
+                            screentimeGoal[0].goalValue ===
+                          0
+                        ? SAVE_ICON_COLORS.GREEN
+                        : screentimeData[0].goalValue -
+                            screentimeGoal[0].goalValue !==
+                          0
+                        ? SAVE_ICON_COLORS.YELLOW
+                        : "auto",
+                    }}
                     onClick={() => {
                       updateBehaviorValue(
                         1,
@@ -1295,6 +1278,17 @@ const JournalScreen = () => {
                 <Tooltip title="Save Today's Eating Goal">
                   <SaveIcon
                     className="save edit-icon"
+                    style={{
+                      color: !eatingData.length
+                        ? SAVE_ICON_COLORS.RED
+                        : eatingData[0].goalValue - eatingGoal[0].goalValue ===
+                          0
+                        ? SAVE_ICON_COLORS.GREEN
+                        : eatingData[0].goalValue - eatingGoal[0].goalValue !==
+                          0
+                        ? SAVE_ICON_COLORS.YELLOW
+                        : "auto",
+                    }}
                     onClick={() => {
                       updateBehaviorValue(
                         2,
@@ -1343,6 +1337,15 @@ const JournalScreen = () => {
                 <Tooltip title="Save Today's Sleep Goal">
                   <SaveIcon
                     className="save edit-icon"
+                    style={{
+                      color: !sleepData.length
+                        ? SAVE_ICON_COLORS.RED
+                        : sleepData[0].goalValue - sleepGoal[0].goalValue === 0
+                        ? SAVE_ICON_COLORS.GREEN
+                        : sleepData[0].goalValue - sleepGoal[0].goalValue !== 0
+                        ? SAVE_ICON_COLORS.YELLOW
+                        : "auto",
+                    }}
                     onClick={() => {
                       updateBehaviorValue(
                         3,
@@ -1350,6 +1353,7 @@ const JournalScreen = () => {
                         sleepGoal[0].behaviorValue,
                         sleepGoal[0].reflection
                       );
+                      setLoggedSleepToday(true);
                       setEditingBehaviorId(-1);
                     }}
                   />
