@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const authMiddleware = require("./authMiddleware");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const sgMail = require("@sendgrid/mail");
 
 const app = express();
@@ -100,7 +100,8 @@ const behaviorSchema = new mongoose.Schema({
     type: Number,
   },
   behaviorValue: {
-    type: Number, default: 0,
+    type: Number,
+    default: 0,
   },
   goalStatus: {
     type: String,
@@ -237,8 +238,7 @@ app.post("/behaviors", async (req, res) => {
         goalValue: req.body.goalValue,
         behaviorValue: req.body.behaviorValue,
         date: req.body.date,
-        goalStatus:
-          req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
+        goalStatus: req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
         divInfo1: req.body.divInfo1,
         divInfo2: req.body.divInfo2,
         reflection: req.body.reflection,
@@ -325,32 +325,26 @@ app.get(
   }
 );
 
-app.get(
-  "/user",
-  async (req, res) => {
-    try {
-      const user = await User.find({email: req.query.email});
-      res.json(user);
-    } catch (error) {
-      res.status(500).send("Internal server error");
-      console.error(error);
-    }
+app.get("/user", async (req, res) => {
+  try {
+    const user = await User.find({ email: req.query.email });
+    res.json(user);
+  } catch (error) {
+    res.status(500).send("Internal server error");
+    console.error(error);
   }
-)
+});
 
 // User endpoint
-app.get(
-  "/allUsers",
-  async (req, res) => {
-    try {
-      const allUsers = await User.find();
-      res.json(allUsers);
-    } catch (error) {
-      res.status(500).send("Internal server error");
-      console.error(error);
-    }
+app.get("/allUsers", async (req, res) => {
+  try {
+    const allUsers = await User.find();
+    res.json(allUsers);
+  } catch (error) {
+    res.status(500).send("Internal server error");
+    console.error(error);
   }
-);
+});
 
 // Get all goals endpoint
 app.get("/allGoals", async (req, res) => {
@@ -426,31 +420,31 @@ app.get("/dailyBehavior", async (req, res) => {
     const behaviorToday = await Behavior.find({
       user: req.query.user,
       goalType: req.query.goalType,
-      date: req.query.date
+      date: req.query.date,
     });
     res.status(200).json(behaviorToday);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
-})
+});
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-app.post('/send-email', (req, res) => {
+app.post("/send-email", (req, res) => {
   const { to, subject, text } = req.body;
 
   const msg = {
     to,
-    from: 'quachbruce@gmail.com',
+    from: "quachbruce@gmail.com",
     subject,
     text,
   };
 
   sgMail
     .send(msg)
-    .then(() => res.send('Email sent successfully'))
+    .then(() => res.send("Email sent successfully"))
     .catch((error) => {
       console.error(error);
-      res.status(500).send('Failed to send email');
+      res.status(500).send("Failed to send email");
     });
 });
 

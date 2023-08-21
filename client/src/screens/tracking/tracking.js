@@ -9,6 +9,7 @@ import {
   BarChart,
   Bar,
   Label,
+  ReferenceLine,
 } from "recharts";
 import axios from "axios";
 import styled from "styled-components";
@@ -27,6 +28,7 @@ import { has } from "lodash";
 
 import withAuth from "../../components/auth/withAuth";
 import { BehaviorTrackingCSV } from "../journal/csv";
+import { DATABASE_URL } from "../../constants";
 
 const FilterWrapper = styled.div`
   display: flex;
@@ -45,13 +47,24 @@ const BehaviorLineChart = ({ data, chartType }) => {
       data={data}
       margin={{ top: 55, right: 80, left: 70, bottom: 70 }}
     >
-      <CartesianGrid strokeDasharray="3 3" />
+      <CartesianGrid strokeDasharray="3 3" fill="white" />
 
       <XAxis dataKey="date">
         <Label value="Date" position="bottom" />
       </XAxis>
 
-      <YAxis>
+      <YAxis
+        domain={[
+          0,
+          chartType === "activity"
+            ? 70
+            : chartType === "screentime"
+            ? 130
+            : chartType === "eating"
+            ? 6
+            : 9,
+        ]}
+      >
         <Label
           value={
             chartType === "sleep"
@@ -70,7 +83,27 @@ const BehaviorLineChart = ({ data, chartType }) => {
         type="monotone"
         dataKey="behaviorValue"
         stroke="#8884d8"
+        strokeWidth={5}
         activeDot={{ r: 8 }}
+      />
+      <ReferenceLine
+        y={
+          chartType === "activity"
+            ? 60
+            : chartType === "screentime"
+            ? 120
+            : chartType === "eating"
+            ? 5
+            : 9
+        }
+        label={{
+          value: "Recommended Level",
+          className: "tracking-reference",
+          fill: "#FF7F50",
+          position: "top",
+        }}
+        stroke="green"
+        strokeWidth={2}
       />
     </LineChart>
   );
@@ -84,13 +117,24 @@ const BehaviorBarChart = ({ data, chartType }) => {
       data={data}
       margin={{ top: 55, right: 80, left: 70, bottom: 70 }}
     >
-      <CartesianGrid strokeDasharray="3 3" />
+      <CartesianGrid strokeDasharray="3 3" fill="white" />
 
       <XAxis dataKey="date">
         <Label value="Date" position="bottom" />
       </XAxis>
 
-      <YAxis>
+      <YAxis
+        domain={[
+          0,
+          chartType === "activity"
+            ? 70
+            : chartType === "screentime"
+            ? 130
+            : chartType === "eating"
+            ? 6
+            : 9,
+        ]}
+      >
         <Label
           value={
             chartType === "sleep"
@@ -105,6 +149,26 @@ const BehaviorBarChart = ({ data, chartType }) => {
       </YAxis>
       <Tooltip />
       <Bar dataKey="behaviorValue" fill="#8884d8" />
+
+      <ReferenceLine
+        y={
+          chartType === "activity"
+            ? 60
+            : chartType === "screentime"
+            ? 120
+            : chartType === "eating"
+            ? 5
+            : 9
+        }
+        label={{
+          value: "Recommended Level",
+          className: "tracking-reference",
+          fill: "#FF7F50",
+          position: "top",
+        }}
+        stroke="green"
+        strokeWidth={2}
+      />
     </BarChart>
   );
 };
@@ -119,7 +183,7 @@ const TrackingScreen = () => {
   const [currentGoalData, setCurrentGoalData] = useState([]);
   const [allBehaviorData, setAllBehaviorData] = useState([]);
 
-  const [chartType, setChartType] = useState("line");
+  const [chartType, setChartType] = useState("bar");
 
   const [activityBehaviorData, setActivityBehaviorData] = useState([]);
   const [screentimeBehaviorData, setScreentimeBehaviorData] = useState([]);
@@ -128,7 +192,7 @@ const TrackingScreen = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    fetch(`https://project-proudme.onrender.com/users`, {
+    fetch(`${DATABASE_URL}/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -142,7 +206,7 @@ const TrackingScreen = () => {
       .then(() => setLoading(false))
       .catch((error) => console.error(error));
 
-    fetch(`https://project-proudme.onrender.com/allUsers`)
+    fetch(`${DATABASE_URL}/allUsers`)
       .then((response) => response.json())
       .then((data) => {
         setAllUsers(data);
@@ -153,7 +217,7 @@ const TrackingScreen = () => {
   useEffect(() => {
     const fetchActivityBehaviors = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
+        const response = await axios.get(`${DATABASE_URL}/behaviorType`, {
           params: {
             user: shownUser,
             goalType: "activity",
@@ -167,7 +231,7 @@ const TrackingScreen = () => {
 
     const fetchScreentimeBehaviors = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
+        const response = await axios.get(`${DATABASE_URL}/behaviorType`, {
           params: {
             user: shownUser,
             goalType: "screentime",
@@ -181,7 +245,7 @@ const TrackingScreen = () => {
 
     const fetchEatingBehaviors = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
+        const response = await axios.get(`${DATABASE_URL}/behaviorType`, {
           params: {
             user: shownUser,
             goalType: "eating",
@@ -195,7 +259,7 @@ const TrackingScreen = () => {
 
     const fetchSleepBehaviors = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/behaviorType", {
+        const response = await axios.get(`${DATABASE_URL}/behaviorType`, {
           params: {
             user: shownUser,
             goalType: "sleep",
@@ -216,7 +280,7 @@ const TrackingScreen = () => {
   useEffect(() => {
     const fetchSelectedUserGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goals", {
+        const response = await axios.get(`${DATABASE_URL}/goals`, {
           params: {
             user: shownUser,
           },
@@ -230,10 +294,7 @@ const TrackingScreen = () => {
 
     const fetchAllBehaviors = async () => {
       try {
-        const response = await axios.get(
-          "https://project-proudme.onrender.com/allBehaviors",
-          {}
-        );
+        const response = await axios.get(`${DATABASE_URL}/allBehaviors`, {});
         setAllBehaviorData(response.data);
         console.log(response.data);
       } catch (error) {
@@ -258,16 +319,16 @@ const TrackingScreen = () => {
           Behavior Tracking
         </div>
       ) : (
-          <div
-            style={{
-              textAlign: "center",
-              fontSize: 30,
-              fontWeight: "bold",
-              margin: "1%",
-            }}
-          >
-            Behavior Tracking (Admin)
-          </div>
+        <div
+          style={{
+            textAlign: "center",
+            fontSize: 30,
+            fontWeight: "bold",
+            margin: "1%",
+          }}
+        >
+          Behavior Tracking (Admin)
+        </div>
       )}
 
       {has(user, "admin") && (
@@ -288,7 +349,7 @@ const TrackingScreen = () => {
                 {user.name}
               </MenuItem>
             ))}
-          </Select>          
+          </Select>
 
           <Button
             onClick={() => {
@@ -320,14 +381,14 @@ const TrackingScreen = () => {
             style={{ display: "flex", flexDirection: "row" }}
           >
             <FormControlLabel
-              value="line"
-              control={<Radio onClick={(e) => setChartType(e.target.value)} />}
-              label="Line Chart"
-            />
-            <FormControlLabel
               value="bar"
               control={<Radio onClick={(e) => setChartType(e.target.value)} />}
               label="Bar Chart"
+            />
+            <FormControlLabel
+              value="line"
+              control={<Radio onClick={(e) => setChartType(e.target.value)} />}
+              label="Line Chart"
             />
           </RadioGroup>
         </FormControl>

@@ -13,6 +13,7 @@ import axios from "axios";
 import { CircularProgress } from "@mui/material";
 
 import "../../css/signup.css";
+import { DATABASE_URL } from "../../constants";
 
 const SignUpScreen = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const SignUpScreen = () => {
     setLoading(true);
     event.preventDefault();
     axios
-      .post("https://project-proudme.onrender.com/signup", {
+      .post(`${DATABASE_URL}/signup`, {
         email: form.email,
         password: form.password,
         confirmPassword: form.confirmPassword,
@@ -178,24 +179,6 @@ const SignUpScreen = () => {
               <MenuItem disabled value="">
                 <div style={{ opacity: 0.6 }}>Select an Option</div>
               </MenuItem>
-              <MenuItem value="1990">1990</MenuItem>
-              <MenuItem value="1991">1991</MenuItem>
-              <MenuItem value="1992">1992</MenuItem>
-              <MenuItem value="1993">1993</MenuItem>
-              <MenuItem value="1994">1994</MenuItem>
-              <MenuItem value="1995">1995</MenuItem>
-              <MenuItem value="1996">1996</MenuItem>
-              <MenuItem value="1997">1997</MenuItem>
-              <MenuItem value="1998">1998</MenuItem>
-              <MenuItem value="1999">1999</MenuItem>
-              <MenuItem value="2000">2000</MenuItem>
-              <MenuItem value="2001">2001</MenuItem>
-              <MenuItem value="2002">2002</MenuItem>
-              <MenuItem value="2003">2003</MenuItem>
-              <MenuItem value="2004">2004</MenuItem>
-              <MenuItem value="2005">2005</MenuItem>
-              <MenuItem value="2006">2006</MenuItem>
-              <MenuItem value="2007">2007</MenuItem>
               <MenuItem value="2008">2008</MenuItem>
               <MenuItem value="2009">2009</MenuItem>
               <MenuItem value="2010">2010</MenuItem>
@@ -228,21 +211,11 @@ const SignUpScreen = () => {
               <MenuItem disabled value="">
                 <div style={{ opacity: 0.6 }}>Select an Option</div>
               </MenuItem>
-              <MenuItem value="prek">Pre-K</MenuItem>
-              <MenuItem value="kindergarten">Kindergarten</MenuItem>
-              <MenuItem value="first">1st</MenuItem>
-              <MenuItem value="second">2nd</MenuItem>
-              <MenuItem value="third">3rd</MenuItem>
-              <MenuItem value="fourth">4th</MenuItem>
               <MenuItem value="fifth">5th</MenuItem>
               <MenuItem value="sixth">6th</MenuItem>
               <MenuItem value="seventh">7th</MenuItem>
               <MenuItem value="eighth">8th</MenuItem>
               <MenuItem value="ninth">9th</MenuItem>
-              <MenuItem value="tenth">10th</MenuItem>
-              <MenuItem value="eleventh">11th</MenuItem>
-              <MenuItem value="twelfth">12th</MenuItem>
-              <MenuItem value="other">Other</MenuItem>
             </Select>
           </div>
         </div>
@@ -285,7 +258,13 @@ const SignUpScreen = () => {
                 control={<Checkbox required />}
                 label={
                   <Typography style={{ color: "black" }}>
-                    I agree to the <a target="blank" href="https://www.freeprivacypolicy.com/live/2b89beef-a3ea-4d18-89c6-d6a1732b0ad7">Terms of Use & Privacy Policy.</a>
+                    I agree to the{" "}
+                    <a
+                      target="blank"
+                      href="https://www.freeprivacypolicy.com/live/2b89beef-a3ea-4d18-89c6-d6a1732b0ad7"
+                    >
+                      Terms of Use & Privacy Policy.
+                    </a>
                   </Typography>
                 }
               />

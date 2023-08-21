@@ -11,6 +11,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import LockIcon from "@mui/icons-material/Lock";
 
 import { SAVE_ICON_COLORS } from "./constants";
+import { DATABASE_URL } from "../../constants";
 
 const Wrapper = styled.div`
   margin-top: 1%;
@@ -168,16 +169,13 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchDailyBehavior = async (goalType) => {
       try {
-        const response = await axios.get(
-          "https://project-proudme.onrender.com/dailyBehavior",
-          {
-            params: {
-              user: user,
-              goalType: goalType,
-              date: date,
-            },
-          }
-        );
+        const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
+          params: {
+            user: user,
+            goalType: goalType,
+            date: date,
+          },
+        });
         if (response.data.length) {
           console.log("logged today");
           if (goalType === "activity") {
@@ -205,7 +203,7 @@ const JournalScreen = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    fetch(`https://project-proudme.onrender.com/users`, {
+    fetch(`${DATABASE_URL}/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -220,7 +218,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goals", {
+        const response = await axios.get(`${DATABASE_URL}/goals`, {
           params: {
             user: user,
           },
@@ -237,7 +235,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
+        const response = await axios.get(`${DATABASE_URL}/goalType`, {
           params: {
             user: user,
             goalType: "eating",
@@ -254,7 +252,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
+        const response = await axios.get(`${DATABASE_URL}/goalType`, {
           params: {
             user: user,
             goalType: "eating",
@@ -275,7 +273,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
+        const response = await axios.get(`${DATABASE_URL}/goalType`, {
           params: {
             user: user,
             goalType: "activity",
@@ -292,7 +290,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
+        const response = await axios.get(`${DATABASE_URL}/goalType`, {
           params: {
             user: user,
             goalType: "activity",
@@ -313,7 +311,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
+        const response = await axios.get(`${DATABASE_URL}/goalType`, {
           params: {
             user: user,
             goalType: "sleep",
@@ -330,7 +328,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
+        const response = await axios.get(`${DATABASE_URL}/goalType`, {
           params: {
             user: user,
             goalType: "sleep",
@@ -351,7 +349,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
+        const response = await axios.get(`${DATABASE_URL}/goalType`, {
           params: {
             user: user,
             goalType: "screentime",
@@ -369,7 +367,7 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get("https://project-proudme.onrender.com/goalType", {
+        const response = await axios.get(`${DATABASE_URL}/goalType`, {
           params: {
             user: user,
             goalType: "screentime",
@@ -393,18 +391,6 @@ const JournalScreen = () => {
     year = dateToday.getFullYear(),
     date = month + 1 + "/" + day + "/" + year;
 
-  const [inputGoalValue, setInputGoalValue] = useState(false);
-
-  const handleEnter = (event) => {
-    if (event.key === "Enter") {
-      setInputGoalValue(false);
-    }
-  };
-
-  const handleBlur = (event) => {
-    setInputGoalValue(false);
-  };
-
   async function updateBehaviorValue(
     id,
     newGoalValue,
@@ -416,7 +402,7 @@ const JournalScreen = () => {
         const updatedActivityGoal = prevActivityGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post(`${DATABASE_URL}/goals`, {
               user: user._id,
               name: user.name,
               goalType: "activity",
@@ -438,7 +424,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("https://project-proudme.onrender.com/behaviors", {
+            .post(`${DATABASE_URL}/behaviors`, {
               user: user._id,
               name: user.name,
               goalType: "activity",
@@ -473,7 +459,7 @@ const JournalScreen = () => {
         const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post(`${DATABASE_URL}/goals`, {
               user: user._id,
               name: user.name,
               goalType: "screentime",
@@ -495,7 +481,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("https://project-proudme.onrender.com/behaviors", {
+            .post(`${DATABASE_URL}/behaviors`, {
               user: user._id,
               name: user.name,
               goalType: "screentime",
@@ -530,7 +516,7 @@ const JournalScreen = () => {
         const updatedEatingGoal = prevEatingGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post(`${DATABASE_URL}/goals`, {
               user: user._id,
               name: user.name,
               goalType: "eating",
@@ -552,7 +538,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("https://project-proudme.onrender.com/behaviors", {
+            .post(`${DATABASE_URL}/behaviors`, {
               user: user._id,
               name: user.name,
               goalType: "eating",
@@ -587,7 +573,7 @@ const JournalScreen = () => {
         const updatedSleepGoal = prevSleepGoal.map((goal) => {
           const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
           axios
-            .post("https://project-proudme.onrender.com/goals", {
+            .post(`${DATABASE_URL}/goals`, {
               user: user._id,
               name: user.name,
               goalType: "sleep",
@@ -609,7 +595,7 @@ const JournalScreen = () => {
               console.error(error);
             });
           axios
-            .post("https://project-proudme.onrender.com/behaviors", {
+            .post(`${DATABASE_URL}/behaviors`, {
               user: user._id,
               name: user.name,
               goalType: "sleep",
@@ -681,37 +667,29 @@ const JournalScreen = () => {
                   />
                 </Tooltip>
               </div>
-              {inputGoalValue === true ? (
-                <>
-                  <TextField
-                    style={styles.inputBox}
-                    label="minutes/day"
-                    id="input"
-                    type="number"
-                    onBlur={handleBlur}
-                    onKeyDown={handleEnter}
-                    value={activityGoal.length ? activityGoal[0].goalValue : ""}
-                    onChange={(e) => {
-                      setActivityGoal((prevActivityGoal) => {
-                        const updatedActivityGoal = prevActivityGoal.map(
-                          (goal) => {
-                            const newActivityGoalValue = {
-                              ...goal,
-                              goalValue: e.target.value,
-                            };
-                            return newActivityGoalValue;
-                          }
-                        );
-                        return updatedActivityGoal;
-                      });
-                    }}
-                  />
-                </>
-              ) : (
-                <h2 onClick={setInputGoalValue(true)}>
-                  {activityData.length ? activityData.goalValue : ""}
-                </h2>
-              )}
+              <>
+                <TextField
+                  style={styles.inputBox}
+                  label="minutes/day"
+                  id="input"
+                  type="number"
+                  value={activityGoal.length ? activityGoal[0].goalValue : ""}
+                  onChange={(e) => {
+                    setActivityGoal((prevActivityGoal) => {
+                      const updatedActivityGoal = prevActivityGoal.map(
+                        (goal) => {
+                          const newActivityGoalValue = {
+                            ...goal,
+                            goalValue: e.target.value,
+                          };
+                          return newActivityGoalValue;
+                        }
+                      );
+                      return updatedActivityGoal;
+                    });
+                  }}
+                />
+              </>
 
               <>
                 <Tooltip
@@ -795,36 +773,30 @@ const JournalScreen = () => {
                   />
                 </Tooltip>
               </div>
-              {inputGoalValue === true ? (
-                <>
-                  <TextField
-                    style={styles.inputBox}
-                    label="minutes/day"
-                    type="number"
-                    value={
-                      screentimeGoal.length ? screentimeGoal[0].goalValue : ""
-                    }
-                    onChange={(e) => {
-                      setScreentimeGoal((prevScreentimeGoal) => {
-                        const updatedScreentimeGoal = prevScreentimeGoal.map(
-                          (goal) => {
-                            const newScreentimeGoalValue = {
-                              ...goal,
-                              goalValue: e.target.value,
-                            };
-                            return newScreentimeGoalValue;
-                          }
-                        );
-                        return updatedScreentimeGoal;
-                      });
-                    }}
-                  />
-                </>
-              ) : (
-                <h2>
-                  {screentimeData.length ? screentimeData[0].goalValue : ""}
-                </h2>
-              )}
+              <>
+                <TextField
+                  style={styles.inputBox}
+                  label="minutes/day"
+                  type="number"
+                  value={
+                    screentimeGoal.length ? screentimeGoal[0].goalValue : ""
+                  }
+                  onChange={(e) => {
+                    setScreentimeGoal((prevScreentimeGoal) => {
+                      const updatedScreentimeGoal = prevScreentimeGoal.map(
+                        (goal) => {
+                          const newScreentimeGoalValue = {
+                            ...goal,
+                            goalValue: e.target.value,
+                          };
+                          return newScreentimeGoalValue;
+                        }
+                      );
+                      return updatedScreentimeGoal;
+                    });
+                  }}
+                />
+              </>
 
               <>
                 <Tooltip
@@ -907,31 +879,26 @@ const JournalScreen = () => {
                 </Tooltip>
               </div>
 
-              {inputGoalValue === true ? (
-                <>
-                  <TextField
-                    style={styles.inputBox}
-                    label="servings/day"
-                    type="number"
-                    value={eatingGoal.length ? eatingGoal[0].goalValue : ""}
-                    onChange={(e) => {
-                      setEatingGoal((prevEatingGoal) => {
-                        const updatedEatingGoal = prevEatingGoal.map((goal) => {
-                          const newEatingGoalValue = {
-                            ...goal,
-                            goalValue: e.target.value,
-                          };
-                          return newEatingGoalValue;
-                        });
-                        return updatedEatingGoal;
+              <>
+                <TextField
+                  style={styles.inputBox}
+                  label="servings/day"
+                  type="number"
+                  value={eatingGoal.length ? eatingGoal[0].goalValue : ""}
+                  onChange={(e) => {
+                    setEatingGoal((prevEatingGoal) => {
+                      const updatedEatingGoal = prevEatingGoal.map((goal) => {
+                        const newEatingGoalValue = {
+                          ...goal,
+                          goalValue: e.target.value,
+                        };
+                        return newEatingGoalValue;
                       });
-                    }}
-                  />
-                </>
-              ) : (
-                <h2>{eatingData.length ? eatingData[0].goalValue : ""}</h2>
-              )}
-
+                      return updatedEatingGoal;
+                    });
+                  }}
+                />
+              </>
               <>
                 <Tooltip
                   title={
@@ -1007,30 +974,26 @@ const JournalScreen = () => {
                 </Tooltip>
               </div>
 
-              {inputGoalValue === true ? (
-                <>
-                  <TextField
-                    style={styles.inputBox}
-                    label="hours/day"
-                    type="number"
-                    value={sleepGoal.length ? sleepGoal[0].goalValue : ""}
-                    onChange={(e) => {
-                      setSleepGoal((prevSleepGoal) => {
-                        const updatedSleepGoal = prevSleepGoal.map((goal) => {
-                          const newSleepGoalValue = {
-                            ...goal,
-                            goalValue: e.target.value,
-                          };
-                          return newSleepGoalValue;
-                        });
-                        return updatedSleepGoal;
+              <>
+                <TextField
+                  style={styles.inputBox}
+                  label="hours/day"
+                  type="number"
+                  value={sleepGoal.length && sleepGoal[0].goalValue}
+                  onChange={(e) => {
+                    setSleepGoal((prevSleepGoal) => {
+                      const updatedSleepGoal = prevSleepGoal.map((goal) => {
+                        const newSleepGoalValue = {
+                          ...goal,
+                          goalValue: e.target.value,
+                        };
+                        return newSleepGoalValue;
                       });
-                    }}
-                  />
-                </>
-              ) : (
-                <h2>{sleepData.length ? sleepData[0].goalValue : ""}</h2>
-              )}
+                      return updatedSleepGoal;
+                    });
+                  }}
+                />
+              </>
 
               <>
                 <Tooltip
@@ -1052,7 +1015,7 @@ const JournalScreen = () => {
                     style={styles.inputBox}
                     label="hours/day"
                     type="number"
-                    value={sleepGoal.length ? sleepGoal[0].behaviorValue : ""}
+                    value={sleepGoal.length && sleepGoal[0].behaviorValue}
                     onChange={(e) => {
                       setSleepGoal((prevSleepGoal) => {
                         const updatedSleepGoal = prevSleepGoal.map((goal) => {
@@ -1155,11 +1118,21 @@ const JournalScreen = () => {
                         ? SAVE_ICON_COLORS.RED
                         : activityData[0].goalValue -
                             activityGoal[0].goalValue ===
-                          0
+                            0 &&
+                          activityData[0].behaviorValue -
+                            activityGoal[0].behaviorValue ===
+                            0 &&
+                          activityData[0].reflection ===
+                            activityGoal[0].reflection
                         ? SAVE_ICON_COLORS.GREEN
                         : activityData[0].goalValue -
                             activityGoal[0].goalValue !==
-                          0
+                            0 ||
+                          activityData[0].behaviorValue -
+                            activityGoal[0].behaviorValue !==
+                            0 ||
+                          activityData[0].reflection !==
+                            activityGoal[0].reflection
                         ? SAVE_ICON_COLORS.YELLOW
                         : "auto",
                     }}
@@ -1196,9 +1169,7 @@ const JournalScreen = () => {
                   type="text"
                   placeholder="Type my thoughts"
                   style={{ width: "80%" }}
-                  value={
-                    screentimeGoal.length ? screentimeGoal[0].reflection : ""
-                  }
+                  value={screentimeGoal.length && screentimeGoal[0].reflection}
                   onChange={(e) => {
                     setScreentimeGoal((prevScreentimeGoal) => {
                       const updatedScreentimeGoal = prevScreentimeGoal.map(
@@ -1222,11 +1193,21 @@ const JournalScreen = () => {
                         ? SAVE_ICON_COLORS.RED
                         : screentimeData[0].goalValue -
                             screentimeGoal[0].goalValue ===
-                          0
+                            0 &&
+                          screentimeData[0].behaviorValue -
+                            screentimeGoal[0].behaviorValue ===
+                            0 &&
+                          screentimeData[0].reflection ===
+                            screentimeGoal[0].reflection
                         ? SAVE_ICON_COLORS.GREEN
                         : screentimeData[0].goalValue -
                             screentimeGoal[0].goalValue !==
-                          0
+                            0 ||
+                          screentimeData[0].behaviorValue -
+                            screentimeGoal[0].behaviorValue !==
+                            0 ||
+                          screentimeData[0].reflection !==
+                            screentimeGoal[0].reflection
                         ? SAVE_ICON_COLORS.YELLOW
                         : "auto",
                     }}
@@ -1261,7 +1242,7 @@ const JournalScreen = () => {
                   type="text"
                   placeholder="Type my thoughts"
                   style={{ width: "80%" }}
-                  value={eatingGoal.length ? eatingGoal[0].reflection : ""}
+                  value={eatingGoal.length && eatingGoal[0].reflection}
                   onChange={(e) => {
                     setEatingGoal((prevEatingGoal) => {
                       const updatedEatingGoal = prevEatingGoal.map((goal) => {
@@ -1282,10 +1263,18 @@ const JournalScreen = () => {
                       color: !eatingData.length
                         ? SAVE_ICON_COLORS.RED
                         : eatingData[0].goalValue - eatingGoal[0].goalValue ===
-                          0
+                            0 &&
+                          eatingData[0].behaviorValue -
+                            eatingGoal[0].behaviorValue ===
+                            0 &&
+                          eatingData[0].reflection === eatingGoal[0].reflection
                         ? SAVE_ICON_COLORS.GREEN
                         : eatingData[0].goalValue - eatingGoal[0].goalValue !==
-                          0
+                            0 ||
+                          eatingData[0].behaviorValue -
+                            eatingGoal[0].behaviorValue !==
+                            0 ||
+                          eatingData[0].reflection !== eatingGoal[0].reflection
                         ? SAVE_ICON_COLORS.YELLOW
                         : "auto",
                     }}
@@ -1320,7 +1309,7 @@ const JournalScreen = () => {
                   type="text"
                   placeholder="Type my thoughts"
                   style={{ width: "80%" }}
-                  value={sleepGoal.length ? sleepGoal[0].reflection : ""}
+                  value={sleepGoal.length && sleepGoal[0].reflection}
                   onChange={(e) => {
                     setSleepGoal((prevSleepGoal) => {
                       const updatedSleepGoal = prevSleepGoal.map((goal) => {
@@ -1340,9 +1329,19 @@ const JournalScreen = () => {
                     style={{
                       color: !sleepData.length
                         ? SAVE_ICON_COLORS.RED
-                        : sleepData[0].goalValue - sleepGoal[0].goalValue === 0
+                        : sleepData[0].goalValue - sleepGoal[0].goalValue ===
+                            0 &&
+                          sleepData[0].behaviorValue -
+                            sleepGoal[0].behaviorValue ===
+                            0 &&
+                          sleepData[0].reflection === sleepGoal[0].reflection
                         ? SAVE_ICON_COLORS.GREEN
-                        : sleepData[0].goalValue - sleepGoal[0].goalValue !== 0
+                        : sleepData[0].goalValue - sleepGoal[0].goalValue !==
+                            0 ||
+                          sleepData[0].behaviorValue -
+                            sleepGoal[0].behaviorValue !==
+                            0 ||
+                          sleepData[0].reflection !== sleepGoal[0].reflection
                         ? SAVE_ICON_COLORS.YELLOW
                         : "auto",
                     }}

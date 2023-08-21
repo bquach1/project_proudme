@@ -14,6 +14,7 @@ import TrackingScreen from "./screens/tracking/tracking";
 import RecoveryScreen from "./screens/account/recovery";
 
 import Header from "./components/header";
+import { DATABASE_URL } from "./constants";
 
 function App() {
 
@@ -21,7 +22,7 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    fetch(`https://project-proudme.onrender.com/users`, {
+    fetch(`${DATABASE_URL}/users`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

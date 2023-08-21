@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import "../../css/login.css";
+import { DATABASE_URL } from "../../constants";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -19,7 +20,7 @@ const LoginScreen = () => {
     setLoading(true);
 
     axios
-      .post("https://project-proudme.onrender.com/login", {
+      .post(`${DATABASE_URL}/login`, {
         email,
         password,
       })
@@ -61,31 +62,35 @@ const LoginScreen = () => {
           />
         </div>
         <div className="button-container">
-          {loading ? 
-          <div style={{display: "flex", alignItems: "center", margin: "auto"}}>
-            <span style={{marginRight: "5%", fontWeight: "bold"}}>Loading...</span>
-            <CircularProgress style={{display: "flex"}}/>
-          </div>
-          :
-          <Button
-          style={{
-            backgroundColor: "#D7A746",
-            color: "white",
-            padding: "10px 50px 10px 50px",
-            borderRadius: "20px",
-            textTransform: "none",
-            marginTop: "2%",
-            height: "60px",
-            width: "40%",
-            fontSize: "25px",
-            margin: "auto",
-            marginBottom: "0px",
-          }}
-          type="submit"
-        >
-          Log In
-        </Button>
-          }
+          {loading ? (
+            <div
+              style={{ display: "flex", alignItems: "center", margin: "auto" }}
+            >
+              <span style={{ marginRight: "5%", fontWeight: "bold" }}>
+                Loading...
+              </span>
+              <CircularProgress style={{ display: "flex" }} />
+            </div>
+          ) : (
+            <Button
+              style={{
+                backgroundColor: "#D7A746",
+                color: "white",
+                padding: "10px 50px 10px 50px",
+                borderRadius: "20px",
+                textTransform: "none",
+                marginTop: "2%",
+                height: "60px",
+                width: "40%",
+                fontSize: "25px",
+                margin: "auto",
+                marginBottom: "0px",
+              }}
+              type="submit"
+            >
+              Log In
+            </Button>
+          )}
         </div>
         <div className="registration">
           <div className="registration-link">
@@ -93,8 +98,8 @@ const LoginScreen = () => {
               Having trouble logging in?
               <a className="nav-select" onClick={() => navigate("/recovery")}>
                 Click here
-              </a>      
-              !      
+              </a>
+              !
             </h2>
           </div>
           <div className="registration-link">

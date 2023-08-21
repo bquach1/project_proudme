@@ -3,6 +3,8 @@ import axios from "axios";
 import { Button, TextField, Modal } from "@mui/material";
 import { styled } from "styled-components";
 
+import { DATABASE_URL } from "../../constants";
+
 const ButtonPageWrapper = styled.div`
   height: calc(100vh - 80px);
   display: flex;
@@ -12,13 +14,13 @@ const ButtonPageWrapper = styled.div`
 
 const RecoveryWrapper = styled.div`
   margin-top: 2%;
-`
+`;
 
 const generateVerificationCode = () => {
   const charset =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let code = "";
-  let length = 6;
+  let length = 8;
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * charset.length);
     code += charset[randomIndex];
@@ -32,7 +34,7 @@ const Recovery = () => {
   const [email, setEmail] = useState("");
   const [emailData, setEmailData] = useState({
     to: "",
-    subject: "test",
+    subject: "Project ProudME Password Recovery",
     text:
       "Enter the confirmation code listed to reset your password: " +
       verificationCode,
@@ -47,24 +49,25 @@ const Recovery = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     setConfirming(true);
+    setEmailData((prevEmailData) => ({
+      ...prevEmailData,
+      to: email,
+    }));
     axios
-      .post("https://project-proudme.onrender.com/send-email", emailData)
+      .post(`${DATABASE_URL}/send-email`, emailData)
       .then((response) => {
         console.log(response.data);
-        // Handle success response
       })
       .catch((error) => {
         console.error(error);
-        // Handle error response
       });
   };
 
   const handleUsernameSubmit = (event) => {
     event.preventDefault();
-
     try {
       axios
-        .get("https://project-proudme.onrender.com/user", {
+        .get(`${DATABASE_URL}/user`, {
           params: {
             email: email,
           },
@@ -80,14 +83,12 @@ const Recovery = () => {
               ".",
           }));
           axios
-            .post("https://project-proudme.onrender.com/send-email", emailData)
+            .post(`${DATABASE_URL}/send-email`, emailData)
             .then((response) => {
               console.log(response.data);
-              // Handle success response
             })
             .catch((error) => {
               console.error(error);
-              // Handle error response
             });
         });
     } catch (error) {
