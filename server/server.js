@@ -335,6 +335,22 @@ app.get("/user", async (req, res) => {
   }
 });
 
+app.post("/user", async (req, res) => {
+  const user = await User.findOneAndUpdate(
+    {
+      email: req.body.email,
+    },
+    {
+      $set: {
+        password: req.body.password,
+        confirmPassword: req.body.password,
+      },
+    },
+  );
+  console.log(req.body.password);
+  res.status(200).json(user);
+});
+
 // User endpoint
 app.get("/allUsers", async (req, res) => {
   try {

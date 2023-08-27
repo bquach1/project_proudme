@@ -10,6 +10,8 @@ import {
   Bar,
   Label,
   ReferenceLine,
+  Cell,
+  Legend,
 } from "recharts";
 import axios from "axios";
 import styled from "styled-components";
@@ -22,6 +24,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  DateRangePicker,
 } from "@mui/material";
 
 import { has } from "lodash";
@@ -39,11 +42,116 @@ const FilterWrapper = styled.div`
   margin-bottom: 1%;
 `;
 
+export const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div
+        style={{
+          border: "1px solid rgb(204, 204, 204)",
+          padding: "10px",
+          backgroundColor: "white",
+        }}
+      >
+        <p className="label">{`${label}`}</p>
+        {payload.map((pld) => (
+          <div>
+            {pld.dataKey === "goalValue" ? (
+              <div style={{ color: "#A7C7E7" }}>Goal Value: {pld.value}</div>
+            ) : (
+              <div style={{ color: "#8884d8" }}>
+                Behavior Value: {pld.value}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
+export const CustomLegend = ({ payload }) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+        backgroundColor: "#D3D3D3",
+        marginTop: "2%",
+        width: "40%",
+        margin: "0 auto",
+        padding: 10,
+        border: "1px solid black",
+      }}
+    >
+      <h2 style={{ width: "20%" }}>Legend</h2>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        {payload.map((entry, index) => (
+          <div style={{ display: "flex" }}>
+            <div
+              style={{
+                backgroundColor:
+                  entry.value === "goalValue" ? "#A7C7E7" : "#8884d8",
+                width: 20,
+                height: 15,
+                marginRight: 10,
+              }}
+            />
+            <div key={index}>
+              {entry.value === "goalValue"
+                ? "Goal Value"
+                : entry.value === "behaviorValue"
+                ? "Behavior Value (Met Goal)"
+                : null}
+            </div>
+          </div>
+        ))}
+        <div style={{ display: "flex" }}>
+          <div
+            style={{
+              backgroundColor: "#77DD77",
+              width: 20,
+              height: 15,
+              marginRight: 10,
+            }}
+          />
+          Behavior Value (Exceeds Goal)
+        </div>
+        <div style={{ display: "flex" }}>
+          <div
+            style={{
+              backgroundColor: "#FF6961",
+              width: 20,
+              height: 15,
+              marginRight: 10,
+            }}
+          />
+          Behavior Value (Needs Improvement)
+        </div>
+        <div style={{ display: "flex" }}>
+          <div
+            style={{
+              backgroundColor: "#FFC000",
+              width: 20,
+              height: 15,
+              marginRight: 10,
+            }}
+          />
+          Behavior Value (Close to Goal)
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const CustomBar = {};
+
 const BehaviorLineChart = ({ data, chartType }) => {
   return (
     <LineChart
-      width={800}
-      height={600}
+      width={1000}
+      height={800}
       data={data}
       margin={{ top: 55, right: 80, left: 70, bottom: 70 }}
     >
@@ -78,13 +186,44 @@ const BehaviorLineChart = ({ data, chartType }) => {
         />
       </YAxis>
 
-      <Tooltip />
+      <Tooltip content={<CustomTooltip />} />
+      <Legend wrapperStyle={{ paddingTop: 20 }} content={<CustomLegend />} />
       <Line
-        type="monotone"
+        type="linear"
+        dataKey="goalValue"
+        stroke="#A7C7E7"
+        strokeWidth={3}
+        activeDot={{ r: 6 }}
+      />
+      <defs>
+        <linearGradient id="colorUv" x1="0%" y1="0%" x2="100%" y2="0%">
+          {data.map((entry, index) => {
+            const colorOffset = (index / (data.length - 1)) * 100;            
+            const stopColor =
+              entry.behaviorValue > entry.goalValue
+              ? "#77DD77"
+              : entry.behaviorValue === entry.goalValue
+              ? "#8884d8"
+              : entry.behaviorValue < entry.goalValue / 2
+              ? "#FF6961"
+              : "#FFC000";
+
+            return (
+              <stop
+                key={index}
+                offset={`${colorOffset}%`}
+                stopColor={stopColor}
+              />
+            );
+          })}
+        </linearGradient>
+      </defs>
+      <Line
+        type="linear"
         dataKey="behaviorValue"
-        stroke="#8884d8"
-        strokeWidth={5}
-        activeDot={{ r: 8 }}
+        stroke={'url(#colorUv)'}
+        strokeWidth={3}
+        activeDot={{ r: 6 }}
       />
       <ReferenceLine
         y={
@@ -112,8 +251,8 @@ const BehaviorLineChart = ({ data, chartType }) => {
 const BehaviorBarChart = ({ data, chartType }) => {
   return (
     <BarChart
-      width={800}
-      height={600}
+      width={1000}
+      height={800}
       data={data}
       margin={{ top: 55, right: 80, left: 70, bottom: 70 }}
     >
@@ -147,9 +286,24 @@ const BehaviorBarChart = ({ data, chartType }) => {
           offset={-70}
         />
       </YAxis>
-      <Tooltip />
-      <Bar dataKey="behaviorValue" fill="#8884d8" />
-
+      <Tooltip content={<CustomTooltip />} />
+      <Bar dataKey="goalValue" fill="#A7C7E7" />
+      <Bar dataKey="behaviorValue">
+        {data.map((entry) => (
+          <Cell
+            fill={
+              entry.behaviorValue > entry.goalValue
+                ? "#77DD77"
+                : entry.behaviorValue === entry.goalValue
+                ? "#8884d8"
+                : entry.behaviorValue < entry.goalValue / 2
+                ? "#FF6961"
+                : "#FFC000"
+            }
+          />
+        ))}
+      </Bar>
+      <Legend wrapperStyle={{ paddingTop: 20 }} content={<CustomLegend />} />
       <ReferenceLine
         y={
           chartType === "activity"
@@ -286,7 +440,6 @@ const TrackingScreen = () => {
           },
         });
         setCurrentGoalData(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -296,7 +449,6 @@ const TrackingScreen = () => {
       try {
         const response = await axios.get(`${DATABASE_URL}/allBehaviors`, {});
         setAllBehaviorData(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
