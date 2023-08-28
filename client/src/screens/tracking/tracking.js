@@ -53,12 +53,12 @@ export const CustomTooltip = ({ active, payload, label }) => {
         }}
       >
         <p className="label">{`${label}`}</p>
-        {payload.map((pld) => (
-          <div>
+        {payload.map((pld, index) => (
+          <div key={index}>
             {pld.dataKey === "goalValue" ? (
-              <div style={{ color: "#A7C7E7" }}>Goal Value: {pld.value}</div>
+              <div id={`goal-${index}`} style={{ color: "#A7C7E7" }}>Goal Value: {pld.value}</div>
             ) : (
-              <div style={{ color: "#8884d8" }}>
+              <div id={`behavior-${index}`} style={{ color: "#8884d8" }}>
                 Behavior Value: {pld.value}
               </div>
             )}
@@ -88,7 +88,7 @@ export const CustomLegend = ({ payload }) => {
       <h2 style={{ width: "20%" }}>Legend</h2>
       <div style={{ display: "flex", flexDirection: "column" }}>
         {payload.map((entry, index) => (
-          <div style={{ display: "flex" }}>
+          <div key={index} style={{ display: "flex" }}>
             <div
               style={{
                 backgroundColor:
@@ -145,9 +145,7 @@ export const CustomLegend = ({ payload }) => {
   );
 };
 
-export const CustomBar = {};
-
-const BehaviorLineChart = ({ data, chartType }) => {
+const BehaviorLineChart = ({ data, chartGoalType }) => {
   return (
     <LineChart
       width={1000}
@@ -164,20 +162,20 @@ const BehaviorLineChart = ({ data, chartType }) => {
       <YAxis
         domain={[
           0,
-          chartType === "activity"
+          chartGoalType === "activity"
             ? 70
-            : chartType === "screentime"
+            : chartGoalType === "screentime"
             ? 130
-            : chartType === "eating"
+            : chartGoalType === "eating"
             ? 6
             : 9,
         ]}
       >
         <Label
           value={
-            chartType === "sleep"
+            chartGoalType === "sleep"
               ? "hours/day"
-              : chartType === "eating"
+              : chartGoalType === "eating"
               ? "servings/day"
               : "minutes/day"
           }
@@ -187,7 +185,6 @@ const BehaviorLineChart = ({ data, chartType }) => {
       </YAxis>
 
       <Tooltip content={<CustomTooltip />} />
-      <Legend wrapperStyle={{ paddingTop: 20 }} content={<CustomLegend />} />
       <Line
         type="linear"
         dataKey="goalValue"
@@ -196,17 +193,23 @@ const BehaviorLineChart = ({ data, chartType }) => {
         activeDot={{ r: 6 }}
       />
       <defs>
-        <linearGradient id="colorUv" x1="0%" y1="0%" x2="100%" y2="0%">
+        <linearGradient id={`colorUv${chartGoalType}`} x1="0%" y1="0%" x2="100%" y2="0%">
           {data.map((entry, index) => {
-            const colorOffset = (index / (data.length - 1)) * 100;            
+            const colorOffset = (index / (data.length - 1)) * 100;
             const stopColor =
-              entry.behaviorValue > entry.goalValue
-              ? "#77DD77"
-              : entry.behaviorValue === entry.goalValue
-              ? "#8884d8"
-              : entry.behaviorValue < entry.goalValue / 2
-              ? "#FF6961"
-              : "#FFC000";
+              chartGoalType === "screentime" && entry.behaviorValue > entry.goalValue * 2 ?
+                "#FF6961"
+                : chartGoalType === "screentime" && entry.behaviorValue > entry.goalValue ?
+                "#FFC000"
+                : chartGoalType === "screentime" && entry.behaviorValue < entry.goalValue ?
+                "#77DD77"                
+                : entry.behaviorValue > entry.goalValue
+                ? "#77DD77"
+                : entry.behaviorValue === entry.goalValue
+                ? "#8884d8"
+                : entry.behaviorValue < entry.goalValue / 2
+                ? "#FF6961"
+                : "#FFC000";
 
             return (
               <stop
@@ -221,17 +224,18 @@ const BehaviorLineChart = ({ data, chartType }) => {
       <Line
         type="linear"
         dataKey="behaviorValue"
-        stroke={'url(#colorUv)'}
+        stroke={`url(#colorUv${chartGoalType})`}
         strokeWidth={3}
         activeDot={{ r: 6 }}
       />
+      <Legend wrapperStyle={{ paddingTop: 20 }} content={<CustomLegend />} />
       <ReferenceLine
         y={
-          chartType === "activity"
+          chartGoalType === "activity"
             ? 60
-            : chartType === "screentime"
+            : chartGoalType === "screentime"
             ? 120
-            : chartType === "eating"
+            : chartGoalType === "eating"
             ? 5
             : 9
         }
@@ -248,7 +252,7 @@ const BehaviorLineChart = ({ data, chartType }) => {
   );
 };
 
-const BehaviorBarChart = ({ data, chartType }) => {
+const BehaviorBarChart = ({ data, chartGoalType }) => {
   return (
     <BarChart
       width={1000}
@@ -265,20 +269,20 @@ const BehaviorBarChart = ({ data, chartType }) => {
       <YAxis
         domain={[
           0,
-          chartType === "activity"
+          chartGoalType === "activity"
             ? 70
-            : chartType === "screentime"
+            : chartGoalType === "screentime"
             ? 130
-            : chartType === "eating"
+            : chartGoalType === "eating"
             ? 6
             : 9,
         ]}
       >
         <Label
           value={
-            chartType === "sleep"
+            chartGoalType === "sleep"
               ? "hours/day"
-              : chartType === "eating"
+              : chartGoalType === "eating"
               ? "servings/day"
               : "minutes/day"
           }
@@ -289,16 +293,23 @@ const BehaviorBarChart = ({ data, chartType }) => {
       <Tooltip content={<CustomTooltip />} />
       <Bar dataKey="goalValue" fill="#A7C7E7" />
       <Bar dataKey="behaviorValue">
-        {data.map((entry) => (
+        {data.map((entry, index) => (
           <Cell
+            key={index}
             fill={
-              entry.behaviorValue > entry.goalValue
-                ? "#77DD77"
-                : entry.behaviorValue === entry.goalValue
-                ? "#8884d8"
-                : entry.behaviorValue < entry.goalValue / 2
-                ? "#FF6961"
-                : "#FFC000"
+              chartGoalType === "screentime" && entry.behaviorValue > entry.goalValue * 2 ?
+              "#FF6961"
+              : chartGoalType === "screentime" && entry.behaviorValue > entry.goalValue ?
+              "#FFC000"
+              : chartGoalType === "screentime" && entry.behaviorValue < entry.goalValue ?
+              "#77DD77"                
+              : entry.behaviorValue > entry.goalValue
+              ? "#77DD77"
+              : entry.behaviorValue === entry.goalValue
+              ? "#8884d8"
+              : entry.behaviorValue < entry.goalValue / 2
+              ? "#FF6961"
+              : "#FFC000"
             }
           />
         ))}
@@ -306,11 +317,11 @@ const BehaviorBarChart = ({ data, chartType }) => {
       <Legend wrapperStyle={{ paddingTop: 20 }} content={<CustomLegend />} />
       <ReferenceLine
         y={
-          chartType === "activity"
+          chartGoalType === "activity"
             ? 60
-            : chartType === "screentime"
+            : chartGoalType === "screentime"
             ? 120
-            : chartType === "eating"
+            : chartGoalType === "eating"
             ? 5
             : 9
         }
@@ -557,37 +568,43 @@ const TrackingScreen = () => {
         {chartType === "line" ? (
           <BehaviorLineChart
             data={activityBehaviorData}
-            chartType={"activity"}
+            chartGoalType={"activity"}
           />
         ) : (
           <BehaviorBarChart
             data={activityBehaviorData}
-            chartType={"activity"}
+            chartGoalType={"activity"}
           />
         )}
         <h1>{shownUser.name}'s Screentime Behavior Data</h1>
         {chartType === "line" ? (
           <BehaviorLineChart
             data={screentimeBehaviorData}
-            chartType={"screentime"}
+            chartGoalType={"screentime"}
           />
         ) : (
           <BehaviorBarChart
             data={screentimeBehaviorData}
-            chartType={"screentime"}
+            chartGoalType={"screentime"}
           />
         )}
         <h1>{shownUser.name}'s Eating Behavior Data</h1>
         {chartType === "line" ? (
-          <BehaviorLineChart data={eatingBehaviorData} chartType={"eating"} />
+          <BehaviorLineChart
+            data={eatingBehaviorData}
+            chartGoalType={"eating"}
+          />
         ) : (
-          <BehaviorBarChart data={eatingBehaviorData} chartType={"eating"} />
+          <BehaviorBarChart
+            data={eatingBehaviorData}
+            chartGoalType={"eating"}
+          />
         )}
         <h1>{shownUser.name}'s Sleep Behavior Data</h1>
         {chartType === "line" ? (
-          <BehaviorLineChart data={sleepBehaviorData} chartType={"sleep"} />
+          <BehaviorLineChart data={sleepBehaviorData} chartGoalType={"sleep"} />
         ) : (
-          <BehaviorBarChart data={sleepBehaviorData} chartType={"sleep"} />
+          <BehaviorBarChart data={sleepBehaviorData} chartGoalType={"sleep"} />
         )}
       </div>
     </>
