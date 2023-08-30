@@ -21,7 +21,7 @@ label {
     align-items: flex-start;
 }
 
-input {
+.login-input {
     height: 40px;
     margin: 10px 5px 10px 5px;
     border-style: none;

@@ -77,7 +77,7 @@ const SignUpScreen = () => {
         <div className="input-container">
           <label>Username: </label>
           <input
-            className="input"
+            className="signup-input"
             onChange={(e) => updateForm({ name: e.target.value })}
             type="text"
             value={form.name}
@@ -87,7 +87,7 @@ const SignUpScreen = () => {
         <div className="input-container">
           <label>Password: </label>
           <input
-            className="input"
+            className="signup-input"          
             onChange={(e) => updateForm({ password: e.target.value })}
             type="password"
             value={form.password}
@@ -97,7 +97,7 @@ const SignUpScreen = () => {
         <div className="input-container">
           <label>Confirm Password: </label>
           <input
-            className="input"
+            className="signup-input"            
             onChange={(e) => updateForm({ confirmPassword: e.target.value })}
             type="password"
             value={form.confirmPassword}
@@ -243,7 +243,7 @@ const SignUpScreen = () => {
           <div className="input-container">
             <label>Email Address: </label>
             <input
-              className="input"
+              className="signup-input"              
               type="text"
               onChange={(e) => updateForm({ email: e.target.value })}
               value={form.email}

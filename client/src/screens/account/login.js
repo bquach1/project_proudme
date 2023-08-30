@@ -49,6 +49,7 @@ const LoginScreen = () => {
             type="email"
             onChange={(e) => setEmail(e.target.value)}
             name="emailInput"
+            className="login-input"
             required
           />
         </div>
@@ -58,6 +59,7 @@ const LoginScreen = () => {
             type="password"
             onChange={(e) => setPassword(e.target.value)}
             name="passwordInput"
+            className="login-input"
             required
           />
         </div>
