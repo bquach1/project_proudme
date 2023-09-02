@@ -24,10 +24,11 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  InputLabel,
 } from "@mui/material";
 
 import { DateRange } from "react-date-range";
-import {format, addDays} from "date-fns";
+import { format, addDays, subDays } from "date-fns";
 
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
@@ -45,11 +46,11 @@ const TrackingWrapper = styled.div`
     padding: 10px;
     margin: 0 auto;
     text-align: center;
+    display: flex;
   }
 
   .calendarElement {
-    display: flex;
-    width: 25%;
+    width: auto;
     margin: 0 auto;
   }
 `;
@@ -168,7 +169,7 @@ export const CustomLegend = ({ payload }) => {
   );
 };
 
-const BehaviorLineChart = ({ data, chartGoalType }) => {
+const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
   return (
     <LineChart
       width={1000}
@@ -208,6 +209,7 @@ const BehaviorLineChart = ({ data, chartGoalType }) => {
       </YAxis>
 
       <Tooltip content={<CustomTooltip />} />
+      { lineChartView !== "behaviorOnly" &&
       <Line
         type="linear"
         dataKey="goalValue"
@@ -216,6 +218,8 @@ const BehaviorLineChart = ({ data, chartGoalType }) => {
         activeDot={{ r: 6 }}
         label
       />
+      }
+      
       <defs>
         <linearGradient
           id={`colorUv${chartGoalType}`}
@@ -254,6 +258,8 @@ const BehaviorLineChart = ({ data, chartGoalType }) => {
           })}
         </linearGradient>
       </defs>
+
+      { lineChartView !== "goalOnly" &&
       <Line
         type="linear"
         dataKey="behaviorValue"
@@ -261,6 +267,7 @@ const BehaviorLineChart = ({ data, chartGoalType }) => {
         strokeWidth={3}
         activeDot={{ r: 6 }}
       />
+      }
       <Legend wrapperStyle={{ paddingTop: 20 }} content={<CustomLegend />} />
       <ReferenceLine
         y={
@@ -275,7 +282,7 @@ const BehaviorLineChart = ({ data, chartGoalType }) => {
         label={{
           value: "Recommended Level",
           className: "tracking-reference",
-          fill: "#FF7F50",
+          fill: "black",
           position: "top",
         }}
         stroke="green"
@@ -324,8 +331,8 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
         />
       </YAxis>
       <Tooltip content={<CustomTooltip />} />
-      <Bar dataKey="goalValue" fill="#A7C7E7" />
-      <Bar dataKey="behaviorValue">
+      <Bar dataKey="goalValue" fill="#A7C7E7" stackId="stack"/>
+      <Bar dataKey="behaviorValue"stackId="stack">
         {data.map((entry, index) => (
           <Cell
             key={index}
@@ -364,7 +371,7 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
         label={{
           value: "Recommended Level",
           className: "tracking-reference",
-          fill: "#FF7F50",
+          fill: "black",
           position: "top",
         }}
         stroke="green"
@@ -385,45 +392,78 @@ const TrackingScreen = () => {
   const [allBehaviorData, setAllBehaviorData] = useState([]);
 
   const [chartType, setChartType] = useState("bar");
+  const [lineChartView, setLineChartView] = useState("bothLines");
 
   const [activityBehaviorData, setActivityBehaviorData] = useState([]);
-  const [filteredActivityBehaviorData, setFilteredActivityBehaviorData] = useState(activityBehaviorData);
+  const [filteredActivityBehaviorData, setFilteredActivityBehaviorData] =
+    useState(activityBehaviorData);
   const [screentimeBehaviorData, setScreentimeBehaviorData] = useState([]);
-  const [filteredScreentimeBehaviorData, setFilteredScreentimeBehaviorData] = useState(screentimeBehaviorData);
+  const [filteredScreentimeBehaviorData, setFilteredScreentimeBehaviorData] =
+    useState(screentimeBehaviorData);
   const [eatingBehaviorData, setEatingBehaviorData] = useState([]);
-  const [filteredEatingBehaviorData, setFilteredEatingBehaviorData] = useState(eatingBehaviorData);
+  const [filteredEatingBehaviorData, setFilteredEatingBehaviorData] =
+    useState(eatingBehaviorData);
   const [sleepBehaviorData, setSleepBehaviorData] = useState([]);
-  const [filteredSleepBehaviorData, setFilteredSleepBehaviorData] = useState(sleepBehaviorData);
+  const [filteredSleepBehaviorData, setFilteredSleepBehaviorData] =
+    useState(sleepBehaviorData);
 
-  const [dateRange, setDateRange] = useState([{
-    startDate: new Date(),
-    endDate: addDays(new Date(), 7),
-    key: "selection",
-  }]);
+  const [dateRange, setDateRange] = useState([
+    {
+      startDate: subDays(new Date(), 7),
+      endDate: addDays(subDays(new Date(), 7), 7),
+      key: "selection",
+    },
+  ]);
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   useEffect(() => {
-    setFilteredActivityBehaviorData(activityBehaviorData.filter((item) => {
-      if (new Date(item.date) < dateRange[0].endDate
-      && new Date(item.date) > dateRange[0].startDate) {
-        return item;
-      }}));
-    setFilteredScreentimeBehaviorData(screentimeBehaviorData.filter((item) => {
-      if (new Date(item.date) < dateRange[0].endDate
-      && new Date(item.date) > dateRange[0].startDate) {
-        return item;
-      }}));
-    setFilteredEatingBehaviorData(eatingBehaviorData.filter((item) => {
-      if (new Date(item.date) < dateRange[0].endDate
-      && new Date(item.date) > dateRange[0].startDate) {
-        return item;
-      }}));
-    setFilteredSleepBehaviorData(sleepBehaviorData.filter((item) => {
-      if (new Date(item.date) < dateRange[0].endDate
-      && new Date(item.date) > dateRange[0].startDate) {
-        return item;
-      }}));
-  }, [dateRange]);
+    setFilteredActivityBehaviorData(
+      activityBehaviorData.filter((item) => {
+        if (
+          new Date(item.date) < dateRange[0].endDate &&
+          new Date(item.date) > dateRange[0].startDate
+        ) {
+          return item;
+        }
+      })
+    );
+    setFilteredScreentimeBehaviorData(
+      screentimeBehaviorData.filter((item) => {
+        if (
+          new Date(item.date) < dateRange[0].endDate &&
+          new Date(item.date) > dateRange[0].startDate
+        ) {
+          return item;
+        }
+      })
+    );
+    setFilteredEatingBehaviorData(
+      eatingBehaviorData.filter((item) => {
+        if (
+          new Date(item.date) < dateRange[0].endDate &&
+          new Date(item.date) > dateRange[0].startDate
+        ) {
+          return item;
+        }
+      })
+    );
+    setFilteredSleepBehaviorData(
+      sleepBehaviorData.filter((item) => {
+        if (
+          new Date(item.date) < dateRange[0].endDate &&
+          new Date(item.date) > dateRange[0].startDate
+        ) {
+          return item;
+        }
+      })
+    );
+  }, [
+    dateRange,
+    activityBehaviorData,
+    screentimeBehaviorData,
+    eatingBehaviorData,
+    sleepBehaviorData,
+  ]);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -627,6 +667,23 @@ const TrackingScreen = () => {
         </FormControl>
       </FilterWrapper>
 
+      {chartType === "line" && (
+          <FormControl style={{margin: "10px 0px"}}>
+            <InputLabel id="line-chart-view">Line View</InputLabel>
+            <Select
+              labelId="line-chart-view"
+              id="line-view"
+              value={lineChartView}
+              label="Line View"
+              onChange={(e) => setLineChartView(e.target.value)}
+            >
+              <MenuItem value="bothLines">Goal and Behavior Lines</MenuItem>
+              <MenuItem value="goalOnly">Goal Line</MenuItem>
+              <MenuItem value="behaviorOnly">Behavior Line</MenuItem>
+            </Select>
+          </FormControl>
+        )}
+
       <div>
         <input
           value={`${format(dateRange[0].startDate, "MM/dd/yyyy")} to ${format(
@@ -637,16 +694,17 @@ const TrackingScreen = () => {
           className="input-box"
           onClick={() => setCalendarOpen(!calendarOpen)}
         />
-        {calendarOpen && 
-        <DateRange  
-          onChange={item => setDateRange([item.selection])}
-          editableDateInputs={true}
-          moveRangeOnFirstSelection={false}
-          ranges={dateRange}
-          months={1}
-          direction="horizontal"
-          className="calendarElement"
-        />}
+        {calendarOpen && (
+          <DateRange
+            onChange={(item) => setDateRange([item.selection])}
+            editableDateInputs={true}
+            moveRangeOnFirstSelection={false}
+            ranges={dateRange}
+            months={1}
+            direction="horizontal"
+            className="calendarElement"
+          />
+        )}
       </div>
 
       <div
@@ -661,6 +719,7 @@ const TrackingScreen = () => {
           <BehaviorLineChart
             data={filteredActivityBehaviorData}
             chartGoalType={"activity"}
+            lineChartView={lineChartView}
           />
         ) : (
           <BehaviorBarChart
@@ -673,6 +732,7 @@ const TrackingScreen = () => {
           <BehaviorLineChart
             data={filteredScreentimeBehaviorData}
             chartGoalType={"screentime"}
+            lineChartView={lineChartView}
           />
         ) : (
           <BehaviorBarChart
@@ -685,6 +745,7 @@ const TrackingScreen = () => {
           <BehaviorLineChart
             data={filteredEatingBehaviorData}
             chartGoalType={"eating"}
+            lineChartView={lineChartView}
           />
         ) : (
           <BehaviorBarChart
@@ -694,9 +755,16 @@ const TrackingScreen = () => {
         )}
         <h1>{shownUser.name}'s Sleep Behavior Data</h1>
         {chartType === "line" ? (
-          <BehaviorLineChart data={filteredSleepBehaviorData} chartGoalType={"sleep"} />
+          <BehaviorLineChart
+            data={filteredSleepBehaviorData}
+            chartGoalType={"sleep"}
+            lineChartView={lineChartView}
+          />
         ) : (
-          <BehaviorBarChart data={filteredSleepBehaviorData} chartGoalType={"sleep"} />
+          <BehaviorBarChart
+            data={filteredSleepBehaviorData}
+            chartGoalType={"sleep"}
+          />
         )}
       </div>
     </TrackingWrapper>

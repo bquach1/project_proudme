@@ -8,7 +8,7 @@ import withAuth from "../components/auth/withAuth";
 import { DATABASE_URL } from "../constants";
 
 const HomeWrapper = styled.div`
-  width: 60%;
+  width: 80%;
   margin: 0 auto;
   margin-top: 1%;
 
