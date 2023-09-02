@@ -73,7 +73,7 @@ const HomeScreen = (props) => {
           <li>
             Middle school students who are part of the Project ProudMe will be
             taught how to set SMART goals for their daily physical activity,
-            screen-time, fruits/vegetables consumption, and sleep time.{" "}
+            screen-time, fruit/vegetable consumption, and sleep time.{" "}
           </li>
           <li>
             Each student will be instructed to register a ProudMe account using
@@ -83,7 +83,7 @@ const HomeScreen = (props) => {
             Each student will be asked to (1) sign in the ProudMe website, (2)
             set SMART behavior goals regularly (e.g., once a day) and then (3)
             track their engagement of each health-related behavior (physical
-            activity, screen time, fruits/vegetable consumption, sleep time).{" "}
+            activity, screen time, fruit/vegetable consumption, sleep time).{" "}
           </li>
           <li>
             Each student, while on the Project ProudMe website, will interact
@@ -104,7 +104,7 @@ const HomeScreen = (props) => {
         <strong>II. ProudMe PE Resources </strong>
         <div>This website publishes important resources
         related to the ProudMe PE curriculum. This is a 12-lesson curriculum
-        unit that educates middle students knowledge, skill, and disposition to
+        unit that educates middle school students' knowledge, skill, and disposition to
         adopt obesity-prevention behaviors (more physical activity, less screen
         time, more fruits/vegetables, and get enough sleep). The website
         contains lesson plans for the curriculum unit that are accessible for

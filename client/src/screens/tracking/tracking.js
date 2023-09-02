@@ -214,6 +214,7 @@ const BehaviorLineChart = ({ data, chartGoalType }) => {
         stroke="#A7C7E7"
         strokeWidth={3}
         activeDot={{ r: 6 }}
+        label
       />
       <defs>
         <linearGradient
