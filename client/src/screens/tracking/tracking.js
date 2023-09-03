@@ -81,11 +81,15 @@ export const CustomTooltip = ({ active, payload, label }) => {
               <div id={`goal-${index}`} style={{ color: "#A7C7E7" }}>
                 Goal Value: {pld.value}
               </div>
-            ) : (
+            ) : pld.dataKey === "behaviorValue" ? (
               <div id={`behavior-${index}`} style={{ color: "#8884d8" }}>
                 Behavior Value: {pld.value}
               </div>
-            )}
+            ) :
+              <div id={`recommendedVal-${index}`} style={{ color: "#8884d8" }}>
+                Recommended Value: {pld.value}
+              </div>
+            }
           </div>
         ))}
       </div>
@@ -111,26 +115,28 @@ export const CustomLegend = ({ payload }) => {
     >
       <h2 style={{ width: "20%" }}>Legend</h2>
       <div style={{ display: "flex", flexDirection: "column" }}>
-        {payload.map((entry, index) => (
-          <div key={index} style={{ display: "flex" }}>
-            <div
-              style={{
-                backgroundColor:
-                  entry.value === "goalValue" ? "#A7C7E7" : "#8884d8",
-                width: 20,
-                height: 15,
-                marginRight: 10,
-              }}
-            />
-            <div key={index}>
-              {entry.value === "goalValue"
-                ? "Goal Value"
-                : entry.value === "behaviorValue"
-                ? "Behavior Value (Met Goal)"
-                : null}
-            </div>
-          </div>
-        ))}
+      <div style={{ display: "flex" }}>
+          <div
+            style={{
+              backgroundColor: "#A7C7E7",
+              width: 20,
+              height: 15,
+              marginRight: 10,
+            }}
+          />
+          Goal Value
+        </div>
+        <div style={{ display: "flex" }}>
+          <div
+            style={{
+              backgroundColor: "#8884d8",
+              width: 20,
+              height: 15,
+              marginRight: 10,
+            }}
+          />
+          Behavior Value (Met Goal)
+        </div>
         <div style={{ display: "flex" }}>
           <div
             style={{
@@ -332,7 +338,7 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
       </YAxis>
       <Tooltip content={<CustomTooltip />} />
       <Bar dataKey="goalValue" fill="#A7C7E7" stackId="stack"/>
-      <Bar dataKey="behaviorValue"stackId="stack">
+      <Bar dataKey="behaviorValue" stackId="stack">
         {data.map((entry, index) => (
           <Cell
             key={index}
@@ -357,8 +363,8 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
           />
         ))}
       </Bar>
-      <Legend wrapperStyle={{ paddingTop: 20 }} content={<CustomLegend />} />
-      <ReferenceLine
+      <Bar dataKey="recommendedValue" stackId="stack" />
+      {/* <ReferenceLine
         y={
           chartGoalType === "activity"
             ? 60
@@ -376,7 +382,8 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
         }}
         stroke="green"
         strokeWidth={2}
-      />
+      /> */}
+      <Legend wrapperStyle={{ paddingTop: 20 }} content={<CustomLegend />} />
     </BarChart>
   );
 };
@@ -415,6 +422,10 @@ const TrackingScreen = () => {
     },
   ]);
   const [calendarOpen, setCalendarOpen] = useState(false);
+
+  useEffect(() => {
+    console.log(activityBehaviorData);
+  })
 
   useEffect(() => {
     setFilteredActivityBehaviorData(

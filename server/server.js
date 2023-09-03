@@ -115,6 +115,10 @@ const behaviorSchema = new mongoose.Schema({
   reflection: {
     type: String,
   },
+  recommendedValue: {
+    type: Number,
+    default: 0,
+  }
 });
 
 const Goal = mongoose.model("Goal", goalSchema);
@@ -170,6 +174,7 @@ app.post("/goals", async (req, res) => {
             date: req.body.date,
             goalStatus:
               req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
+            recommendedValue: req.body.recommendedValue,
           },
         },
         {
@@ -188,6 +193,7 @@ app.post("/goals", async (req, res) => {
         reflection: req.body.reflection,
         date: req.body.date,
         goalStatus: req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
+        recommendedValue: req.body.recommendedValue,
       });
       const savedGoal = await goal.save();
       res.status(201).json(savedGoal);
@@ -223,6 +229,7 @@ app.post("/behaviors", async (req, res) => {
             divInfo1: req.body.divInfo1,
             divInfo2: req.body.divInfo2,
             reflection: req.body.reflection,
+            recommendedValue: req.body.recommendedValue,
           },
         },
         {
@@ -242,6 +249,7 @@ app.post("/behaviors", async (req, res) => {
         divInfo1: req.body.divInfo1,
         divInfo2: req.body.divInfo2,
         reflection: req.body.reflection,
+        recommendedValue: req.body.recommendedValue,
       });
       const savedBehavior = await behavior.save();
       res.status(201).json(savedBehavior);

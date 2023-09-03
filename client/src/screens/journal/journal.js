@@ -98,6 +98,7 @@ const JournalScreen = () => {
       reflection: "",
       behaviorValue: 0,
       date: date,
+      recommendedValue: 60,
     },
   ]);
   const [screentimeGoal, setScreentimeGoal] = useState([
@@ -111,6 +112,7 @@ const JournalScreen = () => {
       reflection: "",
       behaviorValue: 0,
       date: date,
+      recommendedValue: 120,
     },
   ]);
   const [eatingGoal, setEatingGoal] = useState([
@@ -123,6 +125,7 @@ const JournalScreen = () => {
       reflection: "",
       behaviorValue: 0,
       date: date,
+      recommendedValue: 5,
     },
   ]);
   const [sleepGoal, setSleepGoal] = useState([
@@ -136,6 +139,7 @@ const JournalScreen = () => {
       reflection: "",
       behaviorValue: 0,
       date: date,
+      recommendedValue: 9,
     },
   ]);
 
@@ -416,6 +420,7 @@ const JournalScreen = () => {
                 ? "yes"
                 : "no",
               reflection: newReflection,
+              recommendedValue: 60,
             })
             .then((response) => {
               console.log(response.data);
@@ -443,6 +448,7 @@ const JournalScreen = () => {
               divInfo1: activityGoal[0].divInfo1,
               divInfo2: activityGoal[0].divInfo2,
               reflection: newReflection,
+              recommendedValue: 60,
             })
             .then((response) => {
               console.log(response.data);
@@ -473,6 +479,7 @@ const JournalScreen = () => {
                 ? "yes"
                 : "no",
               reflection: newReflection,
+              recommendedValue: 120,
             })
             .then((response) => {
               console.log(response.data);
@@ -500,6 +507,7 @@ const JournalScreen = () => {
               divInfo1: screentimeGoal[0].divInfo1,
               divInfo2: screentimeGoal[0].divInfo2,
               reflection: newReflection,
+              recommendedValue: 120,
             })
             .then((response) => {
               console.log(response.data);
@@ -530,6 +538,7 @@ const JournalScreen = () => {
                 ? "yes"
                 : "no",
               reflection: newReflection,
+              recommendedValue: 5,
             })
             .then((response) => {
               console.log(response.data);
@@ -557,6 +566,7 @@ const JournalScreen = () => {
               divInfo1: eatingGoal[0].divInfo1,
               divInfo2: eatingGoal[0].divInfo2,
               reflection: newReflection,
+              recommendedValue: 5,
             })
             .then((response) => {
               console.log(response.data);
@@ -587,6 +597,7 @@ const JournalScreen = () => {
                 ? "yes"
                 : "no",
               reflection: newReflection,
+              recommendedValue: 9,
             })
             .then((response) => {
               console.log(response.data);
@@ -614,6 +625,7 @@ const JournalScreen = () => {
               divInfo1: sleepGoal[0].divInfo1,
               divInfo2: sleepGoal[0].divInfo2,
               reflection: newReflection,
+              recommendedValue: 9,
             })
             .then((response) => {
               console.log(response.data);
