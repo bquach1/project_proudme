@@ -86,7 +86,7 @@ export const CustomTooltip = ({ active, payload, label }) => {
                 Behavior Value: {pld.value}
               </div>
             ) :
-              <div id={`recommendedVal-${index}`} style={{ color: "#8884d8" }}>
+              <div id={`recommendedVal-${index}`} style={{ color: "green" }}>
                 Recommended Value: {pld.value}
               </div>
             }
@@ -337,6 +337,7 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
         />
       </YAxis>
       <Tooltip content={<CustomTooltip />} />
+      <Bar dataKey="recommendedValue" fill="green" stackId="stack" />
       <Bar dataKey="goalValue" fill="#A7C7E7" stackId="stack"/>
       <Bar dataKey="behaviorValue" stackId="stack">
         {data.map((entry, index) => (
@@ -362,8 +363,7 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
             }
           />
         ))}
-      </Bar>
-      <Bar dataKey="recommendedValue" stackId="stack" />
+      </Bar>      
       {/* <ReferenceLine
         y={
           chartGoalType === "activity"
