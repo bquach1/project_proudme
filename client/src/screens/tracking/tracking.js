@@ -12,6 +12,7 @@ import {
   ReferenceLine,
   Cell,
   Legend,
+  LabelList,
 } from "recharts";
 import axios from "axios";
 import styled from "styled-components";
@@ -85,7 +86,7 @@ export const CustomTooltip = ({ active, payload, label }) => {
               <div id={`behavior-${index}`} style={{ color: "#8884d8" }}>
                 Behavior Value: {pld.value}
               </div>
-            ) :
+            ) : (
               <div id={`recommendedVal-${index}`} style={{ color: "green" }}>
                 Recommended Value: {pld.value}
               </div>
@@ -232,7 +233,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
           dataKey="goalValue"
           stroke="#A7C7E7"
           strokeWidth={3}
-          activeDot={{ r: 6 }}          
+          activeDot={{ r: 6 }}
         />
       )}
 
@@ -308,6 +309,21 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
   );
 };
 
+// const CustomLabel = ({ x, y, value }) => {
+//   // Customize the label text here
+//   const customText = `Recommended Level: ${value}`;
+
+//   if (value) {
+//     return (
+//       <text x={x + 105} y={y + 20} fill="black" textAnchor="middle">
+//         {customText}
+//       </text>
+//     );
+//   } else {
+//     return null;
+//   }
+// };
+
 const BehaviorBarChart = ({ data, chartGoalType }) => {
   return (
     <BarChart
@@ -347,9 +363,23 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
         />
       </YAxis>
       <Tooltip content={<CustomTooltip />} />
-      <Bar dataKey="recommendedValue" fill="green" stackId="stack" />
-      <Bar dataKey="goalValue" fill="#A7C7E7" stackId="stack"/>
+      <Bar dataKey="recommendedValue" fill="green" stackId="stack">
+        <LabelList
+          dataKey="recommendedValue"
+          fill="white"
+        />
+      </Bar>
+      <Bar dataKey="goalValue" fill="#A7C7E7" stackId="stack">
+        <LabelList
+          dataKey="goalValue"
+          fill="white"
+        />
+      </Bar>
       <Bar dataKey="behaviorValue" stackId="stack">
+        <LabelList
+          dataKey="behaviorValue"
+          fill="white"
+        />
         {data.map((entry, index) => (
           <Cell
             key={index}
@@ -373,7 +403,7 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
             }
           />
         ))}
-      </Bar>      
+      </Bar>
       {/* <ReferenceLine
         y={
           chartGoalType === "activity"
