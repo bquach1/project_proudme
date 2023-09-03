@@ -85,11 +85,11 @@ export const CustomTooltip = ({ active, payload, label }) => {
               <div id={`behavior-${index}`} style={{ color: "#8884d8" }}>
                 Behavior Value: {pld.value}
               </div>
-            ) :
-              <div id={`recommendedVal-${index}`} style={{ color: "#8884d8" }}>
+            ) : (
+              <div id={`recommendedVal-${index}`} style={{ color: "green" }}>
                 Recommended Value: {pld.value}
               </div>
-            }
+            )}
           </div>
         ))}
       </div>
@@ -98,7 +98,7 @@ export const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-export const CustomLegend = ({ payload }) => {
+export const CustomLegend = () => {
   return (
     <div
       style={{
@@ -115,12 +115,23 @@ export const CustomLegend = ({ payload }) => {
     >
       <h2 style={{ width: "20%" }}>Legend</h2>
       <div style={{ display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex" }}>
+        <div style={{ display: "flex" }}>
+          <div
+            style={{
+              backgroundColor: "green",
+              width: 20,
+              height: 20,
+              marginRight: 10,
+            }}
+          />
+          Recommended Goal Value
+        </div>
+        <div style={{ display: "flex" }}>
           <div
             style={{
               backgroundColor: "#A7C7E7",
               width: 20,
-              height: 15,
+              height: 20,
               marginRight: 10,
             }}
           />
@@ -131,7 +142,7 @@ export const CustomLegend = ({ payload }) => {
             style={{
               backgroundColor: "#8884d8",
               width: 20,
-              height: 15,
+              height: 20,
               marginRight: 10,
             }}
           />
@@ -142,7 +153,7 @@ export const CustomLegend = ({ payload }) => {
             style={{
               backgroundColor: "#77DD77",
               width: 20,
-              height: 15,
+              height: 20,
               marginRight: 10,
             }}
           />
@@ -153,7 +164,7 @@ export const CustomLegend = ({ payload }) => {
             style={{
               backgroundColor: "#FF6961",
               width: 20,
-              height: 15,
+              height: 20,
               marginRight: 10,
             }}
           />
@@ -164,7 +175,7 @@ export const CustomLegend = ({ payload }) => {
             style={{
               backgroundColor: "#FFC000",
               width: 20,
-              height: 15,
+              height: 20,
               marginRight: 10,
             }}
           />
@@ -215,17 +226,16 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
       </YAxis>
 
       <Tooltip content={<CustomTooltip />} />
-      { lineChartView !== "behaviorOnly" &&
-      <Line
-        type="linear"
-        dataKey="goalValue"
-        stroke="#A7C7E7"
-        strokeWidth={3}
-        activeDot={{ r: 6 }}
-        label
-      />
-      }
-      
+      {lineChartView !== "behaviorOnly" && (
+        <Line
+          type="linear"
+          dataKey="goalValue"
+          stroke="#A7C7E7"
+          strokeWidth={3}
+          activeDot={{ r: 6 }}          
+        />
+      )}
+
       <defs>
         <linearGradient
           id={`colorUv${chartGoalType}`}
@@ -265,15 +275,15 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
         </linearGradient>
       </defs>
 
-      { lineChartView !== "goalOnly" &&
-      <Line
-        type="linear"
-        dataKey="behaviorValue"
-        stroke={`url(#colorUv${chartGoalType})`}
-        strokeWidth={3}
-        activeDot={{ r: 6 }}
-      />
-      }
+      {lineChartView !== "goalOnly" && (
+        <Line
+          type="linear"
+          dataKey="behaviorValue"
+          stroke={`url(#colorUv${chartGoalType})`}
+          strokeWidth={3}
+          activeDot={{ r: 6 }}
+        />
+      )}
       <Legend wrapperStyle={{ paddingTop: 20 }} content={<CustomLegend />} />
       <ReferenceLine
         y={
@@ -337,7 +347,8 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
         />
       </YAxis>
       <Tooltip content={<CustomTooltip />} />
-      <Bar dataKey="goalValue" fill="#A7C7E7" stackId="stack"/>
+      <Bar dataKey="recommendedValue" fill="green" stackId="stack" />
+      <Bar dataKey="goalValue" fill="#A7C7E7" stackId="stack" />
       <Bar dataKey="behaviorValue" stackId="stack">
         {data.map((entry, index) => (
           <Cell
@@ -363,7 +374,6 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
           />
         ))}
       </Bar>
-      <Bar dataKey="recommendedValue" stackId="stack" />
       {/* <ReferenceLine
         y={
           chartGoalType === "activity"
@@ -425,7 +435,7 @@ const TrackingScreen = () => {
 
   useEffect(() => {
     console.log(activityBehaviorData);
-  })
+  });
 
   useEffect(() => {
     setFilteredActivityBehaviorData(
@@ -679,21 +689,21 @@ const TrackingScreen = () => {
       </FilterWrapper>
 
       {chartType === "line" && (
-          <FormControl style={{margin: "10px 0px"}}>
-            <InputLabel id="line-chart-view">Line View</InputLabel>
-            <Select
-              labelId="line-chart-view"
-              id="line-view"
-              value={lineChartView}
-              label="Line View"
-              onChange={(e) => setLineChartView(e.target.value)}
-            >
-              <MenuItem value="bothLines">Goal and Behavior Lines</MenuItem>
-              <MenuItem value="goalOnly">Goal Line</MenuItem>
-              <MenuItem value="behaviorOnly">Behavior Line</MenuItem>
-            </Select>
-          </FormControl>
-        )}
+        <FormControl style={{ margin: "10px 0px" }}>
+          <InputLabel id="line-chart-view">Line View</InputLabel>
+          <Select
+            labelId="line-chart-view"
+            id="line-view"
+            value={lineChartView}
+            label="Line View"
+            onChange={(e) => setLineChartView(e.target.value)}
+          >
+            <MenuItem value="bothLines">Goal and Behavior Lines</MenuItem>
+            <MenuItem value="goalOnly">Goal Line</MenuItem>
+            <MenuItem value="behaviorOnly">Behavior Line</MenuItem>
+          </Select>
+        </FormControl>
+      )}
 
       <div>
         <input

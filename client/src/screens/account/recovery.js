@@ -55,12 +55,6 @@ const Recovery = () => {
   const [resetMode, setResetMode] = useState("");
 
   useEffect(() => {
-    console.log(verificationCode);
-    console.log(resetPassword);
-    console.log(resetPasswordConfirm);
-  });
-
-  useEffect(() => {
     setEmailData((prevEmailData) => ({
       ...prevEmailData,
       to: email,
@@ -93,7 +87,6 @@ const Recovery = () => {
 
   const changePassword = async () => {
     const hashedPassword = await bcrypt.hash(resetPassword, 10);
-    console.log(hashedPassword);
     axios.post(`${DATABASE_URL}/user`, {
       email: email,
       password: hashedPassword,
