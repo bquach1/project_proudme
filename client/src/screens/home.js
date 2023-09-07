@@ -11,6 +11,14 @@ const HomeWrapper = styled.div`
   width: 80%;
   margin: 0 auto;
   margin-top: 1%;
+  text-align: left;
+
+  font-family: Palatino;
+  font-size: 18px;
+
+  .home {
+    text-align: center;
+  }
 
   .text-box {
     margin-top: 3%;
@@ -52,10 +60,13 @@ const HomeScreen = (props) => {
   var currentTime = dateToday.toLocaleTimeString();
 
   return (
-    <HomeWrapper className="home">
-      <h1 className="title">Hello {user.firstName}!</h1>
-      <h4>{exactTime}</h4>
-      <h4>{currentTime}</h4>
+    <HomeWrapper>
+      <div className="home">
+        <h1 className="title">Hello {user.firstName}!</h1>
+        <h4>{exactTime}</h4>
+        <h4>{currentTime}</h4>
+      </div>
+      <div style={{margin: 0}}>
       <div className="text-box">
         Welcome to the home page of ProudMe! ProudMe is an adolescent obesity
         prevention intervention in Louisiana. Project ProudMe is led by Dr.
@@ -126,6 +137,7 @@ const HomeScreen = (props) => {
           senlinchen@lsu.edu
         </a>
         ). Thank you!
+      </div>
       </div>
       {/* <div className="imageWrapper">
         <div className="left-icons">

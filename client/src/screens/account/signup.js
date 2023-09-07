@@ -8,6 +8,7 @@ import {
   Typography,
   Select,
   MenuItem,
+  TextField,
 } from "@mui/material";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
@@ -15,12 +16,30 @@ import { CircularProgress } from "@mui/material";
 import "../../css/signup.css";
 import { DATABASE_URL } from "../../constants";
 
+const generateVerificationCode = () => {
+  const charset =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let code = "";
+  let length = 8;
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    code += charset[randomIndex];
+  }
+  return code;
+};
+
 const SignUpScreen = () => {
   const navigate = useNavigate();
 
   // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [verificationCode, setVerificationCode] = useState(
+    generateVerificationCode()
+  );
+
+  const [accountConfirm, setAccountConfirm] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -43,32 +62,67 @@ const SignUpScreen = () => {
     });
   }
 
-  // This function will handle the submission.
-  const handleSubmit = (event) => {
-    setLoading(true);
+  const handleAccountConfirmChange = (e) => {
+    setAccountConfirm(e.target.value);
+  };
+
+  const [emailData, setEmailData] = useState({
+    to: "",
+    from: "quachbruce@gmail.com",
+    subject: "Project ProudME Registration Confirmation",
+    text:
+      "Enter the confirmation code listed to confirm your email account: " +
+      verificationCode,
+  });
+
+  const handleAccountConfirm = async (event) => {
     event.preventDefault();
-    axios
-      .post(`${DATABASE_URL}/signup`, {
-        email: form.email,
-        password: form.password,
-        confirmPassword: form.confirmPassword,
-        name: form.name,
-        firstName: form.firstName,
-        lastName: form.lastName,
-        schoolName: form.schoolAttending,
-        birthMonth: form.birthMonth,
-        birthYear: form.birthYear,
-        gradeLevel: form.gradeLevel,
-        gender: form.gender,
-      })
-      .then((response) => {
-        setLoading(false);
-        setSubmitted(true);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    setLoading(true);
+    if (verificationCode === accountConfirm) {
+      console.log("beans");
+      await axios
+        .post(`${DATABASE_URL}/signup`, {
+          email: form.email,
+          password: form.password,
+          confirmPassword: form.confirmPassword,
+          name: form.name,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          schoolName: form.schoolAttending,
+          birthMonth: form.birthMonth,
+          birthYear: form.birthYear,
+          gradeLevel: form.gradeLevel,
+          gender: form.gender,
+        })
+        .then((response) => {
+          setLoading(false);
+          setSubmitted(true);
+          setConfirming(false);                
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });          
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const newEmailData = {
+        subject: "Project ProudME Registration Confirmation",
+        to: form.email,
+        text:
+          "Enter the confirmation code listed to confirm your email account: " +
+          verificationCode,
+      };
+      console.log(newEmailData);
+      setEmailData(newEmailData);
+      await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
+      setConfirming(true);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const renderForm = (
@@ -87,7 +141,7 @@ const SignUpScreen = () => {
         <div className="input-container">
           <label>Password: </label>
           <input
-            className="signup-input"          
+            className="signup-input"
             onChange={(e) => updateForm({ password: e.target.value })}
             type="password"
             value={form.password}
@@ -97,7 +151,7 @@ const SignUpScreen = () => {
         <div className="input-container">
           <label>Confirm Password: </label>
           <input
-            className="signup-input"            
+            className="signup-input"
             onChange={(e) => updateForm({ confirmPassword: e.target.value })}
             type="password"
             value={form.confirmPassword}
@@ -243,7 +297,7 @@ const SignUpScreen = () => {
           <div className="input-container">
             <label>Email Address: </label>
             <input
-              className="signup-input"              
+              className="signup-input"
               type="text"
               onChange={(e) => updateForm({ email: e.target.value })}
               value={form.email}
@@ -298,7 +352,41 @@ const SignUpScreen = () => {
           >
             Register
           </Button>
-        </div>
+        </div>        
+      </form>
+      {confirming && (
+          <div style={{ marginTop: "2%" }}>
+            Enter the confirmation code sent to your email to reset your
+            password!
+            <form
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "2%",
+              }}
+              onSubmit={handleAccountConfirm}
+            >
+              <TextField
+                type="text"
+                name="account-confirm"
+                value={accountConfirm}
+                onChange={handleAccountConfirmChange}
+                placeholder="Verification Code"
+                style={{ width: "20%" }}
+              />
+              <Button
+                style={{
+                  backgroundColor: "green",
+                  textTransform: "none",
+                  color: "white",
+                }}
+                type="submit"
+              >
+                Confirm Account
+              </Button>
+            </form>
+          </div>
+        )}
         <div className="signup-registration">
           <h2>
             Already have an account?{" "}
@@ -307,7 +395,6 @@ const SignUpScreen = () => {
             </a>
           </h2>
         </div>
-      </form>
     </div>
   );
 
