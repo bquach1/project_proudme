@@ -101,7 +101,7 @@ export const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-export const CustomLegend = ({ payload }) => {
+export const CustomLegend = () => {
   return (
     <div
       style={{
@@ -121,9 +121,20 @@ export const CustomLegend = ({ payload }) => {
         <div style={{ display: "flex" }}>
           <div
             style={{
+              backgroundColor: "green",
+              width: 20,
+              height: 20,
+              marginRight: 10,
+            }}
+          />
+          Recommended Goal Value
+        </div>
+        <div style={{ display: "flex" }}>
+          <div
+            style={{
               backgroundColor: "#A7C7E7",
               width: 20,
-              height: 15,
+              height: 20,
               marginRight: 10,
             }}
           />
@@ -134,7 +145,7 @@ export const CustomLegend = ({ payload }) => {
             style={{
               backgroundColor: "#8884d8",
               width: 20,
-              height: 15,
+              height: 20,
               marginRight: 10,
             }}
           />
@@ -145,7 +156,7 @@ export const CustomLegend = ({ payload }) => {
             style={{
               backgroundColor: "#77DD77",
               width: 20,
-              height: 15,
+              height: 20,
               marginRight: 10,
             }}
           />
@@ -156,7 +167,7 @@ export const CustomLegend = ({ payload }) => {
             style={{
               backgroundColor: "#FF6961",
               width: 20,
-              height: 15,
+              height: 20,
               marginRight: 10,
             }}
           />
@@ -167,7 +178,7 @@ export const CustomLegend = ({ payload }) => {
             style={{
               backgroundColor: "#FFC000",
               width: 20,
-              height: 15,
+              height: 20,
               marginRight: 10,
             }}
           />
@@ -224,7 +235,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
           dataKey="goalValue"
           stroke="#A7C7E7"
           strokeWidth={3}
-          activeDot={{ r: 6 }}
+          activeDot={{ r: 6 }}          
         />
       )}
 
