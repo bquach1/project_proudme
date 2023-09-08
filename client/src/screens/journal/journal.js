@@ -101,6 +101,7 @@ const JournalScreen = () => {
       behaviorValue: 0,
       date: date,
       recommendedValue: 60,
+      dateToday: new Date(),
     },
   ]);
   const [screentimeGoal, setScreentimeGoal] = useState([
@@ -115,6 +116,7 @@ const JournalScreen = () => {
       behaviorValue: 0,
       date: date,
       recommendedValue: 120,
+      dateToday: new Date(),
     },
   ]);
   const [eatingGoal, setEatingGoal] = useState([
@@ -128,6 +130,7 @@ const JournalScreen = () => {
       behaviorValue: 0,
       date: date,
       recommendedValue: 5,
+      dateToday: new Date(),
     },
   ]);
   const [sleepGoal, setSleepGoal] = useState([
@@ -142,6 +145,7 @@ const JournalScreen = () => {
       behaviorValue: 0,
       date: date,
       recommendedValue: 9,
+      dateToday: new Date(),
     },
   ]);
 
@@ -171,6 +175,12 @@ const JournalScreen = () => {
       ? "I'm not too far away from my goal!"
       : "...";
   };
+
+  useEffect(() => {
+    console.log(activityGoal[0].dateToday);
+    console.log(dateToday);
+    console.log (typeof(new Date()));
+  })
 
   useEffect(() => {
     const fetchDailyBehavior = async (goalType) => {
@@ -422,6 +432,7 @@ const JournalScreen = () => {
                 ? "yes"
                 : "no",
               reflection: newReflection,
+              dateToday: new Date(),
               recommendedValue: 60,
             })
             .then((response) => {
@@ -481,6 +492,7 @@ const JournalScreen = () => {
                 ? "yes"
                 : "no",
               reflection: newReflection,
+              dateToday: new Date(),
               recommendedValue: 120,
             })
             .then((response) => {
@@ -540,6 +552,7 @@ const JournalScreen = () => {
                 ? "yes"
                 : "no",
               reflection: newReflection,
+              dateToday: new Date(),
               recommendedValue: 5,
             })
             .then((response) => {
@@ -599,6 +612,7 @@ const JournalScreen = () => {
                 ? "yes"
                 : "no",
               reflection: newReflection,
+              dateToday: new Date(),
               recommendedValue: 9,
             })
             .then((response) => {
@@ -644,7 +658,7 @@ const JournalScreen = () => {
 
   return (
     <Wrapper>
-      <h1 style={{ color: "#2E6AA1" }}>My Journal</h1>
+      <h1 style={{ color: "#2E6AA1" }}>My Journal (Last Logged {typeof(activityGoal[0].dateToday)} )</h1>
       <JournalWrapper>
         <img
           className="journalCover"
@@ -1091,8 +1105,8 @@ const JournalScreen = () => {
               <h2 style={styles.goalHeader}>Reflect</h2>
             </div>
             <div style={styles.goalRow}>
-              {activityData.length && loggedActivityToday ? (
-                <h4 style={styles.feedback}>{renderFeedback(activityData)}</h4>
+              {activityData.length && activityGoal[0].goalValue !== 0 && activityGoal[0].behaviorValue !== 0 ? (
+                <h4 style={styles.feedback}>{renderFeedback(activityGoal)}</h4>
               ) : (
                 <Tooltip title="Set an Activity goal today to see feedback!">
                   <LockIcon
@@ -1191,9 +1205,9 @@ const JournalScreen = () => {
             </div>
 
             <div style={styles.goalRow}>
-              {screentimeData.length && loggedScreentimeToday ? (
+              {screentimeData.length && screentimeGoal[0].goalValue !== 0 && screentimeGoal[0].behaviorValue !== 0 ? (
                 <h4 style={styles.feedback}>
-                  {renderFeedback(screentimeData)}
+                  {renderFeedback(screentimeGoal)}
                 </h4>
               ) : (
                 <Tooltip title="Set a Screentime goal today to see feedback!">
@@ -1226,7 +1240,7 @@ const JournalScreen = () => {
                 />
                 <Tooltip
                   title={
-                    !screentimeData.length
+                    !screentimeData.length || !loggedScreentimeToday
                       ? "Record your first Screentime goal for today!"
                       : screentimeData[0].goalValue -
                           screentimeData[0].goalValue ===
@@ -1293,8 +1307,8 @@ const JournalScreen = () => {
             </div>
 
             <div style={styles.goalRow}>
-              {eatingData.length && loggedEatingToday ? (
-                <h4 style={styles.feedback}>{renderFeedback(eatingData)}</h4>
+              {eatingData.length && eatingGoal[0].goalValue !== 0 && eatingGoal[0].behaviorValue !== 0 ? (
+                <h4 style={styles.feedback}>{renderFeedback(eatingGoal)}</h4>
               ) : (
                 <Tooltip title="Set an Eating goal today to see feedback!">
                   <LockIcon
@@ -1324,7 +1338,7 @@ const JournalScreen = () => {
                 />
                 <Tooltip
                   title={
-                    !eatingData.length
+                    !eatingData.length || !loggedEatingToday
                       ? "Record your first Eating goal for today!"
                       : eatingData[0].goalValue - eatingGoal[0].goalValue ===
                           0 &&
@@ -1385,8 +1399,8 @@ const JournalScreen = () => {
             </div>
 
             <div style={styles.goalRow}>
-              {sleepData.length && loggedSleepToday ? (
-                <h4 style={styles.feedback}>{renderFeedback(sleepData)}</h4>
+              {sleepData.length && sleepGoal[0].goalValue !== 0 && sleepGoal[0].behaviorValue !== 0 ? (
+                <h4 style={styles.feedback}>{renderFeedback(sleepGoal)}</h4>
               ) : (
                 <Tooltip title="Set a Sleep goal today to see feedback!">
                   <LockIcon
@@ -1416,7 +1430,7 @@ const JournalScreen = () => {
                 />
                 <Tooltip
                   title={
-                    !sleepData.length
+                    !sleepData.length || !loggedSleepToday
                       ? "Record your first Sleep goal for today!"
                       : sleepData[0].goalValue - sleepGoal[0].goalValue === 0 &&
                         sleepData[0].behaviorValue -
@@ -1531,26 +1545,26 @@ let styles = {
   },
   activityIcon: {
     width: "30px",
-    marginLeft: 20,
+    marginLeft: 10,
   },
   screentimeIcon: {
     width: "30px",
-    marginLeft: 20,
+    marginLeft: 10,
   },
   eatingIcon: {
     width: "30px",
-    marginLeft: 20,
+    marginLeft: 10,
   },
   sleepIcon: {
     width: "30px",
-    marginLeft: 20,
+    marginLeft: 10,
   },
   titleGroup: {
     display: "flex",
     margin: "auto",
     flexDirection: "row",
     width: "40%",
-    justifyContent: "flex-end",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   feedback: {

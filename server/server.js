@@ -75,6 +75,9 @@ const goalSchema = new mongoose.Schema({
   date: {
     type: String,
   },
+  dateToday: {
+    type: Date,
+  },
   goalStatus: {
     type: String,
   },
@@ -172,6 +175,7 @@ app.post("/goals", async (req, res) => {
             divInfo2: req.body.divInfo2,
             reflection: req.body.reflection,
             date: req.body.date,
+            dateToday: req.body.dateToday,
             goalStatus:
               req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
             recommendedValue: req.body.recommendedValue,
@@ -192,6 +196,7 @@ app.post("/goals", async (req, res) => {
         divInfo2: req.body.divInfo2,
         reflection: req.body.reflection,
         date: req.body.date,
+        dateToday: req.body.dateToday,
         goalStatus: req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
         recommendedValue: req.body.recommendedValue,
       });

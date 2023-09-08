@@ -127,8 +127,8 @@ const HomeScreen = (props) => {
       <div className="text-box">
         For questions about the Project ProudMe, please contact Dr. Chen’s lab –
         the Pedagogical Kinesiology Lab (
-        <a href="mailto:pklab@lsu.edu?subject=Project%20ProudME%20Feedback">
-          pklab@lsu.edu
+        <a href="mailto:quachbruce@gmail.com?subject=Project%20ProudME%20Feedback">
+          quachbruce@gmail.com
         </a>
         ). If your school is interested in becoming a partnership school, our
         lab offers small grants as incentives for you to participate. Please
