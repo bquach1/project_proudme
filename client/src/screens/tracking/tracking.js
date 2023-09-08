@@ -66,6 +66,7 @@ const FilterWrapper = styled.div`
 
 export const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
+
     return (
       <div
         style={{
@@ -75,9 +76,6 @@ export const CustomTooltip = ({ active, payload, label }) => {
         }}
       >
         <p className="label">{`${label}`}</p>
-        {payload.map((pld) => {
-          console.log(pld)
-        })}
         {payload.map((pld, index) => (
           <div key={index}>
             {pld.dataKey === "goalValue" ? (

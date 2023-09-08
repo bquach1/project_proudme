@@ -101,7 +101,6 @@ const JournalScreen = () => {
       behaviorValue: 0,
       date: date,
       recommendedValue: 60,
-      dateToday: new Date(),
     },
   ]);
   const [screentimeGoal, setScreentimeGoal] = useState([
@@ -116,7 +115,6 @@ const JournalScreen = () => {
       behaviorValue: 0,
       date: date,
       recommendedValue: 120,
-      dateToday: new Date(),
     },
   ]);
   const [eatingGoal, setEatingGoal] = useState([
@@ -130,7 +128,6 @@ const JournalScreen = () => {
       behaviorValue: 0,
       date: date,
       recommendedValue: 5,
-      dateToday: new Date(),
     },
   ]);
   const [sleepGoal, setSleepGoal] = useState([
@@ -145,7 +142,6 @@ const JournalScreen = () => {
       behaviorValue: 0,
       date: date,
       recommendedValue: 9,
-      dateToday: new Date(),
     },
   ]);
 
@@ -156,31 +152,25 @@ const JournalScreen = () => {
   const [sleepData, setSleepData] = useState({});
 
   const renderFeedback = (goalData) => {
-    return (goalData !== screentimeData &&
+    return (goalData !== screentimeGoal &&
       goalData[0].behaviorValue > goalData[0].goalValue) ||
-      (goalData === screentimeData &&
+      (goalData === screentimeGoal &&
         goalData[0].behaviorValue < goalData[0].goalValue)
       ? "Great! I exceeded my goal!"
       : goalData[0].behaviorValue === goalData[0].goalValue
       ? "Hooray! I reached my goal!"
-      : (goalData !== screentimeData &&
+      : (goalData !== screentimeGoal &&
           goalData[0].behaviorValue < goalData[0].goalValue / 2) ||
-        (goalData === screentimeData &&
+        (goalData === screentimeGoal &&
           goalData[0].behaviorValue > goalData[0].goalValue * 2)
       ? "I need to work harder to reach my goal!"
-      : (goalData !== screentimeData &&
+      : (goalData !== screentimeGoal &&
           goalData[0].behaviorValue < goalData[0].goalValue) ||
-        (goalData === screentimeData &&
+        (goalData === screentimeGoal &&
           goalData[0].behaviorValue > goalData[0].goalValue)
       ? "I'm not too far away from my goal!"
       : "...";
   };
-
-  useEffect(() => {
-    console.log(activityGoal[0].dateToday);
-    console.log(dateToday);
-    console.log (typeof(new Date()));
-  })
 
   useEffect(() => {
     const fetchDailyBehavior = async (goalType) => {
@@ -656,9 +646,18 @@ const JournalScreen = () => {
     }
   }
 
+  let lastLoggedDate =
+    activityData.length &&
+    new Date(activityData[0].dateToday).toLocaleDateString();
+  let lastLoggedTime =
+    activityData.length &&
+    new Date(activityData[0].dateToday).toLocaleTimeString();
+
   return (
     <Wrapper>
-      <h1 style={{ color: "#2E6AA1" }}>My Journal (Last Logged {typeof(activityGoal[0].dateToday)} )</h1>
+      <h1 style={{ color: "#2E6AA1" }}>
+        My Journal (Last Logged {lastLoggedDate} {lastLoggedTime})
+      </h1>
       <JournalWrapper>
         <img
           className="journalCover"
@@ -687,11 +686,17 @@ const JournalScreen = () => {
                       Exercise, do chores, play sports, and go out and do other
                       physical activities.
                       <br /> <strong>Recommended Level: 60 minutes/day</strong>
-                    </div>
+                      <br />
+                      <strong>Last Logged Time:</strong> {activityData.length && new Date(activityData[0].dateToday).toLocaleDateString()} {activityData.length && new Date(activityData[0].dateToday).toLocaleTimeString()}
+                    </div>                  
                   }
                 >
                   <HelpOutlineIcon
-                    style={{ fontSize: "16px", cursor: "pointer", marginLeft: -5 }}
+                    style={{
+                      fontSize: "16px",
+                      cursor: "pointer",
+                      marginLeft: -5,
+                    }}
                   />
                 </Tooltip>
               </div>
@@ -791,11 +796,16 @@ const JournalScreen = () => {
                       <strong>
                         Recommended Level: &lt; 2 hours (120 minutes)/day
                       </strong>
+                      <strong>Last Logged Time:</strong> {screentimeData.length && new Date(screentimeData[0].dateToday).toLocaleDateString()} {screentimeData.length && new Date(screentimeData[0].dateToday).toLocaleTimeString()}
                     </div>
                   }
                 >
                   <HelpOutlineIcon
-                    style={{ fontSize: "16px", cursor: "pointer", marginLeft: -5 }}
+                    style={{
+                      fontSize: "16px",
+                      cursor: "pointer",
+                      marginLeft: -5,
+                    }}
                   />
                 </Tooltip>
               </div>
@@ -896,11 +906,16 @@ const JournalScreen = () => {
                       Eat more servings of fruits and vegetables for a healthier
                       diet.
                       <br /> <strong>Recommended Level: 5 servings/day</strong>
+                      <strong>Last Logged Time:</strong> {eatingData.length && new Date(eatingData[0].dateToday).toLocaleDateString()} {eatingData.length && new Date(eatingData[0].dateToday).toLocaleTimeString()}
                     </div>
                   }
                 >
                   <HelpOutlineIcon
-                    style={{ fontSize: "16px", cursor: "pointer", marginLeft: -5 }}
+                    style={{
+                      fontSize: "16px",
+                      cursor: "pointer",
+                      marginLeft: -5,
+                    }}
                   />
                 </Tooltip>
               </div>
@@ -991,11 +1006,16 @@ const JournalScreen = () => {
                       Get a good night's rest to be productive and healthy.
                       <br />{" "}
                       <strong>Recommended Level: 9-11 hours/night</strong>
+                      <strong>Last Logged Time:</strong> {sleepData.length && new Date(sleepData[0].dateToday).toLocaleDateString()} {sleepData.length && new Date(sleepData[0].dateToday).toLocaleTimeString()}
                     </div>
                   }
                 >
                   <HelpOutlineIcon
-                    style={{ fontSize: "16px", cursor: "pointer", marginLeft: -5 }}
+                    style={{
+                      fontSize: "16px",
+                      cursor: "pointer",
+                      marginLeft: -5,
+                    }}
                   />
                 </Tooltip>
               </div>
@@ -1105,7 +1125,9 @@ const JournalScreen = () => {
               <h2 style={styles.goalHeader}>Reflect</h2>
             </div>
             <div style={styles.goalRow}>
-              {activityData.length && activityGoal[0].goalValue !== 0 && activityGoal[0].behaviorValue !== 0 ? (
+              {activityData.length &&
+              activityGoal[0].goalValue !== 0 &&
+              activityGoal[0].behaviorValue !== 0 ? (
                 <h4 style={styles.feedback}>{renderFeedback(activityGoal)}</h4>
               ) : (
                 <Tooltip title="Set an Activity goal today to see feedback!">
@@ -1205,7 +1227,9 @@ const JournalScreen = () => {
             </div>
 
             <div style={styles.goalRow}>
-              {screentimeData.length && screentimeGoal[0].goalValue !== 0 && screentimeGoal[0].behaviorValue !== 0 ? (
+              {screentimeData.length &&
+              screentimeGoal[0].goalValue !== 0 &&
+              screentimeGoal[0].behaviorValue !== 0 ? (
                 <h4 style={styles.feedback}>
                   {renderFeedback(screentimeGoal)}
                 </h4>
@@ -1307,7 +1331,9 @@ const JournalScreen = () => {
             </div>
 
             <div style={styles.goalRow}>
-              {eatingData.length && eatingGoal[0].goalValue !== 0 && eatingGoal[0].behaviorValue !== 0 ? (
+              {eatingData.length &&
+              eatingGoal[0].goalValue !== 0 &&
+              eatingGoal[0].behaviorValue !== 0 ? (
                 <h4 style={styles.feedback}>{renderFeedback(eatingGoal)}</h4>
               ) : (
                 <Tooltip title="Set an Eating goal today to see feedback!">
@@ -1399,7 +1425,9 @@ const JournalScreen = () => {
             </div>
 
             <div style={styles.goalRow}>
-              {sleepData.length && sleepGoal[0].goalValue !== 0 && sleepGoal[0].behaviorValue !== 0 ? (
+              {sleepData.length &&
+              sleepGoal[0].goalValue !== 0 &&
+              sleepGoal[0].behaviorValue !== 0 ? (
                 <h4 style={styles.feedback}>{renderFeedback(sleepGoal)}</h4>
               ) : (
                 <Tooltip title="Set a Sleep goal today to see feedback!">
