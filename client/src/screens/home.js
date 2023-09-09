@@ -8,12 +8,20 @@ import withAuth from "../components/auth/withAuth";
 import { DATABASE_URL } from "../constants";
 
 const HomeWrapper = styled.div`
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   margin-top: 1%;
+  text-align: left;
+
+  font-family: Calibri;
+  font-size: 20px;
+
+  .home {
+    text-align: center;
+  }
 
   .text-box {
-    margin-top: 3%;
+    margin-top: 2%;
 
     li {
         list-style-position: inside;
@@ -24,6 +32,7 @@ const HomeWrapper = styled.div`
 const HomeScreen = (props) => {
   const [user, setUser] = useState([]);
   const [exactTime, setExactTime] = useState("");
+  const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -38,6 +47,17 @@ const HomeScreen = (props) => {
 
     setExactTime(date);
   }, []);
+  
+  useEffect(() => {
+    const timerID = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+
+    return () => {
+      clearInterval(timerID);
+    };
+  }, []);
+
 
   var dateToday = new Date(),
     date =
@@ -49,13 +69,14 @@ const HomeScreen = (props) => {
       dateToday.getFullYear() +
       ".";
 
-  var currentTime = dateToday.toLocaleTimeString();
-
   return (
-    <HomeWrapper className="home">
-      <h1 className="title">Hello {user.firstName}!</h1>
-      <h4>{exactTime}</h4>
-      <h4>{currentTime}</h4>
+    <HomeWrapper>
+      <div className="home">
+        <h1 className="title">Hello {user.firstName}!</h1>
+        <h4>{exactTime}</h4>
+        <h4>{currentTime}</h4>
+      </div>
+      <div style={{margin: 0}}>
       <div className="text-box">
         Welcome to the home page of ProudMe! ProudMe is an adolescent obesity
         prevention intervention in Louisiana. Project ProudMe is led by Dr.
@@ -126,6 +147,7 @@ const HomeScreen = (props) => {
           senlinchen@lsu.edu
         </a>
         ). Thank you!
+      </div>
       </div>
       {/* <div className="imageWrapper">
         <div className="left-icons">

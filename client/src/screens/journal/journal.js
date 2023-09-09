@@ -3,7 +3,7 @@ import "../../css/journal.css";
 import withAuth from "../../components/auth/withAuth";
 import axios from "axios";
 
-import { TextField, Tooltip } from "@mui/material";
+import { TextField, Tooltip, Button } from "@mui/material";
 import styled from "styled-components";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
@@ -40,6 +40,8 @@ const JournalWrapper = styled.div`
 `;
 
 const GoalContainer = styled.div`
+  margin-left: 10px;
+
   .edit-icon {
     &:hover {
       cursor: pointer;
@@ -66,11 +68,11 @@ const ReflectionContainer = styled.div`
     &:hover {
       cursor: pointer;
       transition: 0.5s;
-      color: gray;
+      opacity: 0.7;
     }
 
     &.save:hover {
-      color: green;
+      background-color: green;
     }
   }
 `;
@@ -149,25 +151,76 @@ const JournalScreen = () => {
   const [eatingData, setEatingData] = useState({});
   const [sleepData, setSleepData] = useState({});
 
+  useEffect(() => {
+    console.log(screentimeGoal);
+  });
+
   const renderFeedback = (goalData) => {
-    return (goalData !== screentimeData &&
-      goalData[0].behaviorValue > goalData[0].goalValue) ||
-      (goalData === screentimeData &&
-        goalData[0].behaviorValue < goalData[0].goalValue)
-      ? "Great! I exceeded my goal!"
-      : goalData[0].behaviorValue === goalData[0].goalValue
-      ? "Hooray! I reached my goal!"
-      : (goalData !== screentimeData &&
-          goalData[0].behaviorValue < goalData[0].goalValue / 2) ||
-        (goalData === screentimeData &&
-          goalData[0].behaviorValue > goalData[0].goalValue * 2)
-      ? "I need to work harder to reach my goal!"
-      : (goalData !== screentimeData &&
-          goalData[0].behaviorValue < goalData[0].goalValue) ||
-        (goalData === screentimeData &&
-          goalData[0].behaviorValue > goalData[0].goalValue)
-      ? "I'm not too far away from my goal!"
-      : "...";
+    if (goalData === screentimeGoal) {
+      if (
+        goalData[0].behaviorValue <= goalData[0].goalValue / 2 &&
+        goalData[0].behaviorValue <= goalData[0].recommendedValue / 2
+      )
+        return "Bravo! I EXCEEDED my goal AND the recommended level of behavior! I am doing great!";
+      else if (
+        goalData[0].behaviorValue <= goalData[0].goalValue &&
+        goalData[0].behaviorValue <= goalData[0].recommendedValue
+      )
+        return "Hooray! I reached my goal AND the recommended level of behavior! Keep it up!";
+      else if (
+        goalData[0].behaviorValue <= goalData[0].goalValue &&
+        goalData[0].behaviorValue > goalData[0].recommendedValue
+      )
+        return "Great, I reached my goal! Next I will need to work harder to reach the recommended level of behavior!";
+      else if (
+        goalData[0].behaviorValue > goalData[0].goalValue &&
+        goalData[0].behaviorValue <= goalData[0].recommendedValue
+      )
+        return "Great, I reached the recommended behavior level! Next I will need to work harder to reach my own goal!";
+      else if (
+        goalData[0].behaviorValue > goalData[0].goalValue * 2 &&
+        goalData[0].behaviorValue > goalData[0].recommendedValue * 2
+      )
+        return "I need to work harder to reach my goal! I can do it!";
+      else if (
+        goalData[0].behaviorValue > goalData[0].goalValue &&
+        goalData[0].behaviorValue > goalData[0].recommendedValue
+      )
+        return "I'm not too far away from my goal AND the recommended level of behavior! Come on! My goal is within reach!";
+      else return "...";
+    } else {
+      if (
+        goalData[0].behaviorValue >= goalData[0].goalValue * 2 &&
+        goalData[0].behaviorValue >= goalData[0].recommendedValue * 2
+      )
+        return "Bravo! I EXCEEDED my goal AND the recommended level of behavior! I am doing great!";
+      else if (
+        goalData[0].behaviorValue >= goalData[0].goalValue &&
+        goalData[0].behaviorValue >= goalData[0].recommendedValue
+      )
+        return "Hooray! I reached my goal AND the recommended level of behavior! Keep it up!";
+      else if (
+        goalData[0].behaviorValue >= goalData[0].goalValue &&
+        goalData[0].behaviorValue < goalData[0].recommendedValue
+      )
+        return "Great, I reached my goal! Next I will need to work harder to reach the recommended level of behavior!";
+      else if (
+        goalData[0].behaviorValue < goalData[0].goalValue &&
+        goalData[0].behaviorValue >= goalData[0].recommendedValue
+      )
+        return "Great, I reached the recommended behavior level! Next I will need to work harder to reach my own goal!";
+      else if (
+        goalData[0].behaviorValue < goalData[0].goalValue / 2 &&
+        goalData[0].behaviorValue < goalData[0].recommendedValue / 2
+      )
+        return "I need to work harder to reach my goal! I can do it!";
+      else if (
+        goalData[0].behaviorValue < goalData[0].goalValue &&
+        goalData[0].behaviorValue < goalData[0].recommendedValue
+      )
+        return "I'm not too far away from my goal AND the recommended level of behavior! Come on! My goal is within reach!";
+      else return "...";
+    }
   };
 
   useEffect(() => {
@@ -262,7 +315,7 @@ const JournalScreen = () => {
             goalType: "eating",
           },
         });
-        if (response.data.length === 0) {
+        if (response.data.length === 0 || !loggedEatingToday) {
           setEatingGoal(eatingGoal);
         } else {
           setEatingGoal(response.data);
@@ -300,7 +353,7 @@ const JournalScreen = () => {
             goalType: "activity",
           },
         });
-        if (response.data.length === 0) {
+        if (response.data.length === 0 || !loggedActivityToday) {
           setActivityGoal(activityGoal);
         } else {
           setActivityGoal(response.data);
@@ -310,7 +363,7 @@ const JournalScreen = () => {
       }
     };
     fetchActivityGoals();
-  }, [user]);
+  }, [user, loggedActivityToday]);
 
   useEffect(() => {
     const fetchSleepGoals = async () => {
@@ -338,7 +391,7 @@ const JournalScreen = () => {
             goalType: "sleep",
           },
         });
-        if (response.data.length === 0) {
+        if (response.data.length === 0 || !loggedSleepToday) {
           setSleepGoal(sleepGoal);
         } else {
           setSleepGoal(response.data);
@@ -377,7 +430,7 @@ const JournalScreen = () => {
             goalType: "screentime",
           },
         });
-        if (response.data.length === 0) {
+        if (response.data.length === 0 || !loggedScreentimeToday) {
           setScreentimeGoal(screentimeGoal);
         } else {
           setScreentimeGoal(response.data);
@@ -420,6 +473,7 @@ const JournalScreen = () => {
                 ? "yes"
                 : "no",
               reflection: newReflection,
+              dateToday: new Date(),
               recommendedValue: 60,
             })
             .then((response) => {
@@ -479,6 +533,7 @@ const JournalScreen = () => {
                 ? "yes"
                 : "no",
               reflection: newReflection,
+              dateToday: new Date(),
               recommendedValue: 120,
             })
             .then((response) => {
@@ -538,6 +593,7 @@ const JournalScreen = () => {
                 ? "yes"
                 : "no",
               reflection: newReflection,
+              dateToday: new Date(),
               recommendedValue: 5,
             })
             .then((response) => {
@@ -597,6 +653,7 @@ const JournalScreen = () => {
                 ? "yes"
                 : "no",
               reflection: newReflection,
+              dateToday: new Date(),
               recommendedValue: 9,
             })
             .then((response) => {
@@ -640,9 +697,18 @@ const JournalScreen = () => {
     }
   }
 
+  let lastLoggedDate =
+    activityData.length &&
+    new Date(activityData[0].dateToday).toLocaleDateString();
+  let lastLoggedTime =
+    activityData.length &&
+    new Date(activityData[0].dateToday).toLocaleTimeString();
+
   return (
     <Wrapper>
-      <h1 style={{ color: "#2E6AA1" }}>My Journal</h1>
+      <h1 style={{ color: "#2E6AA1" }}>
+        My Journal (Last Logged {lastLoggedDate} {lastLoggedTime})
+      </h1>
       <JournalWrapper>
         <img
           className="journalCover"
@@ -664,18 +730,32 @@ const JournalScreen = () => {
                   src={require("../../components/images/journal/activity_goals.png")}
                   alt="Activity goals icon on activity goals page"
                 />
-                <h2 style={styles.goalLabel}>Do</h2>
+                <h2 style={styles.goalLabel}>Physical Activity</h2>
                 <Tooltip
                   title={
                     <div>
                       Exercise, do chores, play sports, and go out and do other
                       physical activities.
                       <br /> <strong>Recommended Level: 60 minutes/day</strong>
+                      <br />
+                      <strong>Last Logged Time:</strong>{" "}
+                      {activityData.length &&
+                        new Date(
+                          activityData[0].dateToday
+                        ).toLocaleDateString()}{" "}
+                      {activityData.length &&
+                        new Date(
+                          activityData[0].dateToday
+                        ).toLocaleTimeString()}
                     </div>
                   }
                 >
                   <HelpOutlineIcon
-                    style={{ fontSize: "16px", cursor: "pointer" }}
+                    style={{
+                      fontSize: "16px",
+                      cursor: "pointer",
+                      marginLeft: -5,
+                    }}
                   />
                 </Tooltip>
               </div>
@@ -685,7 +765,7 @@ const JournalScreen = () => {
                   label="minutes/day"
                   id="input"
                   type="number"
-                  value={activityGoal.length ? activityGoal[0].goalValue : ""}
+                  value={activityGoal.length && activityGoal[0].goalValue}
                   onChange={(e) => {
                     setActivityGoal((prevActivityGoal) => {
                       const updatedActivityGoal = prevActivityGoal.map(
@@ -725,9 +805,7 @@ const JournalScreen = () => {
                     style={styles.inputBox}
                     label="minutes/day"
                     type="number"
-                    value={
-                      activityGoal.length ? activityGoal[0].behaviorValue : ""
-                    }
+                    value={activityGoal.length && activityGoal[0].behaviorValue}
                     onChange={(e) => {
                       setActivityGoal((prevActivityGoal) => {
                         const updatedActivityGoal = prevActivityGoal.map(
@@ -766,7 +844,7 @@ const JournalScreen = () => {
                   src={require("../../components/images/journal/tablet_icon.png")}
                   alt="Tablet for screentime goals"
                 />
-                <h2 style={styles.goalLabel}>View</h2>
+                <h2 style={styles.goalLabel}>Screentime</h2>
 
                 <Tooltip
                   title={
@@ -777,11 +855,25 @@ const JournalScreen = () => {
                       <strong>
                         Recommended Level: &lt; 2 hours (120 minutes)/day
                       </strong>
+                      <br />
+                      <strong>Last Logged Time:</strong>{" "}
+                      {screentimeData.length &&
+                        new Date(
+                          screentimeData[0].dateToday
+                        ).toLocaleDateString()}{" "}
+                      {screentimeData.length &&
+                        new Date(
+                          screentimeData[0].dateToday
+                        ).toLocaleTimeString()}
                     </div>
                   }
                 >
                   <HelpOutlineIcon
-                    style={{ fontSize: "16px", cursor: "pointer" }}
+                    style={{
+                      fontSize: "16px",
+                      cursor: "pointer",
+                      marginLeft: -5,
+                    }}
                   />
                 </Tooltip>
               </div>
@@ -875,18 +967,30 @@ const JournalScreen = () => {
                   src={require("../../components/images/journal/apple.png")}
                   alt="Apple for servings goal"
                 />
-                <h2 style={styles.goalLabel}>Chew</h2>
+                <h2 style={styles.goalLabel}>Eating Fruits and Vegetables</h2>
                 <Tooltip
                   title={
                     <div>
                       Eat more servings of fruits and vegetables for a healthier
                       diet.
                       <br /> <strong>Recommended Level: 5 servings/day</strong>
+                      <br />
+                      <strong>Last Logged Time:</strong>{" "}
+                      {eatingData.length &&
+                        new Date(
+                          eatingData[0].dateToday
+                        ).toLocaleDateString()}{" "}
+                      {eatingData.length &&
+                        new Date(eatingData[0].dateToday).toLocaleTimeString()}
                     </div>
                   }
                 >
                   <HelpOutlineIcon
-                    style={{ fontSize: "16px", cursor: "pointer" }}
+                    style={{
+                      fontSize: "16px",
+                      cursor: "pointer",
+                      marginLeft: -5,
+                    }}
                   />
                 </Tooltip>
               </div>
@@ -977,11 +1081,23 @@ const JournalScreen = () => {
                       Get a good night's rest to be productive and healthy.
                       <br />{" "}
                       <strong>Recommended Level: 9-11 hours/night</strong>
+                      <br />
+                      <strong>Last Logged Time:</strong>{" "}
+                      {sleepData.length &&
+                        new Date(
+                          sleepData[0].dateToday
+                        ).toLocaleDateString()}{" "}
+                      {sleepData.length &&
+                        new Date(sleepData[0].dateToday).toLocaleTimeString()}
                     </div>
                   }
                 >
                   <HelpOutlineIcon
-                    style={{ fontSize: "16px", cursor: "pointer" }}
+                    style={{
+                      fontSize: "16px",
+                      cursor: "pointer",
+                      marginLeft: -5,
+                    }}
                   />
                 </Tooltip>
               </div>
@@ -1091,10 +1207,12 @@ const JournalScreen = () => {
               <h2 style={styles.goalHeader}>Reflect</h2>
             </div>
             <div style={styles.goalRow}>
-              {activityData.length ? (
-                <h4 style={styles.feedback}>{renderFeedback(activityData)}</h4>
+              {activityData.length &&
+              activityGoal[0].goalValue !== 0 &&
+              activityGoal[0].behaviorValue !== 0 ? (
+                <h4 style={styles.feedback}>{renderFeedback(activityGoal)}</h4>
               ) : (
-                <Tooltip title="Set a goal value to see feedback!">
+                <Tooltip title="Set an Activity goal today to see feedback!">
                   <LockIcon
                     style={{ margin: "auto", width: "30%" }}
                     className="lock-icon"
@@ -1106,7 +1224,7 @@ const JournalScreen = () => {
                   type="text"
                   placeholder="Type my thoughts"
                   style={{ width: "80%" }}
-                  value={activityGoal[0].reflection}
+                  value={activityGoal.length && activityGoal[0].reflection}
                   onChange={(e) => {
                     setActivityGoal((prevActivityGoal) => {
                       const updatedActivityGoal = prevActivityGoal.map(
@@ -1122,31 +1240,60 @@ const JournalScreen = () => {
                     });
                   }}
                 />
-                <Tooltip title="Save Today's Activity Goal">
-                  <SaveIcon
+                <Tooltip
+                  title={
+                    !activityData.length || !loggedActivityToday
+                      ? "Record your first Activity goal for today!"
+                      : activityData[0].goalValue -
+                          activityData[0].goalValue ===
+                          0 &&
+                        activityData[0].behaviorValue -
+                          activityGoal[0].behaviorValue ===
+                          0 &&
+                        activityData[0].reflection ===
+                          activityGoal[0].reflection
+                      ? "Today's Activity goal is up to date!"
+                      : activityData[0].goalValue -
+                          activityGoal[0].goalValue !==
+                          0 ||
+                        activityData[0].behaviorValue -
+                          activityGoal[0].behaviorValue !==
+                          0 ||
+                        activityData[0].reflection !==
+                          activityGoal[0].reflection
+                      ? "Save changes to today's Activity goal"
+                      : "No Activity Data found"
+                  }
+                >
+                  <Button
                     className="save edit-icon"
                     style={{
-                      color: !activityData.length
-                        ? SAVE_ICON_COLORS.RED
-                        : activityData[0].goalValue -
-                            activityGoal[0].goalValue ===
-                            0 &&
-                          activityData[0].behaviorValue -
-                            activityGoal[0].behaviorValue ===
-                            0 &&
-                          activityData[0].reflection ===
-                            activityGoal[0].reflection
-                        ? SAVE_ICON_COLORS.GREEN
-                        : activityData[0].goalValue -
-                            activityGoal[0].goalValue !==
-                            0 ||
+                      color: "white",
+                      border: "1px solid black",
+                      backgroundColor:
+                        loggedActivityToday &&
+                        activityData.length &&
+                        (activityData[0].goalValue -
+                          activityGoal[0].goalValue !==
+                          0 ||
                           activityData[0].behaviorValue -
                             activityGoal[0].behaviorValue !==
                             0 ||
                           activityData[0].reflection !==
-                            activityGoal[0].reflection
-                        ? SAVE_ICON_COLORS.YELLOW
-                        : "auto",
+                            activityGoal[0].reflection)
+                          ? SAVE_ICON_COLORS.YELLOW
+                          : !activityData.length || !loggedActivityToday
+                          ? SAVE_ICON_COLORS.RED
+                          : activityData[0].goalValue -
+                              activityGoal[0].goalValue ===
+                              0 &&
+                            activityData[0].behaviorValue -
+                              activityGoal[0].behaviorValue ===
+                              0 &&
+                            activityData[0].reflection ===
+                              activityGoal[0].reflection
+                          ? SAVE_ICON_COLORS.GREEN
+                          : "auto",
                     }}
                     onClick={() => {
                       updateBehaviorValue(
@@ -1158,18 +1305,22 @@ const JournalScreen = () => {
                       setLoggedActivityToday(true);
                       setEditingBehaviorId(-1);
                     }}
-                  />
+                  >
+                    SAVE
+                  </Button>
                 </Tooltip>
               </ReflectionContainer>
             </div>
 
             <div style={styles.goalRow}>
-              {screentimeData.length ? (
+              {screentimeData.length &&
+              screentimeGoal[0].goalValue !== 0 &&
+              screentimeGoal[0].behaviorValue !== 0 ? (
                 <h4 style={styles.feedback}>
-                  {renderFeedback(screentimeData)}
+                  {renderFeedback(screentimeGoal)}
                 </h4>
               ) : (
-                <Tooltip title="Set a goal value to see feedback!">
+                <Tooltip title="Set a Screentime goal today to see feedback!">
                   <LockIcon
                     style={{ margin: "auto", width: "30%" }}
                     className="lock-icon"
@@ -1197,31 +1348,60 @@ const JournalScreen = () => {
                     });
                   }}
                 />
-                <Tooltip title="Save Today's Screentime Goal">
-                  <SaveIcon
+                <Tooltip
+                  title={
+                    !screentimeData.length || !loggedScreentimeToday
+                      ? "Record your first Screentime goal for today!"
+                      : screentimeData[0].goalValue -
+                          screentimeData[0].goalValue ===
+                          0 &&
+                        screentimeData[0].behaviorValue -
+                          screentimeGoal[0].behaviorValue ===
+                          0 &&
+                        screentimeData[0].reflection ===
+                          screentimeGoal[0].reflection
+                      ? "Today's Screentime goal is up to date!"
+                      : screentimeData[0].goalValue -
+                          screentimeGoal[0].goalValue !==
+                          0 ||
+                        screentimeData[0].behaviorValue -
+                          screentimeGoal[0].behaviorValue !==
+                          0 ||
+                        screentimeData[0].reflection !==
+                          screentimeGoal[0].reflection
+                      ? "Save changes to today's Screentime goal"
+                      : "No Screentime Data found"
+                  }
+                >
+                  <Button
                     className="save edit-icon"
                     style={{
-                      color: !screentimeData.length
-                        ? SAVE_ICON_COLORS.RED
-                        : screentimeData[0].goalValue -
-                            screentimeGoal[0].goalValue ===
-                            0 &&
-                          screentimeData[0].behaviorValue -
-                            screentimeGoal[0].behaviorValue ===
-                            0 &&
-                          screentimeData[0].reflection ===
-                            screentimeGoal[0].reflection
-                        ? SAVE_ICON_COLORS.GREEN
-                        : screentimeData[0].goalValue -
-                            screentimeGoal[0].goalValue !==
-                            0 ||
+                      color: "white",
+                      border: "1px solid black",
+                      backgroundColor:
+                        loggedScreentimeToday &&
+                        screentimeData.length &&
+                        (screentimeData[0].goalValue -
+                          screentimeGoal[0].goalValue !==
+                          0 ||
                           screentimeData[0].behaviorValue -
                             screentimeGoal[0].behaviorValue !==
                             0 ||
                           screentimeData[0].reflection !==
-                            screentimeGoal[0].reflection
-                        ? SAVE_ICON_COLORS.YELLOW
-                        : "auto",
+                            screentimeGoal[0].reflection)
+                          ? SAVE_ICON_COLORS.YELLOW
+                          : !screentimeData.length || !loggedScreentimeToday
+                          ? SAVE_ICON_COLORS.RED
+                          : screentimeData[0].goalValue -
+                              screentimeGoal[0].goalValue ===
+                              0 &&
+                            screentimeData[0].behaviorValue -
+                              screentimeGoal[0].behaviorValue ===
+                              0 &&
+                            screentimeData[0].reflection ===
+                              screentimeGoal[0].reflection
+                          ? SAVE_ICON_COLORS.GREEN
+                          : "auto",
                     }}
                     onClick={() => {
                       updateBehaviorValue(
@@ -1233,16 +1413,20 @@ const JournalScreen = () => {
                       setLoggedScreentimeToday(true);
                       setEditingBehaviorId(-1);
                     }}
-                  />
+                  >
+                    SAVE
+                  </Button>
                 </Tooltip>
               </ReflectionContainer>
             </div>
 
             <div style={styles.goalRow}>
-              {eatingData.length ? (
-                <h4 style={styles.feedback}>{renderFeedback(eatingData)}</h4>
+              {eatingData.length &&
+              eatingGoal[0].goalValue !== 0 &&
+              eatingGoal[0].behaviorValue !== 0 ? (
+                <h4 style={styles.feedback}>{renderFeedback(eatingGoal)}</h4>
               ) : (
-                <Tooltip title="Set a goal value to see feedback!">
+                <Tooltip title="Set an Eating goal today to see feedback!">
                   <LockIcon
                     style={{ margin: "auto", width: "30%" }}
                     className="lock-icon"
@@ -1268,27 +1452,54 @@ const JournalScreen = () => {
                     });
                   }}
                 />
-                <Tooltip title="Save Today's Eating Goal">
-                  <SaveIcon
+                <Tooltip
+                  title={
+                    !eatingData.length || !loggedEatingToday
+                      ? "Record your first Eating goal for today!"
+                      : eatingData[0].goalValue - eatingGoal[0].goalValue ===
+                          0 &&
+                        eatingData[0].behaviorValue -
+                          eatingGoal[0].behaviorValue ===
+                          0 &&
+                        eatingData[0].reflection === eatingGoal[0].reflection
+                      ? "Today's Eating goal is up to date!"
+                      : eatingData[0].goalValue - eatingGoal[0].goalValue !==
+                          0 ||
+                        eatingData[0].behaviorValue -
+                          eatingGoal[0].behaviorValue !==
+                          0 ||
+                        eatingData[0].reflection !== eatingGoal[0].reflection
+                      ? "Save changes to today's Eating goal"
+                      : "No Eating Data found"
+                  }
+                >
+                  <Button
                     className="save edit-icon"
                     style={{
-                      color: !eatingData.length
-                        ? SAVE_ICON_COLORS.RED
-                        : eatingData[0].goalValue - eatingGoal[0].goalValue ===
-                            0 &&
-                          eatingData[0].behaviorValue -
-                            eatingGoal[0].behaviorValue ===
-                            0 &&
-                          eatingData[0].reflection === eatingGoal[0].reflection
-                        ? SAVE_ICON_COLORS.GREEN
-                        : eatingData[0].goalValue - eatingGoal[0].goalValue !==
-                            0 ||
+                      color: "white",
+                      border: "1px solid black",
+                      backgroundColor:
+                        loggedEatingToday &&
+                        eatingData.length &&
+                        (eatingData[0].goalValue - eatingGoal[0].goalValue !==
+                          0 ||
                           eatingData[0].behaviorValue -
                             eatingGoal[0].behaviorValue !==
                             0 ||
-                          eatingData[0].reflection !== eatingGoal[0].reflection
-                        ? SAVE_ICON_COLORS.YELLOW
-                        : "auto",
+                          eatingData[0].reflection !== eatingGoal[0].reflection)
+                          ? SAVE_ICON_COLORS.YELLOW
+                          : !eatingData.length || !loggedEatingToday
+                          ? SAVE_ICON_COLORS.RED
+                          : eatingData[0].goalValue -
+                              eatingGoal[0].goalValue ===
+                              0 &&
+                            eatingData[0].behaviorValue -
+                              eatingGoal[0].behaviorValue ===
+                              0 &&
+                            eatingData[0].reflection ===
+                              eatingGoal[0].reflection
+                          ? SAVE_ICON_COLORS.GREEN
+                          : "auto",
                     }}
                     onClick={() => {
                       updateBehaviorValue(
@@ -1300,18 +1511,22 @@ const JournalScreen = () => {
                       setLoggedEatingToday(true);
                       setEditingBehaviorId(-1);
                     }}
-                  />
+                  >
+                    SAVE
+                  </Button>
                 </Tooltip>
               </ReflectionContainer>
             </div>
 
             <div style={styles.goalRow}>
-              {sleepData.length ? (
-                <h4 style={styles.feedback}>{renderFeedback(sleepData)}</h4>
+              {sleepData.length &&
+              sleepGoal[0].goalValue !== 0 &&
+              sleepGoal[0].behaviorValue !== 0 ? (
+                <h4 style={styles.feedback}>{renderFeedback(sleepGoal)}</h4>
               ) : (
-                <Tooltip title="Set a goal value to see feedback!">
+                <Tooltip title="Set a Sleep goal today to see feedback!">
                   <LockIcon
-                    style={{ margin: "auto", width: "30%" }}
+                    style={{ width: "30%", display: "flex", margin: "0 auto" }}
                     className="lock-icon"
                   />
                 </Tooltip>
@@ -1335,27 +1550,50 @@ const JournalScreen = () => {
                     });
                   }}
                 />
-                <Tooltip title="Save Today's Sleep Goal">
-                  <SaveIcon
+                <Tooltip
+                  title={
+                    !sleepData.length || !loggedSleepToday
+                      ? "Record your first Sleep goal for today!"
+                      : sleepData[0].goalValue - sleepGoal[0].goalValue === 0 &&
+                        sleepData[0].behaviorValue -
+                          sleepGoal[0].behaviorValue ===
+                          0 &&
+                        sleepData[0].reflection === sleepGoal[0].reflection
+                      ? "Today's Sleep goal is up to date!"
+                      : sleepData[0].goalValue - sleepGoal[0].goalValue !== 0 ||
+                        sleepData[0].behaviorValue -
+                          sleepGoal[0].behaviorValue !==
+                          0 ||
+                        sleepData[0].reflection !== sleepGoal[0].reflection
+                      ? "Save changes to today's Sleep goal"
+                      : "No Sleep Data found"
+                  }
+                >
+                  <Button
                     className="save edit-icon"
                     style={{
-                      color: !sleepData.length
-                        ? SAVE_ICON_COLORS.RED
-                        : sleepData[0].goalValue - sleepGoal[0].goalValue ===
-                            0 &&
-                          sleepData[0].behaviorValue -
-                            sleepGoal[0].behaviorValue ===
-                            0 &&
-                          sleepData[0].reflection === sleepGoal[0].reflection
-                        ? SAVE_ICON_COLORS.GREEN
-                        : sleepData[0].goalValue - sleepGoal[0].goalValue !==
-                            0 ||
+                      color: "white",
+                      border: "1px solid black",
+                      backgroundColor:
+                        loggedSleepToday &&
+                        sleepData.length &&
+                        (sleepData[0].goalValue - sleepGoal[0].goalValue !==
+                          0 ||
                           sleepData[0].behaviorValue -
                             sleepGoal[0].behaviorValue !==
                             0 ||
-                          sleepData[0].reflection !== sleepGoal[0].reflection
-                        ? SAVE_ICON_COLORS.YELLOW
-                        : "auto",
+                          sleepData[0].reflection !== sleepGoal[0].reflection)
+                          ? SAVE_ICON_COLORS.YELLOW
+                          : !sleepData.length || !loggedSleepToday
+                          ? SAVE_ICON_COLORS.RED
+                          : sleepData[0].goalValue - sleepGoal[0].goalValue ===
+                              0 &&
+                            sleepData[0].behaviorValue -
+                              sleepGoal[0].behaviorValue ===
+                              0 &&
+                            sleepData[0].reflection === sleepGoal[0].reflection
+                          ? SAVE_ICON_COLORS.GREEN
+                          : "auto",
                     }}
                     onClick={() => {
                       updateBehaviorValue(
@@ -1367,7 +1605,9 @@ const JournalScreen = () => {
                       setLoggedSleepToday(true);
                       setEditingBehaviorId(-1);
                     }}
-                  />
+                  >
+                    SAVE
+                  </Button>
                 </Tooltip>
               </ReflectionContainer>
             </div>
@@ -1408,6 +1648,7 @@ let styles = {
   },
   goalRow: {
     display: "flex",
+    marginLeft: "5%",
     justifyContent: "space-between",
     alignItems: "center",
     width: "auto",
@@ -1415,6 +1656,7 @@ let styles = {
   goalLabel: {
     width: "auto",
     margin: "5%",
+    fontSize: 22,
   },
   inputBox: {
     width: "20%",
@@ -1427,30 +1669,36 @@ let styles = {
     justifyContent: "space-between",
     width: "30%",
     marginLeft: "auto",
+    padding: 5,
   },
   activityIcon: {
     width: "30px",
+    marginLeft: 10,
   },
   screentimeIcon: {
     width: "30px",
+    marginLeft: 10,
   },
   eatingIcon: {
     width: "30px",
+    marginLeft: 10,
   },
   sleepIcon: {
     width: "30px",
+    marginLeft: 10,
   },
   titleGroup: {
     display: "flex",
     margin: "auto",
     flexDirection: "row",
-    width: "30%",
-    justifyContent: "flex-end",
+    width: "40%",
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   feedback: {
     width: "35%",
     color: "blue",
     marginLeft: "auto",
+    padding: 5,
   },
 };

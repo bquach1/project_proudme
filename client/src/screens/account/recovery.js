@@ -204,7 +204,7 @@ const Recovery = () => {
                   >
                     <TextField
                       type="password"
-                      name="password-confrim"
+                      name="password-confirm"
                       value={passwordConfirm}
                       onChange={handleEmailConfirmChange}
                       placeholder="Verification Code"

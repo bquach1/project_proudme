@@ -67,6 +67,7 @@ const FilterWrapper = styled.div`
 
 export const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
+
     return (
       <div
         style={{
@@ -363,18 +364,8 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
         />
       </YAxis>
       <Tooltip content={<CustomTooltip />} />
-      <Bar dataKey="recommendedValue" fill="green" stackId="stack">
-        <LabelList
-          dataKey="recommendedValue"
-          fill="white"
-        />
-      </Bar>
-      <Bar dataKey="goalValue" fill="#A7C7E7" stackId="stack">
-        <LabelList
-          dataKey="goalValue"
-          fill="white"
-        />
-      </Bar>
+      <Bar dataKey="recommendedValue" fill="green" stackId="stack" />
+      <Bar dataKey="goalValue" fill="#A7C7E7" stackId="stack" />
       <Bar dataKey="behaviorValue" stackId="stack">
         <LabelList
           dataKey="behaviorValue"
@@ -438,8 +429,8 @@ const TrackingScreen = () => {
   const [currentGoalData, setCurrentGoalData] = useState([]);
   const [allBehaviorData, setAllBehaviorData] = useState([]);
 
-  const [chartType, setChartType] = useState("bar");
-  const [lineChartView, setLineChartView] = useState("bothLines");
+  const [chartType, setChartType] = useState("line");
+  const [lineChartView, setLineChartView] = useState("behaviorOnly");
 
   const [activityBehaviorData, setActivityBehaviorData] = useState([]);
   const [filteredActivityBehaviorData, setFilteredActivityBehaviorData] =
@@ -704,11 +695,11 @@ const TrackingScreen = () => {
             name="radio-buttons-group"
             style={{ display: "flex", flexDirection: "row" }}
           >
-            <FormControlLabel
+            {/* <FormControlLabel
               value="bar"
               control={<Radio onClick={(e) => setChartType(e.target.value)} />}
               label="Bar Chart"
-            />
+            /> */}
             <FormControlLabel
               value="line"
               control={<Radio onClick={(e) => setChartType(e.target.value)} />}
