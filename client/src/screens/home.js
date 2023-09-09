@@ -8,20 +8,20 @@ import withAuth from "../components/auth/withAuth";
 import { DATABASE_URL } from "../constants";
 
 const HomeWrapper = styled.div`
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   margin-top: 1%;
   text-align: left;
 
-  font-family: Palatino;
-  font-size: 18px;
+  font-family: Calibri;
+  font-size: 20px;
 
   .home {
     text-align: center;
   }
 
   .text-box {
-    margin-top: 3%;
+    margin-top: 2%;
 
     li {
         list-style-position: inside;
@@ -32,6 +32,7 @@ const HomeWrapper = styled.div`
 const HomeScreen = (props) => {
   const [user, setUser] = useState([]);
   const [exactTime, setExactTime] = useState("");
+  const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -46,6 +47,17 @@ const HomeScreen = (props) => {
 
     setExactTime(date);
   }, []);
+  
+  useEffect(() => {
+    const timerID = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+
+    return () => {
+      clearInterval(timerID);
+    };
+  }, []);
+
 
   var dateToday = new Date(),
     date =
@@ -56,8 +68,6 @@ const HomeScreen = (props) => {
       "/" +
       dateToday.getFullYear() +
       ".";
-
-  var currentTime = dateToday.toLocaleTimeString();
 
   return (
     <HomeWrapper>
@@ -127,8 +137,8 @@ const HomeScreen = (props) => {
       <div className="text-box">
         For questions about the Project ProudMe, please contact Dr. Chen’s lab –
         the Pedagogical Kinesiology Lab (
-        <a href="mailto:quachbruce@gmail.com?subject=Project%20ProudME%20Feedback">
-          quachbruce@gmail.com
+        <a href="mailto:pklab@lsu.edu?subject=Project%20ProudME%20Feedback">
+          pklab@lsu.edu
         </a>
         ). If your school is interested in becoming a partnership school, our
         lab offers small grants as incentives for you to participate. Please

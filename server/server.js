@@ -81,6 +81,9 @@ const goalSchema = new mongoose.Schema({
   goalStatus: {
     type: String,
   },
+  recommendedValue: {
+    type: Number,
+  }
 });
 
 const behaviorSchema = new mongoose.Schema({

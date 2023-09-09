@@ -3,7 +3,7 @@ import "../../css/journal.css";
 import withAuth from "../../components/auth/withAuth";
 import axios from "axios";
 
-import { TextField, Tooltip } from "@mui/material";
+import { TextField, Tooltip, Button } from "@mui/material";
 import styled from "styled-components";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
@@ -68,11 +68,11 @@ const ReflectionContainer = styled.div`
     &:hover {
       cursor: pointer;
       transition: 0.5s;
-      color: gray;
+      opacity: 0.7;
     }
 
     &.save:hover {
-      color: green;
+      background-color: green;
     }
   }
 `;
@@ -151,25 +151,76 @@ const JournalScreen = () => {
   const [eatingData, setEatingData] = useState({});
   const [sleepData, setSleepData] = useState({});
 
+  useEffect(() => {
+    console.log(screentimeGoal);
+  });
+
   const renderFeedback = (goalData) => {
-    return (goalData !== screentimeGoal &&
-      goalData[0].behaviorValue > goalData[0].goalValue) ||
-      (goalData === screentimeGoal &&
-        goalData[0].behaviorValue < goalData[0].goalValue)
-      ? "Great! I exceeded my goal!"
-      : goalData[0].behaviorValue === goalData[0].goalValue
-      ? "Hooray! I reached my goal!"
-      : (goalData !== screentimeGoal &&
-          goalData[0].behaviorValue < goalData[0].goalValue / 2) ||
-        (goalData === screentimeGoal &&
-          goalData[0].behaviorValue > goalData[0].goalValue * 2)
-      ? "I need to work harder to reach my goal!"
-      : (goalData !== screentimeGoal &&
-          goalData[0].behaviorValue < goalData[0].goalValue) ||
-        (goalData === screentimeGoal &&
-          goalData[0].behaviorValue > goalData[0].goalValue)
-      ? "I'm not too far away from my goal!"
-      : "...";
+    if (goalData === screentimeGoal) {
+      if (
+        goalData[0].behaviorValue <= goalData[0].goalValue / 2 &&
+        goalData[0].behaviorValue <= goalData[0].recommendedValue / 2
+      )
+        return "Bravo! I EXCEEDED my goal AND the recommended level of behavior! I am doing great!";
+      else if (
+        goalData[0].behaviorValue <= goalData[0].goalValue &&
+        goalData[0].behaviorValue <= goalData[0].recommendedValue
+      )
+        return "Hooray! I reached my goal AND the recommended level of behavior! Keep it up!";
+      else if (
+        goalData[0].behaviorValue <= goalData[0].goalValue &&
+        goalData[0].behaviorValue > goalData[0].recommendedValue
+      )
+        return "Great, I reached my goal! Next I will need to work harder to reach the recommended level of behavior!";
+      else if (
+        goalData[0].behaviorValue > goalData[0].goalValue &&
+        goalData[0].behaviorValue <= goalData[0].recommendedValue
+      )
+        return "Great, I reached the recommended behavior level! Next I will need to work harder to reach my own goal!";
+      else if (
+        goalData[0].behaviorValue > goalData[0].goalValue * 2 &&
+        goalData[0].behaviorValue > goalData[0].recommendedValue * 2
+      )
+        return "I need to work harder to reach my goal! I can do it!";
+      else if (
+        goalData[0].behaviorValue > goalData[0].goalValue &&
+        goalData[0].behaviorValue > goalData[0].recommendedValue
+      )
+        return "I'm not too far away from my goal AND the recommended level of behavior! Come on! My goal is within reach!";
+      else return "...";
+    } else {
+      if (
+        goalData[0].behaviorValue >= goalData[0].goalValue * 2 &&
+        goalData[0].behaviorValue >= goalData[0].recommendedValue * 2
+      )
+        return "Bravo! I EXCEEDED my goal AND the recommended level of behavior! I am doing great!";
+      else if (
+        goalData[0].behaviorValue >= goalData[0].goalValue &&
+        goalData[0].behaviorValue >= goalData[0].recommendedValue
+      )
+        return "Hooray! I reached my goal AND the recommended level of behavior! Keep it up!";
+      else if (
+        goalData[0].behaviorValue >= goalData[0].goalValue &&
+        goalData[0].behaviorValue < goalData[0].recommendedValue
+      )
+        return "Great, I reached my goal! Next I will need to work harder to reach the recommended level of behavior!";
+      else if (
+        goalData[0].behaviorValue < goalData[0].goalValue &&
+        goalData[0].behaviorValue >= goalData[0].recommendedValue
+      )
+        return "Great, I reached the recommended behavior level! Next I will need to work harder to reach my own goal!";
+      else if (
+        goalData[0].behaviorValue < goalData[0].goalValue / 2 &&
+        goalData[0].behaviorValue < goalData[0].recommendedValue / 2
+      )
+        return "I need to work harder to reach my goal! I can do it!";
+      else if (
+        goalData[0].behaviorValue < goalData[0].goalValue &&
+        goalData[0].behaviorValue < goalData[0].recommendedValue
+      )
+        return "I'm not too far away from my goal AND the recommended level of behavior! Come on! My goal is within reach!";
+      else return "...";
+    }
   };
 
   useEffect(() => {
@@ -687,8 +738,16 @@ const JournalScreen = () => {
                       physical activities.
                       <br /> <strong>Recommended Level: 60 minutes/day</strong>
                       <br />
-                      <strong>Last Logged Time:</strong> {activityData.length && new Date(activityData[0].dateToday).toLocaleDateString()} {activityData.length && new Date(activityData[0].dateToday).toLocaleTimeString()}
-                    </div>                  
+                      <strong>Last Logged Time:</strong>{" "}
+                      {activityData.length &&
+                        new Date(
+                          activityData[0].dateToday
+                        ).toLocaleDateString()}{" "}
+                      {activityData.length &&
+                        new Date(
+                          activityData[0].dateToday
+                        ).toLocaleTimeString()}
+                    </div>
                   }
                 >
                   <HelpOutlineIcon
@@ -796,7 +855,16 @@ const JournalScreen = () => {
                       <strong>
                         Recommended Level: &lt; 2 hours (120 minutes)/day
                       </strong>
-                      <strong>Last Logged Time:</strong> {screentimeData.length && new Date(screentimeData[0].dateToday).toLocaleDateString()} {screentimeData.length && new Date(screentimeData[0].dateToday).toLocaleTimeString()}
+                      <br />
+                      <strong>Last Logged Time:</strong>{" "}
+                      {screentimeData.length &&
+                        new Date(
+                          screentimeData[0].dateToday
+                        ).toLocaleDateString()}{" "}
+                      {screentimeData.length &&
+                        new Date(
+                          screentimeData[0].dateToday
+                        ).toLocaleTimeString()}
                     </div>
                   }
                 >
@@ -906,7 +974,14 @@ const JournalScreen = () => {
                       Eat more servings of fruits and vegetables for a healthier
                       diet.
                       <br /> <strong>Recommended Level: 5 servings/day</strong>
-                      <strong>Last Logged Time:</strong> {eatingData.length && new Date(eatingData[0].dateToday).toLocaleDateString()} {eatingData.length && new Date(eatingData[0].dateToday).toLocaleTimeString()}
+                      <br />
+                      <strong>Last Logged Time:</strong>{" "}
+                      {eatingData.length &&
+                        new Date(
+                          eatingData[0].dateToday
+                        ).toLocaleDateString()}{" "}
+                      {eatingData.length &&
+                        new Date(eatingData[0].dateToday).toLocaleTimeString()}
                     </div>
                   }
                 >
@@ -1006,7 +1081,14 @@ const JournalScreen = () => {
                       Get a good night's rest to be productive and healthy.
                       <br />{" "}
                       <strong>Recommended Level: 9-11 hours/night</strong>
-                      <strong>Last Logged Time:</strong> {sleepData.length && new Date(sleepData[0].dateToday).toLocaleDateString()} {sleepData.length && new Date(sleepData[0].dateToday).toLocaleTimeString()}
+                      <br />
+                      <strong>Last Logged Time:</strong>{" "}
+                      {sleepData.length &&
+                        new Date(
+                          sleepData[0].dateToday
+                        ).toLocaleDateString()}{" "}
+                      {sleepData.length &&
+                        new Date(sleepData[0].dateToday).toLocaleTimeString()}
                     </div>
                   }
                 >
@@ -1183,10 +1265,12 @@ const JournalScreen = () => {
                       : "No Activity Data found"
                   }
                 >
-                  <SaveIcon
+                  <Button
                     className="save edit-icon"
                     style={{
-                      color:
+                      color: "white",
+                      border: "1px solid black",
+                      backgroundColor:
                         loggedActivityToday &&
                         activityData.length &&
                         (activityData[0].goalValue -
@@ -1221,7 +1305,9 @@ const JournalScreen = () => {
                       setLoggedActivityToday(true);
                       setEditingBehaviorId(-1);
                     }}
-                  />
+                  >
+                    SAVE
+                  </Button>
                 </Tooltip>
               </ReflectionContainer>
             </div>
@@ -1287,10 +1373,12 @@ const JournalScreen = () => {
                       : "No Screentime Data found"
                   }
                 >
-                  <SaveIcon
+                  <Button
                     className="save edit-icon"
                     style={{
-                      color:
+                      color: "white",
+                      border: "1px solid black",
+                      backgroundColor:
                         loggedScreentimeToday &&
                         screentimeData.length &&
                         (screentimeData[0].goalValue -
@@ -1325,7 +1413,9 @@ const JournalScreen = () => {
                       setLoggedScreentimeToday(true);
                       setEditingBehaviorId(-1);
                     }}
-                  />
+                  >
+                    SAVE
+                  </Button>
                 </Tooltip>
               </ReflectionContainer>
             </div>
@@ -1383,10 +1473,12 @@ const JournalScreen = () => {
                       : "No Eating Data found"
                   }
                 >
-                  <SaveIcon
+                  <Button
                     className="save edit-icon"
                     style={{
-                      color:
+                      color: "white",
+                      border: "1px solid black",
+                      backgroundColor:
                         loggedEatingToday &&
                         eatingData.length &&
                         (eatingData[0].goalValue - eatingGoal[0].goalValue !==
@@ -1419,7 +1511,9 @@ const JournalScreen = () => {
                       setLoggedEatingToday(true);
                       setEditingBehaviorId(-1);
                     }}
-                  />
+                  >
+                    SAVE
+                  </Button>
                 </Tooltip>
               </ReflectionContainer>
             </div>
@@ -1432,7 +1526,7 @@ const JournalScreen = () => {
               ) : (
                 <Tooltip title="Set a Sleep goal today to see feedback!">
                   <LockIcon
-                    style={{ margin: "auto", width: "30%" }}
+                    style={{ width: "30%", display: "flex", margin: "0 auto" }}
                     className="lock-icon"
                   />
                 </Tooltip>
@@ -1475,10 +1569,12 @@ const JournalScreen = () => {
                       : "No Sleep Data found"
                   }
                 >
-                  <SaveIcon
+                  <Button
                     className="save edit-icon"
                     style={{
-                      color:
+                      color: "white",
+                      border: "1px solid black",
+                      backgroundColor:
                         loggedSleepToday &&
                         sleepData.length &&
                         (sleepData[0].goalValue - sleepGoal[0].goalValue !==
@@ -1509,7 +1605,9 @@ const JournalScreen = () => {
                       setLoggedSleepToday(true);
                       setEditingBehaviorId(-1);
                     }}
-                  />
+                  >
+                    SAVE
+                  </Button>
                 </Tooltip>
               </ReflectionContainer>
             </div>
@@ -1550,6 +1648,7 @@ let styles = {
   },
   goalRow: {
     display: "flex",
+    marginLeft: "5%",
     justifyContent: "space-between",
     alignItems: "center",
     width: "auto",
@@ -1570,6 +1669,7 @@ let styles = {
     justifyContent: "space-between",
     width: "30%",
     marginLeft: "auto",
+    padding: 5,
   },
   activityIcon: {
     width: "30px",
@@ -1599,5 +1699,6 @@ let styles = {
     width: "35%",
     color: "blue",
     marginLeft: "auto",
+    padding: 5,
   },
 };
