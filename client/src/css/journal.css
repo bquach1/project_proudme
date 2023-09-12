@@ -19,7 +19,6 @@
     margin-top: auto;
     margin-right: 32%;
     position: absolute;
-    background-image: "../components/images/journal/left_page.png";
 }
 
 .leftpage1 {
@@ -60,7 +59,7 @@
     justify-content: center;
     align-items: center;
     margin-top: auto;
-    margin-left: 32%;
+    margin-left: 34%;
     position: absolute;
 }
 

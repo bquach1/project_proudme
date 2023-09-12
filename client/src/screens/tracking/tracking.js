@@ -20,10 +20,6 @@ import {
   Button,
   MenuItem,
   FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
   InputLabel,
 } from "@mui/material";
 
@@ -55,15 +51,6 @@ const TrackingWrapper = styled.div`
   }
 `;
 
-const FilterWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1%;
-  margin-bottom: 1%;
-`;
-
 export const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
 
@@ -80,11 +67,11 @@ export const CustomTooltip = ({ active, payload, label }) => {
           <div key={index}>
             {pld.dataKey === "goalValue" ? (
               <div id={`goal-${index}`} style={{ color: "#A7C7E7" }}>
-                Goal Value: {pld.value}
+                My Goal Value: {pld.value}
               </div>
             ) : pld.dataKey === "behaviorValue" ? (
               <div id={`behavior-${index}`} style={{ color: "#8884d8" }}>
-                Behavior Value: {pld.value}
+                My Behavior Value: {pld.value}
               </div>
             ) : (
               <div id={`recommendedVal-${index}`} style={{ color: "green" }}>
@@ -107,7 +94,7 @@ export const CustomLegend = () => {
         alignItems: "center",
         flexDirection: "column",
         backgroundColor: "#D3D3D3",
-        marginTop: "2%",
+        marginTop: "3%",
         width: "40%",
         margin: "0 auto",
         padding: 10,
@@ -136,7 +123,7 @@ export const CustomLegend = () => {
               marginRight: 10,
             }}
           />
-          Goal Value
+          My Goal Value
         </div>
         <div style={{ display: "flex" }}>
           <div
@@ -147,7 +134,7 @@ export const CustomLegend = () => {
               marginRight: 10,
             }}
           />
-          Behavior Value (Met Goal)
+          My Behavior Value (Met Goal)
         </div>
         <div style={{ display: "flex" }}>
           <div
@@ -158,7 +145,7 @@ export const CustomLegend = () => {
               marginRight: 10,
             }}
           />
-          Behavior Value (Exceeds Goal)
+          My Behavior Value (Exceeds Goal)
         </div>
         <div style={{ display: "flex" }}>
           <div
@@ -169,7 +156,7 @@ export const CustomLegend = () => {
               marginRight: 10,
             }}
           />
-          Behavior Value (Needs Improvement)
+          My Behavior Value (Needs Improvement)
         </div>
         <div style={{ display: "flex" }}>
           <div
@@ -180,7 +167,7 @@ export const CustomLegend = () => {
               marginRight: 10,
             }}
           />
-          Behavior Value (Close to Goal)
+          My Behavior Value (Close to Goal)
         </div>
       </div>
     </div>
@@ -666,29 +653,6 @@ const TrackingScreen = () => {
         </>
       )}
 
-      <FilterWrapper>
-        <FormControl>
-          <FormLabel id="demo-radio-buttons-group-label">Chart Type</FormLabel>
-          <RadioGroup
-            aria-labelledby="demo-radio-buttons-group-label"
-            value={chartType}
-            name="radio-buttons-group"
-            style={{ display: "flex", flexDirection: "row" }}
-          >
-            {/* <FormControlLabel
-              value="bar"
-              control={<Radio onClick={(e) => setChartType(e.target.value)} />}
-              label="Bar Chart"
-            /> */}
-            <FormControlLabel
-              value="line"
-              control={<Radio onClick={(e) => setChartType(e.target.value)} />}
-              label="Line Chart"
-            />
-          </RadioGroup>
-        </FormControl>
-      </FilterWrapper>
-
       {chartType === "line" && (
         <FormControl style={{ margin: "10px 0px" }}>
           <InputLabel id="line-chart-view">Line View</InputLabel>
@@ -736,7 +700,7 @@ const TrackingScreen = () => {
           alignItems: "center",
         }}
       >
-        <h1>{shownUser.name}'s Activity Behavior Data</h1>
+        <h1>{shownUser.name}'s Physical Activity Behavior Data</h1>
         {chartType === "line" ? (
           <BehaviorLineChart
             data={filteredActivityBehaviorData}
@@ -749,7 +713,7 @@ const TrackingScreen = () => {
             chartGoalType={"activity"}
           />
         )}
-        <h1>{shownUser.name}'s Screentime Behavior Data</h1>
+        <h1>{shownUser.name}'s Screen Time Behavior Data</h1>
         {chartType === "line" ? (
           <BehaviorLineChart
             data={filteredScreentimeBehaviorData}
@@ -762,7 +726,7 @@ const TrackingScreen = () => {
             chartGoalType={"screentime"}
           />
         )}
-        <h1>{shownUser.name}'s Eating Behavior Data</h1>
+        <h1>{shownUser.name}'s Eating Fruits & Vegetables Behavior Data</h1>
         {chartType === "line" ? (
           <BehaviorLineChart
             data={filteredEatingBehaviorData}

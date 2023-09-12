@@ -1176,17 +1176,17 @@ const JournalScreen = () => {
 
           <img
             className="leftpage1"
-            src={require("../../components/images/journal/right_page.png")}
+            src={require("../../components/images/journal/left_page.png")}
             alt="First left-side page"
           />
           <img
             className="leftpage2"
-            src={require("../../components/images/journal/right_page2.png")}
+            src={require("../../components/images/journal/left_page2.png")}
             alt="Second left-side page"
           />
           <img
             className="leftpage3"
-            src={require("../../components/images/journal/right_page.png")}
+            src={require("../../components/images/journal/left_page3.png")}
             alt="Third left-side page"
           />
         </div>
@@ -1331,7 +1331,7 @@ const JournalScreen = () => {
                 <TextField
                   type="text"
                   placeholder="Type my thoughts"
-                  style={{ width: "80%" }}
+                  style={{ width: "80%", fontSize: 2 }}
                   value={screentimeGoal.length && screentimeGoal[0].reflection}
                   onChange={(e) => {
                     setScreentimeGoal((prevScreentimeGoal) => {
@@ -1614,17 +1614,17 @@ const JournalScreen = () => {
           </div>
           <img
             className="rightpage1"
-            src={require("../../components/images/journal/left_page.png")}
+            src={require("../../components/images/journal/right_page.png")}
             alt="First right-side page"
           />
           <img
             className="rightpage2"
-            src={require("../../components/images/journal/left_page2.png")}
+            src={require("../../components/images/journal/right_page2.png")}
             alt="Second right-side page"
           />
           <img
             className="rightpage3"
-            src={require("../../components/images/journal/left_page3.png")}
+            src={require("../../components/images/journal/right_page3.png")}
             alt="Third right-side page"
           />
         </div>
