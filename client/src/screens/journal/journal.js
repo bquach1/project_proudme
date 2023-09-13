@@ -29,8 +29,15 @@ const JournalWrapper = styled.table`
   width: 100%;
   margin: auto;
   justify-content: center;
-  position: relative;
+  position: absolute;
   margin-top: 1%;
+  top: 65%; /* Adjust as needed to vertically center the child */
+  left: 0%; /* Adjust as needed to horizontally center the child */
+
+  // background-image: url("../../components/images/journal/journal_cover.png");
+
+  // background-size: contain; /* You can use 'contain', '100% 100%', etc. depending on your needs */
+  // background-repeat: no-repeat;
 
   .lock-icon {
     &:hover {
@@ -707,12 +714,12 @@ const JournalScreen = () => {
       <h1 style={{ color: "#2E6AA1" }}>
         My Journal (Last Logged {lastLoggedDate} {lastLoggedTime})
       </h1>
+      <img
+        className="journalCover"
+        src={require("../../components/images/journal/journal_cover.png")}
+        alt="Journal cover screen wrapper"
+      />
       <JournalWrapper>
-        <img
-          className="journalCover"
-          src={require("../../components/images/journal/journal_cover.png")}
-          alt="Journal cover screen wrapper"
-        />
         <div className="leftPageWrapper">
           <div style={styles.goalScreen}>
             <tr style={styles.goalRow}>
@@ -780,14 +787,14 @@ const JournalScreen = () => {
                 />
               </td>
 
-                <Tooltip
-                  title={
-                    loggedActivityToday && editingBehaviorId !== 0
-                      ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
-                      : ""
-                  }
-                >
-                  <td>
+              <Tooltip
+                title={
+                  loggedActivityToday && editingBehaviorId !== 0
+                    ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
+                    : ""
+                }
+              >
+                <td>
                   <TextField
                     className={
                       loggedActivityToday && editingBehaviorId !== 0
@@ -818,20 +825,20 @@ const JournalScreen = () => {
                       });
                     }}
                   />
-                  </td>
+                </td>
+              </Tooltip>
+              {loggedActivityToday && editingBehaviorId !== 0 && (
+                <Tooltip title="Edit Existing Daily Behavior">
+                  <EditIcon
+                    className="save edit-icon"
+                    onClick={() => {
+                      if (editingBehaviorId !== 0) {
+                        setEditingBehaviorId(0);
+                      }
+                    }}
+                  />
                 </Tooltip>
-                {loggedActivityToday && editingBehaviorId !== 0 && (
-                  <Tooltip title="Edit Existing Daily Behavior">
-                    <EditIcon
-                      className="save edit-icon"
-                      onClick={() => {
-                        if (editingBehaviorId !== 0) {
-                          setEditingBehaviorId(0);
-                        }
-                      }}
-                    />
-                  </Tooltip>
-                )}
+              )}
             </GoalContainer>
 
             <GoalContainer style={styles.goalRow}>
@@ -1090,7 +1097,7 @@ const JournalScreen = () => {
                   <HelpOutlineIcon
                     style={{
                       fontSize: "16px",
-                      cursor: "pointer",                    
+                      cursor: "pointer",
                     }}
                   />
                 </Tooltip>
