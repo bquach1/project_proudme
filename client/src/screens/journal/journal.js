@@ -1648,7 +1648,6 @@ let styles = {
   },
   goalRow: {
     display: "flex",
-    marginLeft: "5%",
     justifyContent: "space-between",
     alignItems: "center",
     width: "auto",
@@ -1673,19 +1672,15 @@ let styles = {
   },
   activityIcon: {
     width: "30px",
-    marginLeft: 10,
   },
   screentimeIcon: {
     width: "30px",
-    marginLeft: 10,
   },
   eatingIcon: {
     width: "30px",
-    marginLeft: 10,
   },
   sleepIcon: {
     width: "30px",
-    marginLeft: 10,
   },
   titleGroup: {
     display: "flex",
