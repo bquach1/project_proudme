@@ -23,7 +23,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const JournalWrapper = styled.div`
+const JournalWrapper = styled.table`
   display: flex;
   align-items: center;
   width: 100%;
@@ -39,9 +39,7 @@ const JournalWrapper = styled.div`
   }
 `;
 
-const GoalContainer = styled.div`
-  margin-left: 10px;
-
+const GoalContainer = styled.tr`
   .edit-icon {
     &:hover {
       cursor: pointer;
@@ -717,14 +715,14 @@ const JournalScreen = () => {
         />
         <div className="leftPageWrapper">
           <div style={styles.goalScreen}>
-            <div style={styles.goalRow}>
-              <h2 style={styles.goalHeader}>Health Behaviors</h2>
-              <h2 style={styles.goalHeader}>Set My Goal</h2>
-              <h2 style={styles.goalHeader}>Track My Behavior</h2>
-            </div>
+            <tr style={styles.goalRow}>
+              <th>Health Behaviors</th>
+              <th>Set My Goal</th>
+              <th>Track My Behavior</th>
+            </tr>
 
             <GoalContainer style={styles.goalRow}>
-              <div style={styles.titleGroup}>
+              <td style={styles.titleGroup}>
                 <img
                   style={styles.activityIcon}
                   src={require("../../components/images/journal/activity_goals.png")}
@@ -754,12 +752,11 @@ const JournalScreen = () => {
                     style={{
                       fontSize: "16px",
                       cursor: "pointer",
-                      marginLeft: -5,
                     }}
                   />
                 </Tooltip>
-              </div>
-              <>
+              </td>
+              <td>
                 <TextField
                   style={styles.inputBox}
                   label="minutes/day"
@@ -781,9 +778,8 @@ const JournalScreen = () => {
                     });
                   }}
                 />
-              </>
+              </td>
 
-              <>
                 <Tooltip
                   title={
                     loggedActivityToday && editingBehaviorId !== 0
@@ -791,6 +787,7 @@ const JournalScreen = () => {
                       : ""
                   }
                 >
+                  <td>
                   <TextField
                     className={
                       loggedActivityToday && editingBehaviorId !== 0
@@ -821,6 +818,7 @@ const JournalScreen = () => {
                       });
                     }}
                   />
+                  </td>
                 </Tooltip>
                 {loggedActivityToday && editingBehaviorId !== 0 && (
                   <Tooltip title="Edit Existing Daily Behavior">
@@ -834,11 +832,10 @@ const JournalScreen = () => {
                     />
                   </Tooltip>
                 )}
-              </>
             </GoalContainer>
 
             <GoalContainer style={styles.goalRow}>
-              <div style={styles.titleGroup}>
+              <td style={styles.titleGroup}>
                 <img
                   style={styles.screentimeIcon}
                   src={require("../../components/images/journal/tablet_icon.png")}
@@ -872,12 +869,11 @@ const JournalScreen = () => {
                     style={{
                       fontSize: "16px",
                       cursor: "pointer",
-                      marginLeft: -5,
                     }}
                   />
                 </Tooltip>
-              </div>
-              <>
+              </td>
+              <td>
                 <TextField
                   style={styles.inputBox}
                   label="minutes/day"
@@ -900,9 +896,9 @@ const JournalScreen = () => {
                     });
                   }}
                 />
-              </>
+              </td>
 
-              <>
+              <td>
                 <Tooltip
                   title={
                     loggedScreentimeToday && editingBehaviorId !== 1
@@ -957,11 +953,11 @@ const JournalScreen = () => {
                     />
                   </Tooltip>
                 )}
-              </>
+              </td>
             </GoalContainer>
 
             <GoalContainer style={styles.goalRow}>
-              <div style={styles.titleGroup}>
+              <td style={styles.titleGroup}>
                 <img
                   style={styles.eatingIcon}
                   src={require("../../components/images/journal/apple.png")}
@@ -989,13 +985,12 @@ const JournalScreen = () => {
                     style={{
                       fontSize: "16px",
                       cursor: "pointer",
-                      marginLeft: -5,
                     }}
                   />
                 </Tooltip>
-              </div>
+              </td>
 
-              <>
+              <td>
                 <TextField
                   style={styles.inputBox}
                   label="servings/day"
@@ -1014,8 +1009,8 @@ const JournalScreen = () => {
                     });
                   }}
                 />
-              </>
-              <>
+              </td>
+              <td>
                 <Tooltip
                   title={
                     loggedEatingToday && editingBehaviorId !== 2
@@ -1064,11 +1059,11 @@ const JournalScreen = () => {
                     />
                   </Tooltip>
                 )}
-              </>
+              </td>
             </GoalContainer>
 
             <GoalContainer style={styles.goalRow}>
-              <div style={styles.titleGroup}>
+              <td style={styles.titleGroup}>
                 <img
                   style={styles.sleepIcon}
                   src={require("../../components/images/journal/pillow_icon.png")}
@@ -1095,14 +1090,13 @@ const JournalScreen = () => {
                   <HelpOutlineIcon
                     style={{
                       fontSize: "16px",
-                      cursor: "pointer",
-                      marginLeft: -5,
+                      cursor: "pointer",                    
                     }}
                   />
                 </Tooltip>
-              </div>
+              </td>
 
-              <>
+              <td>
                 <TextField
                   style={styles.inputBox}
                   label="hours/day"
@@ -1121,9 +1115,9 @@ const JournalScreen = () => {
                     });
                   }}
                 />
-              </>
+              </td>
 
-              <>
+              <td>
                 <Tooltip
                   title={
                     loggedSleepToday && editingBehaviorId !== 3
@@ -1170,7 +1164,7 @@ const JournalScreen = () => {
                     />
                   </Tooltip>
                 )}
-              </>
+              </td>
             </GoalContainer>
           </div>
 
@@ -1658,17 +1652,10 @@ let styles = {
     fontSize: 22,
   },
   inputBox: {
-    width: "20%",
+    width: "70%",
     marginLeft: "auto",
     marginRight: "auto",
     size: "10px",
-  },
-  goalHeader: {
-    display: "flex",
-    justifyContent: "space-between",
-    width: "30%",
-    marginLeft: "auto",
-    padding: 5,
   },
   activityIcon: {
     width: "30px",
@@ -1684,10 +1671,7 @@ let styles = {
   },
   titleGroup: {
     display: "flex",
-    margin: "auto",
-    flexDirection: "row",
     width: "40%",
-    justifyContent: "flex-start",
     alignItems: "center",
   },
   feedback: {
