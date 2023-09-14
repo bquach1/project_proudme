@@ -15,11 +15,16 @@ import { DATABASE_URL } from "../../constants";
 
 const Wrapper = styled.div`
   margin-top: 1%;
-  padding-bottom: 5%;
+  padding-bottom: 10%;
+  height: 100vh;
 
   .disabled-behavior:hover {
     border-radius: 5px;
     background-color: #90ee90;
+  }
+
+  .pending-behavior {
+    background-color: ${SAVE_ICON_COLORS.YELLOW};
   }
 `;
 
@@ -28,7 +33,7 @@ const JournalWrapper = styled.table`
   align-items: center;
   width: 100%;
   justify-content: center;
-  position: absolute;
+  position: relative;
   margin-top: 1%;
 
   .lock-icon {
@@ -55,9 +60,6 @@ const GoalContainer = styled.tr`
 const ReflectionContainer = styled.td`
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-  width: 50%;
 
   .edit-icon {
     margin-left: 3%;
@@ -767,41 +769,74 @@ const JournalScreen = () => {
                   </Tooltip>
                 </td>
                 <td>
-                  <TextField
-                    style={styles.inputBox}
-                    label="minutes/day"
-                    id="input"
-                    type="number"
-                    value={activityGoal.length && activityGoal[0].goalValue}
-                    onChange={(e) => {
-                      setActivityGoal((prevActivityGoal) => {
-                        const updatedActivityGoal = prevActivityGoal.map(
-                          (goal) => {
-                            const newActivityGoalValue = {
-                              ...goal,
-                              goalValue: e.target.value,
-                            };
-                            return newActivityGoalValue;
-                          }
-                        );
-                        return updatedActivityGoal;
-                      });
-                    }}
-                  />
-                </td>
-
-                <Tooltip
-                  title={
-                    loggedActivityToday && editingBehaviorId !== 0
-                      ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
-                      : ""
-                  }
-                >
-                  <td>
+                  <Tooltip
+                    title={
+                      loggedActivityToday && editingBehaviorId !== 0
+                        ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
+                        : ""
+                    }
+                  >
                     <TextField
                       className={
                         loggedActivityToday && editingBehaviorId !== 0
                           ? "disabled-behavior"
+                        :
+                        (activityData.length && 
+                          (activityData[0].goalValue -
+                          activityGoal[0].goalValue !==
+                          0 ||
+                          activityData[0].behaviorValue -
+                            activityGoal[0].behaviorValue !==
+                            0 ||
+                          activityData[0].reflection !==
+                            activityGoal[0].reflection))
+                          ? "pending-behavior"
+                          : "behavior"
+                      }
+                      disabled={
+                        loggedActivityToday && editingBehaviorId !== 0
+                          ? true
+                          : false
+                      }
+                      style={styles.inputBox}
+                      label="minutes/day"
+                      id="input"
+                      type="number"
+                      value={activityGoal.length && activityGoal[0].goalValue}
+                      onChange={(e) => {
+                        setActivityGoal((prevActivityGoal) => {
+                          const updatedActivityGoal = prevActivityGoal.map(
+                            (goal) => {
+                              const newActivityGoalValue = {
+                                ...goal,
+                                goalValue: e.target.value,
+                              };
+                              return newActivityGoalValue;
+                            }
+                          );
+                          return updatedActivityGoal;
+                        });
+                      }}
+                    />
+                  </Tooltip>
+                </td>
+                <td>
+                  <Tooltip
+                    title={
+                      loggedActivityToday && editingBehaviorId !== 0
+                        ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
+                        : ""
+                    }
+                  >
+                    <TextField
+                      className={
+                        loggedActivityToday && editingBehaviorId !== 0
+                          ? "disabled-behavior"
+                          :
+                          (activityData.length && 
+                            (activityData[0].behaviorValue !==
+                              activityGoal[0].behaviorValue))
+                            ? "pending-behavior"
                           : "behavior"
                       }
                       disabled={
@@ -830,8 +865,8 @@ const JournalScreen = () => {
                         });
                       }}
                     />
-                  </td>
-                </Tooltip>
+                  </Tooltip>
+                </td>
                 {loggedActivityToday && editingBehaviorId !== 0 && (
                   <Tooltip title="Edit Existing Daily Behavior">
                     <EditIcon
@@ -887,28 +922,46 @@ const JournalScreen = () => {
                   </Tooltip>
                 </td>
                 <td>
-                  <TextField
-                    style={styles.inputBox}
-                    label="minutes/day"
-                    type="number"
-                    value={
-                      screentimeGoal.length ? screentimeGoal[0].goalValue : ""
+                  <Tooltip
+                    title={
+                      loggedScreentimeToday && editingBehaviorId !== 1
+                        ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
+                        : ""
                     }
-                    onChange={(e) => {
-                      setScreentimeGoal((prevScreentimeGoal) => {
-                        const updatedScreentimeGoal = prevScreentimeGoal.map(
-                          (goal) => {
-                            const newScreentimeGoalValue = {
-                              ...goal,
-                              goalValue: e.target.value,
-                            };
-                            return newScreentimeGoalValue;
-                          }
-                        );
-                        return updatedScreentimeGoal;
-                      });
-                    }}
-                  />
+                  >
+                    <TextField
+                      className={
+                        loggedScreentimeToday && editingBehaviorId !== 1
+                          ? "disabled-behavior"
+                          : "behavior"
+                      }
+                      disabled={
+                        loggedScreentimeToday && editingBehaviorId !== 1
+                          ? true
+                          : false
+                      }
+                      style={styles.inputBox}
+                      label="minutes/day"
+                      type="number"
+                      value={
+                        screentimeGoal.length ? screentimeGoal[0].goalValue : ""
+                      }
+                      onChange={(e) => {
+                        setScreentimeGoal((prevScreentimeGoal) => {
+                          const updatedScreentimeGoal = prevScreentimeGoal.map(
+                            (goal) => {
+                              const newScreentimeGoalValue = {
+                                ...goal,
+                                goalValue: e.target.value,
+                              };
+                              return newScreentimeGoalValue;
+                            }
+                          );
+                          return updatedScreentimeGoal;
+                        });
+                      }}
+                    />
+                  </Tooltip>
                 </td>
 
                 <td>
@@ -1007,24 +1060,44 @@ const JournalScreen = () => {
                 </td>
 
                 <td>
-                  <TextField
-                    style={styles.inputBox}
-                    label="servings/day"
-                    type="number"
-                    value={eatingGoal.length ? eatingGoal[0].goalValue : ""}
-                    onChange={(e) => {
-                      setEatingGoal((prevEatingGoal) => {
-                        const updatedEatingGoal = prevEatingGoal.map((goal) => {
-                          const newEatingGoalValue = {
-                            ...goal,
-                            goalValue: e.target.value,
-                          };
-                          return newEatingGoalValue;
+                  <Tooltip
+                    title={
+                      loggedEatingToday && editingBehaviorId !== 2
+                        ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
+                        : ""
+                    }
+                  >
+                    <TextField
+                      className={
+                        loggedEatingToday && editingBehaviorId !== 2
+                          ? "disabled-behavior"
+                          : "behavior"
+                      }
+                      disabled={
+                        loggedEatingToday && editingBehaviorId !== 2
+                          ? true
+                          : false
+                      }
+                      style={styles.inputBox}
+                      label="servings/day"
+                      type="number"
+                      value={eatingGoal.length ? eatingGoal[0].goalValue : ""}
+                      onChange={(e) => {
+                        setEatingGoal((prevEatingGoal) => {
+                          const updatedEatingGoal = prevEatingGoal.map(
+                            (goal) => {
+                              const newEatingGoalValue = {
+                                ...goal,
+                                goalValue: e.target.value,
+                              };
+                              return newEatingGoalValue;
+                            }
+                          );
+                          return updatedEatingGoal;
                         });
-                        return updatedEatingGoal;
-                      });
-                    }}
-                  />
+                      }}
+                    />
+                  </Tooltip>
                 </td>
                 <td>
                   <Tooltip
@@ -1117,24 +1190,42 @@ const JournalScreen = () => {
                 </td>
 
                 <td>
-                  <TextField
-                    style={styles.inputBox}
-                    label="hours/day"
-                    type="number"
-                    value={sleepGoal.length && sleepGoal[0].goalValue}
-                    onChange={(e) => {
-                      setSleepGoal((prevSleepGoal) => {
-                        const updatedSleepGoal = prevSleepGoal.map((goal) => {
-                          const newSleepGoalValue = {
-                            ...goal,
-                            goalValue: e.target.value,
-                          };
-                          return newSleepGoalValue;
+                  <Tooltip
+                    title={
+                      loggedSleepToday && editingBehaviorId !== 3
+                        ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
+                        : ""
+                    }
+                  >
+                    <TextField
+                      className={
+                        loggedSleepToday && editingBehaviorId !== 3
+                          ? "disabled-behavior"
+                          : "behavior"
+                      }
+                      disabled={
+                        loggedSleepToday && editingBehaviorId !== 3
+                          ? true
+                          : false
+                      }
+                      style={styles.inputBox}
+                      label="hours/day"
+                      type="number"
+                      value={sleepGoal.length && sleepGoal[0].goalValue}
+                      onChange={(e) => {
+                        setSleepGoal((prevSleepGoal) => {
+                          const updatedSleepGoal = prevSleepGoal.map((goal) => {
+                            const newSleepGoalValue = {
+                              ...goal,
+                              goalValue: e.target.value,
+                            };
+                            return newSleepGoalValue;
+                          });
+                          return updatedSleepGoal;
                         });
-                        return updatedSleepGoal;
-                      });
-                    }}
-                  />
+                      }}
+                    />
+                  </Tooltip>
                 </td>
 
                 <td>
@@ -1223,8 +1314,8 @@ const JournalScreen = () => {
                 <th style={styles.goalHeader}>Reflect</th>
               </GoalContainer>
 
-              <GoalContainer>
-                <td style={styles.goalRow}>
+              <GoalContainer style={styles.goalRow}>
+                <td style={{ width: "40%" }}>
                   {activityData.length &&
                   activityGoal[0].goalValue !== 0 &&
                   activityGoal[0].behaviorValue !== 0 ? (
@@ -1240,103 +1331,101 @@ const JournalScreen = () => {
                     </Tooltip>
                   )}
                 </td>
-                <td style={styles.goalRow}>
-                  <ReflectionContainer>
-                    <TextField
-                      type="text"
-                      placeholder="Type my thoughts"
-                      style={{ width: "80%" }}
-                      value={activityGoal.length && activityGoal[0].reflection}
-                      onChange={(e) => {
-                        setActivityGoal((prevActivityGoal) => {
-                          const updatedActivityGoal = prevActivityGoal.map(
-                            (goal) => {
-                              const newActivityReflection = {
-                                ...goal,
-                                reflection: e.target.value,
-                              };
-                              return newActivityReflection;
-                            }
-                          );
-                          return updatedActivityGoal;
-                        });
-                      }}
-                    />
-                    <Tooltip
-                      title={
-                        !activityData.length || !loggedActivityToday
-                          ? "Record your first Activity goal for today!"
-                          : activityData[0].goalValue -
-                              activityData[0].goalValue ===
-                              0 &&
-                            activityData[0].behaviorValue -
-                              activityGoal[0].behaviorValue ===
-                              0 &&
-                            activityData[0].reflection ===
-                              activityGoal[0].reflection
-                          ? "Today's Activity goal is up to date!"
-                          : activityData[0].goalValue -
-                              activityGoal[0].goalValue !==
-                              0 ||
+                <ReflectionContainer style={styles.goalRow}>
+                  <TextField
+                    type="text"
+                    placeholder="Type my thoughts"
+                    style={{ width: "80%" }}
+                    value={activityGoal.length && activityGoal[0].reflection}
+                    onChange={(e) => {
+                      setActivityGoal((prevActivityGoal) => {
+                        const updatedActivityGoal = prevActivityGoal.map(
+                          (goal) => {
+                            const newActivityReflection = {
+                              ...goal,
+                              reflection: e.target.value,
+                            };
+                            return newActivityReflection;
+                          }
+                        );
+                        return updatedActivityGoal;
+                      });
+                    }}
+                  />
+                  <Tooltip
+                    title={
+                      !activityData.length || !loggedActivityToday
+                        ? "Record your first Activity goal for today!"
+                        : activityData[0].goalValue -
+                            activityData[0].goalValue ===
+                            0 &&
+                          activityData[0].behaviorValue -
+                            activityGoal[0].behaviorValue ===
+                            0 &&
+                          activityData[0].reflection ===
+                            activityGoal[0].reflection
+                        ? "Today's Activity goal is up to date!"
+                        : activityData[0].goalValue -
+                            activityGoal[0].goalValue !==
+                            0 ||
+                          activityData[0].behaviorValue -
+                            activityGoal[0].behaviorValue !==
+                            0 ||
+                          activityData[0].reflection !==
+                            activityGoal[0].reflection
+                        ? "Save changes to today's Activity goal"
+                        : "No Activity Data found"
+                    }
+                  >
+                    <Button
+                      className="save edit-icon"
+                      style={{
+                        color: "white",
+                        border: "1px solid black",
+                        backgroundColor:
+                          loggedActivityToday &&
+                          activityData.length &&
+                          (activityData[0].goalValue -
+                            activityGoal[0].goalValue !==
+                            0 ||
                             activityData[0].behaviorValue -
                               activityGoal[0].behaviorValue !==
                               0 ||
                             activityData[0].reflection !==
-                              activityGoal[0].reflection
-                          ? "Save changes to today's Activity goal"
-                          : "No Activity Data found"
-                      }
-                    >
-                      <Button
-                        className="save edit-icon"
-                        style={{
-                          color: "white",
-                          border: "1px solid black",
-                          backgroundColor:
-                            loggedActivityToday &&
-                            activityData.length &&
-                            (activityData[0].goalValue -
-                              activityGoal[0].goalValue !==
-                              0 ||
+                              activityGoal[0].reflection)
+                            ? SAVE_ICON_COLORS.YELLOW
+                            : !activityData.length || !loggedActivityToday
+                            ? SAVE_ICON_COLORS.RED
+                            : activityData[0].goalValue -
+                                activityGoal[0].goalValue ===
+                                0 &&
                               activityData[0].behaviorValue -
-                                activityGoal[0].behaviorValue !==
-                                0 ||
-                              activityData[0].reflection !==
-                                activityGoal[0].reflection)
-                              ? SAVE_ICON_COLORS.YELLOW
-                              : !activityData.length || !loggedActivityToday
-                              ? SAVE_ICON_COLORS.RED
-                              : activityData[0].goalValue -
-                                  activityGoal[0].goalValue ===
-                                  0 &&
-                                activityData[0].behaviorValue -
-                                  activityGoal[0].behaviorValue ===
-                                  0 &&
-                                activityData[0].reflection ===
-                                  activityGoal[0].reflection
-                              ? SAVE_ICON_COLORS.GREEN
-                              : "auto",
-                        }}
-                        onClick={() => {
-                          updateBehaviorValue(
-                            0,
-                            activityGoal[0].goalValue,
-                            activityGoal[0].behaviorValue,
-                            activityGoal[0].reflection
-                          );
-                          setLoggedActivityToday(true);
-                          setEditingBehaviorId(-1);
-                        }}
-                      >
-                        SAVE
-                      </Button>
-                    </Tooltip>
-                  </ReflectionContainer>
-                </td>
+                                activityGoal[0].behaviorValue ===
+                                0 &&
+                              activityData[0].reflection ===
+                                activityGoal[0].reflection
+                            ? SAVE_ICON_COLORS.GREEN
+                            : "auto",
+                      }}
+                      onClick={() => {
+                        updateBehaviorValue(
+                          0,
+                          activityGoal[0].goalValue,
+                          activityGoal[0].behaviorValue,
+                          activityGoal[0].reflection
+                        );
+                        setLoggedActivityToday(true);
+                        setEditingBehaviorId(-1);
+                      }}
+                    >
+                      SAVE
+                    </Button>
+                  </Tooltip>
+                </ReflectionContainer>
               </GoalContainer>
 
-              <GoalContainer>
-                <td style={styles.goalRow}>
+              <GoalContainer style={styles.goalRow}>
+                <td style={{ width: "40%" }}>
                   {screentimeData.length &&
                   screentimeGoal[0].goalValue !== 0 &&
                   screentimeGoal[0].behaviorValue !== 0 ? (
@@ -1352,105 +1441,103 @@ const JournalScreen = () => {
                     </Tooltip>
                   )}
                 </td>
-                <td style={styles.goalRow}>
-                  <ReflectionContainer>
-                    <TextField
-                      type="text"
-                      placeholder="Type my thoughts"
-                      style={{ width: "80%", fontSize: 2 }}
-                      value={
-                        screentimeGoal.length && screentimeGoal[0].reflection
-                      }
-                      onChange={(e) => {
-                        setScreentimeGoal((prevScreentimeGoal) => {
-                          const updatedScreentimeGoal = prevScreentimeGoal.map(
-                            (goal) => {
-                              const newScreentimeReflection = {
-                                ...goal,
-                                reflection: e.target.value,
-                              };
-                              return newScreentimeReflection;
-                            }
-                          );
-                          return updatedScreentimeGoal;
-                        });
-                      }}
-                    />
-                    <Tooltip
-                      title={
-                        !screentimeData.length || !loggedScreentimeToday
-                          ? "Record your first Screentime goal for today!"
-                          : screentimeData[0].goalValue -
-                              screentimeData[0].goalValue ===
-                              0 &&
-                            screentimeData[0].behaviorValue -
-                              screentimeGoal[0].behaviorValue ===
-                              0 &&
-                            screentimeData[0].reflection ===
-                              screentimeGoal[0].reflection
-                          ? "Today's Screentime goal is up to date!"
-                          : screentimeData[0].goalValue -
-                              screentimeGoal[0].goalValue !==
-                              0 ||
+                <ReflectionContainer style={styles.goalRow}>
+                  <TextField
+                    type="text"
+                    placeholder="Type my thoughts"
+                    style={{ width: "80%" }}
+                    value={
+                      screentimeGoal.length && screentimeGoal[0].reflection
+                    }
+                    onChange={(e) => {
+                      setScreentimeGoal((prevScreentimeGoal) => {
+                        const updatedScreentimeGoal = prevScreentimeGoal.map(
+                          (goal) => {
+                            const newScreentimeReflection = {
+                              ...goal,
+                              reflection: e.target.value,
+                            };
+                            return newScreentimeReflection;
+                          }
+                        );
+                        return updatedScreentimeGoal;
+                      });
+                    }}
+                  />
+                  <Tooltip
+                    title={
+                      !screentimeData.length || !loggedScreentimeToday
+                        ? "Record your first Screentime goal for today!"
+                        : screentimeData[0].goalValue -
+                            screentimeData[0].goalValue ===
+                            0 &&
+                          screentimeData[0].behaviorValue -
+                            screentimeGoal[0].behaviorValue ===
+                            0 &&
+                          screentimeData[0].reflection ===
+                            screentimeGoal[0].reflection
+                        ? "Today's Screentime goal is up to date!"
+                        : screentimeData[0].goalValue -
+                            screentimeGoal[0].goalValue !==
+                            0 ||
+                          screentimeData[0].behaviorValue -
+                            screentimeGoal[0].behaviorValue !==
+                            0 ||
+                          screentimeData[0].reflection !==
+                            screentimeGoal[0].reflection
+                        ? "Save changes to today's Screentime goal"
+                        : "No Screentime Data found"
+                    }
+                  >
+                    <Button
+                      className="save edit-icon"
+                      style={{
+                        color: "white",
+                        border: "1px solid black",
+                        backgroundColor:
+                          loggedScreentimeToday &&
+                          screentimeData.length &&
+                          (screentimeData[0].goalValue -
+                            screentimeGoal[0].goalValue !==
+                            0 ||
                             screentimeData[0].behaviorValue -
                               screentimeGoal[0].behaviorValue !==
                               0 ||
                             screentimeData[0].reflection !==
-                              screentimeGoal[0].reflection
-                          ? "Save changes to today's Screentime goal"
-                          : "No Screentime Data found"
-                      }
-                    >
-                      <Button
-                        className="save edit-icon"
-                        style={{
-                          color: "white",
-                          border: "1px solid black",
-                          backgroundColor:
-                            loggedScreentimeToday &&
-                            screentimeData.length &&
-                            (screentimeData[0].goalValue -
-                              screentimeGoal[0].goalValue !==
-                              0 ||
+                              screentimeGoal[0].reflection)
+                            ? SAVE_ICON_COLORS.YELLOW
+                            : !screentimeData.length || !loggedScreentimeToday
+                            ? SAVE_ICON_COLORS.RED
+                            : screentimeData[0].goalValue -
+                                screentimeGoal[0].goalValue ===
+                                0 &&
                               screentimeData[0].behaviorValue -
-                                screentimeGoal[0].behaviorValue !==
-                                0 ||
-                              screentimeData[0].reflection !==
-                                screentimeGoal[0].reflection)
-                              ? SAVE_ICON_COLORS.YELLOW
-                              : !screentimeData.length || !loggedScreentimeToday
-                              ? SAVE_ICON_COLORS.RED
-                              : screentimeData[0].goalValue -
-                                  screentimeGoal[0].goalValue ===
-                                  0 &&
-                                screentimeData[0].behaviorValue -
-                                  screentimeGoal[0].behaviorValue ===
-                                  0 &&
-                                screentimeData[0].reflection ===
-                                  screentimeGoal[0].reflection
-                              ? SAVE_ICON_COLORS.GREEN
-                              : "auto",
-                        }}
-                        onClick={() => {
-                          updateBehaviorValue(
-                            1,
-                            screentimeGoal[0].goalValue,
-                            screentimeGoal[0].behaviorValue,
-                            screentimeGoal[0].reflection
-                          );
-                          setLoggedScreentimeToday(true);
-                          setEditingBehaviorId(-1);
-                        }}
-                      >
-                        SAVE
-                      </Button>
-                    </Tooltip>
-                  </ReflectionContainer>
-                </td>
+                                screentimeGoal[0].behaviorValue ===
+                                0 &&
+                              screentimeData[0].reflection ===
+                                screentimeGoal[0].reflection
+                            ? SAVE_ICON_COLORS.GREEN
+                            : "auto",
+                      }}
+                      onClick={() => {
+                        updateBehaviorValue(
+                          1,
+                          screentimeGoal[0].goalValue,
+                          screentimeGoal[0].behaviorValue,
+                          screentimeGoal[0].reflection
+                        );
+                        setLoggedScreentimeToday(true);
+                        setEditingBehaviorId(-1);
+                      }}
+                    >
+                      SAVE
+                    </Button>
+                  </Tooltip>
+                </ReflectionContainer>
               </GoalContainer>
 
-              <GoalContainer>
-                <td style={styles.goalRow}>
+              <GoalContainer style={styles.goalRow}>
+                <td style={{ width: "40%" }}>
                   {eatingData.length &&
                   eatingGoal[0].goalValue !== 0 &&
                   eatingGoal[0].behaviorValue !== 0 ? (
@@ -1466,103 +1553,94 @@ const JournalScreen = () => {
                     </Tooltip>
                   )}
                 </td>
-                <td style={styles.goalRow}>
-                  <ReflectionContainer>
-                    <TextField
-                      type="text"
-                      placeholder="Type my thoughts"
-                      style={{ width: "80%" }}
-                      value={eatingGoal.length && eatingGoal[0].reflection}
-                      onChange={(e) => {
-                        setEatingGoal((prevEatingGoal) => {
-                          const updatedEatingGoal = prevEatingGoal.map(
-                            (goal) => {
-                              const newEatingReflection = {
-                                ...goal,
-                                reflection: e.target.value,
-                              };
-                              return newEatingReflection;
-                            }
-                          );
-                          return updatedEatingGoal;
+                <ReflectionContainer style={styles.goalRow}>
+                  <TextField
+                    type="text"
+                    placeholder="Type my thoughts"
+                    style={{ width: "80%" }}
+                    value={eatingGoal.length && eatingGoal[0].reflection}
+                    onChange={(e) => {
+                      setEatingGoal((prevEatingGoal) => {
+                        const updatedEatingGoal = prevEatingGoal.map((goal) => {
+                          const newEatingReflection = {
+                            ...goal,
+                            reflection: e.target.value,
+                          };
+                          return newEatingReflection;
                         });
-                      }}
-                    />
-                    <Tooltip
-                      title={
-                        !eatingData.length || !loggedEatingToday
-                          ? "Record your first Eating goal for today!"
-                          : eatingData[0].goalValue -
-                              eatingGoal[0].goalValue ===
-                              0 &&
-                            eatingData[0].behaviorValue -
-                              eatingGoal[0].behaviorValue ===
-                              0 &&
-                            eatingData[0].reflection ===
-                              eatingGoal[0].reflection
-                          ? "Today's Eating goal is up to date!"
-                          : eatingData[0].goalValue -
-                              eatingGoal[0].goalValue !==
-                              0 ||
+                        return updatedEatingGoal;
+                      });
+                    }}
+                  />
+                  <Tooltip
+                    title={
+                      !eatingData.length || !loggedEatingToday
+                        ? "Record your first Eating goal for today!"
+                        : eatingData[0].goalValue - eatingGoal[0].goalValue ===
+                            0 &&
+                          eatingData[0].behaviorValue -
+                            eatingGoal[0].behaviorValue ===
+                            0 &&
+                          eatingData[0].reflection === eatingGoal[0].reflection
+                        ? "Today's Eating goal is up to date!"
+                        : eatingData[0].goalValue - eatingGoal[0].goalValue !==
+                            0 ||
+                          eatingData[0].behaviorValue -
+                            eatingGoal[0].behaviorValue !==
+                            0 ||
+                          eatingData[0].reflection !== eatingGoal[0].reflection
+                        ? "Save changes to today's Eating goal"
+                        : "No Eating Data found"
+                    }
+                  >
+                    <Button
+                      className="save edit-icon"
+                      style={{
+                        color: "white",
+                        border: "1px solid black",
+                        backgroundColor:
+                          loggedEatingToday &&
+                          eatingData.length &&
+                          (eatingData[0].goalValue - eatingGoal[0].goalValue !==
+                            0 ||
                             eatingData[0].behaviorValue -
                               eatingGoal[0].behaviorValue !==
                               0 ||
                             eatingData[0].reflection !==
-                              eatingGoal[0].reflection
-                          ? "Save changes to today's Eating goal"
-                          : "No Eating Data found"
-                      }
-                    >
-                      <Button
-                        className="save edit-icon"
-                        style={{
-                          color: "white",
-                          border: "1px solid black",
-                          backgroundColor:
-                            loggedEatingToday &&
-                            eatingData.length &&
-                            (eatingData[0].goalValue -
-                              eatingGoal[0].goalValue !==
-                              0 ||
+                              eatingGoal[0].reflection)
+                            ? SAVE_ICON_COLORS.YELLOW
+                            : !eatingData.length || !loggedEatingToday
+                            ? SAVE_ICON_COLORS.RED
+                            : eatingData[0].goalValue -
+                                eatingGoal[0].goalValue ===
+                                0 &&
                               eatingData[0].behaviorValue -
-                                eatingGoal[0].behaviorValue !==
-                                0 ||
-                              eatingData[0].reflection !==
-                                eatingGoal[0].reflection)
-                              ? SAVE_ICON_COLORS.YELLOW
-                              : !eatingData.length || !loggedEatingToday
-                              ? SAVE_ICON_COLORS.RED
-                              : eatingData[0].goalValue -
-                                  eatingGoal[0].goalValue ===
-                                  0 &&
-                                eatingData[0].behaviorValue -
-                                  eatingGoal[0].behaviorValue ===
-                                  0 &&
-                                eatingData[0].reflection ===
-                                  eatingGoal[0].reflection
-                              ? SAVE_ICON_COLORS.GREEN
-                              : "auto",
-                        }}
-                        onClick={() => {
-                          updateBehaviorValue(
-                            2,
-                            eatingGoal[0].goalValue,
-                            eatingGoal[0].behaviorValue,
-                            eatingGoal[0].reflection
-                          );
-                          setLoggedEatingToday(true);
-                          setEditingBehaviorId(-1);
-                        }}
-                      >
-                        SAVE
-                      </Button>
-                    </Tooltip>
-                  </ReflectionContainer>
-                </td>
+                                eatingGoal[0].behaviorValue ===
+                                0 &&
+                              eatingData[0].reflection ===
+                                eatingGoal[0].reflection
+                            ? SAVE_ICON_COLORS.GREEN
+                            : "auto",
+                      }}
+                      onClick={() => {
+                        updateBehaviorValue(
+                          2,
+                          eatingGoal[0].goalValue,
+                          eatingGoal[0].behaviorValue,
+                          eatingGoal[0].reflection
+                        );
+                        setLoggedEatingToday(true);
+                        setEditingBehaviorId(-1);
+                      }}
+                    >
+                      SAVE
+                    </Button>
+                  </Tooltip>
+                </ReflectionContainer>
               </GoalContainer>
 
-              <GoalContainer>
-                <td style={styles.goalRow}>
+              <GoalContainer style={styles.goalRow}>
+                <td style={{ width: "40%" }}>
                   {sleepData.length &&
                   sleepGoal[0].goalValue !== 0 &&
                   sleepGoal[0].behaviorValue !== 0 ? (
@@ -1580,97 +1658,94 @@ const JournalScreen = () => {
                     </Tooltip>
                   )}
                 </td>
-                <td style={styles.goalRow}>
-                  <ReflectionContainer>
-                    <TextField
-                      type="text"
-                      placeholder="Type my thoughts"
-                      style={{ width: "80%" }}
-                      value={sleepGoal.length && sleepGoal[0].reflection}
-                      onChange={(e) => {
-                        setSleepGoal((prevSleepGoal) => {
-                          const updatedSleepGoal = prevSleepGoal.map((goal) => {
-                            const newSleepGoal = {
-                              ...goal,
-                              reflection: e.target.value,
-                            };
-                            return newSleepGoal;
-                          });
-                          return updatedSleepGoal;
+                <ReflectionContainer style={styles.goalRow}>
+                  <TextField
+                    type="text"
+                    placeholder="Type my thoughts"
+                    style={{ width: "80%" }}
+                    value={sleepGoal.length && sleepGoal[0].reflection}
+                    onChange={(e) => {
+                      setSleepGoal((prevSleepGoal) => {
+                        const updatedSleepGoal = prevSleepGoal.map((goal) => {
+                          const newSleepGoal = {
+                            ...goal,
+                            reflection: e.target.value,
+                          };
+                          return newSleepGoal;
                         });
-                      }}
-                    />
-                    <Tooltip
-                      title={
-                        !sleepData.length || !loggedSleepToday
-                          ? "Record your first Sleep goal for today!"
-                          : sleepData[0].goalValue - sleepGoal[0].goalValue ===
-                              0 &&
-                            sleepData[0].behaviorValue -
-                              sleepGoal[0].behaviorValue ===
-                              0 &&
-                            sleepData[0].reflection === sleepGoal[0].reflection
-                          ? "Today's Sleep goal is up to date!"
-                          : sleepData[0].goalValue - sleepGoal[0].goalValue !==
-                              0 ||
+                        return updatedSleepGoal;
+                      });
+                    }}
+                  />
+                  <Tooltip
+                    title={
+                      !sleepData.length || !loggedSleepToday
+                        ? "Record your first Sleep goal for today!"
+                        : sleepData[0].goalValue - sleepGoal[0].goalValue ===
+                            0 &&
+                          sleepData[0].behaviorValue -
+                            sleepGoal[0].behaviorValue ===
+                            0 &&
+                          sleepData[0].reflection === sleepGoal[0].reflection
+                        ? "Today's Sleep goal is up to date!"
+                        : sleepData[0].goalValue - sleepGoal[0].goalValue !==
+                            0 ||
+                          sleepData[0].behaviorValue -
+                            sleepGoal[0].behaviorValue !==
+                            0 ||
+                          sleepData[0].reflection !== sleepGoal[0].reflection
+                        ? "Save changes to today's Sleep goal"
+                        : "No Sleep Data found"
+                    }
+                  >
+                    <Button
+                      className="save edit-icon"
+                      style={{
+                        color: "white",
+                        border: "1px solid black",
+                        backgroundColor:
+                          loggedSleepToday &&
+                          sleepData.length &&
+                          (sleepData[0].goalValue - sleepGoal[0].goalValue !==
+                            0 ||
                             sleepData[0].behaviorValue -
                               sleepGoal[0].behaviorValue !==
                               0 ||
-                            sleepData[0].reflection !== sleepGoal[0].reflection
-                          ? "Save changes to today's Sleep goal"
-                          : "No Sleep Data found"
-                      }
-                    >
-                      <Button
-                        className="save edit-icon"
-                        style={{
-                          color: "white",
-                          border: "1px solid black",
-                          backgroundColor:
-                            loggedSleepToday &&
-                            sleepData.length &&
-                            (sleepData[0].goalValue - sleepGoal[0].goalValue !==
-                              0 ||
+                            sleepData[0].reflection !== sleepGoal[0].reflection)
+                            ? SAVE_ICON_COLORS.YELLOW
+                            : !sleepData.length || !loggedSleepToday
+                            ? SAVE_ICON_COLORS.RED
+                            : sleepData[0].goalValue -
+                                sleepGoal[0].goalValue ===
+                                0 &&
                               sleepData[0].behaviorValue -
-                                sleepGoal[0].behaviorValue !==
-                                0 ||
-                              sleepData[0].reflection !==
-                                sleepGoal[0].reflection)
-                              ? SAVE_ICON_COLORS.YELLOW
-                              : !sleepData.length || !loggedSleepToday
-                              ? SAVE_ICON_COLORS.RED
-                              : sleepData[0].goalValue -
-                                  sleepGoal[0].goalValue ===
-                                  0 &&
-                                sleepData[0].behaviorValue -
-                                  sleepGoal[0].behaviorValue ===
-                                  0 &&
-                                sleepData[0].reflection ===
-                                  sleepGoal[0].reflection
-                              ? SAVE_ICON_COLORS.GREEN
-                              : "auto",
-                        }}
-                        onClick={() => {
-                          updateBehaviorValue(
-                            3,
-                            sleepGoal[0].goalValue,
-                            sleepGoal[0].behaviorValue,
-                            sleepGoal[0].reflection
-                          );
-                          setLoggedSleepToday(true);
-                          setEditingBehaviorId(-1);
-                        }}
-                      >
-                        SAVE
-                      </Button>
-                    </Tooltip>
-                  </ReflectionContainer>
-                </td>
+                                sleepGoal[0].behaviorValue ===
+                                0 &&
+                              sleepData[0].reflection ===
+                                sleepGoal[0].reflection
+                            ? SAVE_ICON_COLORS.GREEN
+                            : "auto",
+                      }}
+                      onClick={() => {
+                        updateBehaviorValue(
+                          3,
+                          sleepGoal[0].goalValue,
+                          sleepGoal[0].behaviorValue,
+                          sleepGoal[0].reflection
+                        );
+                        setLoggedSleepToday(true);
+                        setEditingBehaviorId(-1);
+                      }}
+                    >
+                      SAVE
+                    </Button>
+                  </Tooltip>
+                </ReflectionContainer>
               </GoalContainer>
             </div>
             <img
               className="rightpage1"
-              src={require("../../components/images/journal/left_page3.png")}
+              src={require("../../components/images/journal/left_page.png")}
               alt="First right-side page"
             />
             <img
@@ -1680,7 +1755,7 @@ const JournalScreen = () => {
             />
             <img
               className="rightpage3"
-              src={require("../../components/images/journal/left_page.png")}
+              src={require("../../components/images/journal/left_page3.png")}
               alt="Third right-side page"
             />
           </div>
@@ -1738,9 +1813,7 @@ let styles = {
     justifyContent: "flex-end",
   },
   feedback: {
-    width: "35%",
     color: "blue",
-    // marginLeft: "auto",
     padding: 5,
   },
 };
