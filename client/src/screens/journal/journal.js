@@ -150,12 +150,8 @@ const JournalScreen = () => {
   const [eatingData, setEatingData] = useState({});
   const [sleepData, setSleepData] = useState({});
 
-  useEffect(() => {
-    console.log(screentimeGoal);
-  });
-
   const renderFeedback = (goalData) => {
-    if (goalData === screentimeGoal) {
+    if (goalData.goalType == "screentime") {
       if (
         goalData[0].behaviorValue <= goalData[0].goalValue / 2 &&
         goalData[0].behaviorValue <= goalData[0].recommendedValue / 2
@@ -233,7 +229,6 @@ const JournalScreen = () => {
           },
         });
         if (response.data.length) {
-          console.log("logged today");
           if (goalType === "activity") {
             setLoggedActivityToday(true);
           } else if (goalType === "screentime") {
