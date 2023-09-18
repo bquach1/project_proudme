@@ -54,7 +54,6 @@ const TrackingWrapper = styled.div`
 
 export const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
-
     return (
       <div
         style={{
@@ -354,10 +353,7 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
       <Bar dataKey="recommendedValue" fill="green" stackId="stack" />
       <Bar dataKey="goalValue" fill="#A7C7E7" stackId="stack" />
       <Bar dataKey="behaviorValue" stackId="stack">
-        <LabelList
-          dataKey="behaviorValue"
-          fill="white"
-        />
+        <LabelList dataKey="behaviorValue" fill="white" />
         {data.map((entry, index) => (
           <Cell
             key={index}
@@ -414,9 +410,9 @@ const TrackingScreen = () => {
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(true);
   const [currentGoalData, setCurrentGoalData] = useState([]);
+  const [userBehaviorData, setUserBehaviorData] = useState([]);
   const [allBehaviorData, setAllBehaviorData] = useState([]);
 
-  const [chartType, setChartType] = useState("line");
   const [lineChartView, setLineChartView] = useState("behaviorOnly");
 
   const [activityBehaviorData, setActivityBehaviorData] = useState([]);
@@ -442,7 +438,7 @@ const TrackingScreen = () => {
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   useEffect(() => {
-    console.log(activityBehaviorData);
+    console.log(userBehaviorData);
   });
 
   useEffect(() => {
@@ -595,6 +591,19 @@ const TrackingScreen = () => {
       }
     };
 
+    const fetchUserBehaviors = async () => {
+      try {
+        const response = await axios.get(`${DATABASE_URL}/behaviors`, {
+          params: {
+            user: shownUser,
+          },
+        });
+        setUserBehaviorData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     const fetchAllBehaviors = async () => {
       try {
         const response = await axios.get(`${DATABASE_URL}/allBehaviors`, {});
@@ -604,6 +613,7 @@ const TrackingScreen = () => {
       }
     };
     fetchSelectedUserGoals();
+    fetchUserBehaviors();
     fetchAllBehaviors();
   }, [user]);
 
@@ -667,28 +677,27 @@ const TrackingScreen = () => {
             Submit
           </Button>
           <BehaviorTrackingCSV
-            allBehaviorData={allBehaviorData}
+            behaviorData={userBehaviorData}
             user={shownUser.name}
+            userData={shownUser}
           />
         </>
       )}
 
-      {chartType === "line" && (
-        <FormControl style={{ margin: "10px 0px" }}>
-          <InputLabel id="line-chart-view">Line View</InputLabel>
-          <Select
-            labelId="line-chart-view"
-            id="line-view"
-            value={lineChartView}
-            label="Line View"
-            onChange={(e) => setLineChartView(e.target.value)}
-          >
-            <MenuItem value="bothLines">Goal and Behavior Lines</MenuItem>
-            <MenuItem value="goalOnly">Goal Line</MenuItem>
-            <MenuItem value="behaviorOnly">Behavior Line</MenuItem>
-          </Select>
-        </FormControl>
-      )}
+      <FormControl style={{ margin: "10px 0px" }}>
+        <InputLabel id="line-chart-view">Line View</InputLabel>
+        <Select
+          labelId="line-chart-view"
+          id="line-view"
+          value={lineChartView}
+          label="Line View"
+          onChange={(e) => setLineChartView(e.target.value)}
+        >
+          <MenuItem value="bothLines">Goal and Behavior Lines</MenuItem>
+          <MenuItem value="goalOnly">Goal Line</MenuItem>
+          <MenuItem value="behaviorOnly">Behavior Line</MenuItem>
+        </Select>
+      </FormControl>
 
       <div>
         <input
@@ -720,58 +729,32 @@ const TrackingScreen = () => {
           alignItems: "center",
         }}
       >
-        <h1>{shownUser.name}'s Physical Activity Behavior Data</h1>
-        {chartType === "line" ? (
-          <BehaviorLineChart
-            data={filteredActivityBehaviorData}
-            chartGoalType={"activity"}
-            lineChartView={lineChartView}
-          />
-        ) : (
-          <BehaviorBarChart
-            data={filteredActivityBehaviorData}
-            chartGoalType={"activity"}
-          />
-        )}
-        <h1>{shownUser.name}'s Screen Time Behavior Data</h1>
-        {chartType === "line" ? (
-          <BehaviorLineChart
-            data={filteredScreentimeBehaviorData}
-            chartGoalType={"screentime"}
-            lineChartView={lineChartView}
-          />
-        ) : (
-          <BehaviorBarChart
-            data={filteredScreentimeBehaviorData}
-            chartGoalType={"screentime"}
-          />
-        )}
-        <h1>{shownUser.name}'s Eating Fruits & Vegetables Behavior Data</h1>
-        {chartType === "line" ? (
-          <BehaviorLineChart
-            data={filteredEatingBehaviorData}
-            chartGoalType={"eating"}
-            lineChartView={lineChartView}
-          />
-        ) : (
-          <BehaviorBarChart
-            data={filteredEatingBehaviorData}
-            chartGoalType={"eating"}
-          />
-        )}
-        <h1>{shownUser.name}'s Sleep Behavior Data</h1>
-        {chartType === "line" ? (
-          <BehaviorLineChart
-            data={filteredSleepBehaviorData}
-            chartGoalType={"sleep"}
-            lineChartView={lineChartView}
-          />
-        ) : (
-          <BehaviorBarChart
-            data={filteredSleepBehaviorData}
-            chartGoalType={"sleep"}
-          />
-        )}
+        <h1>{shownUser.firstName}'s Physical Activity Behavior Data</h1>
+        <BehaviorLineChart
+          data={filteredActivityBehaviorData}
+          chartGoalType={"activity"}
+          lineChartView={lineChartView}
+        />
+        <h1>{shownUser.firstName}'s Screen Time Behavior Data</h1>
+        <BehaviorLineChart
+          data={filteredScreentimeBehaviorData}
+          chartGoalType={"screentime"}
+          lineChartView={lineChartView}
+        />
+        <h1>
+          {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data
+        </h1>
+        <BehaviorLineChart
+          data={filteredEatingBehaviorData}
+          chartGoalType={"eating"}
+          lineChartView={lineChartView}
+        />
+        <h1>{shownUser.firstName}'s Sleep Behavior Data</h1>
+        <BehaviorLineChart
+          data={filteredSleepBehaviorData}
+          chartGoalType={"sleep"}
+          lineChartView={lineChartView}
+        />
       </div>
     </TrackingWrapper>
   );

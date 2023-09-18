@@ -1,1 +1,1 @@
-export const DATABASE_URL = "http://localhost:3001";
+export const DATABASE_URL = "https://project-proudme.onrender.com";
