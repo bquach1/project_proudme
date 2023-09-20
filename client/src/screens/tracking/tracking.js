@@ -439,7 +439,7 @@ const TrackingScreen = () => {
 
   useEffect(() => {
     console.log(userBehaviorData);
-  });
+  })
 
   useEffect(() => {
     setFilteredActivityBehaviorData(
@@ -571,10 +571,24 @@ const TrackingScreen = () => {
       }
     };
 
+    const fetchUserBehaviors = async () => {
+      try {
+        const response = await axios.get(`${DATABASE_URL}/behaviors`, {
+          params: {
+            user: shownUser,
+          },
+        });
+        setUserBehaviorData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchActivityBehaviors();
     fetchScreentimeBehaviors();
     fetchEatingBehaviors();
     fetchSleepBehaviors();
+    fetchUserBehaviors();
   }, [shownUser]);
 
   useEffect(() => {
@@ -591,19 +605,6 @@ const TrackingScreen = () => {
       }
     };
 
-    const fetchUserBehaviors = async () => {
-      try {
-        const response = await axios.get(`${DATABASE_URL}/behaviors`, {
-          params: {
-            user: shownUser,
-          },
-        });
-        setUserBehaviorData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     const fetchAllBehaviors = async () => {
       try {
         const response = await axios.get(`${DATABASE_URL}/allBehaviors`, {});
@@ -613,7 +614,6 @@ const TrackingScreen = () => {
       }
     };
     fetchSelectedUserGoals();
-    fetchUserBehaviors();
     fetchAllBehaviors();
   }, [user]);
 

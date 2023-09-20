@@ -7,7 +7,6 @@ import { TextField, Tooltip, Button } from "@mui/material";
 import styled from "styled-components";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
-import SaveIcon from "@mui/icons-material/Save";
 import LockIcon from "@mui/icons-material/Lock";
 
 import { SAVE_ICON_COLORS } from "./constants";
@@ -151,7 +150,7 @@ const JournalScreen = () => {
   const [sleepData, setSleepData] = useState({});
 
   const renderFeedback = (goalData) => {
-    if (goalData.goalType == "screentime") {
+    if (goalData[0].goalType == "screentime") {
       if (
         goalData[0].behaviorValue <= goalData[0].goalValue / 2 &&
         goalData[0].behaviorValue <= goalData[0].recommendedValue / 2
@@ -319,7 +318,7 @@ const JournalScreen = () => {
       }
     };
     fetchEatingGoals();
-  }, [user]);
+  }, [user, loggedEatingToday]);
 
   useEffect(() => {
     const fetchActivityGoals = async () => {
@@ -347,9 +346,7 @@ const JournalScreen = () => {
             goalType: "activity",
           },
         });
-        if (response.data.length === 0 || !loggedActivityToday) {
-          setActivityGoal(activityGoal);
-        } else {
+        if (response.data.length && loggedActivityToday) {
           setActivityGoal(response.data);
         }
       } catch (error) {
@@ -395,7 +392,7 @@ const JournalScreen = () => {
       }
     };
     fetchSleepGoals();
-  }, [user]);
+  }, [user, loggedSleepToday]);
 
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
@@ -424,9 +421,7 @@ const JournalScreen = () => {
             goalType: "screentime",
           },
         });
-        if (response.data.length === 0 || !loggedScreentimeToday) {
-          setScreentimeGoal(screentimeGoal);
-        } else {
+        if (response.data.length && loggedScreentimeToday) {
           setScreentimeGoal(response.data);
         }
       } catch (error) {
@@ -434,7 +429,7 @@ const JournalScreen = () => {
       }
     };
     fetchScreentimeGoals();
-  }, [user]);
+  }, [user, loggedScreentimeToday]);
 
   var dateToday = new Date(),
     month = dateToday.getMonth(),
@@ -457,7 +452,7 @@ const JournalScreen = () => {
               user: user._id,
               name: user.name,
               goalType: "activity",
-              goalValue: newGoalValue,
+              goalValue: +newGoalValue,
               behaviorValue: newBehaviorValue,
               goalStatus: activityData.length
                 ? newBehaviorValue >= activityData[0].goalValue
@@ -517,7 +512,7 @@ const JournalScreen = () => {
               user: user._id,
               name: user.name,
               goalType: "screentime",
-              goalValue: newGoalValue,
+              goalValue: +newGoalValue,
               behaviorValue: newBehaviorValue,
               goalStatus: screentimeData.length
                 ? newBehaviorValue >= screentimeData[0].goalValue
@@ -577,7 +572,7 @@ const JournalScreen = () => {
               user: user._id,
               name: user.name,
               goalType: "eating",
-              goalValue: newGoalValue,
+              goalValue: +newGoalValue,
               behaviorValue: newBehaviorValue,
               goalStatus: eatingData.length
                 ? newBehaviorValue >= eatingData[0].goalValue
@@ -637,7 +632,7 @@ const JournalScreen = () => {
               user: user._id,
               name: user.name,
               goalType: "sleep",
-              goalValue: newGoalValue,
+              goalValue: +newGoalValue,
               behaviorValue: newBehaviorValue,
               goalStatus: sleepData.length
                 ? newBehaviorValue >= sleepData[0].goalValue
@@ -775,16 +770,15 @@ const JournalScreen = () => {
                       className={
                         loggedActivityToday && editingBehaviorId !== 0
                           ? "disabled-behavior"
-                        :
-                        (activityData.length && 
-                          (activityData[0].goalValue -
-                          activityGoal[0].goalValue !==
-                          0 ||
-                          activityData[0].behaviorValue -
-                            activityGoal[0].behaviorValue !==
-                            0 ||
-                          activityData[0].reflection !==
-                            activityGoal[0].reflection))
+                          : activityData.length &&
+                            (activityData[0].goalValue -
+                              activityGoal[0].goalValue !==
+                              0 ||
+                              activityData[0].behaviorValue -
+                                activityGoal[0].behaviorValue !==
+                                0 ||
+                              activityData[0].reflection !==
+                                activityGoal[0].reflection)
                           ? "pending-behavior"
                           : "behavior"
                       }
@@ -827,11 +821,10 @@ const JournalScreen = () => {
                       className={
                         loggedActivityToday && editingBehaviorId !== 0
                           ? "disabled-behavior"
-                          :
-                          (activityData.length && 
-                            (activityData[0].behaviorValue !==
-                              activityGoal[0].behaviorValue))
-                            ? "pending-behavior"
+                          : activityData.length &&
+                            activityData[0].behaviorValue !==
+                              activityGoal[0].behaviorValue
+                          ? "pending-behavior"
                           : "behavior"
                       }
                       disabled={
@@ -1441,9 +1434,7 @@ const JournalScreen = () => {
                     type="text"
                     placeholder="Type my thoughts"
                     style={{ width: "80%" }}
-                    value={
-                      screentimeGoal.length && screentimeGoal[0].reflection
-                    }
+                    value={screentimeGoal[0].reflection}
                     onChange={(e) => {
                       setScreentimeGoal((prevScreentimeGoal) => {
                         const updatedScreentimeGoal = prevScreentimeGoal.map(

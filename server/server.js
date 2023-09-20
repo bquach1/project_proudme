@@ -83,7 +83,7 @@ const goalSchema = new mongoose.Schema({
   },
   recommendedValue: {
     type: Number,
-  }
+  },
 });
 
 const behaviorSchema = new mongoose.Schema({
@@ -124,7 +124,7 @@ const behaviorSchema = new mongoose.Schema({
   recommendedValue: {
     type: Number,
     default: 0,
-  }
+  },
 });
 
 const Goal = mongoose.model("Goal", goalSchema);
@@ -351,6 +351,16 @@ app.get("/user", async (req, res) => {
   }
 });
 
+app.get("/userByName", async (req, res) => {
+  try {
+    const user = await User.find({ name: req.query.name });
+    res.json(user);
+  } catch (error) {
+    res.status(500).send("Internal server error");
+    console.error(error);
+  }
+});
+
 app.post("/user", async (req, res) => {
   const user = await User.findOneAndUpdate(
     {
@@ -361,7 +371,7 @@ app.post("/user", async (req, res) => {
         password: req.body.password,
         confirmPassword: req.body.password,
       },
-    },
+    }
   );
   console.log(req.body.password);
   res.status(200).json(user);
