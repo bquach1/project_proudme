@@ -15,7 +15,7 @@ import { DATABASE_URL } from "../../constants";
 const Wrapper = styled.div`
   margin-top: 1%;
   padding-bottom: 10%;
-  height: 100vh;
+  height: 130vh;
 
   .disabled-behavior:hover {
     border-radius: 5px;
@@ -41,6 +41,22 @@ const JournalWrapper = styled.table`
     }
   }
 `;
+
+const InfoJournalWrapper = styled.div`
+  border: 1px dashed black;
+  border-radius: 10px;
+  width: 60%;
+  margin: 0 auto;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  background-color: #A7C7E7;
+  padding: 10px;
+`
+
+const BehaviorInfoText = styled.div`
+  display: flex;
+  align-items: center;
+`
 
 const GoalContainer = styled.tr`
   .edit-icon {
@@ -477,6 +493,7 @@ const JournalScreen = () => {
               name: user.name,
               goalType: "activity",
               date: date,
+              dateToday: new Date(),
               goalValue: activityData.length
                 ? activityData[0].goalValue
                 : activityGoal[0].goalValue,
@@ -537,6 +554,7 @@ const JournalScreen = () => {
               name: user.name,
               goalType: "screentime",
               date: date,
+              dateToday: new Date(),
               goalValue: screentimeData.length
                 ? screentimeData[0].goalValue
                 : screentimeGoal[0].goalValue,
@@ -597,6 +615,7 @@ const JournalScreen = () => {
               name: user.name,
               goalType: "eating",
               date: date,
+              dateToday: new Date(),
               goalValue: eatingData.length
                 ? eatingData[0].goalValue
                 : eatingGoal[0].goalValue,
@@ -657,6 +676,7 @@ const JournalScreen = () => {
               name: user.name,
               goalType: "sleep",
               date: date,
+              dateToday: new Date(),
               goalValue: sleepData.length
                 ? sleepData[0].goalValue
                 : sleepGoal[0].goalValue,
@@ -696,8 +716,48 @@ const JournalScreen = () => {
   return (
     <Wrapper>
       <h1 style={{ color: "#2E6AA1" }}>
-        My Journal (Last Logged {lastLoggedDate} {lastLoggedTime})
+        My Journal
       </h1>
+      <InfoJournalWrapper>
+        <strong>Last Logged {lastLoggedDate} {lastLoggedTime}</strong>
+        <h3 style={{marginTop: "2%"}}>Behavior Information</h3>
+        <div style={{textAlign: "left"}}>
+          <BehaviorInfoText>
+            <img
+              style={styles.activityIcon}
+              src={require("../../components/images/journal/activity_goals.png")}
+              alt="Activity goals icon on activity goals page"
+            />
+            <strong style={{marginLeft: "1%"}}>Physical Activity</strong>
+          </BehaviorInfoText>
+          <BehaviorInfoText>
+            <div>
+            <img
+                style={styles.screentimeIcon}
+                src={require("../../components/images/journal/tablet_icon.png")}
+                alt="Tablet for screentime goals"
+              />
+            <strong style={{marginLeft: "1%"}}>Screen Time</strong>
+            </div>
+          </BehaviorInfoText>
+          <BehaviorInfoText>
+            <img
+                style={styles.eatingIcon}
+                src={require("../../components/images/journal/apple.png")}
+                alt="Apple for servings goal"
+              />
+            <strong style={{marginLeft: "1%"}}>Eating Fruits & Vegetables</strong>
+          </BehaviorInfoText>
+          <BehaviorInfoText>
+            <img
+              style={styles.sleepIcon}
+              src={require("../../components/images/journal/pillow_icon.png")}
+              alt="Pillow icon for sleep"
+            />
+            <strong style={{marginLeft: "1%"}}>Sleep</strong>
+          </BehaviorInfoText>
+        </div>
+      </InfoJournalWrapper>
       <JournalWrapper>
         <img
           className="journalCover"

@@ -102,6 +102,9 @@ const behaviorSchema = new mongoose.Schema({
   date: {
     type: String,
   },
+  dateToday: {
+    type: Date,
+  },
   goalValue: {
     type: Number,
   },
@@ -229,6 +232,7 @@ app.post("/behaviors", async (req, res) => {
         },
         {
           $set: {
+            dateToday: req.body.dateToday,
             behaviorValue: req.body.behaviorValue,
             name: req.body.name,
             goalValue: req.body.goalValue,
@@ -253,6 +257,7 @@ app.post("/behaviors", async (req, res) => {
         goalValue: req.body.goalValue,
         behaviorValue: req.body.behaviorValue,
         date: req.body.date,
+        dateToday: req.body.dateToday,
         goalStatus: req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
         divInfo1: req.body.divInfo1,
         divInfo2: req.body.divInfo2,

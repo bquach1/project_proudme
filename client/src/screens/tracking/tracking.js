@@ -409,9 +409,7 @@ const TrackingScreen = () => {
   const [allUsers, setAllUsers] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(true);
-  const [currentGoalData, setCurrentGoalData] = useState([]);
   const [userBehaviorData, setUserBehaviorData] = useState([]);
-  const [allBehaviorData, setAllBehaviorData] = useState([]);
 
   const [lineChartView, setLineChartView] = useState("behaviorOnly");
 
@@ -439,7 +437,7 @@ const TrackingScreen = () => {
 
   useEffect(() => {
     console.log(userBehaviorData);
-  })
+  });
 
   useEffect(() => {
     setFilteredActivityBehaviorData(
@@ -590,32 +588,6 @@ const TrackingScreen = () => {
     fetchSleepBehaviors();
     fetchUserBehaviors();
   }, [shownUser]);
-
-  useEffect(() => {
-    const fetchSelectedUserGoals = async () => {
-      try {
-        const response = await axios.get(`${DATABASE_URL}/goals`, {
-          params: {
-            user: shownUser,
-          },
-        });
-        setCurrentGoalData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const fetchAllBehaviors = async () => {
-      try {
-        const response = await axios.get(`${DATABASE_URL}/allBehaviors`, {});
-        setAllBehaviorData(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchSelectedUserGoals();
-    fetchAllBehaviors();
-  }, [user]);
 
   return (
     <TrackingWrapper>

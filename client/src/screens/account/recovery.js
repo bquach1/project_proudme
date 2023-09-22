@@ -3,7 +3,7 @@ import axios from "axios";
 import { Button, TextField } from "@mui/material";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 
 import { DATABASE_URL } from "../../constants";
 
@@ -42,8 +42,9 @@ const Recovery = () => {
     from: "quachbruce@gmail.com",
     subject: "Project ProudME Password Recovery",
     text:
-      "Enter the confirmation code listed to reset your password: " +
-      verificationCode,
+      "Hi,\nYou are receiving this email because you requested a password reset on the Project ProudME webpage. \n\nEnter the confirmation code listed to reset your password: " +
+      verificationCode +
+      " \n\nProject ProudME Team  \nLouisiana State University \nPedagogical Kinesiology Lab",
   });
   const [confirming, setConfirming] = useState(false);
   const [confirmedPassword, setConfirmedPassword] = useState(false);
@@ -90,9 +91,9 @@ const Recovery = () => {
     axios.post(`${DATABASE_URL}/user`, {
       email: email,
       password: hashedPassword,
-    })
+    });
     navigate("/login");
-  }
+  };
 
   const handleEmailConfirm = (event) => {
     event.preventDefault();
@@ -113,10 +114,8 @@ const Recovery = () => {
       const newEmailData = {
         subject: "Project ProudME Username Recovery",
         to: email,
-        text:
-          "The username associated with this email account is " +
-          response.data[0].name +
-          ".",
+        text: 
+          `Hi,\n\nYou are receiving this email because you requested a username reminder on the Project ProudME webpage. If this was not you, please disregard this email and contact a support member. \n\nThe username associated with this email account is ${response.data[0].name}.\n\nProject ProudME Team  \nLouisiana State University \nPedagogical Kinesiology Lab`,
       };
 
       setEmailData(newEmailData);
@@ -152,7 +151,7 @@ const Recovery = () => {
                   style={{ width: "40%" }}
                 />
               </div>
-              <div style={{marginTop: "2%"}}>
+              <div style={{ marginTop: "2%" }}>
                 <Button
                   style={{
                     backgroundColor: "green",

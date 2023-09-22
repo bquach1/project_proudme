@@ -356,8 +356,7 @@ const SignUpScreen = () => {
       </form>
       {confirming && (
           <div style={{ marginTop: "2%" }}>
-            Enter the confirmation code sent to your email to reset your
-            password!
+            Enter the confirmation code sent to your email to confirm your account registration!
             <form
               style={{
                 display: "flex",

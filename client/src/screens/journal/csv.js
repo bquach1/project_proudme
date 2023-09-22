@@ -5,8 +5,7 @@ import { Button } from "@mui/material";
 import axios from "axios";
 import { DATABASE_URL } from "../../constants";
 
-export const BehaviorTrackingCSV = ({ behaviorData, user }) => {  
-
+export const BehaviorTrackingCSV = ({ behaviorData, user }) => {
   const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
@@ -22,21 +21,23 @@ export const BehaviorTrackingCSV = ({ behaviorData, user }) => {
         console.error(error);
       }
     };
-    fetchAllBehaviors();    
-  }, [user])
+
+    fetchAllBehaviors();
+  }, [user]);
+
+  useEffect(() => {
+    console.log(userInfo.length && userInfo);
+  })
 
   const finalData = behaviorData.map((obj) => ({
-    ...obj, 
+    ...obj,
     gradeLevel: userInfo[0].gradeLevel,
     birthYear: userInfo[0].birthYear,
     birthMonth: userInfo[0].birthMonth,
     gender: userInfo[0].gender,
-    schoolName: userInfo[0].schoolName
-  }))
-
-  useEffect(() => {
-    console.log(userInfo);
-  })
+    schoolName: userInfo[0].schoolName,
+    timeLogged: new Date(obj.dateToday).toLocaleTimeString(),
+  }));
 
   const behaviorHeaders = [
     { label: "User", key: "name" },
@@ -46,6 +47,7 @@ export const BehaviorTrackingCSV = ({ behaviorData, user }) => {
     { label: "Gender", key: "gender" },
     { label: "School Name", key: "schoolName" },
     { label: "Date", key: "date" },
+    { label: "Time Logged", key: "timeLogged" },
     { label: "Type of Goal", key: "goalType" },
     { label: "Goal Quantity", key: "goalValue" },
     { label: "Daily Value", key: "behaviorValue" },
