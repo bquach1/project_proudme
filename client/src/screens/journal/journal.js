@@ -15,7 +15,7 @@ import { DATABASE_URL } from "../../constants";
 const Wrapper = styled.div`
   margin-top: 1%;
   padding-bottom: 10%;
-  height: 130vh;
+  height: 140vh;
 
   .disabled-behavior:hover {
     border-radius: 5px;
@@ -49,14 +49,15 @@ const InfoJournalWrapper = styled.div`
   margin: 0 auto;
   margin-top: 2%;
   margin-bottom: 2%;
-  background-color: #A7C7E7;
+  background-color: #a7c7e7;
   padding: 10px;
-`
+`;
 
 const BehaviorInfoText = styled.div`
   display: flex;
   align-items: center;
-`
+  margin-top: 1%;
+`;
 
 const GoalContainer = styled.tr`
   .edit-icon {
@@ -99,6 +100,8 @@ const JournalScreen = () => {
   const [loggedScreentimeToday, setLoggedScreentimeToday] = useState(false);
   const [loggedEatingToday, setLoggedEatingToday] = useState(false);
   const [loggedSleepToday, setLoggedSleepToday] = useState(false);
+
+  const [showHelpBox, setShowHelpBox] = useState(false);
 
   const [editingBehaviorId, setEditingBehaviorId] = useState(-1);
 
@@ -715,49 +718,72 @@ const JournalScreen = () => {
 
   return (
     <Wrapper>
-      <h1 style={{ color: "#2E6AA1" }}>
-        My Journal
-      </h1>
-      <InfoJournalWrapper>
-        <strong>Last Logged {lastLoggedDate} {lastLoggedTime}</strong>
-        <h3 style={{marginTop: "2%"}}>Behavior Information</h3>
-        <div style={{textAlign: "left"}}>
-          <BehaviorInfoText>
-            <img
-              style={styles.activityIcon}
-              src={require("../../components/images/journal/activity_goals.png")}
-              alt="Activity goals icon on activity goals page"
-            />
-            <strong style={{marginLeft: "1%"}}>Physical Activity</strong>
-          </BehaviorInfoText>
-          <BehaviorInfoText>
-            <div>
-            <img
+      <h1 style={{ color: "#2E6AA1" }}>My Journal</h1>
+      <Button style={{marginTop: "1%", textTransform: "none", backgroundColor: "#77DD77", border: "1px solid black", borderRadius: 5, color: "black"}} onClick={() => setShowHelpBox(!showHelpBox)}>Toggle Help Box</Button>
+      {showHelpBox && (
+        <InfoJournalWrapper>
+          <strong>
+            Last Logged {lastLoggedDate} {lastLoggedTime}
+          </strong>
+          <h3 style={{ marginTop: "2%" }}>Behavior Information</h3>
+          <div style={{ textAlign: "left" }}>
+            <BehaviorInfoText>
+              <img
+                style={styles.activityIcon}
+                src={require("../../components/images/journal/activity_goals.png")}
+                alt="Activity goals icon on activity goals page"
+              />
+              <strong style={{ marginLeft: "1%" }}>Physical Activity</strong> 
+              <strong>&nbsp;(Recommended: 60 minutes/day)</strong>             
+            </BehaviorInfoText>
+            <ul style={{marginLeft: "4%"}}>
+              <li><strong>Goal:</strong> Get a good amount of physical activity every day.</li>
+              <li><strong>How to Achieve:</strong> Exercise (run, play sports, lift weights), do chores, or just perform light movements.</li>              
+            </ul>
+            <BehaviorInfoText>
+              <img
                 style={styles.screentimeIcon}
                 src={require("../../components/images/journal/tablet_icon.png")}
                 alt="Tablet for screentime goals"
               />
-            <strong style={{marginLeft: "1%"}}>Screen Time</strong>
-            </div>
-          </BehaviorInfoText>
-          <BehaviorInfoText>
-            <img
+              <strong style={{ marginLeft: "1%" }}>Screen Time</strong>
+              <strong>&nbsp;(Recommended: 2 hours/day)</strong>            
+            </BehaviorInfoText>
+            <ul style={{marginLeft: "4%"}}>
+              <li><strong>Goal:</strong> Reduce daily screentime to 2 hours or less.</li>
+              <li><strong>How to Achieve:</strong> Assign time slots to use computers/phones for schoolwork, video games, or other activities. Relax and have fun outside or with friends/family in other hours! </li>              
+            </ul>
+            <BehaviorInfoText>
+              <img
                 style={styles.eatingIcon}
                 src={require("../../components/images/journal/apple.png")}
                 alt="Apple for servings goal"
               />
-            <strong style={{marginLeft: "1%"}}>Eating Fruits & Vegetables</strong>
-          </BehaviorInfoText>
-          <BehaviorInfoText>
-            <img
-              style={styles.sleepIcon}
-              src={require("../../components/images/journal/pillow_icon.png")}
-              alt="Pillow icon for sleep"
-            />
-            <strong style={{marginLeft: "1%"}}>Sleep</strong>
-          </BehaviorInfoText>
-        </div>
-      </InfoJournalWrapper>
+              <strong style={{ marginLeft: "1%" }}>
+                Eating Fruits & Vegetables
+              </strong>
+              <strong>&nbsp;(Recommended: 5 servings/day)</strong>            
+            </BehaviorInfoText>
+            <ul style={{marginLeft: "4%"}}>
+              <li><strong>Goal:</strong> Eat target amounts of servings for healthy fruits and vegetables.</li>
+              <li><strong>How to Achieve:</strong> Incorporate fruits/veggies into snacktimes. Eating easy to eat fruits (bananas, grapes, apples, etc.) or vegetables (carrots/celery sticks, broccoli, etc.) helps!</li>              
+            </ul>
+            <BehaviorInfoText>
+              <img
+                style={styles.sleepIcon}
+                src={require("../../components/images/journal/pillow_icon.png")}
+                alt="Pillow icon for sleep"
+              />
+              <strong style={{ marginLeft: "1%" }}>Sleep</strong>
+              <strong>&nbsp;(Recommended: 9-11 hours/day)</strong>
+            </BehaviorInfoText>
+            <ul style={{marginLeft: "4%"}}>
+              <li><strong>Goal:</strong> Sleep for a sufficient number of hours every night.</li>
+              <li><strong>How to Achieve:</strong> Put devices away before sleeping, and focus on making a routine time to go to bed and wake up every morning!</li>              
+            </ul>
+          </div>
+        </InfoJournalWrapper>
+      )}
       <JournalWrapper>
         <img
           className="journalCover"
