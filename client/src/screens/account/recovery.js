@@ -39,7 +39,7 @@ const Recovery = () => {
   const [email, setEmail] = useState("");
   const [emailData, setEmailData] = useState({
     to: "",
-    from: "quachbruce@gmail.com",
+    from: "pklab@lsu.edu",
     subject: "Project ProudME Password Recovery",
     text:
       "Hi,\nYou are receiving this email because you requested a password reset on the Project ProudME webpage. \n\nEnter the confirmation code listed to reset your password: " +
@@ -78,12 +78,29 @@ const Recovery = () => {
     setPasswordConfirm(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setConfirming(true);
-    axios.post(`${DATABASE_URL}/send-email`, emailData).catch((error) => {
+    try {
+      const response = await axios.get(`${DATABASE_URL}/user`, {
+        params: {
+          email: email,
+        },
+      });
+      const newEmailData = {
+        subject: "Project ProudME Password Recovery",
+        to: email,
+        text:
+          `Hi ${response.data[0].firstName},\n\nYou are receiving this email because you requested a password reset on the Project ProudME webpage. \n\nEnter the confirmation code listed to reset your password: ` +
+          verificationCode + " \n\nProject ProudME Team \nLouisiana State University \nPedagogical Kinesiology Lab",
+      };
+
+      setEmailData(newEmailData);
+
+      await axios.post(`${DATABASE_URL}/send-email`, newEmailData)
+    } catch (error) {
       console.error(error);
-    });
+    }
   };
 
   const changePassword = async () => {
@@ -115,7 +132,8 @@ const Recovery = () => {
         subject: "Project ProudME Username Recovery",
         to: email,
         text: 
-          `Hi,\n\nYou are receiving this email because you requested a username reminder on the Project ProudME webpage. If this was not you, please disregard this email and contact a support member. \n\nThe username associated with this email account is ${response.data[0].name}.\n\nProject ProudME Team  \nLouisiana State University \nPedagogical Kinesiology Lab`,
+          `Hi ${response.data[0].firstName},\n\nYou are receiving this email because you requested a username reminder on the Project ProudME webpage. \n\nThe username associated with this email account is ${response.data[0].name}.` +
+          "\n\nProject ProudME Team \nLouisiana State University \nPedagogical Kinesiology Lab",
       };
 
       setEmailData(newEmailData);

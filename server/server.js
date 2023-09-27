@@ -481,7 +481,7 @@ app.post("/send-email", (req, res) => {
 
   const msg = {
     to,
-    from: "quachbruce@gmail.com",
+    from: "pklab@lsu.edu",
     subject,
     text,
   };

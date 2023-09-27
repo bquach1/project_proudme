@@ -68,7 +68,7 @@ const SignUpScreen = () => {
 
   const [emailData, setEmailData] = useState({
     to: "",
-    from: "quachbruce@gmail.com",
+    from: "pklab@lsu.edu",
     subject: "Project ProudME Registration Confirmation",
     text:
       "Enter the confirmation code listed to confirm your email account: " +
@@ -97,12 +97,12 @@ const SignUpScreen = () => {
         .then((response) => {
           setLoading(false);
           setSubmitted(true);
-          setConfirming(false);                
+          setConfirming(false);
           console.log(response.data);
         })
         .catch((error) => {
           console.error(error);
-        });          
+        });
     }
   };
 
@@ -113,8 +113,9 @@ const SignUpScreen = () => {
         subject: "Project ProudME Registration Confirmation",
         to: form.email,
         text:
-          "Enter the confirmation code listed to confirm your email account: " +
-          verificationCode,
+          `Hi ${form.name},\n\nYou are receiving this email because you recently registered a new account on the Project ProudME webpage. \n\nEnter the confirmation code listed to confirm your email account: ` +
+          verificationCode +
+          " \n\nProject ProudME Team \nLouisiana State University \nPedagogical Kinesiology Lab",
       };
       console.log(newEmailData);
       setEmailData(newEmailData);
@@ -352,48 +353,49 @@ const SignUpScreen = () => {
           >
             Register
           </Button>
-        </div>        
+        </div>
       </form>
       {confirming && (
-          <div style={{ marginTop: "2%" }}>
-            Enter the confirmation code sent to your email to confirm your account registration!
-            <form
+        <div style={{ marginTop: "2%" }}>
+          Enter the confirmation code sent to your email to confirm your account
+          registration!
+          <form
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "2%",
+            }}
+            onSubmit={handleAccountConfirm}
+          >
+            <TextField
+              type="text"
+              name="account-confirm"
+              value={accountConfirm}
+              onChange={handleAccountConfirmChange}
+              placeholder="Verification Code"
+              style={{ width: "20%" }}
+            />
+            <Button
               style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "2%",
+                backgroundColor: "green",
+                textTransform: "none",
+                color: "white",
               }}
-              onSubmit={handleAccountConfirm}
+              type="submit"
             >
-              <TextField
-                type="text"
-                name="account-confirm"
-                value={accountConfirm}
-                onChange={handleAccountConfirmChange}
-                placeholder="Verification Code"
-                style={{ width: "20%" }}
-              />
-              <Button
-                style={{
-                  backgroundColor: "green",
-                  textTransform: "none",
-                  color: "white",
-                }}
-                type="submit"
-              >
-                Confirm Account
-              </Button>
-            </form>
-          </div>
-        )}
-        <div className="signup-registration">
-          <h2>
-            Already have an account?{" "}
-            <a className="nav-select" onClick={() => navigate("/login")}>
-              Sign In!
-            </a>
-          </h2>
+              Confirm Account
+            </Button>
+          </form>
         </div>
+      )}
+      <div className="signup-registration">
+        <h2>
+          Already have an account?{" "}
+          <a className="nav-select" onClick={() => navigate("/login")}>
+            Sign In!
+          </a>
+        </h2>
+      </div>
     </div>
   );
 
