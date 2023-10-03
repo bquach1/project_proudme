@@ -15,7 +15,7 @@ import { DATABASE_URL } from "../../constants";
 const Wrapper = styled.div`
   margin-top: 1%;
   padding-bottom: 10%;
-  height: 140vh;
+  height: 100vh;
 
   .disabled-behavior:hover {
     border-radius: 5px;
@@ -76,6 +76,7 @@ const GoalContainer = styled.tr`
 const ReflectionContainer = styled.td`
   display: flex;
   flex-direction: row;
+  width: 50%;
 
   .edit-icon {
     margin-left: 3%;
@@ -719,71 +720,9 @@ const JournalScreen = () => {
   return (
     <Wrapper>
       <h1 style={{ color: "#2E6AA1" }}>My Journal</h1>
-      <Button style={{marginTop: "1%", textTransform: "none", backgroundColor: "#77DD77", border: "1px solid black", borderRadius: 5, color: "black"}} onClick={() => setShowHelpBox(!showHelpBox)}>Toggle Help Box</Button>
-      {showHelpBox && (
-        <InfoJournalWrapper>
-          <strong>
-            Last Logged {lastLoggedDate} {lastLoggedTime}
-          </strong>
-          <h3 style={{ marginTop: "2%" }}>Behavior Information</h3>
-          <div style={{ textAlign: "left" }}>
-            <BehaviorInfoText>
-              <img
-                style={styles.activityIcon}
-                src={require("../../components/images/journal/activity_goals.png")}
-                alt="Activity goals icon on activity goals page"
-              />
-              <strong style={{ marginLeft: "1%" }}>Physical Activity</strong> 
-              <strong>&nbsp;(Recommended: 60 minutes/day)</strong>             
-            </BehaviorInfoText>
-            <ul style={{marginLeft: "4%"}}>
-              <li><strong>Goal:</strong> Get a good amount of physical activity every day.</li>
-              <li><strong>How to Achieve:</strong> Exercise (run, play sports, lift weights), do chores, or just perform light movements.</li>              
-            </ul>
-            <BehaviorInfoText>
-              <img
-                style={styles.screentimeIcon}
-                src={require("../../components/images/journal/tablet_icon.png")}
-                alt="Tablet for screentime goals"
-              />
-              <strong style={{ marginLeft: "1%" }}>Screen Time</strong>
-              <strong>&nbsp;(Recommended: 2 hours/day)</strong>            
-            </BehaviorInfoText>
-            <ul style={{marginLeft: "4%"}}>
-              <li><strong>Goal:</strong> Reduce daily screentime to 2 hours or less.</li>
-              <li><strong>How to Achieve:</strong> Assign time slots to use computers/phones for schoolwork, video games, or other activities. Relax and have fun outside or with friends/family in other hours! </li>              
-            </ul>
-            <BehaviorInfoText>
-              <img
-                style={styles.eatingIcon}
-                src={require("../../components/images/journal/apple.png")}
-                alt="Apple for servings goal"
-              />
-              <strong style={{ marginLeft: "1%" }}>
-                Eating Fruits & Vegetables
-              </strong>
-              <strong>&nbsp;(Recommended: 5 servings/day)</strong>            
-            </BehaviorInfoText>
-            <ul style={{marginLeft: "4%"}}>
-              <li><strong>Goal:</strong> Eat target amounts of servings for healthy fruits and vegetables.</li>
-              <li><strong>How to Achieve:</strong> Incorporate fruits/veggies into snacktimes. Eating easy to eat fruits (bananas, grapes, apples, etc.) or vegetables (carrots/celery sticks, broccoli, etc.) helps!</li>              
-            </ul>
-            <BehaviorInfoText>
-              <img
-                style={styles.sleepIcon}
-                src={require("../../components/images/journal/pillow_icon.png")}
-                alt="Pillow icon for sleep"
-              />
-              <strong style={{ marginLeft: "1%" }}>Sleep</strong>
-              <strong>&nbsp;(Recommended: 9-11 hours/day)</strong>
-            </BehaviorInfoText>
-            <ul style={{marginLeft: "4%"}}>
-              <li><strong>Goal:</strong> Sleep for a sufficient number of hours every night.</li>
-              <li><strong>How to Achieve:</strong> Put devices away before sleeping, and focus on making a routine time to go to bed and wake up every morning!</li>              
-            </ul>
-          </div>
-        </InfoJournalWrapper>
-      )}
+      <strong>
+        Last Logged {lastLoggedDate} {lastLoggedTime}
+      </strong>
       <JournalWrapper>
         <img
           className="journalCover"
@@ -955,6 +894,27 @@ const JournalScreen = () => {
                 )}
               </GoalContainer>
 
+              <GoalContainer>
+                <BehaviorInfoText>
+                  <strong
+                    style={{
+                      width: "30%",
+                    }}
+                  >
+                    &nbsp;Recommended: 60 minutes/day
+                  </strong>
+                  <div
+                    style={{
+                      width: "70%",
+                    }}
+                  >
+                    <strong>Goal:</strong> Get a good amount of physical
+                    activity every day to improve fitness and physical/mental
+                    health.
+                  </div>
+                </BehaviorInfoText>
+              </GoalContainer>
+
               <GoalContainer style={styles.goalRow}>
                 <td style={styles.titleGroup}>
                   <img
@@ -1096,6 +1056,27 @@ const JournalScreen = () => {
                 )}
               </GoalContainer>
 
+              <GoalContainer>
+                <BehaviorInfoText>
+                  <strong
+                    style={{
+                      width: "30%",
+                    }}
+                  >
+                    &nbsp;Recommended: 60 minutes/day
+                  </strong>
+                  <div
+                    style={{
+                      width: "70%",
+                    }}
+                  >
+                    <strong>Goal:</strong> Get a good amount of physical
+                    activity every day to improve fitness and physical/mental
+                    health.
+                  </div>
+                </BehaviorInfoText>
+              </GoalContainer>
+
               <GoalContainer style={styles.goalRow}>
                 <td style={styles.titleGroup}>
                   <img
@@ -1229,6 +1210,27 @@ const JournalScreen = () => {
                 )}
               </GoalContainer>
 
+              <GoalContainer>
+                <BehaviorInfoText>
+                  <strong
+                    style={{
+                      width: "30%",
+                    }}
+                  >
+                    &nbsp;Recommended: 60 minutes/day
+                  </strong>
+                  <div
+                    style={{
+                      width: "70%",
+                    }}
+                  >
+                    <strong>Goal:</strong> Get a good amount of physical
+                    activity every day to improve fitness and physical/mental
+                    health.
+                  </div>
+                </BehaviorInfoText>
+              </GoalContainer>
+
               <GoalContainer style={styles.goalRow}>
                 <td style={styles.titleGroup}>
                   <img
@@ -1353,6 +1355,26 @@ const JournalScreen = () => {
                   </Tooltip>
                 )}
               </GoalContainer>
+              <GoalContainer>
+                <BehaviorInfoText>
+                  <strong
+                    style={{
+                      width: "30%",
+                    }}
+                  >
+                    &nbsp;Recommended: 60 minutes/day
+                  </strong>
+                  <div
+                    style={{
+                      width: "70%",
+                    }}
+                  >
+                    <strong>Goal:</strong> Get a good amount of physical
+                    activity every day to improve fitness and physical/mental
+                    health.
+                  </div>
+                </BehaviorInfoText>
+              </GoalContainer>
             </div>
 
             <img
@@ -1389,7 +1411,7 @@ const JournalScreen = () => {
               </GoalContainer>
 
               <GoalContainer style={styles.goalRow}>
-                <td style={{ width: "40%" }}>
+                <td style={{ width: "50%" }}>
                   {activityData.length &&
                   activityGoal[0].goalValue !== 0 &&
                   activityGoal[0].behaviorValue !== 0 ? (
@@ -1498,8 +1520,18 @@ const JournalScreen = () => {
                 </ReflectionContainer>
               </GoalContainer>
 
+              <GoalContainer>
+                <BehaviorInfoText>
+                  <div style={{ width: "100%" }}>
+                    <strong>How to Achieve:</strong> Exercise (run, play sports,
+                    lift weights) at a local gym, park, or at home, do chores,
+                    or just perform light movements.
+                  </div>
+                </BehaviorInfoText>
+              </GoalContainer>
+
               <GoalContainer style={styles.goalRow}>
-                <td style={{ width: "40%" }}>
+                <td style={{ width: "50%" }}>
                   {screentimeData.length &&
                   screentimeGoal[0].goalValue !== 0 &&
                   screentimeGoal[0].behaviorValue !== 0 ? (
@@ -1608,8 +1640,19 @@ const JournalScreen = () => {
                 </ReflectionContainer>
               </GoalContainer>
 
+              <GoalContainer>
+                <BehaviorInfoText>
+                  <div style={{ width: "100%" }}>
+                    <strong>How to Achieve:</strong> Assign time slots to use
+                    computers/phones for schoolwork, video games, or other
+                    activities. Relax and have fun outside or with
+                    friends/family in other hours!{" "}
+                  </div>
+                </BehaviorInfoText>
+              </GoalContainer>
+
               <GoalContainer style={styles.goalRow}>
-                <td style={{ width: "40%" }}>
+                <td style={{ width: "50%" }}>
                   {eatingData.length &&
                   eatingGoal[0].goalValue !== 0 &&
                   eatingGoal[0].behaviorValue !== 0 ? (
@@ -1711,8 +1754,19 @@ const JournalScreen = () => {
                 </ReflectionContainer>
               </GoalContainer>
 
+              <GoalContainer>
+                <BehaviorInfoText>
+                  <div style={{ width: "100%" }}>
+                    <strong>How to Achieve:</strong> Incorporate fruits/veggies
+                    into snacktimes. Eating easy to eat fruits (bananas, grapes,
+                    apples, etc.) or vegetables (carrots/celery sticks,
+                    broccoli, etc.) helps!
+                  </div>
+                </BehaviorInfoText>
+              </GoalContainer>
+
               <GoalContainer style={styles.goalRow}>
-                <td style={{ width: "40%" }}>
+                <td style={{ width: "50%" }}>
                   {sleepData.length &&
                   sleepGoal[0].goalValue !== 0 &&
                   sleepGoal[0].behaviorValue !== 0 ? (
@@ -1814,6 +1868,16 @@ const JournalScreen = () => {
                   </Tooltip>
                 </ReflectionContainer>
               </GoalContainer>
+
+              <GoalContainer>
+                <BehaviorInfoText>
+                  <div style={{ width: "100%" }}>
+                    <strong>How to Achieve:</strong> Put devices away before
+                    sleeping, and focus on making a routine time to go to bed
+                    and wake up every morning!
+                  </div>
+                </BehaviorInfoText>
+              </GoalContainer>
             </div>
             <img
               className="rightpage1"
@@ -1885,7 +1949,7 @@ let styles = {
     justifyContent: "flex-end",
   },
   feedback: {
-    color: "blue",
+    color: "#000080",
     padding: 5,
   },
 };
