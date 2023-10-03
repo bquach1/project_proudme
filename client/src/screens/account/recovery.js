@@ -92,12 +92,13 @@ const Recovery = () => {
         to: email,
         text:
           `Hi ${response.data[0].firstName},\n\nYou are receiving this email because you requested a password reset on the Project ProudME webpage. \n\nEnter the confirmation code listed to reset your password: ` +
-          verificationCode + " \n\nProject ProudME Team \nLouisiana State University \nPedagogical Kinesiology Lab",
+          verificationCode +
+          " \n\nProject ProudME Team \nLouisiana State University \nPedagogical Kinesiology Lab",
       };
 
       setEmailData(newEmailData);
 
-      await axios.post(`${DATABASE_URL}/send-email`, newEmailData)
+      await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
     } catch (error) {
       console.error(error);
     }
@@ -131,7 +132,7 @@ const Recovery = () => {
       const newEmailData = {
         subject: "Project ProudME Username Recovery",
         to: email,
-        text: 
+        text:
           `Hi ${response.data[0].firstName},\n\nYou are receiving this email because you requested a username reminder on the Project ProudME webpage. \n\nThe username associated with this email account is ${response.data[0].name}.` +
           "\n\nProject ProudME Team \nLouisiana State University \nPedagogical Kinesiology Lab",
       };
