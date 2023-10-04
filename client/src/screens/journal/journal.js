@@ -8,6 +8,7 @@ import styled from "styled-components";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import LockIcon from "@mui/icons-material/Lock";
+import DurationPicker from "../../components/durationPicker";
 
 import { SAVE_ICON_COLORS } from "./constants";
 import { DATABASE_URL } from "../../constants";
@@ -101,8 +102,6 @@ const JournalScreen = () => {
   const [loggedScreentimeToday, setLoggedScreentimeToday] = useState(false);
   const [loggedEatingToday, setLoggedEatingToday] = useState(false);
   const [loggedSleepToday, setLoggedSleepToday] = useState(false);
-
-  const [showHelpBox, setShowHelpBox] = useState(false);
 
   const [editingBehaviorId, setEditingBehaviorId] = useState(-1);
 
@@ -784,13 +783,20 @@ const JournalScreen = () => {
                   </Tooltip>
                 </td>
                 <td>
+                {/* <DurationPicker 
+                    loggedActivityToday={loggedActivityToday}
+                    editingBehaviorId={editingBehaviorId}
+                    activityData={activityData}
+                    activityGoal={activityGoal}
+                    setActivityGoal={setActivityGoal}
+                  /> */}
                   <Tooltip
                     title={
                       loggedActivityToday && editingBehaviorId !== 0
                         ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
                         : ""
                     }
-                  >
+                  >                  
                     <TextField
                       className={
                         loggedActivityToday && editingBehaviorId !== 0
