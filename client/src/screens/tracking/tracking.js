@@ -436,10 +436,6 @@ const TrackingScreen = () => {
   const [calendarOpen, setCalendarOpen] = useState(false);
 
   useEffect(() => {
-    console.log(userBehaviorData);
-  });
-
-  useEffect(() => {
     setFilteredActivityBehaviorData(
       activityBehaviorData.filter((item) => {
         if (

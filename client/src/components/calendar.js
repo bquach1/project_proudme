@@ -7,7 +7,6 @@ const CalendarComponent = ({ startDate, endDate }) => {
 
   function handleDateChange(range) {
     setDateRange(range);
-    console.log(dateRange);
   };
 
   return (

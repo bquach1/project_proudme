@@ -782,65 +782,25 @@ const JournalScreen = () => {
                     />
                   </Tooltip>
                 </td>
-                <td>
-                {/* <DurationPicker 
-                    loggedActivityToday={loggedActivityToday}
-                    editingBehaviorId={editingBehaviorId}
-                    activityData={activityData}
-                    activityGoal={activityGoal}
-                    setActivityGoal={setActivityGoal}
-                  /> */}
+                <td style={{ width: "50%" }}>
                   <Tooltip
                     title={
                       loggedActivityToday && editingBehaviorId !== 0
                         ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
                         : ""
                     }
-                  >                  
-                    <TextField
-                      className={
-                        loggedActivityToday && editingBehaviorId !== 0
-                          ? "disabled-behavior"
-                          : activityData.length &&
-                            (activityData[0].goalValue -
-                              activityGoal[0].goalValue !==
-                              0 ||
-                              activityData[0].behaviorValue -
-                                activityGoal[0].behaviorValue !==
-                                0 ||
-                              activityData[0].reflection !==
-                                activityGoal[0].reflection)
-                          ? "pending-behavior"
-                          : "behavior"
-                      }
-                      disabled={
-                        loggedActivityToday && editingBehaviorId !== 0
-                          ? true
-                          : false
-                      }
-                      style={styles.inputBox}
-                      label="minutes/day"
-                      id="input"
-                      type="number"
-                      value={activityGoal.length && activityGoal[0].goalValue}
-                      onChange={(e) => {
-                        setActivityGoal((prevActivityGoal) => {
-                          const updatedActivityGoal = prevActivityGoal.map(
-                            (goal) => {
-                              const newActivityGoalValue = {
-                                ...goal,
-                                goalValue: e.target.value,
-                              };
-                              return newActivityGoalValue;
-                            }
-                          );
-                          return updatedActivityGoal;
-                        });
-                      }}
+                  >
+                    <DurationPicker
+                      loggedGoalToday={loggedActivityToday}
+                      editingBehaviorId={editingBehaviorId}
+                      goalData={activityData}
+                      goal={activityGoal}
+                      setGoalData={setActivityGoal}
+                      editingId={0}
                     />
                   </Tooltip>
                 </td>
-                <td>
+                <td style={{ width: "50%" }}>
                   <Tooltip
                     title={
                       loggedActivityToday && editingBehaviorId !== 0
@@ -848,41 +808,14 @@ const JournalScreen = () => {
                         : ""
                     }
                   >
-                    <TextField
-                      className={
-                        loggedActivityToday && editingBehaviorId !== 0
-                          ? "disabled-behavior"
-                          : activityData.length &&
-                            activityData[0].behaviorValue !==
-                              activityGoal[0].behaviorValue
-                          ? "pending-behavior"
-                          : "behavior"
-                      }
-                      disabled={
-                        loggedActivityToday && editingBehaviorId !== 0
-                          ? true
-                          : false
-                      }
-                      style={styles.inputBox}
-                      label="minutes/day"
-                      type="number"
-                      value={
-                        activityGoal.length && activityGoal[0].behaviorValue
-                      }
-                      onChange={(e) => {
-                        setActivityGoal((prevActivityGoal) => {
-                          const updatedActivityGoal = prevActivityGoal.map(
-                            (goal) => {
-                              const newActivityGoalValue = {
-                                ...goal,
-                                behaviorValue: Number(e.target.value),
-                              };
-                              return newActivityGoalValue;
-                            }
-                          );
-                          return updatedActivityGoal;
-                        });
-                      }}
+                    <DurationPicker
+                      loggedGoalToday={loggedActivityToday}
+                      editingBehaviorId={editingBehaviorId}
+                      goalData={activityData}
+                      goal={activityGoal}
+                      setGoalData={setActivityGoal}
+                      editingId={0}
+                      type={"behavior"}
                     />
                   </Tooltip>
                 </td>
@@ -961,7 +894,7 @@ const JournalScreen = () => {
                     />
                   </Tooltip>
                 </td>
-                <td>
+                <td style={{ width: "50%" }}>
                   <Tooltip
                     title={
                       loggedScreentimeToday && editingBehaviorId !== 1
@@ -969,42 +902,18 @@ const JournalScreen = () => {
                         : ""
                     }
                   >
-                    <TextField
-                      className={
-                        loggedScreentimeToday && editingBehaviorId !== 1
-                          ? "disabled-behavior"
-                          : "behavior"
-                      }
-                      disabled={
-                        loggedScreentimeToday && editingBehaviorId !== 1
-                          ? true
-                          : false
-                      }
-                      style={styles.inputBox}
-                      label="minutes/day"
-                      type="number"
-                      value={
-                        screentimeGoal.length ? screentimeGoal[0].goalValue : ""
-                      }
-                      onChange={(e) => {
-                        setScreentimeGoal((prevScreentimeGoal) => {
-                          const updatedScreentimeGoal = prevScreentimeGoal.map(
-                            (goal) => {
-                              const newScreentimeGoalValue = {
-                                ...goal,
-                                goalValue: e.target.value,
-                              };
-                              return newScreentimeGoalValue;
-                            }
-                          );
-                          return updatedScreentimeGoal;
-                        });
-                      }}
+                    <DurationPicker
+                      loggedGoalToday={loggedScreentimeToday}
+                      editingBehaviorId={editingBehaviorId}
+                      goalData={screentimeData}
+                      goal={screentimeGoal}
+                      setGoalData={setScreentimeGoal}
+                      editingId={1}
                     />
                   </Tooltip>
                 </td>
 
-                <td>
+                <td style={{ width: "50%" }}>
                   <Tooltip
                     title={
                       loggedScreentimeToday && editingBehaviorId !== 1
@@ -1012,39 +921,14 @@ const JournalScreen = () => {
                         : ""
                     }
                   >
-                    <TextField
-                      disabled={
-                        loggedScreentimeToday && editingBehaviorId !== 1
-                          ? true
-                          : false
-                      }
-                      className={
-                        loggedScreentimeToday && editingBehaviorId !== 1
-                          ? "disabled-behavior"
-                          : "behavior"
-                      }
-                      style={styles.inputBox}
-                      label="minutes/day"
-                      type="number"
-                      value={
-                        screentimeGoal.length
-                          ? screentimeGoal[0].behaviorValue
-                          : ""
-                      }
-                      onChange={(e) => {
-                        setScreentimeGoal((prevScreentimeGoal) => {
-                          const updatedScreentimeGoal = prevScreentimeGoal.map(
-                            (goal) => {
-                              const newScreentimeGoalValue = {
-                                ...goal,
-                                behaviorValue: Number(e.target.value),
-                              };
-                              return newScreentimeGoalValue;
-                            }
-                          );
-                          return updatedScreentimeGoal;
-                        });
-                      }}
+                    <DurationPicker
+                      loggedGoalToday={loggedScreentimeToday}
+                      editingBehaviorId={editingBehaviorId}
+                      goalData={screentimeData}
+                      goal={screentimeGoal}
+                      setGoalData={setScreentimeGoal}
+                      editingId={1}
+                      type={"behavior"}
                     />
                   </Tooltip>
                 </td>
@@ -1069,16 +953,15 @@ const JournalScreen = () => {
                       width: "30%",
                     }}
                   >
-                    &nbsp;Recommended: 60 minutes/day
+                    &nbsp;Recommended: 2 hours/day
                   </strong>
                   <div
                     style={{
                       width: "70%",
                     }}
                   >
-                    <strong>Goal:</strong> Get a good amount of physical
-                    activity every day to improve fitness and physical/mental
-                    health.
+                    <strong>Goal:</strong> Limit screentime to at most 2 hours a
+                    day to improve focus and productive time.
                   </div>
                 </BehaviorInfoText>
               </GoalContainer>
@@ -1223,16 +1106,15 @@ const JournalScreen = () => {
                       width: "30%",
                     }}
                   >
-                    &nbsp;Recommended: 60 minutes/day
+                    &nbsp;Recommended: 5 servings/day
                   </strong>
                   <div
                     style={{
                       width: "70%",
                     }}
                   >
-                    <strong>Goal:</strong> Get a good amount of physical
-                    activity every day to improve fitness and physical/mental
-                    health.
+                    <strong>Goal:</strong> Eat servings of healthy fruits and
+                    vegetables for a balanced diet and a healthy lifestyle.
                   </div>
                 </BehaviorInfoText>
               </GoalContainer>
@@ -1271,7 +1153,7 @@ const JournalScreen = () => {
                   </Tooltip>
                 </td>
 
-                <td>
+                <td style={{ width: "50%" }}>
                   <Tooltip
                     title={
                       loggedSleepToday && editingBehaviorId !== 3
@@ -1279,38 +1161,18 @@ const JournalScreen = () => {
                         : ""
                     }
                   >
-                    <TextField
-                      className={
-                        loggedSleepToday && editingBehaviorId !== 3
-                          ? "disabled-behavior"
-                          : "behavior"
-                      }
-                      disabled={
-                        loggedSleepToday && editingBehaviorId !== 3
-                          ? true
-                          : false
-                      }
-                      style={styles.inputBox}
-                      label="hours/day"
-                      type="number"
-                      value={sleepGoal.length && sleepGoal[0].goalValue}
-                      onChange={(e) => {
-                        setSleepGoal((prevSleepGoal) => {
-                          const updatedSleepGoal = prevSleepGoal.map((goal) => {
-                            const newSleepGoalValue = {
-                              ...goal,
-                              goalValue: e.target.value,
-                            };
-                            return newSleepGoalValue;
-                          });
-                          return updatedSleepGoal;
-                        });
-                      }}
+                    <DurationPicker
+                      loggedGoalToday={loggedSleepToday}
+                      editingBehaviorId={editingBehaviorId}
+                      goalData={sleepData}
+                      goal={sleepGoal}
+                      setGoalData={setSleepGoal}
+                      editingId={3}
                     />
                   </Tooltip>
                 </td>
 
-                <td>
+                <td style={{ width: "50%" }}>
                   <Tooltip
                     title={
                       loggedSleepToday && editingBehaviorId !== 3
@@ -1318,33 +1180,14 @@ const JournalScreen = () => {
                         : ""
                     }
                   >
-                    <TextField
-                      disabled={
-                        loggedSleepToday && editingBehaviorId !== 3
-                          ? true
-                          : false
-                      }
-                      className={
-                        loggedSleepToday && editingBehaviorId !== 3
-                          ? "disabled-behavior"
-                          : "behavior"
-                      }
-                      style={styles.inputBox}
-                      label="hours/day"
-                      type="number"
-                      value={sleepGoal.length && sleepGoal[0].behaviorValue}
-                      onChange={(e) => {
-                        setSleepGoal((prevSleepGoal) => {
-                          const updatedSleepGoal = prevSleepGoal.map((goal) => {
-                            const newSleepGoalValue = {
-                              ...goal,
-                              behaviorValue: Number(e.target.value),
-                            };
-                            return newSleepGoalValue;
-                          });
-                          return updatedSleepGoal;
-                        });
-                      }}
+                    <DurationPicker
+                      loggedGoalToday={loggedSleepToday}
+                      editingBehaviorId={editingBehaviorId}
+                      goalData={sleepData}
+                      goal={sleepGoal}
+                      setGoalData={setSleepGoal}
+                      editingId={3}
+                      type={"behavior"}
                     />
                   </Tooltip>
                 </td>
@@ -1368,16 +1211,16 @@ const JournalScreen = () => {
                       width: "30%",
                     }}
                   >
-                    &nbsp;Recommended: 60 minutes/day
+                    &nbsp;Recommended: 9 hours/day
                   </strong>
                   <div
                     style={{
                       width: "70%",
                     }}
                   >
-                    <strong>Goal:</strong> Get a good amount of physical
-                    activity every day to improve fitness and physical/mental
-                    health.
+                    <strong>Goal:</strong> Get sufficient sleep every night to
+                    improve daily productivity and prevent any sleep-related
+                    health issues.
                   </div>
                 </BehaviorInfoText>
               </GoalContainer>
@@ -1950,7 +1793,7 @@ let styles = {
   },
   titleGroup: {
     display: "flex",
-    width: "40%",
+    width: "30%",
     alignItems: "center",
     justifyContent: "flex-end",
   },

@@ -25,10 +25,6 @@ export const BehaviorTrackingCSV = ({ behaviorData, user }) => {
     fetchAllBehaviors();
   }, [user]);
 
-  useEffect(() => {
-    console.log(userInfo.length && userInfo);
-  })
-
   const finalData = behaviorData.map((obj) => ({
     ...obj,
     gradeLevel: userInfo[0].gradeLevel,

@@ -79,7 +79,6 @@ const SignUpScreen = () => {
     event.preventDefault();
     setLoading(true);
     if (verificationCode === accountConfirm) {
-      console.log("beans");
       await axios
         .post(`${DATABASE_URL}/signup`, {
           email: form.email,
@@ -98,7 +97,6 @@ const SignUpScreen = () => {
           setLoading(false);
           setSubmitted(true);
           setConfirming(false);
-          console.log(response.data);
         })
         .catch((error) => {
           console.error(error);
@@ -117,7 +115,6 @@ const SignUpScreen = () => {
           verificationCode +
           " \n\nProject ProudME Team \nLouisiana State University \nPedagogical Kinesiology Lab",
       };
-      console.log(newEmailData);
       setEmailData(newEmailData);
       await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
       setConfirming(true);
@@ -216,6 +213,7 @@ const SignUpScreen = () => {
               <MenuItem value="July">July</MenuItem>
               <MenuItem value="August">August</MenuItem>
               <MenuItem value="September">September</MenuItem>
+              <MenuItem value="October">October</MenuItem>
               <MenuItem value="November">November</MenuItem>
               <MenuItem value="December">December</MenuItem>
             </Select>

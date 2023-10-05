@@ -1,95 +1,181 @@
-import React, { useState } from 'react';
-import { Tooltip, TextField, Grid, Typography } from '@mui/material';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import React, { useEffect, useState } from "react";
+import { Tooltip, TextField, Typography } from "@mui/material";
 
 const DurationPicker = ({
-  loggedActivityToday,
+  loggedGoalToday,
   editingBehaviorId,
-  activityData,
-  activityGoal,
-  setActivityGoal,
+  goalData,
+  goal,
+  setGoalData,
+  editingId,
+  type = null,
 }) => {
-  const [hours, setHours] = useState(0);
+  const [hours, setHours] = useState(
+    type === "behavior"
+      ? Math.floor(goal[0].behaviorValue / 60)
+      : Math.floor(goal[0].goalValue / 60)
+  );
   const [minutes, setMinutes] = useState(
-    activityGoal.length && activityGoal[0].goalValue
+    type === "behavior" ? goal[0].behaviorValue % 60 : goal[0].goalValue % 60
   );
 
-  const handleHoursChange = (e) => {
-    const value = e.target.value;
-    if (!isNaN(value)) {
-      setHours(Math.max(0, Math.min(23, parseInt(value, 10))));
+  useEffect(() => {
+    if (type === "behavior") {
+      setHours(Math.floor(goal[0].behaviorValue / 60));
+      setMinutes(goal[0].behaviorValue % 60);
+    } else {
+      setHours(Math.floor(goal[0].goalValue / 60));
+      setMinutes(goal[0].goalValue % 60);
     }
+  }, [goal, type]);
+
+  const handleHoursChange = (e) => {
+    const value = +e.target.value;
+
+    if (!isNaN(value)) {
+      if (type !== "behavior") {
+        setHours(Math.floor(goal[0].goalValue / 60));
+      } else {
+        setHours(Math.floor(goal[0].behaviorValue / 60));
+      }
+    }
+
+    setGoalData((prevGoal) => {
+      const updatedGoal = prevGoal.map((goal) => {
+        if (type !== "behavior") {
+          return {
+            ...goal,
+            goalValue: value * 60 + minutes,
+          };
+        } else {
+          return {
+            ...goal,
+            behaviorValue: value * 60 + minutes,
+          };
+        }
+      });
+      return updatedGoal;
+    });
   };
 
   const handleMinutesChange = (e) => {
-    const value = e.target.value;
+    const value = +e.target.value;
     if (!isNaN(value)) {
-      setMinutes(Math.max(0, Math.min(59, parseInt(value, 10))));
+      if (type !== "behavior") {
+        setMinutes(goal[0].goalValue % 60);
+      } else {
+        setMinutes(goal[0].behaviorValue % 60);
+      }
+      //   setMinutes(Math.max(0, Math.min(59, parseInt(value, 10))));
     }
-  };
 
-  const handleBlur = () => {
-    // You can include any additional logic here to handle the state updates.
-    // For example, if you need to update activityGoal, you can do it here.
-    setActivityGoal((prevActivityGoal) => {
-      const updatedActivityGoal = prevActivityGoal.map((goal) => {
-        return {
-          ...goal,
-          goalValue: hours * 60 + minutes,
-        };
+    setGoalData((prevGoal) => {
+      const updatedGoal = prevGoal.map((goal) => {
+        if (type !== "behavior") {
+          return {
+            ...goal,
+            goalValue: hours * 60 + value,
+          };
+        } else {
+          return {
+            ...goal,
+            behaviorValue: hours * 60 + value,
+          };
+        }
       });
-      return updatedActivityGoal;
+      return updatedGoal;
     });
   };
 
   return (
-    <Tooltip
-      title={
-        loggedActivityToday && editingBehaviorId !== 0
-          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
-          : ""
-      }
-    >
-      <Grid container spacing={2} alignItems="center">
-        <Grid item>
-          <AccessTimeIcon style={{width: "80%"}}/>
-        </Grid>
-        <Grid item>
+    <>
+      <Tooltip
+        title={
+          loggedGoalToday &&
+          editingBehaviorId !== editingId &&
+          type !== "behavior"
+            ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
+            : loggedGoalToday &&
+              editingBehaviorId !== editingId &&
+              type === "behavior"
+            ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
+            : ""
+        }
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+            marginLeft: "5%",
+          }}
+        >
           <TextField
+            className={
+              loggedGoalToday && editingBehaviorId !== editingId
+                ? "disabled-behavior"
+                : goalData.length &&
+                  (goalData[0].goalValue - goal[0].goalValue !== 0 ||
+                    goalData[0].behaviorValue - goal[0].behaviorValue !== 0 ||
+                    goalData[0].reflection !== goal[0].reflection)
+                ? "pending-behavior"
+                : "behavior"
+            }
+            disabled={
+              loggedGoalToday && editingBehaviorId !== editingId ? true : false
+            }
             type="number"
             label="Hours"
             variant="outlined"
-            value={hours}
+            value={
+              hours
+              //   type === "behavior"
+              //     ? Math.floor(goal[0].behaviorValue / 60)
+              //     : Math.floor(goal[0].goalValue / 60)
+            }
             onChange={handleHoursChange}
-            onBlur={handleBlur}
             inputProps={{
               min: 0,
               max: 23,
               step: 1,
             }}
-            style={{width:"80%"}}
+            style={{ width: "40%" }}
           />
-        </Grid>
-        <Grid item>
           <Typography variant="h6">:</Typography>
-        </Grid>
-        <Grid item>
           <TextField
+            className={
+              loggedGoalToday && editingBehaviorId !== editingId
+                ? "disabled-behavior"
+                : goalData.length &&
+                  (goalData[0].goalValue - goal[0].goalValue !== 0 ||
+                    goalData[0].behaviorValue - goal[0].behaviorValue !== 0 ||
+                    goalData[0].reflection !== goal[0].reflection)
+                ? "pending-behavior"
+                : "behavior"
+            }
+            disabled={
+              loggedGoalToday && editingBehaviorId !== editingId ? true : false
+            }
+            style={{ width: "50%" }}
             type="number"
             label="Minutes"
             variant="outlined"
-            value={minutes}
+            value={
+              minutes
+              //   type === "behavior"
+              //     ? goal[0].behaviorValue % 60
+              //     : goal[0].goalValue % 60
+            }
             onChange={handleMinutesChange}
-            onBlur={handleBlur}
             inputProps={{
               min: 0,
               max: 59,
               step: 1,
             }}
           />
-        </Grid>
-      </Grid>
-    </Tooltip>
+        </div>
+      </Tooltip>
+    </>
   );
 };
 
