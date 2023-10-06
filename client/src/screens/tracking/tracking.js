@@ -201,13 +201,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
         ]}
       >
         <Label
-          value={
-            chartGoalType === "sleep"
-              ? "hours/day"
-              : chartGoalType === "eating"
-              ? "servings/day"
-              : "minutes/day"
-          }
+          value={chartGoalType === "eating" ? "servings/day" : "minutes/day"}
           position="insideLeft"
           offset={-70}
         />
@@ -281,7 +275,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
             ? 120
             : chartGoalType === "eating"
             ? 5
-            : 9
+            : 540
         }
         label={{
           value: "Recommended Level",
@@ -295,21 +289,6 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
     </LineChart>
   );
 };
-
-// const CustomLabel = ({ x, y, value }) => {
-//   // Customize the label text here
-//   const customText = `Recommended Level: ${value}`;
-
-//   if (value) {
-//     return (
-//       <text x={x + 105} y={y + 20} fill="black" textAnchor="middle">
-//         {customText}
-//       </text>
-//     );
-//   } else {
-//     return null;
-//   }
-// };
 
 const BehaviorBarChart = ({ data, chartGoalType }) => {
   return (
@@ -338,13 +317,7 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
         ]}
       >
         <Label
-          value={
-            chartGoalType === "sleep"
-              ? "hours/day"
-              : chartGoalType === "eating"
-              ? "servings/day"
-              : "minutes/day"
-          }
+          value={chartGoalType === "eating" ? "servings/day" : "minutes/day"}
           position="insideLeft"
           offset={-70}
         />

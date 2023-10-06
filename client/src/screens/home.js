@@ -108,8 +108,8 @@ const HomeScreen = (props) => {
           </li>
           <li>
             Each student, while on the Project ProudMe website, will interact
-            with the website, to become mindful of their behavior goals and
-            behavior engagement, in reference to the recommended levels of the
+            with the website to become mindful of their behavior goals and
+            behavior engagement in reference to the recommended levels of the
             behaviors.
           </li>
           <li>

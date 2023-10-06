@@ -158,7 +158,7 @@ const JournalScreen = () => {
       reflection: "",
       behaviorValue: 0,
       date: date,
-      recommendedValue: 9,
+      recommendedValue: 540,
     },
   ]);
 
@@ -169,7 +169,7 @@ const JournalScreen = () => {
   const [sleepData, setSleepData] = useState({});
 
   const renderFeedback = (goalData) => {
-    if (goalData[0].goalType == "screentime") {
+    if (goalData[0].goalType === "screentime") {
       if (
         goalData[0].behaviorValue <= goalData[0].goalValue / 2 &&
         goalData[0].behaviorValue <= goalData[0].recommendedValue / 2
@@ -665,7 +665,7 @@ const JournalScreen = () => {
                 : "no",
               reflection: newReflection,
               dateToday: new Date(),
-              recommendedValue: 9,
+              recommendedValue: 540,
             })
             .then((response) => {
               console.log(response.data);
@@ -694,7 +694,7 @@ const JournalScreen = () => {
               divInfo1: sleepGoal[0].divInfo1,
               divInfo2: sleepGoal[0].divInfo2,
               reflection: newReflection,
-              recommendedValue: 9,
+              recommendedValue: 540,
             })
             .then((response) => {
               console.log(response.data);

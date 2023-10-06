@@ -20,6 +20,13 @@ const DurationPicker = ({
   );
 
   useEffect(() => {
+    if (goal[0].goalType === "sleep") {
+      console.log(goal[0].goalValue);
+      console.log(goal[0].behaviorValue);
+    }
+  });
+
+  useEffect(() => {
     if (type === "behavior") {
       setHours(Math.floor(goal[0].behaviorValue / 60));
       setMinutes(goal[0].behaviorValue % 60);
@@ -34,8 +41,14 @@ const DurationPicker = ({
 
     if (!isNaN(value)) {
       if (type !== "behavior") {
+        if (editingId === 3) {
+            setHours(Math.floor(goal[0].goalValue));
+        }
         setHours(Math.floor(goal[0].goalValue / 60));
       } else {
+        if (editingId === 3) {
+            setHours(Math.floor(goal[0].behaviorValue));
+        }
         setHours(Math.floor(goal[0].behaviorValue / 60));
       }
     }
@@ -43,6 +56,12 @@ const DurationPicker = ({
     setGoalData((prevGoal) => {
       const updatedGoal = prevGoal.map((goal) => {
         if (type !== "behavior") {
+          if (editingId === 3) {
+            return {
+                ...goal,
+                goalValue: value * 60 + minutes,
+              };
+          }
           return {
             ...goal,
             goalValue: value * 60 + minutes,
@@ -66,7 +85,6 @@ const DurationPicker = ({
       } else {
         setMinutes(goal[0].behaviorValue % 60);
       }
-      //   setMinutes(Math.max(0, Math.min(59, parseInt(value, 10))));
     }
 
     setGoalData((prevGoal) => {
@@ -114,7 +132,8 @@ const DurationPicker = ({
             className={
               loggedGoalToday && editingBehaviorId !== editingId
                 ? "disabled-behavior"
-                : goalData.length &&
+                : loggedGoalToday &&
+                  goalData.length &&
                   (goalData[0].goalValue - goal[0].goalValue !== 0 ||
                     goalData[0].behaviorValue - goal[0].behaviorValue !== 0 ||
                     goalData[0].reflection !== goal[0].reflection)
@@ -127,12 +146,7 @@ const DurationPicker = ({
             type="number"
             label="Hours"
             variant="outlined"
-            value={
-              hours
-              //   type === "behavior"
-              //     ? Math.floor(goal[0].behaviorValue / 60)
-              //     : Math.floor(goal[0].goalValue / 60)
-            }
+            value={hours}
             onChange={handleHoursChange}
             inputProps={{
               min: 0,
@@ -146,7 +160,8 @@ const DurationPicker = ({
             className={
               loggedGoalToday && editingBehaviorId !== editingId
                 ? "disabled-behavior"
-                : goalData.length &&
+                : loggedGoalToday &&
+                  goalData.length &&
                   (goalData[0].goalValue - goal[0].goalValue !== 0 ||
                     goalData[0].behaviorValue - goal[0].behaviorValue !== 0 ||
                     goalData[0].reflection !== goal[0].reflection)
@@ -160,12 +175,7 @@ const DurationPicker = ({
             type="number"
             label="Minutes"
             variant="outlined"
-            value={
-              minutes
-              //   type === "behavior"
-              //     ? goal[0].behaviorValue % 60
-              //     : goal[0].goalValue % 60
-            }
+            value={minutes}
             onChange={handleMinutesChange}
             inputProps={{
               min: 0,
