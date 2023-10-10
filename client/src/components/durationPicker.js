@@ -18,59 +18,52 @@ const DurationPicker = ({
   const [minutes, setMinutes] = useState(
     type === "behavior" ? goal[0].behaviorValue % 60 : goal[0].goalValue % 60
   );
-
-  useEffect(() => {
-    if (goal[0].goalType === "sleep") {
-      console.log(goal[0].goalValue);
-      console.log(goal[0].behaviorValue);
-    }
-  });
-
+  
   useEffect(() => {
     if (type === "behavior") {
-      setHours(Math.floor(goal[0].behaviorValue / 60));
-      setMinutes(goal[0].behaviorValue % 60);
+      if (editingId === 3) {
+        setHours(Math.floor(goal[0].behaviorValue));
+      } else setHours(Math.floor(goal[0].behaviorValue / 60));
+      if (editingId === 3) {
+        setMinutes(Math.round((goal[0].behaviorValue % 1) * 60));
+      } else setMinutes(goal[0].behaviorValue % 60);
     } else {
-      setHours(Math.floor(goal[0].goalValue / 60));
-      setMinutes(goal[0].goalValue % 60);
+      if (editingId === 3) {
+        setHours(Math.floor(goal[0].goalValue));
+      } else setHours(Math.floor(goal[0].goalValue / 60));
+      if (editingId === 3) {
+        setMinutes(Math.round((goal[0].goalValue % 1) * 60));
+      } else setMinutes(goal[0].goalValue % 60);
     }
   }, [goal, type]);
 
   const handleHoursChange = (e) => {
     const value = +e.target.value;
 
-    if (!isNaN(value)) {
-      if (type !== "behavior") {
-        if (editingId === 3) {
-            setHours(Math.floor(goal[0].goalValue));
-        }
-        setHours(Math.floor(goal[0].goalValue / 60));
-      } else {
-        if (editingId === 3) {
-            setHours(Math.floor(goal[0].behaviorValue));
-        }
-        setHours(Math.floor(goal[0].behaviorValue / 60));
-      }
-    }
-
     setGoalData((prevGoal) => {
       const updatedGoal = prevGoal.map((goal) => {
         if (type !== "behavior") {
           if (editingId === 3) {
             return {
-                ...goal,
-                goalValue: value * 60 + minutes,
-              };
-          }
-          return {
-            ...goal,
-            goalValue: value * 60 + minutes,
-          };
+              ...goal,
+              goalValue: value + minutes / 60,
+            };
+          } else
+            return {
+              ...goal,
+              goalValue: value * 60 + minutes,
+            };
         } else {
-          return {
-            ...goal,
-            behaviorValue: value * 60 + minutes,
-          };
+          if (editingId === 3) {
+            return {
+              ...goal,
+              behaviorValue: value + minutes / 60,
+            };
+          } else
+            return {
+              ...goal,
+              behaviorValue: value * 60 + minutes,
+            };
         }
       });
       return updatedGoal;
@@ -79,26 +72,31 @@ const DurationPicker = ({
 
   const handleMinutesChange = (e) => {
     const value = +e.target.value;
-    if (!isNaN(value)) {
-      if (type !== "behavior") {
-        setMinutes(goal[0].goalValue % 60);
-      } else {
-        setMinutes(goal[0].behaviorValue % 60);
-      }
-    }
 
     setGoalData((prevGoal) => {
       const updatedGoal = prevGoal.map((goal) => {
         if (type !== "behavior") {
-          return {
-            ...goal,
-            goalValue: hours * 60 + value,
-          };
+          if (editingId === 3) {
+            return {
+              ...goal,
+              goalValue: hours + value / 60,
+            };
+          } else
+            return {
+              ...goal,
+              goalValue: hours * 60 + value,
+            };
         } else {
-          return {
-            ...goal,
-            behaviorValue: hours * 60 + value,
-          };
+          if (editingId === 3) {
+            return {
+              ...goal,
+              behaviorValue: hours + value / 60,
+            };
+          } else
+            return {
+              ...goal,
+              behaviorValue: hours * 60 + value,
+            };
         }
       });
       return updatedGoal;

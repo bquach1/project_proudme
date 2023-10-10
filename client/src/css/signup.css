@@ -49,9 +49,7 @@ label {
     margin-left: auto;
     border-style: none;
     display: flex;
-    /* align-self: left; */
     border-radius: 10px;
-    width: 100%;
     padding: 10px 10px 10px 10px;
     box-shadow: 2px 2px 2px 2px #808080; 
 }

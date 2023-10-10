@@ -37,15 +37,6 @@ const Recovery = () => {
   );
 
   const [email, setEmail] = useState("");
-  const [emailData, setEmailData] = useState({
-    to: "",
-    from: "pklab@lsu.edu",
-    subject: "Project ProudME Password Recovery",
-    text:
-      "Hi,\nYou are receiving this email because you requested a password reset on the Project ProudME webpage. \n\nEnter the confirmation code listed to reset your password: " +
-      verificationCode +
-      " \n\nProject ProudME Team  \nLouisiana State University \nPedagogical Kinesiology Lab",
-  });
   const [confirming, setConfirming] = useState(false);
   const [confirmedPassword, setConfirmedPassword] = useState(false);
 
@@ -54,13 +45,6 @@ const Recovery = () => {
 
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [resetMode, setResetMode] = useState("");
-
-  useEffect(() => {
-    setEmailData((prevEmailData) => ({
-      ...prevEmailData,
-      to: email,
-    }));
-  }, [email]);
 
   const handleChange = (event) => {
     setEmail(event.target.value);
@@ -95,8 +79,6 @@ const Recovery = () => {
           verificationCode +
           " \n\nProject ProudME Team \nLouisiana State University \nPedagogical Kinesiology Lab",
       };
-
-      setEmailData(newEmailData);
 
       await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
     } catch (error) {
@@ -136,8 +118,6 @@ const Recovery = () => {
           `Hi ${response.data[0].firstName},\n\nYou are receiving this email because you requested a username reminder on the Project ProudME webpage. \n\nThe username associated with this email account is ${response.data[0].name}.` +
           "\n\nProject ProudME Team \nLouisiana State University \nPedagogical Kinesiology Lab",
       };
-
-      setEmailData(newEmailData);
 
       await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
     } catch (error) {

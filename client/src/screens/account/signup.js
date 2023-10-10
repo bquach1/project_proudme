@@ -66,15 +66,6 @@ const SignUpScreen = () => {
     setAccountConfirm(e.target.value);
   };
 
-  const [emailData, setEmailData] = useState({
-    to: "",
-    from: "pklab@lsu.edu",
-    subject: "Project ProudME Registration Confirmation",
-    text:
-      "Enter the confirmation code listed to confirm your email account: " +
-      verificationCode,
-  });
-
   const handleAccountConfirm = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -93,13 +84,24 @@ const SignUpScreen = () => {
           gradeLevel: form.gradeLevel,
           gender: form.gender,
         })
-        .then((response) => {
+        .then(() => {
           setLoading(false);
           setSubmitted(true);
           setConfirming(false);
         })
         .catch((error) => {
+          console.log(error);
+          if (error.response.data === "Email is already in use") {
+            alert(
+              "Email is already in use. Please try signing up again with a different email account."
+            );
+          } else if (error.response.data === "Username is already in use") {
+            alert(
+              "Username is already in use. Please try signing up again with a different email account."
+            );
+          }
           console.error(error);
+          setLoading(false);
         });
     }
   };
@@ -115,7 +117,6 @@ const SignUpScreen = () => {
           verificationCode +
           " \n\nProject ProudME Team \nLouisiana State University \nPedagogical Kinesiology Lab",
       };
-      setEmailData(newEmailData);
       await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
       setConfirming(true);
     } catch (error) {
@@ -199,7 +200,7 @@ const SignUpScreen = () => {
               required
               displayEmpty
               value={form.birthMonth}
-              style={{ width: 190, backgroundColor: "white" }}
+              style={{ backgroundColor: "white" }}
             >
               <MenuItem disabled value="">
                 <div style={{ opacity: 0.6 }}>Select an Option</div>
@@ -227,7 +228,7 @@ const SignUpScreen = () => {
               required
               displayEmpty
               value={form.birthYear}
-              style={{ width: 190, backgroundColor: "white" }}
+              style={{ backgroundColor: "white" }}
             >
               <MenuItem disabled value="">
                 <div style={{ opacity: 0.6 }}>Select an Option</div>
@@ -256,7 +257,7 @@ const SignUpScreen = () => {
               className="dropdown"
               name="grade"
               onChange={(e) => updateForm({ gradeLevel: e.target.value })}
-              style={{ width: 190, backgroundColor: "white" }}
+              style={{ backgroundColor: "white" }}
               value={form.gradeLevel}
               required
               displayEmpty

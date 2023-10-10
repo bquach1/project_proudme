@@ -216,7 +216,7 @@ app.post("/goals", async (req, res) => {
 
 // Add behaviors endpoint
 app.post("/behaviors", async (req, res) => {
-  console.log(req.body);
+  
   try {
     const existingBehavior = await Behavior.findOne({
       user: req.body.user,

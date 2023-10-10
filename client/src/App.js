@@ -14,23 +14,8 @@ import TrackingScreen from "./screens/tracking/tracking";
 import RecoveryScreen from "./screens/account/recovery";
 
 import Header from "./components/header";
-import { DATABASE_URL } from "./constants";
 
 function App() {
-
-  const [user, setUser] = useState([]);
-
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    fetch(`${DATABASE_URL}/users`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => setUser(data))
-      .catch((error) => console.error(error));
-  }, []);
 
   return (
     <div className="App">
@@ -46,7 +31,7 @@ function App() {
         <Route path="/gallery" element={<GalleryScreen />} />
         <Route path="/pet" element={<PetScreen />} />
         <Route path="/pe" element={<PEScreen />} />
-        <Route path="/tracking" element={<TrackingScreen user={user} />} />
+        <Route path="/tracking" element={<TrackingScreen />} />
       </Routes>
     </div>
   );

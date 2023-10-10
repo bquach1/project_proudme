@@ -6,7 +6,7 @@ import axios from "axios";
 import { DATABASE_URL } from "../../constants";
 
 export const BehaviorTrackingCSV = ({ behaviorData, user }) => {
-  const [userInfo, setUserInfo] = useState({});
+  const [inputData, setInputData] = useState([]);
 
   useEffect(() => {
     const fetchAllBehaviors = async () => {
@@ -16,24 +16,27 @@ export const BehaviorTrackingCSV = ({ behaviorData, user }) => {
             name: user,
           },
         });
-        setUserInfo(response.data);
+
+        // Move the code for generating finalData here
+        const finalData = behaviorData.map((obj) => ({
+          ...obj,
+          gradeLevel: response.data[0].gradeLevel,
+          birthYear: response.data[0].birthYear,
+          birthMonth: response.data[0].birthMonth,
+          gender: response.data[0].gender,
+          schoolName: response.data[0].schoolName,
+          timeLogged: new Date(obj.dateToday).toLocaleTimeString(),
+        }));
+
+        // Set finalData state if needed
+        setInputData(finalData);
       } catch (error) {
         console.error(error);
       }
     };
 
     fetchAllBehaviors();
-  }, [user]);
-
-  const finalData = behaviorData.map((obj) => ({
-    ...obj,
-    gradeLevel: userInfo[0].gradeLevel,
-    birthYear: userInfo[0].birthYear,
-    birthMonth: userInfo[0].birthMonth,
-    gender: userInfo[0].gender,
-    schoolName: userInfo[0].schoolName,
-    timeLogged: new Date(obj.dateToday).toLocaleTimeString(),
-  }));
+  }, [user, behaviorData]);
 
   const behaviorHeaders = [
     { label: "User", key: "name" },
@@ -54,9 +57,9 @@ export const BehaviorTrackingCSV = ({ behaviorData, user }) => {
   return (
     <div>
       <CSVLink
-        data={finalData}
+        data={inputData}
         headers={behaviorHeaders}
-        filename={`behaviordata.csv`}
+        filename={`${user}_behaviordata.csv`}
       >
         <Button
           style={{

@@ -22,6 +22,13 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Radio,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  LinearProgress,
+  Box,
+  Typography,
 } from "@mui/material";
 
 import { DateRange } from "react-date-range";
@@ -69,17 +76,20 @@ export const CustomTooltip = ({ active, payload, label }) => {
               <div id={`goal-${index}`} style={{ color: "#A7C7E7" }}>
                 My Goal Value: {pld.value}
               </div>
-            ) : pld.dataKey === "behaviorValue" ? (
-              <div id={`behavior-${index}`} style={{ color: "#8884d8" }}>
-                My Behavior Value: {pld.value}
-              </div>
             ) : (
-              <div id={`recommendedVal-${index}`} style={{ color: "green" }}>
-                Recommended Value: {pld.value}
+              <div id={`behavior-${index}`} style={{ color: "#8884d8" }}>
+                My Behavior Value: {Math.round(pld.value * 100) / 100}
               </div>
             )}
           </div>
         ))}
+        {payload.map((pld, index) =>
+          index === 0 ? (
+            <div style={{ color: "green" }}>
+              Recommended Value: {pld.payload.recommendedValue}
+            </div>
+          ) : null
+        )}
       </div>
     );
   }
@@ -139,7 +149,7 @@ export const CustomLegend = () => {
         <div style={{ display: "flex" }}>
           <div
             style={{
-              backgroundColor: "#77DD77",
+              backgroundColor: "77DD77#",
               width: 20,
               height: 20,
               marginRight: 10,
@@ -174,6 +184,63 @@ export const CustomLegend = () => {
   );
 };
 
+const BehaviorProgressBar = ({ data, chartGoalType }) => {
+  return (
+    <Box sx={{ width: "80%" }} position="relative">
+      {data.map((entry) => {
+        return (
+          <div
+            style={{
+              display: "flex",
+              margin: 10,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div style={{ width: "10%" }}>{entry.date}</div>
+            <LinearProgress
+              variant="determinate"
+              value={
+                (entry.behaviorValue / entry.recommendedValue) * 100 > 100
+                  ? 100
+                  : (entry.behaviorValue / entry.recommendedValue) * 100
+              }
+              style={{ height: 50, borderRadius: 10, flex: 1, margin: 10 }}
+              sx={{
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor:
+                    chartGoalType === "screentime" &&
+                    entry.behaviorValue > entry.recommendedValue * 2
+                      ? "#FF6961"
+                      : chartGoalType === "screentime" &&
+                        entry.behaviorValue === entry.recommendedValue
+                      ? "#8884d8"
+                      : chartGoalType === "screentime" &&
+                        entry.behaviorValue > entry.recommendedValue
+                      ? "#FFC000"
+                      : chartGoalType === "screentime" &&
+                        entry.behaviorValue < entry.recommendedValue
+                      ? "#77DD77"
+                      : entry.behaviorValue > entry.recommendedValue
+                      ? "#77DD77"
+                      : entry.behaviorValue === entry.recommendedValue
+                      ? "#8884d8"
+                      : entry.behaviorValue < entry.recommendedValue / 2
+                      ? "#FF6961"
+                      : "#FFC000",
+                },
+              }}
+            />
+            <div style={{ width: "10%" }}>
+              {entry.behaviorValue} / {entry.recommendedValue}
+            </div>
+          </div>
+        );
+      })}
+    </Box>
+  );
+};
+
 const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
   return (
     <LineChart
@@ -201,7 +268,13 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
         ]}
       >
         <Label
-          value={chartGoalType === "eating" ? "servings/day" : "minutes/day"}
+          value={
+            chartGoalType === "eating"
+              ? "servings/day"
+              : chartGoalType === "sleep"
+              ? "hours/day"
+              : "minutes/day"
+          }
           position="insideLeft"
           offset={-70}
         />
@@ -275,7 +348,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
             ? 120
             : chartGoalType === "eating"
             ? 5
-            : 540
+            : 9
         }
         label={{
           value: "Recommended Level",
@@ -384,6 +457,7 @@ const TrackingScreen = () => {
   const [loading, setLoading] = useState(true);
   const [userBehaviorData, setUserBehaviorData] = useState([]);
 
+  const [chartType, setChartType] = useState("line");
   const [lineChartView, setLineChartView] = useState("behaviorOnly");
 
   const [activityBehaviorData, setActivityBehaviorData] = useState([]);
@@ -622,23 +696,49 @@ const TrackingScreen = () => {
             user={shownUser.name}
             userData={shownUser}
           />
+          <FormControl
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            <FormLabel id="demo-radio-buttons-group-label">
+              Chart Type
+            </FormLabel>
+            <RadioGroup
+              aria-labelledby="demo-radio-buttons-group-label"
+              defaultValue="line"
+              name="radio-buttons-group"
+              onChange={(e) => setChartType(e.target.value)}
+            >
+              <FormControlLabel value="line" control={<Radio />} label="Line" />
+              <FormControlLabel
+                value="progress"
+                control={<Radio />}
+                label="Progress Bar"
+              />
+            </RadioGroup>
+          </FormControl>
         </>
       )}
 
-      <FormControl style={{ margin: "10px 0px" }}>
-        <InputLabel id="line-chart-view">Line View</InputLabel>
-        <Select
-          labelId="line-chart-view"
-          id="line-view"
-          value={lineChartView}
-          label="Line View"
-          onChange={(e) => setLineChartView(e.target.value)}
-        >
-          <MenuItem value="bothLines">Goal and Behavior Lines</MenuItem>
-          <MenuItem value="goalOnly">Goal Line</MenuItem>
-          <MenuItem value="behaviorOnly">Behavior Line</MenuItem>
-        </Select>
-      </FormControl>
+      {chartType === "line" && (
+        <FormControl style={{ margin: "10px 0px" }}>
+          <InputLabel id="line-chart-view">Line View</InputLabel>
+          <Select
+            labelId="line-chart-view"
+            id="line-view"
+            value={lineChartView}
+            label="Line View"
+            onChange={(e) => setLineChartView(e.target.value)}
+          >
+            <MenuItem value="bothLines">Goal and Behavior Lines</MenuItem>
+            <MenuItem value="goalOnly">Goal Line</MenuItem>
+            <MenuItem value="behaviorOnly">Behavior Line</MenuItem>
+          </Select>
+        </FormControl>
+      )}
 
       <div>
         <input
@@ -670,32 +770,65 @@ const TrackingScreen = () => {
           alignItems: "center",
         }}
       >
-        <h1>{shownUser.firstName}'s Physical Activity Behavior Data</h1>
-        <BehaviorLineChart
-          data={filteredActivityBehaviorData}
-          chartGoalType={"activity"}
-          lineChartView={lineChartView}
-        />
-        <h1>{shownUser.firstName}'s Screen Time Behavior Data</h1>
-        <BehaviorLineChart
-          data={filteredScreentimeBehaviorData}
-          chartGoalType={"screentime"}
-          lineChartView={lineChartView}
-        />
-        <h1>
-          {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data
-        </h1>
-        <BehaviorLineChart
-          data={filteredEatingBehaviorData}
-          chartGoalType={"eating"}
-          lineChartView={lineChartView}
-        />
-        <h1>{shownUser.firstName}'s Sleep Behavior Data</h1>
-        <BehaviorLineChart
-          data={filteredSleepBehaviorData}
-          chartGoalType={"sleep"}
-          lineChartView={lineChartView}
-        />
+        {chartType === "line" ? (
+          <>
+            <h1>{shownUser.firstName}'s Physical Activity Behavior Data</h1>
+            <BehaviorLineChart
+              data={filteredActivityBehaviorData}
+              chartGoalType={"activity"}
+              lineChartView={lineChartView}
+            />
+            <h1>{shownUser.firstName}'s Screen Time Behavior Data</h1>
+            <BehaviorLineChart
+              data={filteredScreentimeBehaviorData}
+              chartGoalType={"screentime"}
+              lineChartView={lineChartView}
+            />
+            <h1>
+              {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data
+            </h1>
+            <BehaviorLineChart
+              data={filteredEatingBehaviorData}
+              chartGoalType={"eating"}
+              lineChartView={lineChartView}
+            />
+            <h1>{shownUser.firstName}'s Sleep Behavior Data</h1>
+            <BehaviorLineChart
+              data={filteredSleepBehaviorData}
+              chartGoalType={"sleep"}
+              lineChartView={lineChartView}
+            />
+          </>
+        ) : (
+          <>
+            <h1>{shownUser.firstName}'s Physical Activity Behavior Data</h1>
+            <BehaviorProgressBar
+              data={filteredActivityBehaviorData}
+              chartGoalType={"activity"}
+              lineChartView={lineChartView}
+            />
+            <h1>{shownUser.firstName}'s Screen Time Behavior Data</h1>
+            <BehaviorProgressBar
+              data={filteredScreentimeBehaviorData}
+              chartGoalType={"screentime"}
+              lineChartView={lineChartView}
+            />
+            <h1>
+              {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data
+            </h1>
+            <BehaviorProgressBar
+              data={filteredEatingBehaviorData}
+              chartGoalType={"eating"}
+              lineChartView={lineChartView}
+            />
+            <h1>{shownUser.firstName}'s Sleep Behavior Data</h1>
+            <BehaviorProgressBar
+              data={filteredSleepBehaviorData}
+              chartGoalType={"sleep"}
+              lineChartView={lineChartView}
+            />
+          </>
+        )}
       </div>
     </TrackingWrapper>
   );
