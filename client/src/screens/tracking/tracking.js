@@ -1,19 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  BarChart,
-  Bar,
-  Label,
-  ReferenceLine,
-  Cell,
-  Legend,
-  LabelList,
-} from "recharts";
 import axios from "axios";
 import styled from "styled-components";
 import {
@@ -26,13 +11,13 @@ import {
   FormLabel,
   RadioGroup,
   FormControlLabel,
-  LinearProgress,
-  Box,
-  Typography,
 } from "@mui/material";
 
 import { DateRange } from "react-date-range";
 import { format, addDays, subDays } from "date-fns";
+
+import BehaviorProgressBar from "./components/charts/BehaviorProgressBar";
+import BehaviorLineChart from "./components/charts/BehaviorLineChart";
 
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
@@ -58,395 +43,6 @@ const TrackingWrapper = styled.div`
     margin: 0 auto;
   }
 `;
-
-export const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div
-        style={{
-          border: "1px solid rgb(204, 204, 204)",
-          padding: "10px",
-          backgroundColor: "white",
-        }}
-      >
-        <p className="label">{`${label}`}</p>
-        {payload.map((pld, index) => (
-          <div key={index}>
-            {pld.dataKey === "goalValue" ? (
-              <div id={`goal-${index}`} style={{ color: "#A7C7E7" }}>
-                My Goal Value: {pld.value}
-              </div>
-            ) : (
-              <div id={`behavior-${index}`} style={{ color: "#8884d8" }}>
-                My Behavior Value: {Math.round(pld.value * 100) / 100}
-              </div>
-            )}
-          </div>
-        ))}
-        {payload.map((pld, index) =>
-          index === 0 ? (
-            <div style={{ color: "green" }}>
-              Recommended Value: {pld.payload.recommendedValue}
-            </div>
-          ) : null
-        )}
-      </div>
-    );
-  }
-  return null;
-};
-
-export const CustomLegend = () => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
-        backgroundColor: "#D3D3D3",
-        marginTop: "3%",
-        width: "40%",
-        margin: "0 auto",
-        padding: 10,
-        border: "1px solid black",
-      }}
-    >
-      <h2 style={{ width: "20%" }}>Legend</h2>
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <div style={{ display: "flex" }}>
-          <div
-            style={{
-              backgroundColor: "green",
-              width: 20,
-              height: 20,
-              marginRight: 10,
-            }}
-          />
-          Recommended Goal Value
-        </div>
-        <div style={{ display: "flex" }}>
-          <div
-            style={{
-              backgroundColor: "#A7C7E7",
-              width: 20,
-              height: 20,
-              marginRight: 10,
-            }}
-          />
-          My Goal Value
-        </div>
-        <div style={{ display: "flex" }}>
-          <div
-            style={{
-              backgroundColor: "#8884d8",
-              width: 20,
-              height: 20,
-              marginRight: 10,
-            }}
-          />
-          My Behavior Value (Met Goal)
-        </div>
-        <div style={{ display: "flex" }}>
-          <div
-            style={{
-              backgroundColor: "77DD77#",
-              width: 20,
-              height: 20,
-              marginRight: 10,
-            }}
-          />
-          My Behavior Value (Exceeds Goal)
-        </div>
-        <div style={{ display: "flex" }}>
-          <div
-            style={{
-              backgroundColor: "#FF6961",
-              width: 20,
-              height: 20,
-              marginRight: 10,
-            }}
-          />
-          My Behavior Value (Needs Improvement)
-        </div>
-        <div style={{ display: "flex" }}>
-          <div
-            style={{
-              backgroundColor: "#FFC000",
-              width: 20,
-              height: 20,
-              marginRight: 10,
-            }}
-          />
-          My Behavior Value (Close to Goal)
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const BehaviorProgressBar = ({ data, chartGoalType }) => {
-  return (
-    <Box sx={{ width: "80%" }} position="relative">
-      {data.map((entry) => {
-        return (
-          <div
-            style={{
-              display: "flex",
-              margin: 10,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div style={{ width: "10%" }}>{entry.date}</div>
-            <LinearProgress
-              variant="determinate"
-              value={
-                (entry.behaviorValue / entry.recommendedValue) * 100 > 100
-                  ? 100
-                  : (entry.behaviorValue / entry.recommendedValue) * 100
-              }
-              style={{ height: 50, borderRadius: 10, flex: 1, margin: 10 }}
-              sx={{
-                "& .MuiLinearProgress-bar": {
-                  backgroundColor:
-                    chartGoalType === "screentime" &&
-                    entry.behaviorValue > entry.recommendedValue * 2
-                      ? "#FF6961"
-                      : chartGoalType === "screentime" &&
-                        entry.behaviorValue === entry.recommendedValue
-                      ? "#8884d8"
-                      : chartGoalType === "screentime" &&
-                        entry.behaviorValue > entry.recommendedValue
-                      ? "#FFC000"
-                      : chartGoalType === "screentime" &&
-                        entry.behaviorValue < entry.recommendedValue
-                      ? "#77DD77"
-                      : entry.behaviorValue > entry.recommendedValue
-                      ? "#77DD77"
-                      : entry.behaviorValue === entry.recommendedValue
-                      ? "#8884d8"
-                      : entry.behaviorValue < entry.recommendedValue / 2
-                      ? "#FF6961"
-                      : "#FFC000",
-                },
-              }}
-            />
-            <div style={{ width: "10%" }}>
-              {entry.behaviorValue} / {entry.recommendedValue}
-            </div>
-          </div>
-        );
-      })}
-    </Box>
-  );
-};
-
-const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
-  return (
-    <LineChart
-      width={1000}
-      height={800}
-      data={data}
-      margin={{ top: 55, right: 80, left: 70, bottom: 70 }}
-    >
-      <CartesianGrid strokeDasharray="3 3" fill="white" />
-
-      <XAxis dataKey="date">
-        <Label value="Date" position="bottom" />
-      </XAxis>
-
-      <YAxis
-        domain={[
-          0,
-          chartGoalType === "activity"
-            ? 70
-            : chartGoalType === "screentime"
-            ? 130
-            : chartGoalType === "eating"
-            ? 6
-            : 9,
-        ]}
-      >
-        <Label
-          value={
-            chartGoalType === "eating"
-              ? "servings/day"
-              : chartGoalType === "sleep"
-              ? "hours/day"
-              : "minutes/day"
-          }
-          position="insideLeft"
-          offset={-70}
-        />
-      </YAxis>
-
-      <Tooltip content={<CustomTooltip />} />
-      {lineChartView !== "behaviorOnly" && (
-        <Line
-          type="linear"
-          dataKey="goalValue"
-          stroke="#A7C7E7"
-          strokeWidth={3}
-          activeDot={{ r: 6 }}
-        />
-      )}
-
-      <defs>
-        <linearGradient
-          id={`colorUv${chartGoalType}`}
-          x1="0%"
-          y1="0%"
-          x2="100%"
-          y2="0%"
-        >
-          {data.map((entry, index) => {
-            const colorOffset = (index / (data.length - 1)) * 100;
-            const stopColor =
-              chartGoalType === "screentime" &&
-              entry.behaviorValue > entry.goalValue * 2
-                ? "#FF6961"
-                : chartGoalType === "screentime" &&
-                  entry.behaviorValue > entry.goalValue
-                ? "#FFC000"
-                : chartGoalType === "screentime" &&
-                  entry.behaviorValue < entry.goalValue
-                ? "#77DD77"
-                : entry.behaviorValue > entry.goalValue
-                ? "#77DD77"
-                : entry.behaviorValue === entry.goalValue
-                ? "#8884d8"
-                : entry.behaviorValue < entry.goalValue / 2
-                ? "#FF6961"
-                : "#FFC000";
-
-            return (
-              <stop
-                key={index}
-                offset={`${colorOffset}%`}
-                stopColor={stopColor}
-              />
-            );
-          })}
-        </linearGradient>
-      </defs>
-
-      {lineChartView !== "goalOnly" && (
-        <Line
-          type="linear"
-          dataKey="behaviorValue"
-          stroke={`url(#colorUv${chartGoalType})`}
-          strokeWidth={3}
-          activeDot={{ r: 6 }}
-        />
-      )}
-      <Legend wrapperStyle={{ paddingTop: 20 }} content={<CustomLegend />} />
-      <ReferenceLine
-        y={
-          chartGoalType === "activity"
-            ? 60
-            : chartGoalType === "screentime"
-            ? 120
-            : chartGoalType === "eating"
-            ? 5
-            : 9
-        }
-        label={{
-          value: "Recommended Level",
-          className: "tracking-reference",
-          fill: "black",
-          position: "top",
-        }}
-        stroke="green"
-        strokeWidth={2}
-      />
-    </LineChart>
-  );
-};
-
-const BehaviorBarChart = ({ data, chartGoalType }) => {
-  return (
-    <BarChart
-      width={1000}
-      height={800}
-      data={data}
-      margin={{ top: 55, right: 80, left: 70, bottom: 70 }}
-    >
-      <CartesianGrid strokeDasharray="3 3" fill="white" />
-
-      <XAxis dataKey="date">
-        <Label value="Date" position="bottom" />
-      </XAxis>
-
-      <YAxis
-        domain={[
-          0,
-          chartGoalType === "activity"
-            ? 70
-            : chartGoalType === "screentime"
-            ? 130
-            : chartGoalType === "eating"
-            ? 6
-            : 9,
-        ]}
-      >
-        <Label
-          value={chartGoalType === "eating" ? "servings/day" : "minutes/day"}
-          position="insideLeft"
-          offset={-70}
-        />
-      </YAxis>
-      <Tooltip content={<CustomTooltip />} />
-      <Bar dataKey="recommendedValue" fill="green" stackId="stack" />
-      <Bar dataKey="goalValue" fill="#A7C7E7" stackId="stack" />
-      <Bar dataKey="behaviorValue" stackId="stack">
-        <LabelList dataKey="behaviorValue" fill="white" />
-        {data.map((entry, index) => (
-          <Cell
-            key={index}
-            fill={
-              chartGoalType === "screentime" &&
-              entry.behaviorValue > entry.goalValue * 2
-                ? "#FF6961"
-                : chartGoalType === "screentime" &&
-                  entry.behaviorValue > entry.goalValue
-                ? "#FFC000"
-                : chartGoalType === "screentime" &&
-                  entry.behaviorValue < entry.goalValue
-                ? "#77DD77"
-                : entry.behaviorValue > entry.goalValue
-                ? "#77DD77"
-                : entry.behaviorValue === entry.goalValue
-                ? "#8884d8"
-                : entry.behaviorValue < entry.goalValue / 2
-                ? "#FF6961"
-                : "#FFC000"
-            }
-          />
-        ))}
-      </Bar>
-      {/* <ReferenceLine
-        y={
-          chartGoalType === "activity"
-            ? 60
-            : chartGoalType === "screentime"
-            ? 120
-            : chartGoalType === "eating"
-            ? 5
-            : 9
-        }
-        label={{
-          value: "Recommended Level",
-          className: "tracking-reference",
-          fill: "black",
-          position: "top",
-        }}
-        stroke="green"
-        strokeWidth={2}
-      /> */}
-      <Legend wrapperStyle={{ paddingTop: 20 }} content={<CustomLegend />} />
-    </BarChart>
-  );
-};
 
 // Render the chart component
 const TrackingScreen = () => {
@@ -485,42 +81,34 @@ const TrackingScreen = () => {
   useEffect(() => {
     setFilteredActivityBehaviorData(
       activityBehaviorData.filter((item) => {
-        if (
-          new Date(item.date) < dateRange[0].endDate &&
-          new Date(item.date) > dateRange[0].startDate
-        ) {
-          return item;
-        }
+        return (
+          new Date(item.date) <= dateRange[0].endDate &&
+          new Date(item.date) >= dateRange[0].startDate
+        );
       })
     );
     setFilteredScreentimeBehaviorData(
       screentimeBehaviorData.filter((item) => {
-        if (
-          new Date(item.date) < dateRange[0].endDate &&
-          new Date(item.date) > dateRange[0].startDate
-        ) {
-          return item;
-        }
+        return (
+          new Date(item.date) <= dateRange[0].endDate &&
+          new Date(item.date) >= dateRange[0].startDate
+        );
       })
     );
     setFilteredEatingBehaviorData(
       eatingBehaviorData.filter((item) => {
-        if (
-          new Date(item.date) < dateRange[0].endDate &&
-          new Date(item.date) > dateRange[0].startDate
-        ) {
-          return item;
-        }
+        return (
+          new Date(item.date) <= dateRange[0].endDate &&
+          new Date(item.date) >= dateRange[0].startDate
+        );
       })
     );
     setFilteredSleepBehaviorData(
       sleepBehaviorData.filter((item) => {
-        if (
-          new Date(item.date) < dateRange[0].endDate &&
-          new Date(item.date) > dateRange[0].startDate
-        ) {
-          return item;
-        }
+        return (
+          new Date(item.date) <= dateRange[0].endDate &&
+          new Date(item.date) >= dateRange[0].startDate
+        );
       })
     );
   }, [

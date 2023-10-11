@@ -44,26 +44,6 @@ const JournalWrapper = styled.table`
   }
 `;
 
-const CoverWrapper = styled.div`
-  background-image: url(../../components/images/journal/journal_cover.png);
-  background-size: cover; /* Adjust as needed */
-  background-repeat: no-repeat; /* Adjust as needed */
-  width: 100%; /* Make the parent div the same width as the image */
-  height: auto; /* Adjust as needed */
-  position: relative; /* Required for positioning the child div */
-`;
-
-const InfoJournalWrapper = styled.div`
-  border: 1px dashed black;
-  border-radius: 10px;
-  width: 60%;
-  margin: 0 auto;
-  margin-top: 2%;
-  margin-bottom: 2%;
-  background-color: #a7c7e7;
-  padding: 10px;
-`;
-
 const BehaviorInfoText = styled.div`
   display: flex;
   align-items: center;

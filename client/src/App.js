@@ -1,7 +1,6 @@
 import "./App.css";
-import React, { useState, useEffect } from "react";
-import { Routes, Route, HashRouter } from "react-router-dom";
-import withAuth from "./components/auth/withAuth";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
 
 import SignUpScreen from "./screens/account/signup.js";
 import LoginScreen from "./screens/account/login.js";
