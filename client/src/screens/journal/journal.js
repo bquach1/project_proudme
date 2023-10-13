@@ -9,7 +9,7 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import LockIcon from "@mui/icons-material/Lock";
 import DurationPicker from "../../components/durationPicker";
-import journalCover from '../../components/images/journal/journal_cover.png';
+import journalCover from "../../components/images/journal/journal_cover.png";
 
 import { SAVE_ICON_COLORS } from "./constants";
 import { DATABASE_URL } from "../../constants";
@@ -227,10 +227,6 @@ const JournalScreen = () => {
   };
 
   useEffect(() => {
-    console.log(journalCover);
-  })
-
-  useEffect(() => {
     const fetchDailyBehavior = async (goalType) => {
       try {
         const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
@@ -298,10 +294,11 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get(`${DATABASE_URL}/goalType`, {
+        const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
           params: {
             user: user,
             goalType: "eating",
+            date: date,
           },
         });
         setEatingData(response.data);
@@ -315,10 +312,11 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get(`${DATABASE_URL}/goalType`, {
+        const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
           params: {
             user: user,
             goalType: "eating",
+            date: date,
           },
         });
         if (response.data.length === 0 || !loggedEatingToday) {
@@ -336,10 +334,11 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get(`${DATABASE_URL}/goalType`, {
+        const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
           params: {
             user: user,
             goalType: "activity",
+            date: date,
           },
         });
         setActivityData(response.data);
@@ -353,10 +352,11 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get(`${DATABASE_URL}/goalType`, {
+        const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
           params: {
             user: user,
             goalType: "activity",
+            date: date,
           },
         });
         if (response.data.length && loggedActivityToday) {
@@ -372,10 +372,11 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get(`${DATABASE_URL}/goalType`, {
+        const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
           params: {
             user: user,
             goalType: "sleep",
+            date: date,
           },
         });
         setSleepData(response.data);
@@ -389,10 +390,11 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get(`${DATABASE_URL}/goalType`, {
+        const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
           params: {
             user: user,
             goalType: "sleep",
+            date: date,
           },
         });
         if (response.data.length === 0 || !loggedSleepToday) {
@@ -410,10 +412,11 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get(`${DATABASE_URL}/goalType`, {
+        const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
           params: {
             user: user,
             goalType: "screentime",
+            date: date,
           },
         });
         setScreentimeData(response.data);
@@ -428,10 +431,11 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get(`${DATABASE_URL}/goalType`, {
+        const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
           params: {
             user: user,
             goalType: "screentime",
+            date: date,
           },
         });
         if (response.data.length && loggedScreentimeToday) {
@@ -491,9 +495,7 @@ const JournalScreen = () => {
               goalType: "activity",
               date: date,
               dateToday: new Date(),
-              goalValue: activityData.length
-                ? activityData[0].goalValue
-                : activityGoal[0].goalValue,
+              goalValue: +newGoalValue,
               behaviorValue: newBehaviorValue,
               goalStatus: activityData.length
                 ? newBehaviorValue >= activityData[0].goalValue
@@ -552,9 +554,7 @@ const JournalScreen = () => {
               goalType: "screentime",
               date: date,
               dateToday: new Date(),
-              goalValue: screentimeData.length
-                ? screentimeData[0].goalValue
-                : screentimeGoal[0].goalValue,
+              goalValue: +newGoalValue,
               behaviorValue: newBehaviorValue,
               goalStatus: screentimeData.length
                 ? newBehaviorValue >= screentimeData[0].goalValue
@@ -613,9 +613,7 @@ const JournalScreen = () => {
               goalType: "eating",
               date: date,
               dateToday: new Date(),
-              goalValue: eatingData.length
-                ? eatingData[0].goalValue
-                : eatingGoal[0].goalValue,
+              goalValue: +newGoalValue,
               behaviorValue: newBehaviorValue,
               goalStatus: eatingData.length
                 ? newBehaviorValue >= eatingData[0].goalValue
@@ -674,9 +672,7 @@ const JournalScreen = () => {
               goalType: "sleep",
               date: date,
               dateToday: new Date(),
-              goalValue: sleepData.length
-                ? sleepData[0].goalValue
-                : sleepGoal[0].goalValue,
+              goalValue: +newGoalValue,
               behaviorValue: newBehaviorValue,
               goalStatus: sleepData.length
                 ? newBehaviorValue >= sleepData[0].goalValue
@@ -728,7 +724,7 @@ const JournalScreen = () => {
             height: "105vh",
             position: "relative",
             display: "flex",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           {/* <img

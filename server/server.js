@@ -378,7 +378,6 @@ app.post("/user", async (req, res) => {
       },
     }
   );
-  console.log(req.body.password);
   res.status(200).json(user);
 });
 
@@ -419,6 +418,20 @@ app.get("/goalType", async (req, res) => {
     const goals = await Goal.find({
       user: req.query.user,
       goalType: req.query.goalType,
+    });
+    res.status(200).json(goals);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// Get specific goal by goal type and current date endpoint
+app.get("/dateGoalType", async (req, res) => {
+  try {
+    const goals = await Goal.find({
+      user: req.query.user,
+      goalType: req.query.goalType,
+      date: req.query.date,
     });
     res.status(200).json(goals);
   } catch (err) {

@@ -18,6 +18,12 @@ const DurationPicker = ({
   const [minutes, setMinutes] = useState(
     type === "behavior" ? goal[0].behaviorValue % 60 : goal[0].goalValue % 60
   );
+
+  useEffect(() => {
+    if (editingId === 0) {
+      console.log(goal);
+    }
+  })
   
   useEffect(() => {
     if (type === "behavior") {
