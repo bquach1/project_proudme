@@ -27,6 +27,29 @@ const Wrapper = styled.div`
   .pending-behavior {
     background-color: ${SAVE_ICON_COLORS.YELLOW};
   }
+
+  @keyframes shake {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-5px);
+    }
+    50% {
+      transform: translateX(5px);
+    }
+    75% {
+      transform: translateX(-5px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  .timeload-dots {
+    margin-left: 1%;
+    animation: shake 1s infinite;
+  }
 `;
 
 const JournalWrapper = styled.table`
@@ -225,6 +248,11 @@ const JournalScreen = () => {
       else return "...";
     }
   };
+  
+  useEffect(() => {
+    console.log(eatingGoal);
+    console.log(eatingData);
+  })
 
   useEffect(() => {
     const fetchDailyBehavior = async (goalType) => {
@@ -709,8 +737,15 @@ const JournalScreen = () => {
   return (
     <Wrapper>
       <h1 style={{ color: "#2E6AA1" }}>My Journal</h1>
-      <strong>
-        Last Logged {lastLoggedDate} {lastLoggedTime}
+      <strong style={{display: "flex", justifyContent: "center"}}>
+        Last Logged {
+          lastLoggedDate && lastLoggedTime ?
+          <>
+        {lastLoggedDate} {lastLoggedTime}
+        </>
+        :
+        <div className="timeload-dots">...</div>
+        }
       </strong>
       <JournalWrapper>
         <div
