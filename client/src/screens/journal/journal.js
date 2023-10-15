@@ -175,6 +175,28 @@ const JournalScreen = () => {
     },
   ]);
 
+  const getSaveButtonColor = (loggedGoalToday, goalData, goal) => {
+    if (
+      loggedGoalToday &&
+      goalData.length &&
+      (goalData[0].goalValue - goal[0].goalValue !== 0 ||
+        goalData[0].behaviorValue - goal[0].behaviorValue !== 0 ||
+        goalData[0].reflection !== goal[0].reflection)
+    ) {
+      return SAVE_ICON_COLORS.YELLOW;
+    } else if (!goalData.length || !loggedGoalToday) {
+      return SAVE_ICON_COLORS.RED;
+    } else if (
+      goalData[0].goalValue - goal[0].goalValue === 0 &&
+      goalData[0].behaviorValue - goal[0].behaviorValue === 0 &&
+      goalData[0].reflection === goal[0].reflection
+    ) {
+      return SAVE_ICON_COLORS.GREEN;
+    } else {
+      return "auto";
+    }
+  };
+
   // Stores goal data pulled from MongoDB.
   const [activityData, setActivityData] = useState({});
   const [screentimeData, setScreentimeData] = useState({});
@@ -1364,32 +1386,13 @@ const JournalScreen = () => {
                       <Button
                         className="save edit-icon"
                         style={{
+                          backgroundColor: getSaveButtonColor(
+                            loggedActivityToday,
+                            activityData,
+                            activityGoal
+                          ),
                           color: "white",
                           border: "1px solid black",
-                          backgroundColor:
-                            loggedActivityToday &&
-                            activityData.length &&
-                            (activityData[0].goalValue -
-                              activityGoal[0].goalValue !==
-                              0 ||
-                              activityData[0].behaviorValue -
-                                activityGoal[0].behaviorValue !==
-                                0 ||
-                              activityData[0].reflection !==
-                                activityGoal[0].reflection)
-                              ? SAVE_ICON_COLORS.YELLOW
-                              : !activityData.length || !loggedActivityToday
-                              ? SAVE_ICON_COLORS.RED
-                              : activityData[0].goalValue -
-                                  activityGoal[0].goalValue ===
-                                  0 &&
-                                activityData[0].behaviorValue -
-                                  activityGoal[0].behaviorValue ===
-                                  0 &&
-                                activityData[0].reflection ===
-                                  activityGoal[0].reflection
-                              ? SAVE_ICON_COLORS.GREEN
-                              : "auto",
                         }}
                         onClick={() => {
                           updateBehaviorValue(
@@ -1484,32 +1487,13 @@ const JournalScreen = () => {
                       <Button
                         className="save edit-icon"
                         style={{
+                          backgroundColor: getSaveButtonColor(
+                            loggedScreentimeToday,
+                            screentimeData,
+                            screentimeGoal
+                          ),
                           color: "white",
                           border: "1px solid black",
-                          backgroundColor:
-                            loggedScreentimeToday &&
-                            screentimeData.length &&
-                            (screentimeData[0].goalValue -
-                              screentimeGoal[0].goalValue !==
-                              0 ||
-                              screentimeData[0].behaviorValue -
-                                screentimeGoal[0].behaviorValue !==
-                                0 ||
-                              screentimeData[0].reflection !==
-                                screentimeGoal[0].reflection)
-                              ? SAVE_ICON_COLORS.YELLOW
-                              : !screentimeData.length || !loggedScreentimeToday
-                              ? SAVE_ICON_COLORS.RED
-                              : screentimeData[0].goalValue -
-                                  screentimeGoal[0].goalValue ===
-                                  0 &&
-                                screentimeData[0].behaviorValue -
-                                  screentimeGoal[0].behaviorValue ===
-                                  0 &&
-                                screentimeData[0].reflection ===
-                                  screentimeGoal[0].reflection
-                              ? SAVE_ICON_COLORS.GREEN
-                              : "auto",
                         }}
                         onClick={() => {
                           updateBehaviorValue(
@@ -1605,32 +1589,13 @@ const JournalScreen = () => {
                       <Button
                         className="save edit-icon"
                         style={{
+                          backgroundColor: getSaveButtonColor(
+                            loggedEatingToday,
+                            eatingData,
+                            eatingGoal
+                          ),
                           color: "white",
                           border: "1px solid black",
-                          backgroundColor:
-                            loggedEatingToday &&
-                            eatingData.length &&
-                            (eatingData[0].goalValue -
-                              eatingGoal[0].goalValue !==
-                              0 ||
-                              eatingData[0].behaviorValue -
-                                eatingGoal[0].behaviorValue !==
-                                0 ||
-                              eatingData[0].reflection !==
-                                eatingGoal[0].reflection)
-                              ? SAVE_ICON_COLORS.YELLOW
-                              : !eatingData.length || !loggedEatingToday
-                              ? SAVE_ICON_COLORS.RED
-                              : eatingData[0].goalValue -
-                                  eatingGoal[0].goalValue ===
-                                  0 &&
-                                eatingData[0].behaviorValue -
-                                  eatingGoal[0].behaviorValue ===
-                                  0 &&
-                                eatingData[0].reflection ===
-                                  eatingGoal[0].reflection
-                              ? SAVE_ICON_COLORS.GREEN
-                              : "auto",
                         }}
                         onClick={() => {
                           updateBehaviorValue(
@@ -1724,31 +1689,13 @@ const JournalScreen = () => {
                       <Button
                         className="save edit-icon"
                         style={{
+                          backgroundColor: getSaveButtonColor(
+                            loggedSleepToday,
+                            sleepData,
+                            sleepGoal
+                          ),
                           color: "white",
                           border: "1px solid black",
-                          backgroundColor:
-                            loggedSleepToday &&
-                            sleepData.length &&
-                            (sleepData[0].goalValue - sleepGoal[0].goalValue !==
-                              0 ||
-                              sleepData[0].behaviorValue -
-                                sleepGoal[0].behaviorValue !==
-                                0 ||
-                              sleepData[0].reflection !==
-                                sleepGoal[0].reflection)
-                              ? SAVE_ICON_COLORS.YELLOW
-                              : !sleepData.length || !loggedSleepToday
-                              ? SAVE_ICON_COLORS.RED
-                              : sleepData[0].goalValue -
-                                  sleepGoal[0].goalValue ===
-                                  0 &&
-                                sleepData[0].behaviorValue -
-                                  sleepGoal[0].behaviorValue ===
-                                  0 &&
-                                sleepData[0].reflection ===
-                                  sleepGoal[0].reflection
-                              ? SAVE_ICON_COLORS.GREEN
-                              : "auto",
                         }}
                         onClick={() => {
                           updateBehaviorValue(
