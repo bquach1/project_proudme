@@ -45,7 +45,7 @@ const Wrapper = styled.div`
       transform: translateX(0);
     }
   }
-  
+
   .timeload-dots {
     margin-left: 1%;
     animation: shake 1s infinite;
@@ -248,11 +248,11 @@ const JournalScreen = () => {
       else return "...";
     }
   };
-  
-  useEffect(() => {
-    console.log(eatingGoal);
-    console.log(eatingData);
-  })
+
+  // useEffect(() => {
+  //   console.log(sleepGoal);
+  //   console.log(sleepData);
+  // })
 
   useEffect(() => {
     const fetchDailyBehavior = async (goalType) => {
@@ -322,11 +322,10 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchEatingGoals = async () => {
       try {
-        const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
+        const response = await axios.get(`${DATABASE_URL}/goalType`, {
           params: {
             user: user,
             goalType: "eating",
-            date: date,
           },
         });
         setEatingData(response.data);
@@ -362,11 +361,10 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchActivityGoals = async () => {
       try {
-        const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
+        const response = await axios.get(`${DATABASE_URL}/goalType`, {
           params: {
             user: user,
             goalType: "activity",
-            date: date,
           },
         });
         setActivityData(response.data);
@@ -400,11 +398,10 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchSleepGoals = async () => {
       try {
-        const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
+        const response = await axios.get(`${DATABASE_URL}/goalType`, {
           params: {
             user: user,
             goalType: "sleep",
-            date: date,
           },
         });
         setSleepData(response.data);
@@ -416,6 +413,7 @@ const JournalScreen = () => {
   }, [goalData, sleepGoal]);
 
   useEffect(() => {
+    console.log("beans");
     const fetchSleepGoals = async () => {
       try {
         const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
@@ -440,11 +438,10 @@ const JournalScreen = () => {
   useEffect(() => {
     const fetchScreentimeGoals = async () => {
       try {
-        const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
+        const response = await axios.get(`${DATABASE_URL}/goalType`, {
           params: {
             user: user,
             goalType: "screentime",
-            date: date,
           },
         });
         setScreentimeData(response.data);
@@ -737,15 +734,15 @@ const JournalScreen = () => {
   return (
     <Wrapper>
       <h1 style={{ color: "#2E6AA1" }}>My Journal</h1>
-      <strong style={{display: "flex", justifyContent: "center"}}>
-        Last Logged {
-          lastLoggedDate && lastLoggedTime ?
+      <strong style={{ display: "flex", justifyContent: "center" }}>
+        Last Logged{" "}
+        {lastLoggedDate && lastLoggedTime ? (
           <>
-        {lastLoggedDate} {lastLoggedTime}
-        </>
-        :
-        <div className="timeload-dots">...</div>
-        }
+            {lastLoggedDate} {lastLoggedTime}
+          </>
+        ) : (
+          <div className="timeload-dots">...</div>
+        )}
       </strong>
       <JournalWrapper>
         <div
