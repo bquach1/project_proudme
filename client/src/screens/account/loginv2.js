@@ -1,0 +1,189 @@
+import React, { useState } from "react";
+import { Button, CircularProgress } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import styled from "styled-components";
+
+import "../../css/login.css";
+import { DATABASE_URL } from "../../constants";
+
+const FormWrapper = styled.div`
+  background-color: white;
+  width: 50%;
+  height: auto;
+  box-shadow: 5px 5px 5px 5px #808080;
+  position: absolute;
+  right: 0;
+  height: 100%;
+`;
+
+const LoginScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    setLoading(true);
+
+    axios
+      .post(`${DATABASE_URL}/login`, {
+        email,
+        password,
+      })
+      .then((response) => {
+        localStorage.setItem("authToken", response.data);
+        setIsSubmitted(true);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.error(error);
+        error.code === "ERR_NETWORK"
+          ? alert(
+              "There seems to be a server-side error. Please wait a moment before trying again."
+            )
+          : alert("Incorrect email or password. Please try again.");
+      });
+  };
+
+  const renderForm = (
+    <>
+      <div>
+        <img
+          src={require("../../components/images/login/schoolkids.png")}
+          alt="Jumping schoolkids"
+          style={{
+            width: "50%",
+            height: "100%",
+            position: "absolute",
+            left: 0,
+            top: 0,
+          }}
+        />
+        <img
+          src={require("../../components/images/login/Vector.png")}
+          alt="Jumping schoolkids"
+          style={{
+            width: "50%",
+            height: "100%",
+            position: "absolute",
+            left: 0,
+            top: 0,
+            opacity: 0.8,
+          }}
+        />
+      </div>
+      <FormWrapper>
+          <img src={require("../../components/images/login/proudme_logo.png")} alt="ProudME official Logo" style={{width: "50%"}} />
+          <div style={{
+              fontFamily: "Montserrat",
+              fontSize: 48,
+              width: "70%",
+                margin: "0 auto",
+                textAlign: "left",
+                marginTop: "1%",
+          }}>
+            Login to your ProudME dashboard
+        </div>
+          <form onSubmit={handleSubmit}>
+            <div className="input-container">
+              <label>Email: </label>
+              <input
+                type="email"
+                onChange={(e) => setEmail(e.target.value)}
+                name="emailInput"
+                className="login-input"
+                required
+              />
+            </div>
+            <div className="input-container">
+              <label>Password: </label>
+              <input
+                type="password"
+                onChange={(e) => setPassword(e.target.value)}
+                name="passwordInput"
+                className="login-input"
+                required
+              />
+            </div>
+            <div className="button-container">
+              {loading ? (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    margin: "auto",
+                  }}
+                >
+                  <span style={{ marginRight: "5%", fontWeight: "bold" }}>
+                    Loading...
+                  </span>
+                  <CircularProgress style={{ display: "flex" }} />
+                </div>
+              ) : (
+                <Button
+                  style={{
+                    backgroundColor: "#D7A746",
+                    color: "white",
+                    padding: "10px 50px 10px 50px",
+                    borderRadius: "20px",
+                    textTransform: "none",
+                    marginTop: "2%",
+                    height: "60px",
+                    width: "40%",
+                    fontSize: "25px",
+                    margin: "auto",
+                    marginBottom: "0px",
+                  }}
+                  type="submit"
+                >
+                  Log In
+                </Button>
+              )}
+            </div>
+            <div className="registration">
+              <div className="registration-link">
+                <h2>
+                  Having trouble logging in?
+                  <a
+                    className="nav-select"
+                    onClick={() => navigate("/recovery")}
+                  >
+                    Click here
+                  </a>
+                  !
+                </h2>
+              </div>
+              <div className="registration-link">
+                <h2>
+                  Don't have an account?{" "}
+                  <a className="nav-select" onClick={() => navigate("/signup")}>
+                    Register Here
+                  </a>
+                  !
+                </h2>
+              </div>
+            </div>
+          </form>
+      </FormWrapper>
+    </>
+  );
+
+  function successfulLogin() {
+    setTimeout(() => {
+      navigate("/home");
+    }, 3000);
+    return <div className="success-login">User successfully logged in!</div>;
+  }
+
+  return (
+    <div className="login">{isSubmitted ? successfulLogin() : renderForm}</div>
+  );
+};
+
+export default LoginScreen;

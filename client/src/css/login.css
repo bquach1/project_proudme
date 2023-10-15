@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,700');
+
 .form {
     background-color: #B2C5CB;
     width: 50%;
@@ -7,6 +9,8 @@
     padding: 10px;
     box-shadow: 5px 5px 5px 5px #808080;
     margin-top: 2%;
+    position: absolute;
+    right: 0;
 }
 
 form {
@@ -17,26 +21,24 @@ label {
     color: #2C4F74;
     font-weight: bold;
     font-size: 20px;
-    display: flex;
-    align-items: flex-start;
 }
 
 .login-input {
     height: 40px;
     margin: 10px 5px 10px 5px;
-    border-style: none;
+    border: 1px solid black;
     display: flex;
-    align-self: center;
     border-radius: 10px;
-    width: 97%;
+    width: 100%;
     padding: 10px 10px 10px 10px;
-    box-shadow: 2px 2px 2px 2px #808080; 
 }
 
 .input-container {
     padding: 10px 10px 10px 10px;
     display: flex;
     flex-direction: column;
+    margin: 0 auto;
+    width: 80%;
 }
 
 .success-login {

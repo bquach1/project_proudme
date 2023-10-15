@@ -1,9 +1,9 @@
 import "./App.css";
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 
 import SignUpScreen from "./screens/account/signup.js";
-import LoginScreen from "./screens/account/login.js";
+import LoginScreen from "./screens/account/loginv2.js";
 import HomeScreen from "./screens/home.js";
 import JournalScreen from "./screens/journal/journal.js";
 import GalleryScreen from "./screens/journal/gallery.js";
@@ -16,9 +16,11 @@ import Header from "./components/header";
 
 function App() {
 
+  const location = useLocation();
+
   return (
     <div className="App">
-      <Header />
+      {location.pathname !== "/login" && <Header />}
       <Routes>
         <Route path="/" element={<LoginScreen />} />
         <Route path="/project-proudme" element={<LoginScreen />} />
@@ -37,5 +39,3 @@ function App() {
 }
 
 export default App;
-
-// want users to be able to input numbers and track their progress

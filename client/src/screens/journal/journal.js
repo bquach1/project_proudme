@@ -11,7 +11,8 @@ import LockIcon from "@mui/icons-material/Lock";
 import DurationPicker from "../../components/durationPicker";
 import journalCover from "../../components/images/journal/journal_cover.png";
 
-import { SAVE_ICON_COLORS } from "./constants";
+import { SAVE_ICON_COLORS } from "./constants/constants";
+import { renderFeedback, getSaveButtonColor } from "./helpers/helpers";
 import { DATABASE_URL } from "../../constants";
 
 const Wrapper = styled.div`
@@ -118,6 +119,12 @@ const JournalScreen = () => {
 
   const [editingBehaviorId, setEditingBehaviorId] = useState(-1);
 
+  var dateToday = new Date(),
+  month = dateToday.getMonth(),
+  day = dateToday.getDate(),
+  year = dateToday.getFullYear(),
+  date = month + 1 + "/" + day + "/" + year;
+
   // Local states to manage event changes in React.
   const [activityGoal, setActivityGoal] = useState([
     {
@@ -175,106 +182,11 @@ const JournalScreen = () => {
     },
   ]);
 
-  const getSaveButtonColor = (loggedGoalToday, goalData, goal) => {
-    if (
-      loggedGoalToday &&
-      goalData.length &&
-      (goalData[0].goalValue - goal[0].goalValue !== 0 ||
-        goalData[0].behaviorValue - goal[0].behaviorValue !== 0 ||
-        goalData[0].reflection !== goal[0].reflection)
-    ) {
-      return SAVE_ICON_COLORS.YELLOW;
-    } else if (!goalData.length || !loggedGoalToday) {
-      return SAVE_ICON_COLORS.RED;
-    } else if (
-      goalData[0].goalValue - goal[0].goalValue === 0 &&
-      goalData[0].behaviorValue - goal[0].behaviorValue === 0 &&
-      goalData[0].reflection === goal[0].reflection
-    ) {
-      return SAVE_ICON_COLORS.GREEN;
-    } else {
-      return "auto";
-    }
-  };
-
   // Stores goal data pulled from MongoDB.
   const [activityData, setActivityData] = useState({});
   const [screentimeData, setScreentimeData] = useState({});
   const [eatingData, setEatingData] = useState({});
   const [sleepData, setSleepData] = useState({});
-
-  const renderFeedback = (goalData) => {
-    if (goalData[0].goalType === "screentime") {
-      if (
-        goalData[0].behaviorValue <= goalData[0].goalValue / 2 &&
-        goalData[0].behaviorValue <= goalData[0].recommendedValue / 2
-      )
-        return "Bravo! I EXCEEDED my goal AND the recommended level of behavior! I am doing great!";
-      else if (
-        goalData[0].behaviorValue <= goalData[0].goalValue &&
-        goalData[0].behaviorValue <= goalData[0].recommendedValue
-      )
-        return "Hooray! I reached my goal AND the recommended level of behavior! Keep it up!";
-      else if (
-        goalData[0].behaviorValue <= goalData[0].goalValue &&
-        goalData[0].behaviorValue > goalData[0].recommendedValue
-      )
-        return "Great, I reached my goal! Next I will need to work harder to reach the recommended level of behavior!";
-      else if (
-        goalData[0].behaviorValue > goalData[0].goalValue &&
-        goalData[0].behaviorValue <= goalData[0].recommendedValue
-      )
-        return "Great, I reached the recommended behavior level! Next I will need to work harder to reach my own goal!";
-      else if (
-        goalData[0].behaviorValue > goalData[0].goalValue * 2 &&
-        goalData[0].behaviorValue > goalData[0].recommendedValue * 2
-      )
-        return "I need to work harder to reach my goal! I can do it!";
-      else if (
-        goalData[0].behaviorValue > goalData[0].goalValue &&
-        goalData[0].behaviorValue > goalData[0].recommendedValue
-      )
-        return "I'm not too far away from my goal AND the recommended level of behavior! Come on! My goal is within reach!";
-      else return "...";
-    } else {
-      if (
-        goalData[0].behaviorValue >= goalData[0].goalValue * 2 &&
-        goalData[0].behaviorValue >= goalData[0].recommendedValue * 2
-      )
-        return "Bravo! I EXCEEDED my goal AND the recommended level of behavior! I am doing great!";
-      else if (
-        goalData[0].behaviorValue >= goalData[0].goalValue &&
-        goalData[0].behaviorValue >= goalData[0].recommendedValue
-      )
-        return "Hooray! I reached my goal AND the recommended level of behavior! Keep it up!";
-      else if (
-        goalData[0].behaviorValue >= goalData[0].goalValue &&
-        goalData[0].behaviorValue < goalData[0].recommendedValue
-      )
-        return "Great, I reached my goal! Next I will need to work harder to reach the recommended level of behavior!";
-      else if (
-        goalData[0].behaviorValue < goalData[0].goalValue &&
-        goalData[0].behaviorValue >= goalData[0].recommendedValue
-      )
-        return "Great, I reached the recommended behavior level! Next I will need to work harder to reach my own goal!";
-      else if (
-        goalData[0].behaviorValue < goalData[0].goalValue / 2 &&
-        goalData[0].behaviorValue < goalData[0].recommendedValue / 2
-      )
-        return "I need to work harder to reach my goal! I can do it!";
-      else if (
-        goalData[0].behaviorValue < goalData[0].goalValue &&
-        goalData[0].behaviorValue < goalData[0].recommendedValue
-      )
-        return "I'm not too far away from my goal AND the recommended level of behavior! Come on! My goal is within reach!";
-      else return "...";
-    }
-  };
-
-  // useEffect(() => {
-  //   console.log(sleepGoal);
-  //   console.log(sleepData);
-  // })
 
   useEffect(() => {
     const fetchDailyBehavior = async (goalType) => {
@@ -435,7 +347,6 @@ const JournalScreen = () => {
   }, [goalData, sleepGoal]);
 
   useEffect(() => {
-    console.log("beans");
     const fetchSleepGoals = async () => {
       try {
         const response = await axios.get(`${DATABASE_URL}/dailyBehavior`, {
@@ -494,12 +405,6 @@ const JournalScreen = () => {
     };
     fetchScreentimeGoals();
   }, [user, loggedScreentimeToday]);
-
-  var dateToday = new Date(),
-    month = dateToday.getMonth(),
-    day = dateToday.getDate(),
-    year = dateToday.getFullYear(),
-    date = month + 1 + "/" + day + "/" + year;
 
   async function updateBehaviorValue(
     id,
@@ -781,11 +686,6 @@ const JournalScreen = () => {
             alignItems: "center",
           }}
         >
-          {/* <img
-          className="journalCover"
-          src={require("../../components/images/journal/journal_cover.png")}
-          alt="Journal cover screen wrapper"
-        /> */}
           <div
             style={{
               width: "100%",
@@ -808,7 +708,7 @@ const JournalScreen = () => {
                 <GoalContainer style={styles.goalRow}>
                   <td style={styles.titleGroup}>
                     <img
-                      style={styles.activityIcon}
+                      style={styles.icon}
                       src={require("../../components/images/journal/activity_goals.png")}
                       alt="Activity goals icon on activity goals page"
                     />
@@ -916,7 +816,7 @@ const JournalScreen = () => {
                 <GoalContainer style={styles.goalRow}>
                   <td style={styles.titleGroup}>
                     <img
-                      style={styles.screentimeIcon}
+                      style={styles.icon}
                       src={require("../../components/images/journal/tablet_icon.png")}
                       alt="Tablet for screentime goals"
                     />
@@ -1028,7 +928,7 @@ const JournalScreen = () => {
                 <GoalContainer style={styles.goalRow}>
                   <td style={styles.titleGroup}>
                     <img
-                      style={styles.eatingIcon}
+                      style={styles.icon}
                       src={require("../../components/images/journal/apple.png")}
                       alt="Apple for servings goal"
                     />
@@ -1181,7 +1081,7 @@ const JournalScreen = () => {
                 <GoalContainer style={styles.goalRow}>
                   <td style={styles.titleGroup}>
                     <img
-                      style={styles.sleepIcon}
+                      style={styles.icon}
                       src={require("../../components/images/journal/pillow_icon.png")}
                       alt="Pillow icon for sleep"
                     />
@@ -1776,16 +1676,7 @@ let styles = {
     marginRight: "auto",
     size: "10px",
   },
-  activityIcon: {
-    width: "30px",
-  },
-  screentimeIcon: {
-    width: "30px",
-  },
-  eatingIcon: {
-    width: "30px",
-  },
-  sleepIcon: {
+  icon: {
     width: "30px",
   },
   titleGroup: {
