@@ -1,132 +1,138 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,700');
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,500,700");
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
 .form {
-    background-color: #B2C5CB;
-    width: 50%;
-    margin: auto;
-    border-radius: 10px;
-    height: auto;
-    padding: 10px;
-    box-shadow: 5px 5px 5px 5px #808080;
-    margin-top: 2%;
-    position: absolute;
-    right: 0;
+  background-color: #b2c5cb;
+  width: 50%;
+  margin: auto;
+  border-radius: 10px;
+  height: auto;
+  padding: 10px;
+  box-shadow: 5px 5px 5px 5px #808080;
+  margin-top: 2%;
+  position: absolute;
+  right: 0;
 }
 
 form {
-    width: 100%;
+  width: 100%;
 }
 
 label {
-    color: #515151;
-    font-weight: normal;
-    font-size: 20px;
+  color: #515151;
+  font-weight: normal;
+  font-size: 20px;
 }
 
 .login-input {
-    height: 40px;
-    margin: 10px 5px 10px 5px;
-    border: 1px solid black;
-    display: flex;
-    border-radius: 10px;
-    width: 100%;
-    padding: 10px 10px 10px 10px;
+  height: 40px;
+  margin: 10px 5px 10px 5px;
+  border: 1px solid black;
+  display: flex;
+  border-radius: 10px;
+  width: 100%;
+  padding: 10px 10px 10px 10px;
 }
 
 .input-container {
-    padding: 10px 10px 10px 10px;
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto;
-    width: 80%;
+  padding: 10px 10px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 80%;
 }
 
 .success-login {
-    font-size: 30px;
-    font-weight: bold;
+  font-size: 30px;
+  font-weight: bold;
 }
 
-
 .button-container {
-    display: flex;
+  display: flex;
 }
 
 .nav-select {
-    color: #3C3293;
+  color: #3c3293;
 }
 
 .nav-select:hover {
-    color: #8054C9;
-    cursor: pointer;
+  color: #8054c9;
+  cursor: pointer;
 }
 
 h2 {
-    width: 150%;
+  width: 150%;
 }
 
 .registration {
-    margin-top: 3%;
-    margin-bottom: 2%;
+  margin-top: 3%;
+  margin-bottom: 2%;
 }
 
 .registration-link {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Popup container */
 .popup {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* The actual popup (appears on top) */
+.popup .popuptext {
+  visibility: hidden;
+  width: 160px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class when clicking on the popup container (hide and show the popup) */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  /* The actual popup (appears on top) */
-  .popup .popuptext {
-    visibility: hidden;
-    width: 160px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 8px 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -80px;
+  to {
+    opacity: 1;
   }
-  
-  /* Popup arrow */
-  .popup .popuptext::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  /* Toggle this class when clicking on the popup container (hide and show the popup) */
-  .popup .show {
-    visibility: visible;
-    -webkit-animation: fadeIn 1s;
-    animation: fadeIn 1s
+  to {
+    opacity: 1;
   }
-  
-  /* Add animation (fade in the popup) */
-  @-webkit-keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
-  }
-  
-  @keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity:1 ;}
-  }
-  
+}

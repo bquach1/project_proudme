@@ -106,7 +106,6 @@ a:active {
 }
 
 .signup-page {
-  padding-bottom: 5%;
   /* Customize the scrollbar track */
   ::-webkit-scrollbar {
     width: 10px;

@@ -20,12 +20,11 @@ import { DATABASE_URL } from "../../constants";
 const FormWrapper = styled.div`
   background-color: white;
   width: 50%;
-  height: 120vh;
   position: absolute;
   right: 0;
   top: 0;
-  height: 100%;
   font-family: Roboto;
+  height: 140vh;
 `;
 
 const generateVerificationCode = () => {
@@ -80,10 +79,14 @@ const SignUpScreen = () => {
   };
 
   const handleConfirmPasswordBlur = () => {
-    if ((form.confirmPassword !== form.password) && form.password && form.confirmPassword) {
+    if (
+      form.confirmPassword !== form.password &&
+      form.password &&
+      form.confirmPassword
+    ) {
       setPasswordMatch(false);
     }
-  }
+  };
 
   const handleAccountConfirm = async (event) => {
     event.preventDefault();
@@ -145,31 +148,31 @@ const SignUpScreen = () => {
 
   const renderForm = (
     <>
-      <div>
-        <img
-          src={require("../../components/images/login/schoolkids.png")}
-          alt="Jumping schoolkids"
-          style={{
-            width: "50%",
-            height: "120vh",
-            position: "absolute",
-            left: 0,
-            top: 0,
-          }}
-        />
-        <img
-          src={require("../../components/images/login/purple_background.png")}
-          alt="Jumping schoolkids"
-          style={{
-            width: "50%",
-            height: "120vh",
-            position: "absolute",
-            left: 0,
-            top: 0,
-            opacity: 0.8,
-          }}
-        />
-      </div>
+      <img
+        src={require("../../components/images/login/schoolkids.png")}
+        alt="Jumping schoolkids"
+        style={{
+          width: "auto",
+          height: "140vh",
+          objectFit: "cover",
+          position: "absolute",
+          left: 0,
+          top: 0,
+        }}
+      />
+      <img
+        src={require("../../components/images/login/purple_background.png")}
+        alt="Purple vector background"
+        style={{
+          width: "auto",
+          height: "140vh",
+          objectFit: "cover",
+          position: "absolute",
+          left: 0,
+          top: 0,
+          opacity: 0.8,
+        }}
+      />
       <FormWrapper>
         <img
           src={require("../../components/images/login/logo.png")}
@@ -180,7 +183,7 @@ const SignUpScreen = () => {
           style={{
             fontFamily: "Montserrat",
             fontSize: 46,
-            width: "55%",
+            width: "70%",
             margin: "0 auto",
             textAlign: "left",
             marginTop: "1%",
@@ -265,7 +268,7 @@ const SignUpScreen = () => {
                 required
                 displayEmpty
                 value={form.birthMonth}
-                style={{ backgroundColor: "white" }}
+                style={{ backgroundColor: "white", width: 175 }}
               >
                 <MenuItem disabled value="">
                   <div style={{ opacity: 0.6 }}>Select an Option</div>
@@ -293,7 +296,7 @@ const SignUpScreen = () => {
                 required
                 displayEmpty
                 value={form.birthYear}
-                style={{ backgroundColor: "white" }}
+                style={{ backgroundColor: "white", width: 175 }}
               >
                 <MenuItem disabled value="">
                   <div style={{ opacity: 0.6 }}>Select an Option</div>
@@ -322,7 +325,7 @@ const SignUpScreen = () => {
                 className="dropdown"
                 name="grade"
                 onChange={(e) => updateForm({ gradeLevel: e.target.value })}
-                style={{ backgroundColor: "white" }}
+                style={{ backgroundColor: "white", width: 175 }}
                 value={form.gradeLevel}
                 required
                 displayEmpty
@@ -476,7 +479,7 @@ const SignUpScreen = () => {
   }
 
   return (
-    <div className="signup-page">
+    <div style={{ height: "140vh" }}>
       {submitted ? (
         successMessage()
       ) : loading ? (

@@ -43,7 +43,7 @@ const HomeWrapper = styled.div`
       transform: translateX(0);
     }
   }
-  
+
   .timeload-dots {
     animation: shake 1s infinite;
   }
@@ -93,7 +93,9 @@ const HomeScreen = (props) => {
       <div className="home">
         <h1 className="title">Hello {user.firstName}!</h1>
         <h4>{exactTime}</h4>
-        <h4>{currentTime ? currentTime : <div className="timeload-dots">...</div>}</h4>
+        <h4>
+          {currentTime ? currentTime : <div className="timeload-dots">...</div>}
+        </h4>
       </div>
       <div style={{ margin: 0 }}>
         <div className="text-box">

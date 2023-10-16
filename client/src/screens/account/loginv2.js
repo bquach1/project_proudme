@@ -10,11 +10,9 @@ import { DATABASE_URL } from "../../constants";
 const FormWrapper = styled.div`
   background-color: white;
   width: 50%;
-  height: auto;
-  box-shadow: 5px 5px 5px 5px #808080;
+  height: 100%;
   position: absolute;
   right: 0;
-  height: 100%;
   font-family: Roboto;
 `;
 
@@ -94,7 +92,7 @@ const LoginScreen = () => {
           style={{
             fontFamily: "Montserrat",
             fontSize: 46,
-            width: "55%",
+            width: "70%",
             margin: "0 auto",
             textAlign: "left",
             marginTop: "1%",
