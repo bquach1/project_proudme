@@ -1,105 +1,128 @@
-html {
-    height: 100%;
-}
-
 .signup {
-    background-color: #B2C5CB;
-    width: 50%;
-    margin: auto;
-    border-radius: 10px;
-    height: auto;
-    padding: 10px;
-    box-shadow: 5px 5px 5px 5px #808080;
-    margin-top: 2%;
+  background-color: #b2c5cb;
+  width: 50%;
+  margin: auto;
+  border-radius: 10px;
+  height: auto;
+  padding: 10px;
+  box-shadow: 5px 5px 5px 5px #808080;
+  margin-top: 2%;
 }
 
 form {
-    width: 100%;
+  width: 100%;
 }
 
 .signUpButton {
-    background-color: #EF9090;
-    border-style: none;
-    color: white;
+  background-color: #ef9090;
+  border-style: none;
+  color: white;
 }
 
 label {
-    color: #2C4F74;
-    font-weight: bold;
-    font-size: 20px;
-    display: flex;
-    align-items: flex-start;
+  color: #2c4f74;
+  font-weight: bold;
+  font-size: 20px;
+  display: flex;
+  align-items: flex-start;
 }
 
 .signup-input {
-    height: 40px;
-    margin: 10px 5px 10px 5px;
-    border-style: none;
-    display: flex;
-    align-self: center;
-    border-radius: 10px;
-    width: 97%;
-    padding: 10px 10px 10px 10px;
-    box-shadow: 2px 2px 2px 2px #808080; 
+  height: 40px;
+  margin: 10px 5px 10px 5px;
+  border: 1px solid black;
+  display: flex;
+  border-radius: 10px;
+  width: 97%;
+  padding: 10px 10px 10px 10px;
 }
 
 .dropdown {
-    height: 40px;
-    margin: 10px 5px 10px 5px;
-    margin-left: auto;
-    border-style: none;
-    display: flex;
-    border-radius: 10px;
-    padding: 10px 10px 10px 10px;
-    box-shadow: 2px 2px 2px 2px #808080; 
+  height: 40px;
+  margin: 10px 5px 10px 5px;
+  margin-left: auto;
+  border: 1px solid black;
+  display: flex;
+  border-radius: 10px;
+  padding: 10px 10px 10px 10px;
 }
 
 .row-container {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-container {
+  margin: auto;
 }
 
 .input-container {
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
 }
 
 .line-container {
-    padding: 10px;
-    display: flex;
-    justify-content: space-evenly;
+  padding: 10px;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .signup-registration {
-    margin-top: 3%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+  margin-top: 3%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .success-login {
-    font-size: 30px;
-    font-weight: bold;
+  font-size: 30px;
+  font-weight: bold;
 }
 
-a:link { text-decoration: none; color: #8054C9; }
+a:link {
+  text-decoration: none;
+  color: #8054c9;
+}
 
-a:visited { text-decoration: none; color: #8054C9;}
+a:visited {
+  text-decoration: none;
+  color: #8054c9;
+}
 
-a:hover { text-decoration: none; color: #8054C9;}
+a:hover {
+  text-decoration: none;
+  color: #8054c9;
+}
 
-a:active { text-decoration: none; color: #8054C9;}
+a:active {
+  text-decoration: none;
+  color: #8054c9;
+}
 
 .nav-select {
-    color: #2C4F74;
+  color: #2c4f74;
 }
 
 .signup-page {
-    padding-bottom: 5%;
+  padding-bottom: 5%;
+  /* Customize the scrollbar track */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Customize the scrollbar thumb (the draggable part) */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Customize the scrollbar thumb on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 }
 
 h2 {
-    width: 150%;
+  width: 150%;
 }

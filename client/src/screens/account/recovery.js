@@ -15,7 +15,7 @@ const ButtonPageWrapper = styled.div`
 `;
 
 const RecoveryWrapper = styled.div`
-  margin-top: 2%;
+  padding-top: 2%;
 `;
 
 const generateVerificationCode = () => {

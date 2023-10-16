@@ -15,12 +15,13 @@ import RecoveryScreen from "./screens/account/recovery";
 import Header from "./components/header";
 
 function App() {
-
   const location = useLocation();
 
   return (
     <div className="App">
-      {location.pathname !== "/login" && <Header />}
+      {location.pathname !== "/login" && location.pathname !== "/recovery" && location.pathname !== "/signup" && (
+        <Header />
+      )}
       <Routes>
         <Route path="/" element={<LoginScreen />} />
         <Route path="/project-proudme" element={<LoginScreen />} />

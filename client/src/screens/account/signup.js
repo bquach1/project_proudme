@@ -12,9 +12,21 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
+import styled from "styled-components";
 
 import "../../css/signup.css";
 import { DATABASE_URL } from "../../constants";
+
+const FormWrapper = styled.div`
+  background-color: white;
+  width: 50%;
+  height: 120vh;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  font-family: Roboto;
+`;
 
 const generateVerificationCode = () => {
   const charset =
@@ -38,6 +50,7 @@ const SignUpScreen = () => {
   const [verificationCode, setVerificationCode] = useState(
     generateVerificationCode()
   );
+  const [passwordMatch, setPasswordMatch] = useState(true);
 
   const [accountConfirm, setAccountConfirm] = useState("");
 
@@ -65,6 +78,12 @@ const SignUpScreen = () => {
   const handleAccountConfirmChange = (e) => {
     setAccountConfirm(e.target.value);
   };
+
+  const handleConfirmPasswordBlur = () => {
+    if ((form.confirmPassword !== form.password) && form.password && form.confirmPassword) {
+      setPasswordMatch(false);
+    }
+  }
 
   const handleAccountConfirm = async (event) => {
     event.preventDefault();
@@ -125,277 +144,324 @@ const SignUpScreen = () => {
   };
 
   const renderForm = (
-    <div className="signup">
-      <form className="signup-form" onSubmit={handleSubmit}>
-        <div className="input-container">
-          <label>Username: </label>
-          <input
-            className="signup-input"
-            onChange={(e) => updateForm({ name: e.target.value })}
-            type="text"
-            value={form.name}
-            required
-          />
+    <>
+      <div>
+        <img
+          src={require("../../components/images/login/schoolkids.png")}
+          alt="Jumping schoolkids"
+          style={{
+            width: "50%",
+            height: "120vh",
+            position: "absolute",
+            left: 0,
+            top: 0,
+          }}
+        />
+        <img
+          src={require("../../components/images/login/purple_background.png")}
+          alt="Jumping schoolkids"
+          style={{
+            width: "50%",
+            height: "120vh",
+            position: "absolute",
+            left: 0,
+            top: 0,
+            opacity: 0.8,
+          }}
+        />
+      </div>
+      <FormWrapper>
+        <img
+          src={require("../../components/images/login/logo.png")}
+          alt="ProudME mini official Logo"
+          style={{ position: "absolute", top: 20, right: 20 }}
+        />
+        <div
+          style={{
+            fontFamily: "Montserrat",
+            fontSize: 46,
+            width: "55%",
+            margin: "0 auto",
+            textAlign: "left",
+            marginTop: "1%",
+          }}
+        >
+          Thank you for joining ProudME!
         </div>
-        <div className="input-container">
-          <label>Password: </label>
-          <input
-            className="signup-input"
-            onChange={(e) => updateForm({ password: e.target.value })}
-            type="password"
-            value={form.password}
-            required
-          />
-        </div>
-        <div className="input-container">
-          <label>Confirm Password: </label>
-          <input
-            className="signup-input"
-            onChange={(e) => updateForm({ confirmPassword: e.target.value })}
-            type="password"
-            value={form.confirmPassword}
-            required
-          />
-        </div>
-        <div className="line-container">
-          <div className="row-container">
-            <label>First Name: </label>
-            <input
-              className="dropdown"
-              onChange={(e) => updateForm({ firstName: e.target.value })}
-              type="text"
-              value={form.firstName}
-              required
-            />
-          </div>
-          <div className="row-container">
-            <label>Last Name: </label>
-            <input
-              className="dropdown"
-              onChange={(e) => updateForm({ lastName: e.target.value })}
-              type="text"
-              value={form.lastName}
-              required
-            />
-          </div>
-          <div className="row-container">
-            <label>School Attending: </label>
-            <input
-              className="dropdown"
-              placeholder="Full school name"
-              onChange={(e) => updateForm({ schoolAttending: e.target.value })}
-              type="text"
-              value={form.schoolAttending}
-              required
-            />
-          </div>
-        </div>
-        <div className="line-container">
-          <div className="row-container">
-            <label>Birth Month: </label>
-            <Select
-              className="dropdown"
-              name="month"
-              onChange={(e) => updateForm({ birthMonth: e.target.value })}
-              required
-              displayEmpty
-              value={form.birthMonth}
-              style={{ backgroundColor: "white" }}
-            >
-              <MenuItem disabled value="">
-                <div style={{ opacity: 0.6 }}>Select an Option</div>
-              </MenuItem>
-              <MenuItem value="January">January</MenuItem>
-              <MenuItem value="February">February</MenuItem>
-              <MenuItem value="March">March</MenuItem>
-              <MenuItem value="April">April</MenuItem>
-              <MenuItem value="May">May</MenuItem>
-              <MenuItem value="June">June</MenuItem>
-              <MenuItem value="July">July</MenuItem>
-              <MenuItem value="August">August</MenuItem>
-              <MenuItem value="September">September</MenuItem>
-              <MenuItem value="October">October</MenuItem>
-              <MenuItem value="November">November</MenuItem>
-              <MenuItem value="December">December</MenuItem>
-            </Select>
-          </div>
-          <div className="row-container">
-            <label>Birth Year: </label>
-            <Select
-              className="dropdown"
-              name="year"
-              onChange={(e) => updateForm({ birthYear: e.target.value })}
-              required
-              displayEmpty
-              value={form.birthYear}
-              style={{ backgroundColor: "white" }}
-            >
-              <MenuItem disabled value="">
-                <div style={{ opacity: 0.6 }}>Select an Option</div>
-              </MenuItem>
-              <MenuItem value="2008">2008</MenuItem>
-              <MenuItem value="2009">2009</MenuItem>
-              <MenuItem value="2010">2010</MenuItem>
-              <MenuItem value="2011">2011</MenuItem>
-              <MenuItem value="2012">2012</MenuItem>
-              <MenuItem value="2013">2013</MenuItem>
-              <MenuItem value="2014">2014</MenuItem>
-              <MenuItem value="2015">2015</MenuItem>
-              <MenuItem value="2016">2016</MenuItem>
-              <MenuItem value="2017">2017</MenuItem>
-              <MenuItem value="2018">2018</MenuItem>
-              <MenuItem value="2019">2019</MenuItem>
-              <MenuItem value="2020">2020</MenuItem>
-              <MenuItem value="2021">2021</MenuItem>
-              <MenuItem value="2022">2022</MenuItem>
-              <MenuItem value="2023">2023</MenuItem>
-            </Select>
-          </div>
-          <div className="row-container">
-            <label>Grade Level: </label>
-            <Select
-              className="dropdown"
-              name="grade"
-              onChange={(e) => updateForm({ gradeLevel: e.target.value })}
-              style={{ backgroundColor: "white" }}
-              value={form.gradeLevel}
-              required
-              displayEmpty
-            >
-              <MenuItem disabled value="">
-                <div style={{ opacity: 0.6 }}>Select an Option</div>
-              </MenuItem>
-              <MenuItem value="fifth">5th</MenuItem>
-              <MenuItem value="sixth">6th</MenuItem>
-              <MenuItem value="seventh">7th</MenuItem>
-              <MenuItem value="eighth">8th</MenuItem>
-              <MenuItem value="ninth">9th</MenuItem>
-            </Select>
-          </div>
-        </div>
-        <div className="line-container">
+        <form className="signup-form" onSubmit={handleSubmit}>
           <div className="input-container">
-            <label>Gender: </label>
-            <Select
-              className="dropdown"
-              value={form.gender}
-              name="gender"
-              onChange={(e) => updateForm({ gender: e.target.value })}
-              required
-              displayEmpty
-              style={{ width: 200, backgroundColor: "white" }}
-            >
-              <MenuItem disabled value="">
-                <div style={{ opacity: 0.6 }}>Select an Option</div>
-              </MenuItem>
-              <MenuItem value="male">Male</MenuItem>
-              <MenuItem value="female">Female</MenuItem>
-              <MenuItem value="other">Other</MenuItem>
-              <MenuItem value="none">Prefer not to tell</MenuItem>
-            </Select>
-          </div>
-          <div className="input-container">
-            <label>Email Address: </label>
+            <label>Username: </label>
             <input
               className="signup-input"
+              onChange={(e) => updateForm({ name: e.target.value })}
               type="text"
-              onChange={(e) => updateForm({ email: e.target.value })}
-              value={form.email}
+              value={form.name}
               required
             />
           </div>
-        </div>
-        <div className="row-container">
-          <div className="checkbox-container">
-            <FormGroup>
-              <FormControlLabel
-                control={<Checkbox required />}
-                label={
-                  <Typography style={{ color: "black" }}>
-                    I agree to the{" "}
-                    <a
-                      target="blank"
-                      href="https://www.freeprivacypolicy.com/live/2b89beef-a3ea-4d18-89c6-d6a1732b0ad7"
-                    >
-                      Terms of Use & Privacy Policy.
-                    </a>
-                  </Typography>
-                }
-              />
-              <FormControlLabel
-                control={<Checkbox required />}
-                label={
-                  <Typography style={{ color: "black" }}>
-                    I agree to receive news ad updates by email from ProudME.
-                  </Typography>
-                }
-              />
-            </FormGroup>
-          </div>
-        </div>
-        <div className="button-container">
-          <Button
-            style={{
-              backgroundColor: "#D7A746",
-              color: "white",
-              padding: "10px 50px 10px 50px",
-              borderRadius: "20px",
-              textTransform: "none",
-              marginTop: "3%",
-              margin: "auto",
-              height: "60px",
-              width: "25%",
-              fontSize: "25px",
-            }}
-            type="submit"
-            value="Register user"
-          >
-            Register
-          </Button>
-        </div>
-      </form>
-      {confirming && (
-        <div style={{ marginTop: "2%" }}>
-          Enter the confirmation code sent to your email to confirm your account
-          registration!
-          <form
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "2%",
-            }}
-            onSubmit={handleAccountConfirm}
-          >
-            <TextField
-              type="text"
-              name="account-confirm"
-              value={accountConfirm}
-              onChange={handleAccountConfirmChange}
-              placeholder="Verification Code"
-              style={{ width: "20%" }}
+          <div className="input-container">
+            <label>Password: </label>
+            <input
+              className="signup-input"
+              onChange={(e) => updateForm({ password: e.target.value })}
+              type="password"
+              value={form.password}
+              required
             />
+          </div>
+          <div className="input-container">
+            <label>Confirm Password: </label>
+            <input
+              className="signup-input"
+              onChange={(e) => updateForm({ confirmPassword: e.target.value })}
+              onBlur={handleConfirmPasswordBlur}
+              type="password"
+              value={form.confirmPassword}
+              required
+            />
+          </div>
+          <div className="line-container">
+            <div className="row-container">
+              <label>First Name: </label>
+              <input
+                className="dropdown"
+                onChange={(e) => updateForm({ firstName: e.target.value })}
+                type="text"
+                value={form.firstName}
+                required
+              />
+            </div>
+            <div className="row-container">
+              <label>Last Name: </label>
+              <input
+                className="dropdown"
+                onChange={(e) => updateForm({ lastName: e.target.value })}
+                type="text"
+                value={form.lastName}
+                required
+              />
+            </div>
+            <div className="row-container">
+              <label>School Attending: </label>
+              <input
+                className="dropdown"
+                placeholder="Full school name"
+                onChange={(e) =>
+                  updateForm({ schoolAttending: e.target.value })
+                }
+                type="text"
+                value={form.schoolAttending}
+                required
+              />
+            </div>
+          </div>
+          <div className="line-container">
+            <div className="row-container">
+              <label>Birth Month: </label>
+              <Select
+                className="dropdown"
+                name="month"
+                onChange={(e) => updateForm({ birthMonth: e.target.value })}
+                required
+                displayEmpty
+                value={form.birthMonth}
+                style={{ backgroundColor: "white" }}
+              >
+                <MenuItem disabled value="">
+                  <div style={{ opacity: 0.6 }}>Select an Option</div>
+                </MenuItem>
+                <MenuItem value="January">January</MenuItem>
+                <MenuItem value="February">February</MenuItem>
+                <MenuItem value="March">March</MenuItem>
+                <MenuItem value="April">April</MenuItem>
+                <MenuItem value="May">May</MenuItem>
+                <MenuItem value="June">June</MenuItem>
+                <MenuItem value="July">July</MenuItem>
+                <MenuItem value="August">August</MenuItem>
+                <MenuItem value="September">September</MenuItem>
+                <MenuItem value="October">October</MenuItem>
+                <MenuItem value="November">November</MenuItem>
+                <MenuItem value="December">December</MenuItem>
+              </Select>
+            </div>
+            <div className="row-container">
+              <label>Birth Year: </label>
+              <Select
+                className="dropdown"
+                name="year"
+                onChange={(e) => updateForm({ birthYear: e.target.value })}
+                required
+                displayEmpty
+                value={form.birthYear}
+                style={{ backgroundColor: "white" }}
+              >
+                <MenuItem disabled value="">
+                  <div style={{ opacity: 0.6 }}>Select an Option</div>
+                </MenuItem>
+                <MenuItem value="2008">2008</MenuItem>
+                <MenuItem value="2009">2009</MenuItem>
+                <MenuItem value="2010">2010</MenuItem>
+                <MenuItem value="2011">2011</MenuItem>
+                <MenuItem value="2012">2012</MenuItem>
+                <MenuItem value="2013">2013</MenuItem>
+                <MenuItem value="2014">2014</MenuItem>
+                <MenuItem value="2015">2015</MenuItem>
+                <MenuItem value="2016">2016</MenuItem>
+                <MenuItem value="2017">2017</MenuItem>
+                <MenuItem value="2018">2018</MenuItem>
+                <MenuItem value="2019">2019</MenuItem>
+                <MenuItem value="2020">2020</MenuItem>
+                <MenuItem value="2021">2021</MenuItem>
+                <MenuItem value="2022">2022</MenuItem>
+                <MenuItem value="2023">2023</MenuItem>
+              </Select>
+            </div>
+            <div className="row-container">
+              <label>Grade Level: </label>
+              <Select
+                className="dropdown"
+                name="grade"
+                onChange={(e) => updateForm({ gradeLevel: e.target.value })}
+                style={{ backgroundColor: "white" }}
+                value={form.gradeLevel}
+                required
+                displayEmpty
+              >
+                <MenuItem disabled value="">
+                  <div style={{ opacity: 0.6 }}>Select an Option</div>
+                </MenuItem>
+                <MenuItem value="fifth">5th</MenuItem>
+                <MenuItem value="sixth">6th</MenuItem>
+                <MenuItem value="seventh">7th</MenuItem>
+                <MenuItem value="eighth">8th</MenuItem>
+                <MenuItem value="ninth">9th</MenuItem>
+              </Select>
+            </div>
+          </div>
+          <div className="line-container">
+            <div className="row-container">
+              <label>Gender: </label>
+              <Select
+                className="dropdown"
+                value={form.gender}
+                name="gender"
+                onChange={(e) => updateForm({ gender: e.target.value })}
+                required
+                displayEmpty
+                style={{ width: 200, backgroundColor: "white" }}
+              >
+                <MenuItem disabled value="">
+                  <div style={{ opacity: 0.6 }}>Select an Option</div>
+                </MenuItem>
+                <MenuItem value="male">Male</MenuItem>
+                <MenuItem value="female">Female</MenuItem>
+                <MenuItem value="other">Other</MenuItem>
+                <MenuItem value="none">Prefer not to tell</MenuItem>
+              </Select>
+            </div>
+            <div className="row-container">
+              <label>Email Address: </label>
+              <input
+                className="signup-input"
+                type="text"
+                onChange={(e) => updateForm({ email: e.target.value })}
+                value={form.email}
+                required
+              />
+            </div>
+          </div>
+          <div className="row-container">
+            <div className="checkbox-container">
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox required />}
+                  label={
+                    <Typography style={{ color: "black" }}>
+                      I agree to the{" "}
+                      <a
+                        target="blank"
+                        href="https://www.freeprivacypolicy.com/live/2b89beef-a3ea-4d18-89c6-d6a1732b0ad7"
+                      >
+                        Terms of Use & Privacy Policy.
+                      </a>
+                    </Typography>
+                  }
+                />
+                <FormControlLabel
+                  control={<Checkbox required />}
+                  label={
+                    <Typography style={{ color: "black" }}>
+                      I agree to receive news ad updates by email from ProudME.
+                    </Typography>
+                  }
+                />
+              </FormGroup>
+            </div>
+          </div>
+          <div className="button-container">
             <Button
               style={{
-                backgroundColor: "green",
-                textTransform: "none",
+                backgroundColor: "#3C3293",
                 color: "white",
+                padding: "10px 50px 10px 50px",
+                borderRadius: "20px",
+                textTransform: "none",
+                marginTop: "3%",
+                margin: "auto",
+                height: "60px",
+                width: "25%",
+                fontSize: "25px",
               }}
               type="submit"
+              value="Register user"
             >
-              Confirm Account
+              Register
             </Button>
-          </form>
+          </div>
+        </form>
+        {confirming && (
+          <div style={{ marginTop: "2%" }}>
+            Enter the confirmation code sent to your email to confirm your
+            account registration!
+            <form
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "2%",
+              }}
+              onSubmit={handleAccountConfirm}
+            >
+              <TextField
+                type="text"
+                name="account-confirm"
+                value={accountConfirm}
+                onChange={handleAccountConfirmChange}
+                placeholder="Verification Code"
+                style={{ width: "20%" }}
+              />
+              <Button
+                style={{
+                  backgroundColor: "green",
+                  textTransform: "none",
+                  color: "white",
+                }}
+                type="submit"
+              >
+                Confirm Account
+              </Button>
+            </form>
+          </div>
+        )}
+        <div className="signup-registration">
+          <h2>
+            Already have an account?{" "}
+            <a className="nav-select" onClick={() => navigate("/login")}>
+              Sign In!
+            </a>
+          </h2>
         </div>
-      )}
-      <div className="signup-registration">
-        <h2>
-          Already have an account?{" "}
-          <a className="nav-select" onClick={() => navigate("/login")}>
-            Sign In!
-          </a>
-        </h2>
-      </div>
-    </div>
+      </FormWrapper>
+    </>
   );
 
   function successMessage() {
@@ -411,7 +477,6 @@ const SignUpScreen = () => {
 
   return (
     <div className="signup-page">
-      <h1 id="welcome">Thanks for joining ProudME!</h1>
       {submitted ? (
         successMessage()
       ) : loading ? (
