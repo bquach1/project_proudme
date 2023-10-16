@@ -284,32 +284,31 @@ const TrackingScreen = () => {
             user={shownUser.name}
             userData={shownUser}
           />
-          <FormControl
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <FormLabel id="demo-radio-buttons-group-label">
-              Chart Type
-            </FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="line"
-              name="radio-buttons-group"
-              onChange={(e) => setChartType(e.target.value)}
-            >
-              <FormControlLabel value="line" control={<Radio />} label="Line" />
-              <FormControlLabel
-                value="progress"
-                control={<Radio />}
-                label="Progress Bar"
-              />
-            </RadioGroup>
-          </FormControl>
         </>
       )}
+
+      <FormControl
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <FormLabel id="demo-radio-buttons-group-label">Chart Type</FormLabel>
+        <RadioGroup
+          aria-labelledby="demo-radio-buttons-group-label"
+          defaultValue="line"
+          name="radio-buttons-group"
+          onChange={(e) => setChartType(e.target.value)}
+        >
+          <FormControlLabel value="line" control={<Radio />} label="Line" />
+          <FormControlLabel
+            value="progress"
+            control={<Radio />}
+            label="Progress Bar"
+          />
+        </RadioGroup>
+      </FormControl>
 
       {chartType === "line" && (
         <FormControl style={{ margin: "10px 0px" }}>
