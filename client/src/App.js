@@ -19,7 +19,7 @@ function App() {
 
   return (
     <div className="App">
-      {location.pathname !== "/login" && location.pathname !== "/recovery" && location.pathname !== "/signup" && (
+      {location.pathname !== "/login" && location.pathname !== "/recovery" && location.pathname !== "/signup" && location.pathname !== "/" && (
         <Header />
       )}
       <Routes>
