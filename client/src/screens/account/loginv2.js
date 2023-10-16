@@ -16,6 +16,32 @@ const FormWrapper = styled.div`
   font-family: Roboto;
 `;
 
+const SuccessWrapper = styled.div`
+  .loading-dots {
+    text-align: center;
+  }
+
+  .loading-dots span {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    border-radius: 50%;
+    margin: 0 5px;
+    animation: dot-animation 1.5s infinite;
+  }
+
+  @keyframes dot-animation {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.25);
+    }
+  }
+`;
+
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -188,7 +214,28 @@ const LoginScreen = () => {
     setTimeout(() => {
       navigate("/home");
     }, 3000);
-    return <div className="success-login">User successfully logged in!</div>;
+    return (
+      <SuccessWrapper className="success-login">
+        <span>User successfully logged in!</span>
+        <span>Loading Page</span>
+        <div class="loading-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <img
+          src={require("../../components/images/login/proudme_logo.png")}
+          alt="ProudME official logo"
+          style={{
+            width: "20%",
+            height: "auto",
+            display: "flex",
+            justifyContent: "center",
+            margin: "0 auto",
+          }}
+        />
+      </SuccessWrapper>
+    );
   }
 
   return (
