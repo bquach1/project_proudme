@@ -12,7 +12,7 @@ import DurationPicker from "../../components/durationPicker";
 import journalCover from "../../components/images/journal/journal_cover.png";
 
 import { SAVE_ICON_COLORS } from "./constants/constants";
-import { renderFeedback, getSaveButtonColor } from "./helpers/helpers";
+import { getSaveButtonColor, createChatbotRequest } from "./helpers/helpers";
 import { DATABASE_URL } from "../../constants";
 
 const Wrapper = styled.div`
@@ -187,6 +187,10 @@ const JournalScreen = () => {
   const [screentimeData, setScreentimeData] = useState({});
   const [eatingData, setEatingData] = useState({});
   const [sleepData, setSleepData] = useState({});
+
+  useEffect(() => {
+    console.log(screentimeGoal[0].feedback)
+  })
 
   useEffect(() => {
     const fetchDailyBehavior = async (goalType) => {
@@ -460,6 +464,7 @@ const JournalScreen = () => {
               divInfo2: activityGoal[0].divInfo2,
               reflection: newReflection,
               recommendedValue: 60,
+              feedback: activityGoal[0].feedback,
             })
             .then((response) => {
               console.log(response.data);
@@ -519,6 +524,7 @@ const JournalScreen = () => {
               divInfo2: screentimeGoal[0].divInfo2,
               reflection: newReflection,
               recommendedValue: 120,
+              feedback: screentimeGoal[0].feedback,
             })
             .then((response) => {
               console.log(response.data);
@@ -578,6 +584,7 @@ const JournalScreen = () => {
               divInfo2: eatingGoal[0].divInfo2,
               reflection: newReflection,
               recommendedValue: 5,
+              feedback: eatingGoal[0].feedback,
             })
             .then((response) => {
               console.log(response.data);
@@ -637,6 +644,7 @@ const JournalScreen = () => {
               divInfo2: sleepGoal[0].divInfo2,
               reflection: newReflection,
               recommendedValue: 9,
+              feedback: sleepGoal[0].feedback,
             })
             .then((response) => {
               console.log(response.data);
@@ -1236,7 +1244,7 @@ const JournalScreen = () => {
                     activityGoal[0].goalValue !== 0 &&
                     activityGoal[0].behaviorValue !== 0 ? (
                       <h4 style={styles.feedback}>
-                        {renderFeedback(activityGoal)}
+                        {activityGoal[0].feedback}
                       </h4>
                     ) : (
                       <Tooltip title="Set an Activity goal today to see feedback!">
@@ -1313,6 +1321,12 @@ const JournalScreen = () => {
                           );
                           setLoggedActivityToday(true);
                           setEditingBehaviorId(-1);
+                          createChatbotRequest(
+                            activityGoal,
+                            setActivityGoal,
+                            user,
+                            date
+                          );
                         }}
                       >
                         SAVE
@@ -1337,7 +1351,7 @@ const JournalScreen = () => {
                     screentimeGoal[0].goalValue !== 0 &&
                     screentimeGoal[0].behaviorValue !== 0 ? (
                       <h4 style={styles.feedback}>
-                        {renderFeedback(screentimeGoal)}
+                        {screentimeGoal[0].feedback}
                       </h4>
                     ) : (
                       <Tooltip title="Set a Screentime goal today to see feedback!">
@@ -1414,6 +1428,12 @@ const JournalScreen = () => {
                           );
                           setLoggedScreentimeToday(true);
                           setEditingBehaviorId(-1);
+                          createChatbotRequest(
+                            screentimeGoal,
+                            setScreentimeGoal,
+                            user,
+                            date
+                          );
                         }}
                       >
                         SAVE
@@ -1438,9 +1458,7 @@ const JournalScreen = () => {
                     {eatingData.length &&
                     eatingGoal[0].goalValue !== 0 &&
                     eatingGoal[0].behaviorValue !== 0 ? (
-                      <h4 style={styles.feedback}>
-                        {renderFeedback(eatingGoal)}
-                      </h4>
+                      <h4 style={styles.feedback}>{eatingGoal[0].feedback}</h4>
                     ) : (
                       <Tooltip title="Set an Eating goal today to see feedback!">
                         <LockIcon
@@ -1516,6 +1534,12 @@ const JournalScreen = () => {
                           );
                           setLoggedEatingToday(true);
                           setEditingBehaviorId(-1);
+                          createChatbotRequest(
+                            eatingGoal,
+                            setEatingGoal,
+                            user,
+                            date
+                          );
                         }}
                       >
                         SAVE
@@ -1540,9 +1564,7 @@ const JournalScreen = () => {
                     {sleepData.length &&
                     sleepGoal[0].goalValue !== 0 &&
                     sleepGoal[0].behaviorValue !== 0 ? (
-                      <h4 style={styles.feedback}>
-                        {renderFeedback(sleepGoal)}
-                      </h4>
+                      <h4 style={styles.feedback}>{sleepGoal[0].feedback}</h4>
                     ) : (
                       <Tooltip title="Set a Sleep goal today to see feedback!">
                         <LockIcon
@@ -1616,6 +1638,12 @@ const JournalScreen = () => {
                           );
                           setLoggedSleepToday(true);
                           setEditingBehaviorId(-1);
+                          createChatbotRequest(
+                            sleepGoal,
+                            setSleepGoal,
+                            user,
+                            date
+                          );
                         }}
                       >
                         SAVE
@@ -1698,5 +1726,7 @@ let styles = {
   feedback: {
     color: "#000080",
     padding: 5,
+    overflowY: "scroll",
+    maxHeight: 80,
   },
 };

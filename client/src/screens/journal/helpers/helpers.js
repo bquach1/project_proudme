@@ -1,4 +1,6 @@
 import { SAVE_ICON_COLORS } from "../constants/constants";
+import axios from "axios";
+import { DATABASE_URL } from "../../../constants";
 
 export const renderFeedback = (goalData) => {
   if (goalData[0].goalType === "screentime") {
@@ -88,4 +90,47 @@ export const getSaveButtonColor = (loggedGoalToday, goalData, goal) => {
   } else {
     return "auto";
   }
+};
+
+export const createChatbotRequest = (goal, setGoal, user, date) => {
+  axios
+    .post(`${DATABASE_URL}/chatbot`, {
+      prompt: [
+        {
+          role: "system",
+          content: `Health goal: ${goal[0].goalType}, Recommended Goal value: ${
+            goal[0].recommendedValue
+          }, Actual Goal: ${goal[0].goalValue}, ' \
+f'Actual value achieved: ${
+            goal[0].behaviorValue
+          }, percentage of actual goal achieved: ${
+            parseFloat(goal[0].behaviorValue).toFixed(2) /
+            parseFloat(goal[0].goalValue).toFixed(2)
+          }, ' \
+f'percentage of recommended goal achieved: ${
+            parseFloat(goal[0].behaviorValue).toFixed(2) /
+            parseFloat(goal[0].recommendedValue).toFixed(2)
+          }`,
+        },
+      ],
+    })
+    .then((response) => {
+      setGoal((prevGoal) => {
+        const updatedGoal = prevGoal.map((goal) => {
+          const newFeedback = {
+            ...goal,
+            feedback: response.data.chat_reply,
+          };
+          return newFeedback;
+        });
+        return updatedGoal;
+      });
+      axios.post(`${DATABASE_URL}/behaviors`, {
+        user: user._id,
+        name: user.name,
+        goalType: goal[0].goalType,
+        date: date,
+        feedback: response.data.chat_reply,
+      });
+    });
 };

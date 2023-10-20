@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const authMiddleware = require("./authMiddleware");
 const bcrypt = require("bcrypt");
 const sgMail = require("@sendgrid/mail");
+const openai = require("openai");
 
 const app = express();
 const port = 3001;
@@ -122,6 +123,9 @@ const behaviorSchema = new mongoose.Schema({
     type: String,
   },
   reflection: {
+    type: String,
+  },
+  feedback: {
     type: String,
   },
   recommendedValue: {
@@ -243,6 +247,7 @@ app.post("/behaviors", async (req, res) => {
             divInfo2: req.body.divInfo2,
             reflection: req.body.reflection,
             recommendedValue: req.body.recommendedValue,
+            feedback: req.body.feedback,
           },
         },
         {
@@ -509,6 +514,46 @@ app.post("/send-email", (req, res) => {
       console.error(error);
       res.status(500).send("Failed to send email");
     });
+});
+
+const openaiInstance = new openai({ apiKey: process.env.OPEN_AI_API_KEY });
+
+app.post("/chatbot", (req, res) => {
+  const prompt = req.body.prompt;
+
+  try {
+    openaiInstance.chat.completions
+      .create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content:
+              "you will be provided a list of activity, recommended goal, actual goal, actual value, percentage of actual goal achieved, percenatge of recommended goal achieved \
+        you have to provide feedback based on percentage of goal achieved \
+        If goal achieved is less than 50%, tell user to put extra effort \
+        If goal achieved is more than 50%, encourage them to reach the goal\
+        If they meet any goal, congratulate them and give high five\
+        If there set goal them is more than recommended goal, praise them for setting goal more than recommended value \
+        If they achieve more than 120% of goal, They nailed it. \
+        Keep you feedback encouraging and limited to 50 words",
+          },
+          { role: "user", content: JSON.stringify(prompt) },
+        ],
+        temperature: 0.9,
+        max_tokens: 75,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0.6,
+      })
+      .then((response) => {
+        const chat_reply = response.choices[0].message.content;
+        res.json({ chat_reply });
+      });
+  } catch (error) {
+    console.error("Chatbot error: ", error);
+    res.status(500).json({ error: "Chatbot request failed" });
+  }
 });
 
 app.listen(port, () => {
