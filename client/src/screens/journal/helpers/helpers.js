@@ -78,13 +78,13 @@ export const getSaveButtonColor = (loggedGoalToday, goalData, goal) => {
   ) {
     return SAVE_ICON_COLORS.YELLOW;
   } else if (!goalData.length || !loggedGoalToday) {
-    return SAVE_ICON_COLORS.RED;
+    return SAVE_ICON_COLORS.GREEN;
   } else if (
     goalData[0].goalValue - goal[0].goalValue === 0 &&
     goalData[0].behaviorValue - goal[0].behaviorValue === 0 &&
     goalData[0].reflection === goal[0].reflection
   ) {
-    return SAVE_ICON_COLORS.GREEN;
+    return SAVE_ICON_COLORS.RED;
   } else {
     return "auto";
   }

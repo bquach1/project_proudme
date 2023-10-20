@@ -141,7 +141,9 @@ app.post("/login", async (req, res) => {
 
   try {
     // Check email and password against database
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      $or: [{ email: email }, { name: email }],
+    });
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
       // If login fails, return an error response
@@ -216,7 +218,6 @@ app.post("/goals", async (req, res) => {
 
 // Add behaviors endpoint
 app.post("/behaviors", async (req, res) => {
-  
   try {
     const existingBehavior = await Behavior.findOne({
       user: req.body.user,
@@ -348,7 +349,9 @@ app.get(
 
 app.get("/user", async (req, res) => {
   try {
-    const user = await User.find({ email: req.query.email });
+    const user = await User.findOne({
+      $or: [{ email: req.query.email }, { name: req.query.email }],
+    });
     res.json(user);
   } catch (error) {
     res.status(500).send("Internal server error");

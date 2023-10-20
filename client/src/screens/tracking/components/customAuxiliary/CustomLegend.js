@@ -51,7 +51,7 @@ export const CustomLegend = () => {
         <div style={{ display: "flex" }}>
           <div
             style={{
-              backgroundColor: "77DD77#",
+              backgroundColor: "#77DD77",
               width: 20,
               height: 20,
               marginRight: 10,

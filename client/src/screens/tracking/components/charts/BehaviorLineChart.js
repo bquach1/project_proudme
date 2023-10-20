@@ -15,6 +15,12 @@ import { CustomTooltip } from "../customAuxiliary/CustomTooltip";
 import { CustomLegend } from "../customAuxiliary/CustomLegend";
 
 const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
+  const maxBehaviorVal =
+    data &&
+    data.reduce((max, current) => {
+      return max > current.behaviorValue ? max : current.behaviorValue;
+    }, data.length && data[0].behaviorValue);
+
   return (
     <LineChart
       width={1000}
@@ -32,13 +38,14 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
         domain={[
           0,
           chartGoalType === "activity"
-            ? 70
+            ? Math.min(600, maxBehaviorVal)
             : chartGoalType === "screentime"
-            ? 130
+            ? Math.min(960, maxBehaviorVal)
             : chartGoalType === "eating"
-            ? 6
-            : 9,
+            ? Math.min(20, maxBehaviorVal)
+            : Math.min(15, maxBehaviorVal),
         ]}
+        allowDataOverflow={true}
       >
         <Label
           value={
@@ -54,15 +61,14 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
       </YAxis>
 
       <Tooltip content={<CustomTooltip />} />
-      {lineChartView !== "behaviorOnly" && (
-        <Line
-          type="linear"
-          dataKey="goalValue"
-          stroke="#A7C7E7"
-          strokeWidth={3}
-          activeDot={{ r: 6 }}
-        />
-      )}
+      <Line
+        type="linear"
+        dataKey="goalValue"
+        stroke="#A7C7E7"
+        strokeWidth={5}
+        activeDot={{ r: 6 }}
+        style={lineChartView === "behaviorOnly" ? { display: "none" } : {}}
+      />
 
       <defs>
         <linearGradient
@@ -76,19 +82,19 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
             const colorOffset = (index / (data.length - 1)) * 100;
             const stopColor =
               chartGoalType === "screentime" &&
-              entry.behaviorValue > entry.goalValue * 2
+              entry.behaviorValue > entry.recommendedValue * 2
                 ? "#FF6961"
                 : chartGoalType === "screentime" &&
-                  entry.behaviorValue > entry.goalValue
+                  entry.behaviorValue > entry.recommendedValue
                 ? "#FFC000"
                 : chartGoalType === "screentime" &&
-                  entry.behaviorValue < entry.goalValue
+                  entry.behaviorValue < entry.recommendedValue
                 ? "#77DD77"
-                : entry.behaviorValue > entry.goalValue
+                : entry.behaviorValue > entry.recommendedValue
                 ? "#77DD77"
-                : entry.behaviorValue === entry.goalValue
+                : entry.behaviorValue === entry.recommendedValue
                 ? "#8884d8"
-                : entry.behaviorValue < entry.goalValue / 2
+                : entry.behaviorValue < entry.recommendedValue / 2
                 ? "#FF6961"
                 : "#FFC000";
 
@@ -108,7 +114,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
           type="linear"
           dataKey="behaviorValue"
           stroke={`url(#colorUv${chartGoalType})`}
-          strokeWidth={3}
+          strokeWidth={5}
           activeDot={{ r: 6 }}
         />
       )}

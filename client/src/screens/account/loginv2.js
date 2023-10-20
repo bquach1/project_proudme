@@ -128,9 +128,9 @@ const LoginScreen = () => {
         </div>
         <form onSubmit={handleSubmit}>
           <div className="input-container">
-            <label>Email: </label>
+            <label>Email or Username: </label>
             <input
-              type="email"
+              type="text"
               onChange={(e) => setEmail(e.target.value)}
               name="emailInput"
               className="login-input"

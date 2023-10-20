@@ -120,10 +120,10 @@ const JournalScreen = () => {
   const [editingBehaviorId, setEditingBehaviorId] = useState(-1);
 
   var dateToday = new Date(),
-  month = dateToday.getMonth(),
-  day = dateToday.getDate(),
-  year = dateToday.getFullYear(),
-  date = month + 1 + "/" + day + "/" + year;
+    month = dateToday.getMonth(),
+    day = dateToday.getDate(),
+    year = dateToday.getFullYear(),
+    date = month + 1 + "/" + day + "/" + year;
 
   // Local states to manage event changes in React.
   const [activityGoal, setActivityGoal] = useState([
@@ -651,21 +651,31 @@ const JournalScreen = () => {
     }
   }
 
-  let lastLoggedDate =
-    activityData.length &&
-    new Date(activityData[0].dateToday).toLocaleDateString();
-  let lastLoggedTime =
-    activityData.length &&
-    new Date(activityData[0].dateToday).toLocaleTimeString();
+  const activityDate = new Date(
+    activityData.length && activityData[0].dateToday
+  );
+  const screentimeDate = new Date(
+    screentimeData.length && screentimeData[0].dateToday
+  );
+  const eatingDate = new Date(eatingData.length && eatingData[0].dateToday);
+  const sleepDate = new Date(sleepData.length && sleepData[0].dateToday);
+
+  const dates = [activityDate, screentimeDate, eatingDate, sleepDate];
+
+  // Filter out invalid dates (undefined or falsy) and find the most recent date
+  const validDates = dates.filter((date) => date);
+  const mostRecentDate = new Date(Math.max(...validDates)),
+    mostRecentDay = mostRecentDate.toLocaleDateString(),
+    mostRecentTime = mostRecentDate.toLocaleTimeString();
 
   return (
     <Wrapper>
       <h1 style={{ color: "#2E6AA1" }}>My Journal</h1>
       <strong style={{ display: "flex", justifyContent: "center" }}>
         Last Logged{" "}
-        {lastLoggedDate && lastLoggedTime ? (
+        {mostRecentDay && mostRecentTime ? (
           <>
-            {lastLoggedDate} {lastLoggedTime}
+            {mostRecentDay} {mostRecentTime}
           </>
         ) : (
           <div className="timeload-dots">...</div>
