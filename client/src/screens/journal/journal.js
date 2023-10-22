@@ -3,7 +3,7 @@ import "../../css/journal.css";
 import withAuth from "../../components/auth/withAuth";
 import axios from "axios";
 
-import { TextField, Tooltip, Button } from "@mui/material";
+import { TextField, Tooltip, Button, CircularProgress } from "@mui/material";
 import styled from "styled-components";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
@@ -13,6 +13,7 @@ import journalCover from "../../components/images/journal/journal_cover.png";
 
 import { SAVE_ICON_COLORS } from "./constants/constants";
 import { getSaveButtonColor, createChatbotRequest } from "./helpers/helpers";
+import ExpandableText from "./components/ExpandableText";
 import { DATABASE_URL } from "../../constants";
 
 const Wrapper = styled.div`
@@ -182,15 +183,17 @@ const JournalScreen = () => {
     },
   ]);
 
+  const [activityResponseLoading, setActivityResponseLoading] = useState(false);
+  const [screentimeResponseLoading, setScreentimeResponseLoading] =
+    useState(false);
+  const [eatingResponseLoading, setEatingResponseLoading] = useState(false);
+  const [sleepResponseLoading, setSleepResponseLoading] = useState(false);
+
   // Stores goal data pulled from MongoDB.
   const [activityData, setActivityData] = useState({});
   const [screentimeData, setScreentimeData] = useState({});
   const [eatingData, setEatingData] = useState({});
   const [sleepData, setSleepData] = useState({});
-
-  useEffect(() => {
-    console.log(screentimeGoal[0].feedback)
-  })
 
   useEffect(() => {
     const fetchDailyBehavior = async (goalType) => {
@@ -1240,12 +1243,15 @@ const JournalScreen = () => {
 
                 <GoalContainer style={styles.goalRow}>
                   <td style={{ width: "50%" }}>
-                    {activityData.length &&
-                    activityGoal[0].goalValue !== 0 &&
-                    activityGoal[0].behaviorValue !== 0 ? (
-                      <h4 style={styles.feedback}>
-                        {activityGoal[0].feedback}
-                      </h4>
+                    {activityResponseLoading ? (
+                      <CircularProgress />
+                    ) : activityData.length &&
+                      activityGoal[0].goalValue !== 0 &&
+                      activityGoal[0].behaviorValue !== 0 ? (
+                      <ExpandableText
+                        text={activityGoal[0].feedback}
+                        maxLines={4}
+                      />
                     ) : (
                       <Tooltip title="Set an Activity goal today to see feedback!">
                         <LockIcon
@@ -1325,7 +1331,8 @@ const JournalScreen = () => {
                             activityGoal,
                             setActivityGoal,
                             user,
-                            date
+                            date,
+                            setActivityResponseLoading
                           );
                         }}
                       >
@@ -1347,12 +1354,15 @@ const JournalScreen = () => {
 
                 <GoalContainer style={styles.goalRow}>
                   <td style={{ width: "50%" }}>
-                    {screentimeData.length &&
-                    screentimeGoal[0].goalValue !== 0 &&
-                    screentimeGoal[0].behaviorValue !== 0 ? (
-                      <h4 style={styles.feedback}>
-                        {screentimeGoal[0].feedback}
-                      </h4>
+                    {screentimeResponseLoading ? (
+                      <CircularProgress />
+                    ) : screentimeData.length &&
+                      screentimeGoal[0].goalValue !== 0 &&
+                      screentimeGoal[0].behaviorValue !== 0 ? (
+                      <ExpandableText
+                        text={screentimeGoal[0].feedback}
+                        maxLines={4}
+                      />
                     ) : (
                       <Tooltip title="Set a Screentime goal today to see feedback!">
                         <LockIcon
@@ -1432,7 +1442,8 @@ const JournalScreen = () => {
                             screentimeGoal,
                             setScreentimeGoal,
                             user,
-                            date
+                            date,
+                            setScreentimeResponseLoading
                           );
                         }}
                       >
@@ -1455,10 +1466,15 @@ const JournalScreen = () => {
 
                 <GoalContainer style={styles.goalRow}>
                   <td style={{ width: "50%" }}>
-                    {eatingData.length &&
-                    eatingGoal[0].goalValue !== 0 &&
-                    eatingGoal[0].behaviorValue !== 0 ? (
-                      <h4 style={styles.feedback}>{eatingGoal[0].feedback}</h4>
+                    {eatingResponseLoading ? (
+                      <CircularProgress />
+                    ) : eatingData.length &&
+                      eatingGoal[0].goalValue !== 0 &&
+                      eatingGoal[0].behaviorValue !== 0 ? (
+                      <ExpandableText
+                        text={eatingGoal[0].feedback}
+                        maxLines={4}
+                      />
                     ) : (
                       <Tooltip title="Set an Eating goal today to see feedback!">
                         <LockIcon
@@ -1538,7 +1554,8 @@ const JournalScreen = () => {
                             eatingGoal,
                             setEatingGoal,
                             user,
-                            date
+                            date,
+                            setEatingResponseLoading
                           );
                         }}
                       >
@@ -1561,10 +1578,15 @@ const JournalScreen = () => {
 
                 <GoalContainer style={styles.goalRow}>
                   <td style={{ width: "50%" }}>
-                    {sleepData.length &&
-                    sleepGoal[0].goalValue !== 0 &&
-                    sleepGoal[0].behaviorValue !== 0 ? (
-                      <h4 style={styles.feedback}>{sleepGoal[0].feedback}</h4>
+                    {sleepResponseLoading ? (
+                      <CircularProgress />
+                    ) : sleepData.length &&
+                      sleepGoal[0].goalValue !== 0 &&
+                      sleepGoal[0].behaviorValue !== 0 ? (
+                      <ExpandableText
+                        text={sleepGoal[0].feedback}
+                        maxLines={4}
+                      />
                     ) : (
                       <Tooltip title="Set a Sleep goal today to see feedback!">
                         <LockIcon
@@ -1642,7 +1664,8 @@ const JournalScreen = () => {
                             sleepGoal,
                             setSleepGoal,
                             user,
-                            date
+                            date,
+                            setSleepResponseLoading
                           );
                         }}
                       >
@@ -1727,6 +1750,6 @@ let styles = {
     color: "#000080",
     padding: 5,
     overflowY: "scroll",
-    maxHeight: 80,
+    maxHeight: 20,
   },
 };

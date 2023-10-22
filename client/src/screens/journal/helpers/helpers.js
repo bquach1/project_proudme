@@ -92,7 +92,8 @@ export const getSaveButtonColor = (loggedGoalToday, goalData, goal) => {
   }
 };
 
-export const createChatbotRequest = (goal, setGoal, user, date) => {
+export const createChatbotRequest = (goal, setGoal, user, date, setGoalResponseLoading) => {
+  setGoalResponseLoading(true);
   axios
     .post(`${DATABASE_URL}/chatbot`, {
       prompt: [
@@ -132,5 +133,6 @@ f'percentage of recommended goal achieved: ${
         date: date,
         feedback: response.data.chat_reply,
       });
+    setGoalResponseLoading(false);
     });
 };

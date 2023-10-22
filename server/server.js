@@ -529,14 +529,20 @@ app.post("/chatbot", (req, res) => {
           {
             role: "system",
             content:
-              "you will be provided a list of activity, recommended goal, actual goal, actual value, percentage of actual goal achieved, percenatge of recommended goal achieved \
+              "you will be provided a list of behavior/activity types, recommended goals, actual goals, actual values, percentage of actual goal achieved, percenatge of recommended goal achieved \
         you have to provide feedback based on percentage of goal achieved \
-        If goal achieved is less than 50%, tell user to put extra effort \
-        If goal achieved is more than 50%, encourage them to reach the goal\
-        If they meet any goal, congratulate them and give high five\
-        If there set goal them is more than recommended goal, praise them for setting goal more than recommended value \
+        If goal achieved is less than 50%, tell user to put extra effort and give them tips \
+        If goal achieved is more than 50%, encourage them to reach the goal and keep it up \
+        If they meet their goal, congratulate them and give high five\
+        If their set goal is more than the recommended goal, praise them for setting goal more than recommended value \
+        If the goal type is screentime, it is better if they do less than the specified goal/recommendation \
+        so give feedback for the opposite case.\
         If they achieve more than 120% of goal, They nailed it. \
-        Keep you feedback encouraging and limited to 50 words",
+        Keep your feedback encouraging and limited to 50 words\
+        Provide realistic feedback on how they can improve in the future\
+        relevant to the goal type; for example, specific fruits/veggies to eat for eating, specific exercise methods for activity,\
+        specific alternatives to laptops for screentime, specific sleep methods for sleep.\
+        ",
           },
           { role: "user", content: JSON.stringify(prompt) },
         ],
