@@ -471,8 +471,10 @@ const SignUpScreen = () => {
                   height: "60px",
                   width: "25%",
                   fontSize: "25px",
+                  opacity: (emailError || usernameError || !passwordMatch) && 0.4
                 }}
                 type="submit"
+                disabled={(emailError || usernameError || !passwordMatch) && true}
                 value="Register user"
               >
                 Register
