@@ -1245,6 +1245,8 @@ const JournalScreen = () => {
                   <td style={{ width: "50%" }}>
                     {activityResponseLoading ? (
                       <CircularProgress />
+                    ) : !activityGoal[0].feedback ? (
+                      <div>Please save for feedback!</div>
                     ) : activityData.length &&
                       activityGoal[0].goalValue !== 0 &&
                       activityGoal[0].behaviorValue !== 0 ? (
@@ -1356,6 +1358,8 @@ const JournalScreen = () => {
                   <td style={{ width: "50%" }}>
                     {screentimeResponseLoading ? (
                       <CircularProgress />
+                    ) : !screentimeGoal[0].feedback ? (
+                      <div>Please save for feedback!</div>
                     ) : screentimeData.length &&
                       screentimeGoal[0].goalValue !== 0 &&
                       screentimeGoal[0].behaviorValue !== 0 ? (
@@ -1468,6 +1472,8 @@ const JournalScreen = () => {
                   <td style={{ width: "50%" }}>
                     {eatingResponseLoading ? (
                       <CircularProgress />
+                    ) : !eatingGoal[0].feedback ? (
+                      <div>Please save for feedback!</div>
                     ) : eatingData.length &&
                       eatingGoal[0].goalValue !== 0 &&
                       eatingGoal[0].behaviorValue !== 0 ? (
@@ -1580,6 +1586,8 @@ const JournalScreen = () => {
                   <td style={{ width: "50%" }}>
                     {sleepResponseLoading ? (
                       <CircularProgress />
+                    ) : !sleepGoal[0].feedback ? (
+                      <div>Please save for feedback!</div>
                     ) : sleepData.length &&
                       sleepGoal[0].goalValue !== 0 &&
                       sleepGoal[0].behaviorValue !== 0 ? (
