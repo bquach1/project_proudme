@@ -542,6 +542,8 @@ app.post("/chatbot", (req, res) => {
         Provide realistic feedback on how they can improve in the future\
         relevant to the goal type; for example, specific fruits/veggies to eat for eating, specific exercise methods for activity,\
         specific alternatives to laptops for screentime, specific sleep methods for sleep.\
+        If the user provides a reflection associated with the given behavior,\
+        incorporate it into your feedback.\
         ",
           },
           { role: "user", content: JSON.stringify(prompt) },

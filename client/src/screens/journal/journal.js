@@ -11,7 +11,10 @@ import LockIcon from "@mui/icons-material/Lock";
 import DurationPicker from "../../components/durationPicker";
 import journalCover from "../../components/images/journal/journal_cover.png";
 
-import { SAVE_ICON_COLORS } from "./constants/constants";
+import {
+  SAVE_ICON_COLORS,
+  generateSaveTooltipMessage,
+} from "./constants/constants";
 import { getSaveButtonColor, createChatbotRequest } from "./helpers/helpers";
 import ExpandableText from "./components/ExpandableText";
 import { DATABASE_URL } from "../../constants";
@@ -1285,29 +1288,12 @@ const JournalScreen = () => {
                       }}
                     />
                     <Tooltip
-                      title={
-                        !activityData.length || !loggedActivityToday
-                          ? "Record your first Activity goal for today!"
-                          : activityData[0].goalValue -
-                              activityData[0].goalValue ===
-                              0 &&
-                            activityData[0].behaviorValue -
-                              activityGoal[0].behaviorValue ===
-                              0 &&
-                            activityData[0].reflection ===
-                              activityGoal[0].reflection
-                          ? "Today's Activity goal is up to date!"
-                          : activityData[0].goalValue -
-                              activityGoal[0].goalValue !==
-                              0 ||
-                            activityData[0].behaviorValue -
-                              activityGoal[0].behaviorValue !==
-                              0 ||
-                            activityData[0].reflection !==
-                              activityGoal[0].reflection
-                          ? "Save changes to today's Activity goal"
-                          : "No Activity Data found"
-                      }
+                      title={generateSaveTooltipMessage(
+                        activityGoal,
+                        activityData,
+                        loggedActivityToday,
+                        "Activity"
+                      )}
                     >
                       <Button
                         className="save edit-icon"
@@ -1398,29 +1384,12 @@ const JournalScreen = () => {
                       }}
                     />
                     <Tooltip
-                      title={
-                        !screentimeData.length || !loggedScreentimeToday
-                          ? "Record your first Screentime goal for today!"
-                          : screentimeData[0].goalValue -
-                              screentimeData[0].goalValue ===
-                              0 &&
-                            screentimeData[0].behaviorValue -
-                              screentimeGoal[0].behaviorValue ===
-                              0 &&
-                            screentimeData[0].reflection ===
-                              screentimeGoal[0].reflection
-                          ? "Today's Screentime goal is up to date!"
-                          : screentimeData[0].goalValue -
-                              screentimeGoal[0].goalValue !==
-                              0 ||
-                            screentimeData[0].behaviorValue -
-                              screentimeGoal[0].behaviorValue !==
-                              0 ||
-                            screentimeData[0].reflection !==
-                              screentimeGoal[0].reflection
-                          ? "Save changes to today's Screentime goal"
-                          : "No Screentime Data found"
-                      }
+                      title={generateSaveTooltipMessage(
+                        screentimeGoal,
+                        screentimeData,
+                        loggedScreentimeToday,
+                        "Screentime"
+                      )}
                     >
                       <Button
                         className="save edit-icon"
@@ -1512,29 +1481,12 @@ const JournalScreen = () => {
                       }}
                     />
                     <Tooltip
-                      title={
-                        !eatingData.length || !loggedEatingToday
-                          ? "Record your first Eating goal for today!"
-                          : eatingData[0].goalValue -
-                              eatingGoal[0].goalValue ===
-                              0 &&
-                            eatingData[0].behaviorValue -
-                              eatingGoal[0].behaviorValue ===
-                              0 &&
-                            eatingData[0].reflection ===
-                              eatingGoal[0].reflection
-                          ? "Today's Eating goal is up to date!"
-                          : eatingData[0].goalValue -
-                              eatingGoal[0].goalValue !==
-                              0 ||
-                            eatingData[0].behaviorValue -
-                              eatingGoal[0].behaviorValue !==
-                              0 ||
-                            eatingData[0].reflection !==
-                              eatingGoal[0].reflection
-                          ? "Save changes to today's Eating goal"
-                          : "No Eating Data found"
-                      }
+                      title={generateSaveTooltipMessage(
+                        eatingGoal,
+                        eatingData,
+                        loggedEatingToday,
+                        "Eating"
+                      )}
                     >
                       <Button
                         className="save edit-icon"
@@ -1628,25 +1580,12 @@ const JournalScreen = () => {
                       }}
                     />
                     <Tooltip
-                      title={
-                        !sleepData.length || !loggedSleepToday
-                          ? "Record your first Sleep goal for today!"
-                          : sleepData[0].goalValue - sleepGoal[0].goalValue ===
-                              0 &&
-                            sleepData[0].behaviorValue -
-                              sleepGoal[0].behaviorValue ===
-                              0 &&
-                            sleepData[0].reflection === sleepGoal[0].reflection
-                          ? "Today's Sleep goal is up to date!"
-                          : sleepData[0].goalValue - sleepGoal[0].goalValue !==
-                              0 ||
-                            sleepData[0].behaviorValue -
-                              sleepGoal[0].behaviorValue !==
-                              0 ||
-                            sleepData[0].reflection !== sleepGoal[0].reflection
-                          ? "Save changes to today's Sleep goal"
-                          : "No Sleep Data found"
-                      }
+                      title={generateSaveTooltipMessage(
+                        sleepGoal,
+                        sleepData,
+                        loggedSleepToday,
+                        "Sleep"
+                      )}
                     >
                       <Button
                         className="save edit-icon"

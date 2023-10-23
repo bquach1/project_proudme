@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, LinearProgress, Tooltip } from "@mui/material";
 import styled from "styled-components";
+import { BEHAVIOR_COLORS } from "../../../../constants";
 
 const ProgressBox = styled(Box)``;
 
@@ -34,7 +35,7 @@ const BehaviorProgressBar = ({ data, chartGoalType }) => {
                 content: '""',
                 position: "absolute",
                 width: "5px",
-                background: "red", // Change the color of the vertical line
+                background: (overallProgress > 100 && chartGoalType !== "screentime") || (overallProgress < 100 && chartGoalType === "screentime") ? BEHAVIOR_COLORS.GREEN : overallProgress === 100 ? BEHAVIOR_COLORS.PURPLE : BEHAVIOR_COLORS.RED,
                 top: 0,
                 bottom: 0,
                 zIndex: 1,

@@ -1,3 +1,5 @@
+import { BEHAVIOR_COLORS } from "../../../../constants";
+
 export const CustomLegend = () => {
   return (
     <div
@@ -5,7 +7,7 @@ export const CustomLegend = () => {
         display: "flex",
         alignItems: "center",
         flexDirection: "column",
-        backgroundColor: "#D3D3D3",
+        backgroundColor: BEHAVIOR_COLORS.BACKGROUND_GRAY,
         marginTop: "3%",
         width: "40%",
         margin: "0 auto",
@@ -29,7 +31,7 @@ export const CustomLegend = () => {
         <div style={{ display: "flex" }}>
           <div
             style={{
-              backgroundColor: "#A7C7E7",
+              backgroundColor: BEHAVIOR_COLORS.LIGHT_BLUE,
               width: 20,
               height: 20,
               marginRight: 10,
@@ -40,7 +42,7 @@ export const CustomLegend = () => {
         <div style={{ display: "flex" }}>
           <div
             style={{
-              backgroundColor: "#8884d8",
+              backgroundColor: BEHAVIOR_COLORS.PURPLE,
               width: 20,
               height: 20,
               marginRight: 10,
@@ -51,7 +53,7 @@ export const CustomLegend = () => {
         <div style={{ display: "flex" }}>
           <div
             style={{
-              backgroundColor: "#77DD77",
+              backgroundColor: BEHAVIOR_COLORS.GREEN,
               width: 20,
               height: 20,
               marginRight: 10,
@@ -62,7 +64,7 @@ export const CustomLegend = () => {
         <div style={{ display: "flex" }}>
           <div
             style={{
-              backgroundColor: "#FF6961",
+              backgroundColor: BEHAVIOR_COLORS.RED,
               width: 20,
               height: 20,
               marginRight: 10,
@@ -73,7 +75,7 @@ export const CustomLegend = () => {
         <div style={{ display: "flex" }}>
           <div
             style={{
-              backgroundColor: "#FFC000",
+              backgroundColor: BEHAVIOR_COLORS.YELLOW,
               width: 20,
               height: 20,
               marginRight: 10,

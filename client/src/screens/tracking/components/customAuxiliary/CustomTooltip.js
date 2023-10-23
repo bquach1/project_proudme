@@ -1,3 +1,5 @@
+import { BEHAVIOR_COLORS } from "../../../../constants";
+
 export const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
@@ -12,11 +14,17 @@ export const CustomTooltip = ({ active, payload, label }) => {
         {payload.map((pld, index) => (
           <div key={index}>
             {pld.dataKey === "goalValue" ? (
-              <div id={`goal-${index}`} style={{ color: "#A7C7E7" }}>
+              <div
+                id={`goal-${index}`}
+                style={{ color: BEHAVIOR_COLORS.LIGHT_BLUE }}
+              >
                 My Goal Value: {pld.value}
               </div>
             ) : (
-              <div id={`behavior-${index}`} style={{ color: "#8884d8" }}>
+              <div
+                id={`behavior-${index}`}
+                style={{ color: BEHAVIOR_COLORS.PURPLE }}
+              >
                 My Behavior Value: {Math.round(pld.value * 100) / 100}
               </div>
             )}

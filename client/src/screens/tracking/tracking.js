@@ -29,6 +29,8 @@ import { BehaviorTrackingCSV } from "../journal/csv";
 import { DATABASE_URL } from "../../constants";
 
 const TrackingWrapper = styled.div`
+  padding-bottom: 50px;
+
   .input-box {
     cursor: pointer;
     width: 15%;
