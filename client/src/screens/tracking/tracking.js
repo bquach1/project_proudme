@@ -13,20 +13,19 @@ import {
   FormControlLabel,
 } from "@mui/material";
 
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
 import { DateRange } from "react-date-range";
 import { format, addDays, subDays } from "date-fns";
 
-import BehaviorProgressBar from "./components/charts/BehaviorProgressBar";
-import BehaviorLineChart from "./components/charts/BehaviorLineChart";
-
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css";
+import BehaviorProgressBar from "screens/tracking/components/charts/BehaviorProgressBar";
+import BehaviorLineChart from "screens/tracking/components/charts/BehaviorLineChart";
 
 import { has } from "lodash";
 
-import withAuth from "../../components/auth/withAuth";
-import { BehaviorTrackingCSV } from "../journal/csv";
-import { DATABASE_URL } from "../../constants";
+import { BehaviorTrackingCSV } from "screens/journal/csv";
+import { DATABASE_URL } from "constants";
+import withAuth from "components/auth/withAuth";
 
 const TrackingWrapper = styled.div`
   padding-bottom: 50px;

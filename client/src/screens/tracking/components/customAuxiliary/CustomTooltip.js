@@ -1,4 +1,4 @@
-import { BEHAVIOR_COLORS } from "../../../../constants";
+import { BEHAVIOR_COLORS } from "constants";
 
 export const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {

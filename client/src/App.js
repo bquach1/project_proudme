@@ -1,27 +1,28 @@
-import "./App.css";
+import "App.css";
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
-import SignUpScreen from "./screens/account/signup.js";
-import LoginScreen from "./screens/account/loginv2.js";
-import HomeScreen from "./screens/home.js";
-import JournalScreen from "./screens/journal/journal.js";
-import GalleryScreen from "./screens/journal/gallery.js";
-import PetScreen from "./screens/pet/pet.js";
-import PEScreen from "./screens/pe/pe.js";
-import TrackingScreen from "./screens/tracking/tracking";
-import RecoveryScreen from "./screens/account/recovery";
+import SignUpScreen from "screens/account/signup.js";
+import LoginScreen from "screens/account/login.js";
+import HomeScreen from "screens/home.js";
+import JournalScreen from "screens/journal/journal.js";
+import GalleryScreen from "screens/journal/gallery.js";
+import PetScreen from "screens/pet/pet.js";
+import PEScreen from "screens/pe/pe.js";
+import TrackingScreen from "screens/tracking/tracking";
+import RecoveryScreen from "screens/account/recovery";
 
-import Header from "./components/header";
+import Header from "components/header/header";
 
 function App() {
   const location = useLocation();
 
   return (
     <div className="App">
-      {location.pathname !== "/login" && location.pathname !== "/recovery" && location.pathname !== "/signup" && location.pathname !== "/" && (
-        <Header />
-      )}
+      {location.pathname !== "/login" &&
+        location.pathname !== "/recovery" &&
+        location.pathname !== "/signup" &&
+        location.pathname !== "/" && <Header />}
       <Routes>
         <Route path="/" element={<LoginScreen />} />
         <Route path="/project-proudme" element={<LoginScreen />} />

@@ -1,6 +1,6 @@
-import { SAVE_ICON_COLORS } from "../constants/constants";
+import { SAVE_ICON_COLORS } from "screens/journal/constants/constants";
 import axios from "axios";
-import { DATABASE_URL } from "../../../constants";
+import { DATABASE_URL } from "constants";
 
 export const renderFeedback = (goalData) => {
   if (goalData[0].goalType === "screentime") {

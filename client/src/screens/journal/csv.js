@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { CSVLink } from "react-csv";
 import { Button } from "@mui/material";
 import axios from "axios";
-import { DATABASE_URL } from "../../constants";
+import { DATABASE_URL } from "constants";
 
 export const BehaviorTrackingCSV = ({ behaviorData, user }) => {
   const [inputData, setInputData] = useState([]);

@@ -1,7 +1,7 @@
 import React from "react";
-import '../../css/pe.css';
-import YoutubeEmbed from "../../components/YoutubeEmbed.js";
-import withAuth from '../../components/auth/withAuth';
+import 'css/pe.css';
+import YoutubeEmbed from "components/pe/YoutubeEmbed.js";
+import withAuth from 'components/auth/withAuth';
 
 const PEScreen = () => {
     return (

@@ -13,8 +13,8 @@ import {
   Cell,
 } from "recharts";
 
-import { CustomTooltip } from "../CustomTooltip";
-import { CustomLegend } from "../CustomLegend";
+import { CustomTooltip } from "screens/tracking/components/customAuxiliary/CustomTooltip";
+import { CustomLegend } from "screens/tracking/components/customAuxiliary/CustomLegend";
 
 const BehaviorBarChart = ({ data, chartGoalType }) => {
   return (

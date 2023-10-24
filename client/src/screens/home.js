@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import "../css/home.css";
+import "css/home.css";
 import styled from "styled-components";
 
-import withAuth from "../components/auth/withAuth";
-import { DATABASE_URL } from "../constants";
+import withAuth from "components/auth/withAuth";
+import { DATABASE_URL } from "constants";
 
 const HomeWrapper = styled.div`
   width: 90%;

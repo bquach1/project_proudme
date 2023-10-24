@@ -5,7 +5,7 @@ import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs";
 
-import { DATABASE_URL } from "../../constants";
+import { DATABASE_URL } from "constants";
 
 const ButtonPageWrapper = styled.div`
   height: calc(100vh - 80px);

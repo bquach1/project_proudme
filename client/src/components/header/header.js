@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 
-import "../css/header.css";
+import "css/header.css";
 
 const Header = () => {
   let navigate = useNavigate();

@@ -11,8 +11,8 @@ import {
   ReferenceLine,
 } from "recharts";
 
-import { CustomTooltip } from "../customAuxiliary/CustomTooltip";
-import { CustomLegend } from "../customAuxiliary/CustomLegend";
+import { CustomTooltip } from "screens/tracking/components/customAuxiliary/CustomTooltip";
+import { CustomLegend } from "screens/tracking/components/customAuxiliary/CustomLegend";
 
 const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
   const maxBehaviorVal =

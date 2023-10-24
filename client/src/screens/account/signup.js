@@ -9,13 +9,14 @@ import {
   Select,
   MenuItem,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import axios from "axios";
 import { CircularProgress } from "@mui/material";
 import styled from "styled-components";
 
-import "../../css/signup.css";
-import { DATABASE_URL } from "../../constants";
+import "css/signup.css";
+import { DATABASE_URL } from "constants";
 
 const FormWrapper = styled.div`
   background-color: white;
@@ -54,6 +55,8 @@ const SignUpScreen = () => {
   const [usernameError, setUsernameError] = useState(false);
 
   const [accountConfirm, setAccountConfirm] = useState("");
+
+  const registrationError = emailError || usernameError || !passwordMatch;
 
   const [form, setForm] = useState({
     name: "",
@@ -323,7 +326,7 @@ const SignUpScreen = () => {
                   required
                   displayEmpty
                   value={form.birthMonth}
-                  style={{ backgroundColor: "white", width: "100%" }}
+                  style={{ backgroundColor: "white", width: 175 }}
                 >
                   <MenuItem disabled value="">
                     <div style={{ opacity: 0.6 }}>Select an Option</div>
@@ -458,6 +461,8 @@ const SignUpScreen = () => {
                 </FormGroup>
               </div>
             </div>
+              <Tooltip 
+              title={registrationError ? "Please fix errors in your information before continuing!" : ""}>
             <div className="button-container">
               <Button
                 style={{
@@ -471,15 +476,16 @@ const SignUpScreen = () => {
                   height: "60px",
                   width: "25%",
                   fontSize: "25px",
-                  opacity: (emailError || usernameError || !passwordMatch) && 0.4
+                  opacity: (registrationError) && 0.4
                 }}
                 type="submit"
-                disabled={(emailError || usernameError || !passwordMatch) && true}
+                disabled={(registrationError) && true}
                 value="Register user"
               >
                 Register
               </Button>
             </div>
+              </Tooltip>
           </form>
           {confirming && (
             <div style={{ marginTop: "2%" }}>

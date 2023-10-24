@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "../../css/journal.css";
-import withAuth from "../../components/auth/withAuth";
+import "css/journal.css";
+import withAuth from "components/auth/withAuth";
+import DurationPicker from "components/journal/durationPicker";
+import journalCover from "components/images/journal/journal_cover.png";
 import axios from "axios";
 
 import { TextField, Tooltip, Button, CircularProgress } from "@mui/material";
@@ -8,16 +10,17 @@ import styled from "styled-components";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import LockIcon from "@mui/icons-material/Lock";
-import DurationPicker from "../../components/durationPicker";
-import journalCover from "../../components/images/journal/journal_cover.png";
 
 import {
   SAVE_ICON_COLORS,
   generateSaveTooltipMessage,
-} from "./constants/constants";
-import { getSaveButtonColor, createChatbotRequest } from "./helpers/helpers";
-import ExpandableText from "./components/ExpandableText";
-import { DATABASE_URL } from "../../constants";
+} from "screens/journal/constants/constants";
+import {
+  getSaveButtonColor,
+  createChatbotRequest,
+} from "screens/journal/helpers/helpers";
+import ExpandableText from "screens/journal/components/ExpandableText";
+import { DATABASE_URL } from "constants";
 
 const Wrapper = styled.div`
   margin-top: 1%;
@@ -1010,6 +1013,11 @@ const JournalScreen = () => {
                         type="number"
                         value={eatingGoal.length ? eatingGoal[0].goalValue : ""}
                         onChange={(e) => {
+                          if (e.target.value < 0) {
+                            e.target.value = 0;
+                          } else if (e.target.value > 50) {
+                            e.target.value = 50;
+                          }
                           setEatingGoal((prevEatingGoal) => {
                             const updatedEatingGoal = prevEatingGoal.map(
                               (goal) => {
@@ -1052,6 +1060,11 @@ const JournalScreen = () => {
                           eatingGoal.length ? eatingGoal[0].behaviorValue : ""
                         }
                         onChange={(e) => {
+                          if (e.target.value < 0) {
+                            e.target.value = 0;
+                          } else if (e.target.value > 50) {
+                            e.target.value = 50;
+                          }
                           setEatingGoal((prevEatingGoal) => {
                             const updatedEatingGoal = prevEatingGoal.map(
                               (goal) => {
@@ -1250,9 +1263,7 @@ const JournalScreen = () => {
                       <CircularProgress />
                     ) : !activityGoal[0].feedback ? (
                       <div>Please save for feedback!</div>
-                    ) : activityData.length &&
-                      activityGoal[0].goalValue !== 0 &&
-                      activityGoal[0].behaviorValue !== 0 ? (
+                    ) : activityData.length ? (
                       <ExpandableText
                         text={activityGoal[0].feedback}
                         maxLines={4}
@@ -1346,9 +1357,7 @@ const JournalScreen = () => {
                       <CircularProgress />
                     ) : !screentimeGoal[0].feedback ? (
                       <div>Please save for feedback!</div>
-                    ) : screentimeData.length &&
-                      screentimeGoal[0].goalValue !== 0 &&
-                      screentimeGoal[0].behaviorValue !== 0 ? (
+                    ) : screentimeData.length ? (
                       <ExpandableText
                         text={screentimeGoal[0].feedback}
                         maxLines={4}
@@ -1443,9 +1452,7 @@ const JournalScreen = () => {
                       <CircularProgress />
                     ) : !eatingGoal[0].feedback ? (
                       <div>Please save for feedback!</div>
-                    ) : eatingData.length &&
-                      eatingGoal[0].goalValue !== 0 &&
-                      eatingGoal[0].behaviorValue !== 0 ? (
+                    ) : eatingData.length ? (
                       <ExpandableText
                         text={eatingGoal[0].feedback}
                         maxLines={4}
@@ -1540,9 +1547,7 @@ const JournalScreen = () => {
                       <CircularProgress />
                     ) : !sleepGoal[0].feedback ? (
                       <div>Please save for feedback!</div>
-                    ) : sleepData.length &&
-                      sleepGoal[0].goalValue !== 0 &&
-                      sleepGoal[0].behaviorValue !== 0 ? (
+                    ) : sleepData.length ? (
                       <ExpandableText
                         text={sleepGoal[0].feedback}
                         maxLines={4}

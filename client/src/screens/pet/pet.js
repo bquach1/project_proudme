@@ -1,5 +1,5 @@
 import React from "react";
-import withAuth from "../../components/auth/withAuth";
+import withAuth from "components/auth/withAuth";
 
 const PetScreen = () => {
   return (
