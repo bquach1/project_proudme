@@ -24,7 +24,7 @@ import { DATABASE_URL } from "constants";
 
 const Wrapper = styled.div`
   margin-top: 1%;
-  padding-bottom: 10%;
+  padding-bottom: 20%;
   height: 100vh;
 
   .disabled-behavior:hover {
@@ -66,7 +66,7 @@ const JournalWrapper = styled.table`
   width: 100%;
   justify-content: center;
   position: relative;
-  margin-top: 1%;
+  padding-top: 2%;
 
   .lock-icon {
     &:hover {
@@ -701,7 +701,6 @@ const JournalScreen = () => {
       <JournalWrapper>
         <div
           style={{
-            backgroundImage: `url(${journalCover})`,
             backgroundPosition: "center center",
             backgroundSize: "cover" /* Adjust as needed */,
             backgroundRepeat: "no-repeat",
@@ -1224,12 +1223,11 @@ const JournalScreen = () => {
                 </GoalContainer>
               </div>
 
-
               <img
                 className="new_left_page"
-                src={require("../../components/images/journal/left_page.png")}
+                src={require("../../components/images/journal/new_left_page.png")}
                 alt="First left-side page"
-              />  
+              />
               {/* <img
                 className="leftpage1"
                 src={require("../../components/images/journal/left_page.png")}
@@ -1246,18 +1244,13 @@ const JournalScreen = () => {
                 alt="Third left-side page"
               /> */}
             </div>
-            <img
-              className="middle-line"
-              src={require("../../components/images/journal/middle_line.png")}
-              alt="Middle journal line"
-            />
             <div className="rightPageWrapper">
               <img
                 className="bookmark"
-                src={require("../../components/images/journal/bookmark.png")}
-                alt="Yellow bookmark icon"
+                src={require("../../components/images/journal/journal_binding.png")}
+                alt="Journal spine icon"
               />
-              <div style={styles.goalScreen}>
+              <div style={styles.rightGoalScreen}>
                 <GoalContainer style={styles.goalRow}>
                   <th style={styles.goalHeader}>Your Feedback</th>
                   <th style={styles.goalHeader}>Reflect</th>
@@ -1644,6 +1637,11 @@ const JournalScreen = () => {
                 </GoalContainer>
               </div>
               <img
+                className="new_right_page"
+                src={require("../../components/images/journal/new_right_page.png")}
+                alt="First right-side page"
+              />
+              {/* <img
                 className="rightpage1"
                 src={require("../../components/images/journal/left_page.png")}
                 alt="First right-side page"
@@ -1657,7 +1655,7 @@ const JournalScreen = () => {
                 className="rightpage3"
                 src={require("../../components/images/journal/left_page3.png")}
                 alt="Third right-side page"
-              />
+              /> */}
             </div>
           </div>
         </div>
@@ -1675,7 +1673,19 @@ let styles = {
     display: "flex",
     flexDirection: "column",
     margin: "auto",
-    width: "90%",
+    marginLeft: "8%",
+    width: "80%",
+    height: "90%",
+    justifyContent: "space-between",
+  },
+  rightGoalScreen: {
+    position: "absolute",
+    zIndex: "900",
+    display: "flex",
+    flexDirection: "column",
+    margin: "auto",
+    marginLeft: "2%",
+    width: "80%",
     height: "90%",
     justifyContent: "space-between",
   },
