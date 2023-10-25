@@ -1224,7 +1224,13 @@ const JournalScreen = () => {
                 </GoalContainer>
               </div>
 
+
               <img
+                className="new_left_page"
+                src={require("../../components/images/journal/left_page.png")}
+                alt="First left-side page"
+              />  
+              {/* <img
                 className="leftpage1"
                 src={require("../../components/images/journal/left_page.png")}
                 alt="First left-side page"
@@ -1238,7 +1244,7 @@ const JournalScreen = () => {
                 className="leftpage3"
                 src={require("../../components/images/journal/left_page3.png")}
                 alt="Third left-side page"
-              />
+              /> */}
             </div>
             <img
               className="middle-line"
