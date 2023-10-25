@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "css/journal.css";
 import withAuth from "components/auth/withAuth";
 import DurationPicker from "components/journal/durationPicker";
-import journalCover from "components/images/journal/journal_cover.png";
 import axios from "axios";
 
 import { TextField, Tooltip, Button, CircularProgress } from "@mui/material";
@@ -23,9 +22,10 @@ import ExpandableText from "screens/journal/components/ExpandableText";
 import { DATABASE_URL } from "constants";
 
 const Wrapper = styled.div`
-  margin-top: 1%;
   padding-bottom: 20%;
   height: 100vh;
+  width: 90%;
+  margin: auto;
 
   .disabled-behavior:hover {
     border-radius: 5px;
@@ -687,7 +687,7 @@ const JournalScreen = () => {
 
   return (
     <Wrapper>
-      <h1 style={{ color: "#2E6AA1" }}>My Journal</h1>
+      <h1 style={{ color: "#2E6AA1", marginTop: "1%" }}>My Journal</h1>
       <strong style={{ display: "flex", justifyContent: "center" }}>
         Last Logged{" "}
         {mostRecentDay && mostRecentTime ? (
