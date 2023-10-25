@@ -22,7 +22,7 @@ import ExpandableText from "screens/journal/components/ExpandableText";
 import { DATABASE_URL } from "constants";
 
 const Wrapper = styled.div`
-  padding-bottom: 20%;
+  padding-bottom: 10%;
   height: 100vh;
   width: 90%;
   margin: auto;
@@ -66,12 +66,29 @@ const JournalWrapper = styled.table`
   width: 100%;
   justify-content: center;
   position: relative;
-  padding-top: 2%;
+  margin: 0 auto;
 
   .lock-icon {
     &:hover {
       color: #800000;
     }
+  }
+
+  @media (max-width: 1190px) {
+    width: 90%;
+    font-size: 14px;
+    background-color: black;
+  } 
+
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: 14px;
+    background-color: black;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%; /* Adjust the width as needed */
+    font-size: 12px; /* Adjust the font size as needed */
   }
 `;
 
@@ -1252,31 +1269,12 @@ const JournalScreen = () => {
               />
               <div style={styles.rightGoalScreen}>
                 <GoalContainer style={styles.goalRow}>
-                  <th style={styles.goalHeader}>Your Feedback</th>
                   <th style={styles.goalHeader}>Reflect</th>
+                  <th style={styles.goalHeader}>AI-Generated Feedback</th>                  
                 </GoalContainer>
 
                 <GoalContainer style={styles.goalRow}>
-                  <td style={{ width: "50%" }}>
-                    {activityResponseLoading ? (
-                      <CircularProgress />
-                    ) : !activityGoal[0].feedback ? (
-                      <div>Please save for feedback!</div>
-                    ) : activityData.length ? (
-                      <ExpandableText
-                        text={activityGoal[0].feedback}
-                        maxLines={4}
-                      />
-                    ) : (
-                      <Tooltip title="Set an Activity goal today to see feedback!">
-                        <LockIcon
-                          style={{ margin: "auto", width: "30%" }}
-                          className="lock-icon"
-                        />
-                      </Tooltip>
-                    )}
-                  </td>
-                  <ReflectionContainer style={styles.goalRow}>
+                <ReflectionContainer style={styles.goalRow}>
                     <TextField
                       type="text"
                       placeholder="Type my thoughts"
@@ -1338,6 +1336,25 @@ const JournalScreen = () => {
                       </Button>
                     </Tooltip>
                   </ReflectionContainer>
+                  <td style={{ width: "50%" }}>
+                    {activityResponseLoading ? (
+                      <CircularProgress />
+                    ) : !activityGoal[0].feedback ? (
+                      <div>Please save for feedback!</div>
+                    ) : activityData.length ? (
+                      <ExpandableText
+                        text={activityGoal[0].feedback}
+                        maxLines={4}
+                      />
+                    ) : (
+                      <Tooltip title="Set an Activity goal today to see feedback!">
+                        <LockIcon
+                          style={{ margin: "auto", width: "30%" }}
+                          className="lock-icon"
+                        />
+                      </Tooltip>
+                    )}
+                  </td>
                 </GoalContainer>
 
                 <GoalContainer>
@@ -1351,26 +1368,7 @@ const JournalScreen = () => {
                 </GoalContainer>
 
                 <GoalContainer style={styles.goalRow}>
-                  <td style={{ width: "50%" }}>
-                    {screentimeResponseLoading ? (
-                      <CircularProgress />
-                    ) : !screentimeGoal[0].feedback ? (
-                      <div>Please save for feedback!</div>
-                    ) : screentimeData.length ? (
-                      <ExpandableText
-                        text={screentimeGoal[0].feedback}
-                        maxLines={4}
-                      />
-                    ) : (
-                      <Tooltip title="Set a Screentime goal today to see feedback!">
-                        <LockIcon
-                          style={{ margin: "auto", width: "30%" }}
-                          className="lock-icon"
-                        />
-                      </Tooltip>
-                    )}
-                  </td>
-                  <ReflectionContainer style={styles.goalRow}>
+                <ReflectionContainer style={styles.goalRow}>
                     <TextField
                       type="text"
                       placeholder="Type my thoughts"
@@ -1432,6 +1430,25 @@ const JournalScreen = () => {
                       </Button>
                     </Tooltip>
                   </ReflectionContainer>
+                  <td style={{ width: "50%" }}>
+                    {screentimeResponseLoading ? (
+                      <CircularProgress />
+                    ) : !screentimeGoal[0].feedback ? (
+                      <div>Please save for feedback!</div>
+                    ) : screentimeData.length ? (
+                      <ExpandableText
+                        text={screentimeGoal[0].feedback}
+                        maxLines={4}
+                      />
+                    ) : (
+                      <Tooltip title="Set a Screentime goal today to see feedback!">
+                        <LockIcon
+                          style={{ margin: "auto", width: "30%" }}
+                          className="lock-icon"
+                        />
+                      </Tooltip>
+                    )}
+                  </td>                  
                 </GoalContainer>
 
                 <GoalContainer>
@@ -1446,26 +1463,7 @@ const JournalScreen = () => {
                 </GoalContainer>
 
                 <GoalContainer style={styles.goalRow}>
-                  <td style={{ width: "50%" }}>
-                    {eatingResponseLoading ? (
-                      <CircularProgress />
-                    ) : !eatingGoal[0].feedback ? (
-                      <div>Please save for feedback!</div>
-                    ) : eatingData.length ? (
-                      <ExpandableText
-                        text={eatingGoal[0].feedback}
-                        maxLines={4}
-                      />
-                    ) : (
-                      <Tooltip title="Set an Eating goal today to see feedback!">
-                        <LockIcon
-                          style={{ margin: "auto", width: "30%" }}
-                          className="lock-icon"
-                        />
-                      </Tooltip>
-                    )}
-                  </td>
-                  <ReflectionContainer style={styles.goalRow}>
+                <ReflectionContainer style={styles.goalRow}>
                     <TextField
                       type="text"
                       placeholder="Type my thoughts"
@@ -1527,6 +1525,25 @@ const JournalScreen = () => {
                       </Button>
                     </Tooltip>
                   </ReflectionContainer>
+                  <td style={{ width: "50%" }}>
+                    {eatingResponseLoading ? (
+                      <CircularProgress />
+                    ) : !eatingGoal[0].feedback ? (
+                      <div>Please save for feedback!</div>
+                    ) : eatingData.length ? (
+                      <ExpandableText
+                        text={eatingGoal[0].feedback}
+                        maxLines={4}
+                      />
+                    ) : (
+                      <Tooltip title="Set an Eating goal today to see feedback!">
+                        <LockIcon
+                          style={{ margin: "auto", width: "30%" }}
+                          className="lock-icon"
+                        />
+                      </Tooltip>
+                    )}
+                  </td>
                 </GoalContainer>
 
                 <GoalContainer>
@@ -1541,30 +1558,7 @@ const JournalScreen = () => {
                 </GoalContainer>
 
                 <GoalContainer style={styles.goalRow}>
-                  <td style={{ width: "50%" }}>
-                    {sleepResponseLoading ? (
-                      <CircularProgress />
-                    ) : !sleepGoal[0].feedback ? (
-                      <div>Please save for feedback!</div>
-                    ) : sleepData.length ? (
-                      <ExpandableText
-                        text={sleepGoal[0].feedback}
-                        maxLines={4}
-                      />
-                    ) : (
-                      <Tooltip title="Set a Sleep goal today to see feedback!">
-                        <LockIcon
-                          style={{
-                            width: "30%",
-                            display: "flex",
-                            margin: "0 auto",
-                          }}
-                          className="lock-icon"
-                        />
-                      </Tooltip>
-                    )}
-                  </td>
-                  <ReflectionContainer style={styles.goalRow}>
+                <ReflectionContainer style={styles.goalRow}>
                     <TextField
                       type="text"
                       placeholder="Type my thoughts"
@@ -1624,6 +1618,29 @@ const JournalScreen = () => {
                       </Button>
                     </Tooltip>
                   </ReflectionContainer>
+                  <td style={{ width: "50%" }}>
+                    {sleepResponseLoading ? (
+                      <CircularProgress />
+                    ) : !sleepGoal[0].feedback ? (
+                      <div>Please save for feedback!</div>
+                    ) : sleepData.length ? (
+                      <ExpandableText
+                        text={sleepGoal[0].feedback}
+                        maxLines={4}
+                      />
+                    ) : (
+                      <Tooltip title="Set a Sleep goal today to see feedback!">
+                        <LockIcon
+                          style={{
+                            width: "30%",
+                            display: "flex",
+                            margin: "0 auto",
+                          }}
+                          className="lock-icon"
+                        />
+                      </Tooltip>
+                    )}
+                  </td>                  
                 </GoalContainer>
 
                 <GoalContainer>
