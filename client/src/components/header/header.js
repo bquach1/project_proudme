@@ -13,17 +13,9 @@ const Header = () => {
     <nav>
       <div className="left-nav">
         <Button
-          style={{
-            backgroundColor: "#B2C5CB",
-            padding: "10px 15px 10px 15px",
-            borderRadius: "50px",
-            color: "white",
-            fontWeight: "bold",
-            fontSize: "20px",
-          }}
           onClick={() => navigate("/home")}
         >
-          PROUDME
+          <img style={{width: 40}} src={require("components/images/white_proudme_logo.png")} alt="White mini ProudMe logo" />
         </Button>
         <Button
           style={{

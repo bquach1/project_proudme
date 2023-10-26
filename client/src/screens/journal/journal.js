@@ -78,7 +78,7 @@ const JournalWrapper = styled.table`
     width: 90%;
     font-size: 14px;
     background-color: black;
-  } 
+  }
 
   @media (max-width: 768px) {
     width: 100%;
@@ -1270,11 +1270,11 @@ const JournalScreen = () => {
               <div style={styles.rightGoalScreen}>
                 <GoalContainer style={styles.goalRow}>
                   <th style={styles.goalHeader}>Reflect</th>
-                  <th style={styles.goalHeader}>AI-Generated Feedback</th>                  
+                  <th style={styles.goalHeader}>AI-Generated Feedback</th>
                 </GoalContainer>
 
                 <GoalContainer style={styles.goalRow}>
-                <ReflectionContainer style={styles.goalRow}>
+                  <ReflectionContainer style={styles.goalRow}>
                     <TextField
                       type="text"
                       placeholder="Type my thoughts"
@@ -1368,7 +1368,7 @@ const JournalScreen = () => {
                 </GoalContainer>
 
                 <GoalContainer style={styles.goalRow}>
-                <ReflectionContainer style={styles.goalRow}>
+                  <ReflectionContainer style={styles.goalRow}>
                     <TextField
                       type="text"
                       placeholder="Type my thoughts"
@@ -1448,7 +1448,7 @@ const JournalScreen = () => {
                         />
                       </Tooltip>
                     )}
-                  </td>                  
+                  </td>
                 </GoalContainer>
 
                 <GoalContainer>
@@ -1463,7 +1463,7 @@ const JournalScreen = () => {
                 </GoalContainer>
 
                 <GoalContainer style={styles.goalRow}>
-                <ReflectionContainer style={styles.goalRow}>
+                  <ReflectionContainer style={styles.goalRow}>
                     <TextField
                       type="text"
                       placeholder="Type my thoughts"
@@ -1558,7 +1558,7 @@ const JournalScreen = () => {
                 </GoalContainer>
 
                 <GoalContainer style={styles.goalRow}>
-                <ReflectionContainer style={styles.goalRow}>
+                  <ReflectionContainer style={styles.goalRow}>
                     <TextField
                       type="text"
                       placeholder="Type my thoughts"
@@ -1640,7 +1640,7 @@ const JournalScreen = () => {
                         />
                       </Tooltip>
                     )}
-                  </td>                  
+                  </td>
                 </GoalContainer>
 
                 <GoalContainer>
