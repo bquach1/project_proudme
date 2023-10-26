@@ -529,16 +529,17 @@ app.post("/chatbot", (req, res) => {
           {
             role: "system",
             content:
-              "you will be provided a list of behavior/activity types, recommended goals, actual goals, actual values, percentage of actual goal achieved, percenatge of recommended goal achieved \
-        you have to provide feedback based on percentage of goal achieved \
-        If goal achieved is less than 50%, tell user to put extra effort and give them tips \
-        If goal achieved is more than 50%, encourage them to reach the goal and keep it up \
+              "you will be provided a list of behavior/activity types, recommended goals, actual goals, actual behavior values, percentage of actual goal achieved, percenatge of recommended goal achieved \
+        you have to provide feedback based on the actual behavior value achieved in comparison to the recommended value and actual goal value. \
+        If actual behavior is less than 50% of actual goal, tell user to put extra effort and give them tips \
+        If actual behavior is more than 50% of actual goal, encourage them to reach the goal and keep it up \
         If they meet their goal, congratulate them and give high five\
-        If their set goal is more than the recommended goal, praise them for setting goal more than recommended value \
+        If the goal value is more than the recommended value, praise them for setting goal more than recommended value \
         If the goal type is screentime, it is better if they do less than the specified goal/recommendation \
         so give feedback for the opposite case.\
-        If they achieve more than 120% of goal, They nailed it. \
-        Keep your feedback encouraging and limited to 50 words\
+        If the actual behavior value is more than 120% of goal, They nailed it, unless the goal type is screentime. \
+        Keep your feedback encouraging but limit the response to 50 words. \
+        If your feedback is longer than 50 words, just remove the last sentence. \
         Provide realistic feedback on how they can improve in the future\
         relevant to the goal type; for example, specific fruits/veggies to eat for eating, specific exercise methods for activity,\
         specific alternatives to laptops for screentime, specific sleep methods for sleep.\

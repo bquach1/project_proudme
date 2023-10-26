@@ -105,10 +105,10 @@ export const createChatbotRequest = (
       prompt: [
         {
           role: "system",
-          content: `Health goal: ${goal[0].goalType}, Recommended Goal value: ${
+          content: `Health goal type: ${goal[0].goalType}, Recommended value: ${
             goal[0].recommendedValue
-          }, Actual Goal: ${goal[0].goalValue}, ' \
-f'Actual value achieved: ${
+          }, Actual Goal Value: ${goal[0].goalValue}, ' \
+f'Actual behavior value achieved: ${
             goal[0].behaviorValue
           }, percentage of actual goal achieved: ${
             parseFloat(goal[0].behaviorValue).toFixed(2) /
