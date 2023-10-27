@@ -9,21 +9,9 @@ import { THEME_COLORS } from "constants";
 const Wrapper = styled.div`
   .title-container {
     position: absolute;
-    top: 55%;
-
-    @media (max-width: 1190px) {
-      top: 40%;
-    }
-
-    @media (max-width: 1000px) {
-      top: 30%;
-    }
-
-    @media (max-width: 480px) {
-      top: 20%;
-    }
-
-    right: 5%;
+    height: 100%;
+    width: 100%;
+    top: 30%;
     text-align: center;
     z-index: 2;
     color: #fff;
