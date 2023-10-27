@@ -188,8 +188,7 @@ app.post("/goals", async (req, res) => {
             reflection: req.body.reflection,
             date: req.body.date,
             dateToday: req.body.dateToday,
-            goalStatus:
-              req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
+            goalStatus: req.body.goalStatus,
             recommendedValue: req.body.recommendedValue,
           },
         },
@@ -209,7 +208,7 @@ app.post("/goals", async (req, res) => {
         reflection: req.body.reflection,
         date: req.body.date,
         dateToday: req.body.dateToday,
-        goalStatus: req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
+        goalStatus: req.body.goalStatus,
         recommendedValue: req.body.recommendedValue,
       });
       const savedGoal = await goal.save();
@@ -241,8 +240,7 @@ app.post("/behaviors", async (req, res) => {
             behaviorValue: req.body.behaviorValue,
             name: req.body.name,
             goalValue: req.body.goalValue,
-            goalStatus:
-              req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
+            goalStatus: req.body.goalStatus,
             divInfo1: req.body.divInfo1,
             divInfo2: req.body.divInfo2,
             reflection: req.body.reflection,
@@ -264,7 +262,7 @@ app.post("/behaviors", async (req, res) => {
         behaviorValue: req.body.behaviorValue,
         date: req.body.date,
         dateToday: req.body.dateToday,
-        goalStatus: req.body.behaviorValue >= req.body.goalValue ? "yes" : "no",
+        goalStatus: req.body.goalStatus,
         divInfo1: req.body.divInfo1,
         divInfo2: req.body.divInfo2,
         reflection: req.body.reflection,

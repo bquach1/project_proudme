@@ -17,6 +17,7 @@ import {
 import {
   getSaveButtonColor,
   createChatbotRequest,
+  updateBehaviorValue,
 } from "screens/journal/helpers/helpers";
 import ExpandableText from "screens/journal/components/ExpandableText";
 import { DATABASE_URL } from "constants";
@@ -26,6 +27,7 @@ const Wrapper = styled.div`
   height: 100vh;
   width: 90%;
   margin: auto;
+  font-family: Montserrat;
 
   .disabled-behavior:hover {
     border-radius: 5px;
@@ -436,255 +438,6 @@ const JournalScreen = () => {
     fetchScreentimeGoals();
   }, [user, loggedScreentimeToday]);
 
-  async function updateBehaviorValue(
-    id,
-    newGoalValue,
-    newBehaviorValue,
-    newReflection
-  ) {
-    if (id === 0) {
-      setActivityGoal((prevActivityGoal) => {
-        const updatedActivityGoal = prevActivityGoal.map((goal) => {
-          const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
-          axios
-            .post(`${DATABASE_URL}/goals`, {
-              user: user._id,
-              name: user.name,
-              goalType: "activity",
-              goalValue: +newGoalValue,
-              behaviorValue: newBehaviorValue,
-              goalStatus: activityData.length
-                ? newBehaviorValue >= activityData[0].goalValue
-                  ? "yes"
-                  : "no"
-                : newBehaviorValue >= activityGoal[0].goalValue
-                ? "yes"
-                : "no",
-              reflection: newReflection,
-              dateToday: new Date(),
-              recommendedValue: 60,
-            })
-            .then((response) => {
-              console.log(response.data);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-          axios
-            .post(`${DATABASE_URL}/behaviors`, {
-              user: user._id,
-              name: user.name,
-              goalType: "activity",
-              date: date,
-              dateToday: new Date(),
-              goalValue: +newGoalValue,
-              behaviorValue: newBehaviorValue,
-              goalStatus: activityData.length
-                ? newBehaviorValue >= activityData[0].goalValue
-                  ? "yes"
-                  : "no"
-                : newBehaviorValue >= activityGoal[0].goalValue
-                ? "yes"
-                : "no",
-              divInfo1: activityGoal[0].divInfo1,
-              divInfo2: activityGoal[0].divInfo2,
-              reflection: newReflection,
-              recommendedValue: 60,
-              feedback: activityGoal[0].feedback,
-            })
-            .then((response) => {
-              console.log(response.data);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-          return updatedGoal;
-        });
-        return updatedActivityGoal;
-      });
-    } else if (id === 1) {
-      setScreentimeGoal((prevScreentimeGoal) => {
-        const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
-          const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
-          axios
-            .post(`${DATABASE_URL}/goals`, {
-              user: user._id,
-              name: user.name,
-              goalType: "screentime",
-              goalValue: +newGoalValue,
-              behaviorValue: newBehaviorValue,
-              goalStatus: screentimeData.length
-                ? newBehaviorValue >= screentimeData[0].goalValue
-                  ? "yes"
-                  : "no"
-                : newBehaviorValue >= screentimeGoal[0].goalValue
-                ? "yes"
-                : "no",
-              reflection: newReflection,
-              dateToday: new Date(),
-              recommendedValue: 120,
-            })
-            .then((response) => {
-              console.log(response.data);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-          axios
-            .post(`${DATABASE_URL}/behaviors`, {
-              user: user._id,
-              name: user.name,
-              goalType: "screentime",
-              date: date,
-              dateToday: new Date(),
-              goalValue: +newGoalValue,
-              behaviorValue: newBehaviorValue,
-              goalStatus: screentimeData.length
-                ? newBehaviorValue >= screentimeData[0].goalValue
-                  ? "yes"
-                  : "no"
-                : newBehaviorValue >= screentimeGoal[0].goalValue
-                ? "yes"
-                : "no",
-              divInfo1: screentimeGoal[0].divInfo1,
-              divInfo2: screentimeGoal[0].divInfo2,
-              reflection: newReflection,
-              recommendedValue: 120,
-              feedback: screentimeGoal[0].feedback,
-            })
-            .then((response) => {
-              console.log(response.data);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-          return updatedGoal;
-        });
-        return updatedScreentimeGoal;
-      });
-    } else if (id === 2) {
-      setEatingGoal((prevEatingGoal) => {
-        const updatedEatingGoal = prevEatingGoal.map((goal) => {
-          const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
-          axios
-            .post(`${DATABASE_URL}/goals`, {
-              user: user._id,
-              name: user.name,
-              goalType: "eating",
-              goalValue: +newGoalValue,
-              behaviorValue: newBehaviorValue,
-              goalStatus: eatingData.length
-                ? newBehaviorValue >= eatingData[0].goalValue
-                  ? "yes"
-                  : "no"
-                : newBehaviorValue >= eatingGoal[0].goalValue
-                ? "yes"
-                : "no",
-              reflection: newReflection,
-              dateToday: new Date(),
-              recommendedValue: 5,
-            })
-            .then((response) => {
-              console.log(response.data);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-          axios
-            .post(`${DATABASE_URL}/behaviors`, {
-              user: user._id,
-              name: user.name,
-              goalType: "eating",
-              date: date,
-              dateToday: new Date(),
-              goalValue: +newGoalValue,
-              behaviorValue: newBehaviorValue,
-              goalStatus: eatingData.length
-                ? newBehaviorValue >= eatingData[0].goalValue
-                  ? "yes"
-                  : "no"
-                : newBehaviorValue >= eatingGoal[0].goalValue
-                ? "yes"
-                : "no",
-              divInfo1: eatingGoal[0].divInfo1,
-              divInfo2: eatingGoal[0].divInfo2,
-              reflection: newReflection,
-              recommendedValue: 5,
-              feedback: eatingGoal[0].feedback,
-            })
-            .then((response) => {
-              console.log(response.data);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-          return updatedGoal;
-        });
-        return updatedEatingGoal;
-      });
-    } else if (id === 3) {
-      setSleepGoal((prevSleepGoal) => {
-        const updatedSleepGoal = prevSleepGoal.map((goal) => {
-          const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
-          axios
-            .post(`${DATABASE_URL}/goals`, {
-              user: user._id,
-              name: user.name,
-              goalType: "sleep",
-              goalValue: +newGoalValue,
-              behaviorValue: newBehaviorValue,
-              goalStatus: sleepData.length
-                ? newBehaviorValue >= sleepData[0].goalValue
-                  ? "yes"
-                  : "no"
-                : newBehaviorValue >= sleepGoal[0].goalValue
-                ? "yes"
-                : "no",
-              reflection: newReflection,
-              dateToday: new Date(),
-              recommendedValue: 9,
-            })
-            .then((response) => {
-              console.log(response.data);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-          axios
-            .post(`${DATABASE_URL}/behaviors`, {
-              user: user._id,
-              name: user.name,
-              goalType: "sleep",
-              date: date,
-              dateToday: new Date(),
-              goalValue: +newGoalValue,
-              behaviorValue: newBehaviorValue,
-              goalStatus: sleepData.length
-                ? newBehaviorValue >= sleepData[0].goalValue
-                  ? "yes"
-                  : "no"
-                : newBehaviorValue >= sleepGoal[0].goalValue
-                ? "yes"
-                : "no",
-              divInfo1: sleepGoal[0].divInfo1,
-              divInfo2: sleepGoal[0].divInfo2,
-              reflection: newReflection,
-              recommendedValue: 9,
-              feedback: sleepGoal[0].feedback,
-            })
-            .then((response) => {
-              console.log(response.data);
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-          return updatedGoal;
-        });
-        return updatedSleepGoal;
-      });
-    }
-  }
-
   const activityDate = new Date(
     activityData.length && activityData[0].dateToday
   );
@@ -719,7 +472,7 @@ const JournalScreen = () => {
         <div
           style={{
             backgroundPosition: "center center",
-            backgroundSize: "cover" /* Adjust as needed */,
+            backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             borderRadius: 20,
             width: "82%",
@@ -1245,21 +998,6 @@ const JournalScreen = () => {
                 src={require("../../components/images/journal/new_left_page.png")}
                 alt="First left-side page"
               />
-              {/* <img
-                className="leftpage1"
-                src={require("../../components/images/journal/left_page.png")}
-                alt="First left-side page"
-              />
-              <img
-                className="leftpage2"
-                src={require("../../components/images/journal/left_page2.png")}
-                alt="Second left-side page"
-              />
-              <img
-                className="leftpage3"
-                src={require("../../components/images/journal/left_page3.png")}
-                alt="Third left-side page"
-              /> */}
             </div>
             <div className="rightPageWrapper">
               <img
@@ -1316,10 +1054,16 @@ const JournalScreen = () => {
                         }}
                         onClick={() => {
                           updateBehaviorValue(
-                            0,
+                            user,
                             activityGoal[0].goalValue,
                             activityGoal[0].behaviorValue,
-                            activityGoal[0].reflection
+                            activityGoal[0].reflection,
+                            setActivityGoal,
+                            activityGoal,
+                            activityData,
+                            "activity",
+                            date,
+                            60
                           );
                           setLoggedActivityToday(true);
                           setEditingBehaviorId(-1);
@@ -1410,10 +1154,16 @@ const JournalScreen = () => {
                         }}
                         onClick={() => {
                           updateBehaviorValue(
-                            1,
+                            user,
                             screentimeGoal[0].goalValue,
                             screentimeGoal[0].behaviorValue,
-                            screentimeGoal[0].reflection
+                            screentimeGoal[0].reflection,
+                            setScreentimeGoal,
+                            screentimeGoal,
+                            screentimeData,
+                            "screentime",
+                            date,
+                            120
                           );
                           setLoggedScreentimeToday(true);
                           setEditingBehaviorId(-1);
@@ -1505,10 +1255,16 @@ const JournalScreen = () => {
                         }}
                         onClick={() => {
                           updateBehaviorValue(
-                            2,
+                            user,
                             eatingGoal[0].goalValue,
                             eatingGoal[0].behaviorValue,
-                            eatingGoal[0].reflection
+                            eatingGoal[0].reflection,
+                            setEatingGoal,
+                            eatingGoal,
+                            eatingData,
+                            "eating",
+                            date,
+                            5
                           );
                           setLoggedEatingToday(true);
                           setEditingBehaviorId(-1);
@@ -1598,10 +1354,16 @@ const JournalScreen = () => {
                         }}
                         onClick={() => {
                           updateBehaviorValue(
-                            3,
+                            user,
                             sleepGoal[0].goalValue,
                             sleepGoal[0].behaviorValue,
-                            sleepGoal[0].reflection
+                            sleepGoal[0].reflection,
+                            setSleepGoal,
+                            sleepGoal,
+                            sleepData,
+                            "sleep",
+                            date,
+                            9
                           );
                           setLoggedSleepToday(true);
                           setEditingBehaviorId(-1);
@@ -1658,21 +1420,6 @@ const JournalScreen = () => {
                 src={require("../../components/images/journal/new_right_page.png")}
                 alt="First right-side page"
               />
-              {/* <img
-                className="rightpage1"
-                src={require("../../components/images/journal/left_page.png")}
-                alt="First right-side page"
-              />
-              <img
-                className="rightpage2"
-                src={require("../../components/images/journal/left_page2.png")}
-                alt="Second right-side page"
-              />
-              <img
-                className="rightpage3"
-                src={require("../../components/images/journal/left_page3.png")}
-                alt="Third right-side page"
-              /> */}
             </div>
           </div>
         </div>

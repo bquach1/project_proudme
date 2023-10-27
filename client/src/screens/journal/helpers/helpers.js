@@ -142,3 +142,92 @@ f'percentage of recommended goal achieved: ${
       setGoalResponseLoading(false);
     });
 };
+
+export async function updateBehaviorValue(
+  user,
+  newGoalValue,
+  newBehaviorValue,
+  newReflection,
+  setGoal,
+  currentGoal,
+  goalData,
+  goalType,
+  date,
+  recommendedValue
+) {
+  setGoal((prevGoal) => {
+    const updatedBehaviorGoal = prevGoal.map((goal) => {
+      const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
+      axios
+        .post(`${DATABASE_URL}/goals`, {
+          user: user._id,
+          name: user.name,
+          goalType: goalType,
+          goalValue: +newGoalValue,
+          behaviorValue: newBehaviorValue,
+          goalStatus: goalData.length
+            ? newBehaviorValue > goalData[0].goalValue &&
+              goalType === "screentime"
+              ? "no"
+              : newBehaviorValue >= goalData[0].goalValue &&
+                goalType !== "screentime"
+              ? "yes"
+              : "no"
+            : newBehaviorValue > currentGoal[0].goalValue &&
+              goalType === "screentime"
+            ? "no"
+            : newBehaviorValue >= currentGoal[0].goalValue &&
+              goalType !== "screentime"
+            ? "yes"
+            : "no",
+          reflection: newReflection,
+          dateToday: new Date(),
+          recommendedValue: recommendedValue,
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      axios
+        .post(`${DATABASE_URL}/behaviors`, {
+          user: user._id,
+          name: user.name,
+          goalType: goalType,
+          date: date,
+          dateToday: new Date(),
+          goalValue: +newGoalValue,
+          behaviorValue: newBehaviorValue,
+          goalStatus: goalData.length
+            ? newBehaviorValue > goalData[0].goalValue &&
+              goalType === "screentime"
+              ? "no"
+              : newBehaviorValue >= goalData[0].goalValue &&
+                goalType !== "screentime"
+              ? "yes"
+              : "no"
+            : newBehaviorValue > currentGoal[0].goalValue &&
+              goalType === "screentime"
+            ? "no"
+            : newBehaviorValue >= currentGoal[0].goalValue &&
+              goalType !== "screentime"
+            ? "yes"
+            : "no",
+          divInfo1: currentGoal[0].divInfo1,
+          divInfo2: currentGoal[0].divInfo2,
+          reflection: newReflection,
+          recommendedValue: recommendedValue,
+          feedback: currentGoal[0].feedback,
+        })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      return updatedGoal;
+    });
+    return updatedBehaviorGoal;
+  });
+}
