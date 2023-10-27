@@ -24,11 +24,11 @@ const Wrapper = styled.div`
     }
 
     right: 5%;
-    text-align: center; /* Center the text horizontally */
-    z-index: 2; /* Ensure the title is displayed above the images */
-    color: #fff; /* Text color */
-    font-size: 2em; /* Adjust the font size as needed */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add a text shadow (optional) */
+    text-align: center;
+    z-index: 2;
+    color: #fff;
+    font-size: 2em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   }
 `;
 
@@ -96,45 +96,7 @@ const HomeWrapper = styled.div`
   }
 `;
 
-const HomeScreen = (props) => {
-  const [user, setUser] = useState([]);
-  const [exactTime, setExactTime] = useState("");
-  const [currentTime, setCurrentTime] = useState("");
-
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    fetch(`${DATABASE_URL}/users`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => setUser(data))
-      .catch((error) => console.error(error));
-
-    setExactTime(date);
-  }, []);
-
-  useEffect(() => {
-    const timerID = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString());
-    }, 1000);
-
-    return () => {
-      clearInterval(timerID);
-    };
-  }, []);
-
-  var dateToday = new Date(),
-    date =
-      "Today's date is " +
-      (dateToday.getMonth() + 1) +
-      "/" +
-      dateToday.getDate() +
-      "/" +
-      dateToday.getFullYear() +
-      ".";
-
+const HomeScreen = () => {
   return (
     <Wrapper>
       <img
