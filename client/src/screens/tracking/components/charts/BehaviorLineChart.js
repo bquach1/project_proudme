@@ -14,6 +14,15 @@ import {
 import { CustomTooltip } from "screens/tracking/components/customAuxiliary/CustomTooltip";
 import { CustomLegend } from "screens/tracking/components/customAuxiliary/CustomLegend";
 
+import styled from "styled-components";
+
+const CurrentLineChart = styled(LineChart)`
+  .bold-label {
+    font-weight: bold;
+    font-size: 20px;
+  }
+`;
+
 const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
   const maxBehaviorVal =
     data &&
@@ -22,7 +31,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
     }, data.length && data[0].behaviorValue);
 
   return (
-    <LineChart
+    <CurrentLineChart
       width={1000}
       height={800}
       data={data}
@@ -30,22 +39,31 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
     >
       <CartesianGrid strokeDasharray="3 3" fill="white" />
 
-      <XAxis dataKey="date">
+      <XAxis dataKey="date" className="bold-label">
         <Label value="Date" position="bottom" />
       </XAxis>
 
       <YAxis
         domain={[
           0,
-          chartGoalType === "activity"
+          chartGoalType === "activity" && maxBehaviorVal < 60
+            ? 60
+            : chartGoalType === "activity"
             ? Math.min(600, maxBehaviorVal)
+            : chartGoalType === "screentime" && maxBehaviorVal < 120
+            ? 120
             : chartGoalType === "screentime"
             ? Math.min(960, maxBehaviorVal)
+            : chartGoalType === "eating" && maxBehaviorVal < 5
+            ? 5
             : chartGoalType === "eating"
             ? Math.min(20, maxBehaviorVal)
+            : chartGoalType === "sleep" && maxBehaviorVal < 9
+            ? 9
             : Math.min(15, maxBehaviorVal),
         ]}
         allowDataOverflow={true}
+        className="bold-label"
       >
         <Label
           value={
@@ -56,7 +74,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
               : "minutes/day"
           }
           position="insideLeft"
-          offset={-70}
+          dx={-75}
         />
       </YAxis>
 
@@ -118,7 +136,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
           activeDot={{ r: 6 }}
         />
       )}
-      <Legend wrapperStyle={{ paddingTop: 20 }} content={<CustomLegend />} />
+      <Legend wrapperStyle={{ paddingTop: 30 }} content={<CustomLegend />} />
       <ReferenceLine
         y={
           chartGoalType === "activity"
@@ -138,7 +156,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
         stroke="green"
         strokeWidth={2}
       />
-    </LineChart>
+    </CurrentLineChart>
   );
 };
 

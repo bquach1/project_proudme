@@ -23,7 +23,7 @@ import ExpandableText from "screens/journal/components/ExpandableText";
 import { DATABASE_URL } from "constants";
 
 const Wrapper = styled.div`
-  padding-bottom: 10%;
+  padding-bottom: 5%;
   height: 100vh;
   width: 90%;
   margin: auto;
@@ -89,8 +89,8 @@ const JournalWrapper = styled.table`
   }
 
   @media (max-width: 480px) {
-    width: 100%; /* Adjust the width as needed */
-    font-size: 12px; /* Adjust the font size as needed */
+    width: 100%;
+    font-size: 12px;
   }
 `;
 
@@ -471,9 +471,6 @@ const JournalScreen = () => {
       <JournalWrapper>
         <div
           style={{
-            backgroundPosition: "center center",
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
             borderRadius: 20,
             width: "82%",
             height: "105vh",
@@ -489,7 +486,7 @@ const JournalScreen = () => {
               margin: "0 auto",
               display: "flex",
               justifyContent: "center",
-              alignItems: "center",
+              // alignItems: "center",
               position: "absolute",
             }}
           >
