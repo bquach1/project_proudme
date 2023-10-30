@@ -62,7 +62,7 @@ mongoose
     console.log("Connected to MongoDB");
 
     // Define a cron job to run at midnight (00:00) every day
-    cron.schedule("0 0 * * *", async () => {
+    cron.schedule("0 5 * * *", async () => {
       try {
         const today = new Date();
         const formattedDate = today.toISOString().split("T")[0];
