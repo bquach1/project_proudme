@@ -32,10 +32,10 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
 
   return (
     <CurrentLineChart
-      width={1000}
-      height={800}
+      width={1350}
+      height={750}
       data={data}
-      margin={{ top: 55, right: 80, left: 70, bottom: 70 }}
+      margin={{ top: 30, right: 70, left: 70, bottom: 70 }}
     >
       <CartesianGrid strokeDasharray="3 3" fill="white" />
 
@@ -136,7 +136,13 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
           activeDot={{ r: 6 }}
         />
       )}
-      <Legend wrapperStyle={{ paddingTop: 30 }} content={<CustomLegend />} />
+      <Legend
+        layout="vertical"
+        align="right"
+        verticalAlign="middle"
+        wrapperStyle={{ paddingLeft: 20 }}
+        content={<CustomLegend />}
+      />
       <ReferenceLine
         y={
           chartGoalType === "activity"

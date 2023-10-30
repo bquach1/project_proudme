@@ -8,9 +8,8 @@ export const CustomLegend = () => {
         alignItems: "center",
         flexDirection: "column",
         backgroundColor: BEHAVIOR_COLORS.BACKGROUND_GRAY,
-        marginTop: "5%",
-        width: "40%",
-        margin: "0 auto",
+        width: "90%",
+        textAlign: "left",
         padding: 10,
         border: "1px solid black",
       }}

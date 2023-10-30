@@ -359,7 +359,7 @@ const TrackingScreen = () => {
         }}
       >
         {chartType === "line" ? (
-          <>
+          <div style={{width: "90%"}}>
             <h1>{shownUser.firstName}'s Physical Activity Behavior Data</h1>
             <BehaviorLineChart
               data={filteredActivityBehaviorData}
@@ -386,7 +386,7 @@ const TrackingScreen = () => {
               chartGoalType={"sleep"}
               lineChartView={lineChartView}
             />
-          </>
+          </div>
         ) : (
           <>
             <h1>{shownUser.firstName}'s Physical Activity Behavior Data</h1>

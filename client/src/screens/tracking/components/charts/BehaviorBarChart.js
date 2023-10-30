@@ -77,26 +77,7 @@ const BehaviorBarChart = ({ data, chartGoalType }) => {
           />
         ))}
       </Bar>
-      {/* <ReferenceLine
-          y={
-            chartGoalType === "activity"
-              ? 60
-              : chartGoalType === "screentime"
-              ? 120
-              : chartGoalType === "eating"
-              ? 5
-              : 9
-          }
-          label={{
-            value: "Recommended Level",
-            className: "tracking-reference",
-            fill: "black",
-            position: "top",
-          }}
-          stroke="green"
-          strokeWidth={2}
-        /> */}
-      <Legend wrapperStyle={{ paddingTop: 20 }} content={<CustomLegend />} />
+      <Legend wrapperStyle={{ left: 20 }} content={<CustomLegend />} />
     </BarChart>
   );
 };
