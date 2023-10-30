@@ -391,6 +391,7 @@ app.post("/user", async (req, res) => {
 app.get("/allUsers", async (req, res) => {
   try {
     const allUsers = await User.find();
+    console.log(allUsers);
     res.json(allUsers);
   } catch (error) {
     res.status(500).send("Internal server error");

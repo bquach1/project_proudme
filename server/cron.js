@@ -3,8 +3,59 @@ const express = require("express");
 const cron = require("node-cron");
 const mongoose = require("mongoose");
 const Behavior = require("./models/Behavior");
+const User = require("./models/User");
 
 const dbURI = process.env.REACT_APP_MONGODB_URI;
+
+const createDefaultBehaviorEntry = async (
+  user,
+  goalType,
+  formattedDate,
+  today
+) => {
+  const existingBehavior = await Behavior.findOne({
+    user,
+    goalType,
+    date: formattedDate,
+  });
+
+  if (!existingBehavior) {
+    const defaultBehavior = new Behavior({
+      user,
+      name: user.name,
+      goalType,
+      goalValue: 0,
+      behaviorValue: 0,
+      date: formattedDate,
+      dateToday: today,
+      goalStatus: "no",
+      divInfo1: "",
+      divInfo2: "",
+      reflection: "",
+      recommendedValue: getDefaultRecommendedValue(goalType),
+    });
+    await defaultBehavior.save();
+    console.log(
+      `Default ${goalType} entry created for ${user} on ${formattedDate}`
+    );
+  }
+};
+
+const getDefaultRecommendedValue = (goalType) => {
+  switch (goalType) {
+    case "activity":
+      return 60;
+    case "screentime":
+      return 120;
+    case "eating":
+      return 5;
+    case "sleep":
+      return 9;
+    default:
+      return 0;
+  }
+};
+
 mongoose
   .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
@@ -16,36 +67,28 @@ mongoose
         const today = new Date();
         const formattedDate = today.toISOString().split("T")[0];
 
-        // Fetch all existing users from your MongoDB collection
-        const existingUsers = await Behavior.distinct("user");
+        const existingUsers = await User.find();
 
-        // Iterate through each user and create/update the behavior entry
         for (const user of existingUsers) {
-          const existingBehavior = await Behavior.findOne({
-            user: user,
-            goalType: "your_goal_type", // Replace with the actual goal type
-            date: formattedDate,
-          });
-
-          if (!existingBehavior) {
-            // Entry does not exist, create a new one with default values
-            const behavior = new Behavior({
-              user: user,
-              name: "default_name", // Replace with the actual name
-              goalType: "your_goal_type", // Replace with the actual goal type
-              goalValue: 0, // Default goalValue set to 0
-              behaviorValue: 0, // Default behaviorValue set to 0
-              date: formattedDate,
-              dateToday: today,
-              goalStatus: "no", // Default goalStatus set to "no"
-              divInfo1: "", // Default divInfo1
-              divInfo2: "", // Default divInfo2
-              reflection: "", // Default reflection
-              recommendedValue: 0, // Default recommendedValue set to 0
-            });
-            await behavior.save();
-            console.log(`Default entry created for ${user} on ${formattedDate}`);
-          }
+          await createDefaultBehaviorEntry(
+            user,
+            "activity",
+            formattedDate,
+            today
+          );
+          await createDefaultBehaviorEntry(
+            user,
+            "screentime",
+            formattedDate,
+            today
+          );
+          await createDefaultBehaviorEntry(
+            user,
+            "eating",
+            formattedDate,
+            today
+          );
+          await createDefaultBehaviorEntry(user, "sleep", formattedDate, today);
         }
       } catch (err) {
         console.error(`Error creating default entries: ${err.message}`);

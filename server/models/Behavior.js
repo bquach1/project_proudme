@@ -45,3 +45,5 @@ const behaviorSchema = new mongoose.Schema({
 });
 
 const Behavior = mongoose.model("Behavior", behaviorSchema);
+
+module.exports = Behavior;
