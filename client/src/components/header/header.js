@@ -12,10 +12,12 @@ const Header = () => {
   return (
     <nav>
       <div className="left-nav">
-        <Button
-          onClick={() => navigate("/home")}
-        >
-          <img style={{width: 40}} src={require("components/images/white_proudme_logo.png")} alt="White mini ProudMe logo" />
+        <Button onClick={() => navigate("/home")}>
+          <img
+            style={{ width: 40 }}
+            src={require("components/images/white_proudme_logo.png")}
+            alt="White mini ProudMe logo"
+          />
         </Button>
         <Button
           style={{

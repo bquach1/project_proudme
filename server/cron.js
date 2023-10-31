@@ -61,11 +61,16 @@ mongoose
   .then(() => {
     console.log("Connected to MongoDB");
 
-    // Define a cron job to run at midnight (00:00) every day
-    cron.schedule("0 5 * * *", async () => {
+    const logBehaviors = async () => {
       try {
         const today = new Date();
-        const formattedDate = today.toISOString().split("T")[0];
+        const formattedDate =
+          today.getMonth() +
+          1 +
+          "/" +
+          today.getDate() +
+          "/" +
+          today.getFullYear();
 
         const existingUsers = await User.find();
 
@@ -93,7 +98,8 @@ mongoose
       } catch (err) {
         console.error(`Error creating default entries: ${err.message}`);
       }
-    });
+    };
+    logBehaviors();
   })
   .catch((err) => {
     console.error(`MongoDB connection error: ${err.message}`);
