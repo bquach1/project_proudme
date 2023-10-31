@@ -58,7 +58,7 @@ const getDefaultRecommendedValue = (goalType) => {
 
 mongoose
   .connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
+  .then(async () => {
     console.log("Connected to MongoDB");
 
     const logBehaviors = async () => {
@@ -99,7 +99,9 @@ mongoose
         console.error(`Error creating default entries: ${err.message}`);
       }
     };
-    logBehaviors();
+
+    await logBehaviors();
+    mongoose.connection.close();
   })
   .catch((err) => {
     console.error(`MongoDB connection error: ${err.message}`);
