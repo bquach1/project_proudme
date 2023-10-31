@@ -11,7 +11,9 @@ const createDefaultBehaviorEntry = async (
   user,
   goalType,
   formattedDate,
-  today
+  today,
+  divInfo1,
+  divInfo2
 ) => {
   const existingBehavior = await Behavior.findOne({
     user,
@@ -29,8 +31,8 @@ const createDefaultBehaviorEntry = async (
       date: formattedDate,
       dateToday: today,
       goalStatus: "no",
-      divInfo1: "",
-      divInfo2: "",
+      divInfo1: divInfo1,
+      divInfo2: divInfo2,
       reflection: "",
       recommendedValue: getDefaultRecommendedValue(goalType),
     });
@@ -74,26 +76,58 @@ mongoose
 
         const existingUsers = await User.find();
 
+        const activityDivInfo1 =
+          "Get at least 60 minutes of physical activity per day.";
+        const activityDivInfo2 =
+          "Do exercises like running or playing sports for at least an hour a day.";
+
+        const screentimeDivInfo1 = "Limit screentime to 2 hours a day.";
+        const screentimeDivInfo2 =
+          "Go outside instead of using tech like laptops, phones, and televisions.";
+
+        const eatingDivInfo1 =
+          "Eat 5 or more servings of fruits and/or vegetables.";
+        const eatingDivInfo2 =
+          "Reach target increments for servings of healthy foods.";
+
+        const sleepDivInfo1 = "Get at least 9 hours of sleep a night.";
+        const sleepDivInfo2 =
+          "Sleep at least 9-11 hours a night to feel the best and most productive.";
+
         for (const user of existingUsers) {
+          console.log(user);
           await createDefaultBehaviorEntry(
             user,
             "activity",
             formattedDate,
-            today
+            today,
+            activityDivInfo1,
+            activityDivInfo2
           );
           await createDefaultBehaviorEntry(
             user,
             "screentime",
             formattedDate,
-            today
+            today,
+            screentimeDivInfo1,
+            screentimeDivInfo2
           );
           await createDefaultBehaviorEntry(
             user,
             "eating",
             formattedDate,
-            today
+            today,
+            eatingDivInfo1,
+            eatingDivInfo2
           );
-          await createDefaultBehaviorEntry(user, "sleep", formattedDate, today);
+          await createDefaultBehaviorEntry(
+            user,
+            "sleep",
+            formattedDate,
+            today,
+            sleepDivInfo1,
+            sleepDivInfo2
+          );
         }
       } catch (err) {
         console.error(`Error creating default entries: ${err.message}`);
