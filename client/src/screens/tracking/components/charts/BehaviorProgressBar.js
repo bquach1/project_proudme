@@ -20,7 +20,7 @@ const BehaviorProgressBar = ({ data, chartGoalType }) => {
   const overallProgress = (totalBehaviorValue / totalRecommendedValue) * 100;
 
   return (
-    <ProgressBox sx={{ width: "80%" }} position="relative">
+    <ProgressBox sx={{ width: "80%", marginBottom: "1%" }} position="relative">
       <ProgressBar
         style={{
           display: "flex",
@@ -88,6 +88,10 @@ const BehaviorProgressBar = ({ data, chartGoalType }) => {
           <div style={{ width: "10%", position: "absolute", right: 0 }}>
             {+parseFloat(totalBehaviorValue).toFixed(2)} /{" "}
             {totalRecommendedValue}
+          </div>
+          <div style={{ width: "20%", position: "absolute", left: 0 }}>
+            Number of Days Logged:&nbsp;
+            {data.length}
           </div>
         </div>
       </ProgressBar>
