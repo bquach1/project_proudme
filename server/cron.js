@@ -1,6 +1,4 @@
 require("dotenv").config({ path: "../.env" });
-const express = require("express");
-const cron = require("node-cron");
 const mongoose = require("mongoose");
 const Behavior = require("./models/Behavior");
 const User = require("./models/User");
