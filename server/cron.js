@@ -1,7 +1,10 @@
 require("dotenv").config({ path: "../.env" });
+const moment = require("moment-timezone");
 const mongoose = require("mongoose");
 const Behavior = require("./models/Behavior");
 const User = require("./models/User");
+
+const cstTimeZone = "America/Chicago";
 
 const dbURI = process.env.REACT_APP_MONGODB_URI;
 
@@ -63,14 +66,9 @@ mongoose
 
     const logBehaviors = async () => {
       try {
+        const currentDateInCST = moment.tz(cstTimeZone);
         const today = new Date();
-        const formattedDate =
-          today.getMonth() +
-          1 +
-          "/" +
-          today.getDate() +
-          "/" +
-          today.getFullYear();
+        const formattedDate = currentDateInCST.format("MM/D/YYYY");
 
         const existingUsers = await User.find();
 
