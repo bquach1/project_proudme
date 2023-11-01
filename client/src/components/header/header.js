@@ -70,6 +70,20 @@ const Header = () => {
             fontWeight: "bold",
             textTransform: "none",
             fontSize: "16px",
+          }}
+          onClick={() => navigate("/lunchroom")}
+        >
+          ProudME Lunchroom
+        </Button>
+        <Button
+          style={{
+            backgroundColor: "transparent",
+            padding: "5px 15px 5px 15px",
+            borderRadius: "25px",
+            color: "white",
+            fontWeight: "bold",
+            textTransform: "none",
+            fontSize: "16px",
             opacity: 0.4,
           }}
           onClick={() => navigate("/pet")}

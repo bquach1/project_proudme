@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "css/home.css";
 import styled from "styled-components";
 
 import withAuth from "components/auth/withAuth";
-import { DATABASE_URL } from "constants";
 import { THEME_COLORS } from "constants";
 
 const Wrapper = styled.div`
@@ -135,7 +134,7 @@ const HomeScreen = () => {
               </strong>
               <ul>
                 <li>
-                  SMART Goal-Setting refers to setting goals that are smart,
+                  SMART Goal-Setting refers to setting goals that are specific,
                   measurable, attainable, realistic, and timely.{" "}
                 </li>
                 <li>

@@ -360,7 +360,7 @@ const TrackingScreen = () => {
       >
         {chartType === "line" ? (
           <div style={{width: "90%"}}>
-            <h1>{shownUser.firstName}'s Physical Activity Behavior Data</h1>
+            <h1 style={{marginTop: "1%"}}>{shownUser.firstName}'s Physical Activity Behavior Data</h1>
             <BehaviorLineChart
               data={filteredActivityBehaviorData}
               chartGoalType={"activity"}

@@ -11,6 +11,7 @@ import PetScreen from "screens/pet/pet.js";
 import PEScreen from "screens/pe/pe.js";
 import TrackingScreen from "screens/tracking/tracking";
 import RecoveryScreen from "screens/account/recovery";
+import LunchScreen from "screens/lunch/lunch";
 
 import Header from "components/header/header";
 
@@ -35,6 +36,7 @@ function App() {
         <Route path="/pet" element={<PetScreen />} />
         <Route path="/pe" element={<PEScreen />} />
         <Route path="/tracking" element={<TrackingScreen />} />
+        <Route path="/lunchroom" element={<LunchScreen />} />
       </Routes>
     </div>
   );
