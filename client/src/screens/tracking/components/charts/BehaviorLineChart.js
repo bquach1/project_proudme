@@ -37,7 +37,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
         width={1350}
         height={750}
         data={data}
-        margin={{ top: 30, right: 70, left: 70, bottom: 70 }}
+        margin={{ top: 30, right: 120, left: 120, bottom: 70 }}
       >
         <CartesianGrid strokeDasharray="3 3" fill="white" />
 
@@ -77,6 +77,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
             }
             position="left"
             dx={5}
+            className="custom-label"
           />
         </YAxis>
 
