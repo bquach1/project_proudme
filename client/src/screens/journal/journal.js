@@ -1077,7 +1077,7 @@ const JournalScreen = () => {
                       </Button>
                     </Tooltip>
                   </ReflectionContainer>
-                  <td style={{ width: "50%" }}>
+                  <td style={{ width: "50%", maxHeight: 101 }}>
                     {activityResponseLoading ? (
                       <CircularProgress />
                     ) : !activityGoal[0].feedback ? (
@@ -1177,7 +1177,7 @@ const JournalScreen = () => {
                       </Button>
                     </Tooltip>
                   </ReflectionContainer>
-                  <td style={{ width: "50%" }}>
+                  <td style={{ width: "50%", maxHeight: 101 }}>
                     {screentimeResponseLoading ? (
                       <CircularProgress />
                     ) : !screentimeGoal[0].feedback ? (
@@ -1278,7 +1278,7 @@ const JournalScreen = () => {
                       </Button>
                     </Tooltip>
                   </ReflectionContainer>
-                  <td style={{ width: "50%" }}>
+                  <td style={{ width: "50%", maxHeight: 101 }}>
                     {eatingResponseLoading ? (
                       <CircularProgress />
                     ) : !eatingGoal[0].feedback ? (
@@ -1377,7 +1377,7 @@ const JournalScreen = () => {
                       </Button>
                     </Tooltip>
                   </ReflectionContainer>
-                  <td style={{ width: "50%" }}>
+                  <td style={{ width: "50%", maxHeight: 101 }}>
                     {sleepResponseLoading ? (
                       <CircularProgress />
                     ) : !sleepGoal[0].feedback ? (

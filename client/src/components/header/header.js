@@ -71,9 +71,9 @@ const Header = () => {
             textTransform: "none",
             fontSize: "16px",
           }}
-          onClick={() => navigate("/lunchroom")}
+          onClick={() => navigate("/cafeteria")}
         >
-          ProudME Lunchroom
+          ProudME Cafeteria
         </Button>
         <Button
           style={{

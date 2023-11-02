@@ -1,6 +1,6 @@
 import React from "react";
 
-const LunchScreen = () => {
+const CafeteriaScreen = () => {
   return (
     <div style={{ fontWeight: "bold" }}>
       <h1>Coming soon!</h1>
@@ -8,4 +8,4 @@ const LunchScreen = () => {
   );
 };
 
-export default LunchScreen;
+export default CafeteriaScreen;

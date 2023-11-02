@@ -7,6 +7,7 @@ import styled from "styled-components";
 const ExpandableTextWrapper = styled.div`
   .expand-icon {
     width: 80%;
+    height: 20px;
     border-radius: 5px;
     cursor: pointer;
   }
@@ -15,6 +16,8 @@ const ExpandableTextWrapper = styled.div`
     transition: background 0.4s;
     background-color: #ccc;
   }
+  
+  max-height: 100px;
 `;
 
 function ExpandableText({ text, maxLines }) {
@@ -25,8 +28,8 @@ function ExpandableText({ text, maxLines }) {
   };
 
   const textStyles = {
-    maxHeight: isExpanded ? "none" : `${maxLines * 1.2}em`, // Adjust line height as needed
-    overflow: "hidden",
+    maxHeight: isExpanded ? "none" : `${maxLines * 1.2}em`,
+    overflow: "clip",
   };
 
   return (
@@ -54,6 +57,6 @@ const styles = {
     color: "#000080",
     padding: 5,
     overflowY: "scroll",
-    maxHeight: 80,
+    maxHeight: 101,
   },
 };
