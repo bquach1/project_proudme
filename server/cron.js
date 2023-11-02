@@ -67,8 +67,10 @@ mongoose
     const logBehaviors = async () => {
       try {
         const currentDateInCST = moment.tz(cstTimeZone);
-        const today = new Date();
-        const formattedDate = currentDateInCST.format("MM/D/YYYY");
+        const previousDayInCST = currentDateInCST.clone().subtract(1, "days");
+        const formattedDate = previousDayInCST.format("MM/D/YYYY");
+
+        const today = new Date(formattedDate);
 
         const existingUsers = await User.find();
 
