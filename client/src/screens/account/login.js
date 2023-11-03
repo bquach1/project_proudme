@@ -21,6 +21,9 @@ const FormWrapper = styled.div`
   position: absolute;
   right: 0;
   font-family: Roboto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const SuccessWrapper = styled.div`
@@ -83,7 +86,8 @@ const LoginScreen = () => {
       });
   };
 
-  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   const renderForm = (
     <PageWrapper>
@@ -117,18 +121,23 @@ const LoginScreen = () => {
         <img
           src={require("../../components/images/login/proudme_logo.png")}
           alt="ProudME official Logo"
-          style={{ width: "50%" }}
+          style={{ width: isTablet ? "30%" : "50%", margin: "0 auto" }}
         />
         <img
           src={require("../../components/images/login/logo.png")}
           alt="ProudME mini official Logo"
-          style={{ position: "absolute", width: isTabletOrMobile ? 20 : 40, top: isTabletOrMobile ? 10 : 20, right: isTabletOrMobile ? 10 : 20 }}
+          style={{
+            position: "absolute",
+            width: isMobile ? 20 : 40,
+            top: isMobile ? 10 : 20,
+            right: isMobile ? 10 : 20,
+          }}
         />
         <div
           style={{
             fontFamily: "Montserrat",
-            fontSize: isTabletOrMobile ? 20 : 46,
-            width: isTabletOrMobile ? "50%" : "70%",
+            fontSize: isMobile ? 20 : isTablet ? 32 : 46,
+            width: isMobile ? "50%" : "70%",
             margin: "0 auto",
             textAlign: "left",
             marginTop: "1%",
@@ -139,7 +148,7 @@ const LoginScreen = () => {
         <form onSubmit={handleSubmit}>
           <div className="input-container">
             <label
-              style={{ width: "100%", fontSize: isTabletOrMobile ? 16 : 20 }}
+              style={{ width: "100%", fontSize: isMobile ? 16 : 20 }}
             >
               Email or Username:{" "}
             </label>
@@ -148,13 +157,13 @@ const LoginScreen = () => {
               onChange={(e) => setEmail(e.target.value)}
               name="emailInput"
               className="login-input"
-              style={{width: isTabletOrMobile ? "80%" : "100%"}}
+              style={{ width: isMobile ? "80%" : "100%", height: isMobile || isTablet ? 20 : "auto" }}
               required
             />
           </div>
           <div className="input-container">
             <label
-              style={{ width: "100%", fontSize: isTabletOrMobile ? 16 : 20 }}
+              style={{ width: "100%", fontSize: isMobile ? 16 : 20 }}
             >
               Password:{" "}
             </label>
@@ -163,7 +172,7 @@ const LoginScreen = () => {
               onChange={(e) => setPassword(e.target.value)}
               name="passwordInput"
               className="login-input"
-              style={{width: isTabletOrMobile ? "80%" : "100%"}}
+              style={{ width: isMobile ? "80%" : "100%", height: isMobile || isTablet ? 20 : "auto" }}
               required
             />
           </div>
@@ -190,9 +199,9 @@ const LoginScreen = () => {
                   borderRadius: "25px",
                   textTransform: "none",
                   marginTop: "2%",
-                  height: isTabletOrMobile ? 50 : 60,
+                  height: isMobile ? 50 : 60,
                   width: "40%",
-                  fontSize: isTabletOrMobile ? 15 : 25,
+                  fontSize: isMobile ? 15 : isTablet ? 20 : 25,
                   fontWeight: 500,
                   margin: "auto",
                 }}
@@ -202,9 +211,19 @@ const LoginScreen = () => {
               </Button>
             )}
           </div>
-          <div className="registration">
+          <div
+            className="registration"
+            style={{ width: "90%", margin: "0 auto" }}
+          >
             <div className="registration-link">
-              <h2 style={{ display: "flex", justifyContent: "center", flexDirection: isTabletOrMobile ? "column" : "row", fontSize: isTabletOrMobile ? 20 : 24 }}>
+              <h2
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: isMobile || isTablet ? "column" : "row",
+                  fontSize: isMobile || isTablet ? 20 : 24,
+                }}
+              >
                 Forgot your
                 <div
                   className="nav-select"
@@ -215,7 +234,14 @@ const LoginScreen = () => {
               </h2>
             </div>
             <div className="registration-link">
-              <h2 style={{ display: "flex", justifyContent: "center", flexDirection: isTabletOrMobile ? "column" : "row", fontSize: isTabletOrMobile ? 20 : 24 }}>
+              <h2
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: isMobile || isTablet ? "column" : "row",
+                  fontSize: isMobile|| isTablet ? 20 : 24,
+                }}
+              >
                 Don't have an account?{" "}
                 <div className="nav-select" onClick={() => navigate("/signup")}>
                   &nbsp;Register Here!
