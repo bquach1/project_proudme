@@ -6,6 +6,13 @@ import styled from "styled-components";
 
 import "css/login.css";
 import { DATABASE_URL, THEME_COLORS } from "constants";
+import { useMediaQuery } from "react-responsive";
+
+const PageWrapper = styled.div`
+  @media (max-width: 600px) {
+    font-size: 20px;
+  }
+`;
 
 const FormWrapper = styled.div`
   background-color: white;
@@ -76,14 +83,17 @@ const LoginScreen = () => {
       });
   };
 
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 800px)" });
+
   const renderForm = (
-    <>
+    <PageWrapper>
       <div>
         <img
           src={require("../../components/images/login/schoolkids.png")}
           alt="Jumping schoolkids"
           style={{
             width: "50%",
+            minWidth: 300,
             height: "100%",
             position: "absolute",
             left: 0,
@@ -112,13 +122,13 @@ const LoginScreen = () => {
         <img
           src={require("../../components/images/login/logo.png")}
           alt="ProudME mini official Logo"
-          style={{ position: "absolute", top: 20, right: 20 }}
+          style={{ position: "absolute", width: isTabletOrMobile ? 20 : 40, top: isTabletOrMobile ? 10 : 20, right: isTabletOrMobile ? 10 : 20 }}
         />
         <div
           style={{
             fontFamily: "Montserrat",
-            fontSize: 46,
-            width: "70%",
+            fontSize: isTabletOrMobile ? 20 : 46,
+            width: isTabletOrMobile ? "50%" : "70%",
             margin: "0 auto",
             textAlign: "left",
             marginTop: "1%",
@@ -128,22 +138,32 @@ const LoginScreen = () => {
         </div>
         <form onSubmit={handleSubmit}>
           <div className="input-container">
-            <label>Email or Username: </label>
+            <label
+              style={{ width: "100%", fontSize: isTabletOrMobile ? 16 : 20 }}
+            >
+              Email or Username:{" "}
+            </label>
             <input
               type="text"
               onChange={(e) => setEmail(e.target.value)}
               name="emailInput"
               className="login-input"
+              style={{width: isTabletOrMobile ? "80%" : "100%"}}
               required
             />
           </div>
           <div className="input-container">
-            <label>Password: </label>
+            <label
+              style={{ width: "100%", fontSize: isTabletOrMobile ? 16 : 20 }}
+            >
+              Password:{" "}
+            </label>
             <input
               type="password"
               onChange={(e) => setPassword(e.target.value)}
               name="passwordInput"
               className="login-input"
+              style={{width: isTabletOrMobile ? "80%" : "100%"}}
               required
             />
           </div>
@@ -170,9 +190,9 @@ const LoginScreen = () => {
                   borderRadius: "25px",
                   textTransform: "none",
                   marginTop: "2%",
-                  height: "60px",
+                  height: isTabletOrMobile ? 50 : 60,
                   width: "40%",
-                  fontSize: "25px",
+                  fontSize: isTabletOrMobile ? 15 : 25,
                   fontWeight: 500,
                   margin: "auto",
                 }}
@@ -184,30 +204,28 @@ const LoginScreen = () => {
           </div>
           <div className="registration">
             <div className="registration-link">
-              <h2 style={{ display: "flex", justifyContent: "center" }}>
+              <h2 style={{ display: "flex", justifyContent: "center", flexDirection: isTabletOrMobile ? "column" : "row", fontSize: isTabletOrMobile ? 20 : 24 }}>
                 Forgot your
                 <div
                   className="nav-select"
                   onClick={() => navigate("/recovery")}
                 >
-                  &nbsp;Username or Password
+                  &nbsp;Username or Password?
                 </div>
-                ?
               </h2>
             </div>
             <div className="registration-link">
-              <h2 style={{ display: "flex", justifyContent: "center" }}>
+              <h2 style={{ display: "flex", justifyContent: "center", flexDirection: isTabletOrMobile ? "column" : "row", fontSize: isTabletOrMobile ? 20 : 24 }}>
                 Don't have an account?{" "}
                 <div className="nav-select" onClick={() => navigate("/signup")}>
-                  &nbsp;Register Here
+                  &nbsp;Register Here!
                 </div>
-                !
               </h2>
             </div>
           </div>
         </form>
       </FormWrapper>
-    </>
+    </PageWrapper>
   );
 
   function successfulLogin() {
