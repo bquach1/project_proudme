@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import withAuth from "components/auth/withAuth";
 import { THEME_COLORS } from "constants";
+import { useMediaQuery } from "react-responsive";
 
 const Wrapper = styled.div`
   .title-container {
@@ -84,6 +85,9 @@ const HomeWrapper = styled.div`
 `;
 
 const HomeScreen = () => {
+  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
+
   return (
     <Wrapper>
       <img
@@ -105,8 +109,13 @@ const HomeScreen = () => {
           opacity: 0.9,
         }}
       />
-      <div className="title-container">
-        <h1>Welcome to ProudME!</h1>
+      <div
+        className="title-container"
+        style={{ top: isMobile || isTablet ? "12.5%" : "30%" }}
+      >
+        <h1 style={{ fontSize: isMobile ? 32 : isTablet ? 48 : 64 }}>
+          Welcome to ProudME!
+        </h1>
       </div>
       <HomeWrapper>
         <div className="home"></div>

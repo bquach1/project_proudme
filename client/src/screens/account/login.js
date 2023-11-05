@@ -147,9 +147,7 @@ const LoginScreen = () => {
         </div>
         <form onSubmit={handleSubmit}>
           <div className="input-container">
-            <label
-              style={{ width: "100%", fontSize: isMobile ? 16 : 20 }}
-            >
+            <label style={{ width: "100%", fontSize: isMobile ? 16 : 20 }}>
               Email or Username:{" "}
             </label>
             <input
@@ -157,14 +155,15 @@ const LoginScreen = () => {
               onChange={(e) => setEmail(e.target.value)}
               name="emailInput"
               className="login-input"
-              style={{ width: isMobile ? "80%" : "100%", height: isMobile || isTablet ? 20 : "auto" }}
+              style={{
+                width: isMobile ? "80%" : "100%",
+                height: isMobile || isTablet ? 20 : 40,
+              }}
               required
             />
           </div>
           <div className="input-container">
-            <label
-              style={{ width: "100%", fontSize: isMobile ? 16 : 20 }}
-            >
+            <label style={{ width: "100%", fontSize: isMobile ? 16 : 20 }}>
               Password:{" "}
             </label>
             <input
@@ -172,7 +171,10 @@ const LoginScreen = () => {
               onChange={(e) => setPassword(e.target.value)}
               name="passwordInput"
               className="login-input"
-              style={{ width: isMobile ? "80%" : "100%", height: isMobile || isTablet ? 20 : "auto" }}
+              style={{
+                width: isMobile ? "80%" : "100%",
+                height: isMobile || isTablet ? 20 : 40,
+              }}
               required
             />
           </div>
@@ -221,7 +223,7 @@ const LoginScreen = () => {
                   display: "flex",
                   justifyContent: "center",
                   flexDirection: isMobile || isTablet ? "column" : "row",
-                  fontSize: isMobile || isTablet ? 20 : 24,
+                  fontSize: isMobile || isTablet ? 22 : 28,
                 }}
               >
                 Forgot your
@@ -239,7 +241,7 @@ const LoginScreen = () => {
                   display: "flex",
                   justifyContent: "center",
                   flexDirection: isMobile || isTablet ? "column" : "row",
-                  fontSize: isMobile|| isTablet ? 20 : 24,
+                  fontSize: isMobile || isTablet ? 22 : 28,
                 }}
               >
                 Don't have an account?{" "}
@@ -262,7 +264,7 @@ const LoginScreen = () => {
       <SuccessWrapper className="success-login">
         <span>User successfully logged in!</span>
         <span>Loading Page</span>
-        <div class="loading-dots">
+        <div className="loading-dots">
           <span></span>
           <span></span>
           <span></span>

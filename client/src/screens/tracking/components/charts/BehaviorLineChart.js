@@ -10,7 +10,7 @@ import {
   Legend,
   ReferenceLine,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts';
 
 import { CustomTooltip } from "screens/tracking/components/customAuxiliary/CustomTooltip";
 import { CustomLegend } from "screens/tracking/components/customAuxiliary/CustomLegend";
@@ -66,6 +66,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
           ]}
           allowDataOverflow={true}
           className="bold-label"
+          tickFormatter={(value) => (value % 1 !== 0 ? value.toFixed(2) : value)}
         >
           <Label
             value={
@@ -85,6 +86,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
         <Line
           type="linear"
           dataKey="goalValue"
+          connectNulls={true}
           stroke="#A7C7E7"
           strokeWidth={5}
           activeDot={{ r: 6 }}
@@ -134,6 +136,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
           <Line
             type="linear"
             dataKey="behaviorValue"
+            connectNulls={true}
             stroke={`url(#colorUv${chartGoalType})`}
             strokeWidth={5}
             activeDot={{ r: 6 }}

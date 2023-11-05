@@ -12,7 +12,7 @@ export const CustomTooltip = ({ active, payload, label }) => {
       >
         <p className="label">{`${label}`}</p>
         {payload.map((pld, index) => (
-          <div key={index}>
+          <div key={`pld-${index}`}>
             {pld.dataKey === "goalValue" ? (
               <div
                 id={`goal-${index}`}
@@ -32,7 +32,7 @@ export const CustomTooltip = ({ active, payload, label }) => {
         ))}
         {payload.map((pld, index) =>
           index === 0 ? (
-            <div style={{ color: "green" }}>
+            <div key={`pld-${index}`} style={{ color: "green" }}>
               Recommended Value: {pld.payload.recommendedValue}
             </div>
           ) : null
