@@ -17,6 +17,7 @@ import styled from "styled-components";
 
 import "css/signup.css";
 import { DATABASE_URL } from "constants";
+import { useMediaQuery } from "react-responsive";
 
 const FormWrapper = styled.div`
   background-color: white;
@@ -26,6 +27,9 @@ const FormWrapper = styled.div`
   top: 0;
   font-family: Roboto;
   height: 140vh;
+
+  flex-wrap: wrap;
+  overflow: auto;
 `;
 
 const generateVerificationCode = () => {
@@ -42,6 +46,9 @@ const generateVerificationCode = () => {
 
 const SignUpScreen = () => {
   const navigate = useNavigate();
+
+  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
@@ -186,7 +193,7 @@ const SignUpScreen = () => {
         src={require("../../components/images/login/schoolkids.png")}
         alt="Jumping schoolkids"
         style={{
-          width: "auto",
+          width: "50%",
           height: "140vh",
           objectFit: "cover",
           position: "absolute",
@@ -198,7 +205,7 @@ const SignUpScreen = () => {
         src={require("../../components/images/login/purple_background.png")}
         alt="Purple vector background"
         style={{
-          width: "auto",
+          width: "50%",
           height: "140vh",
           objectFit: "cover",
           position: "absolute",
@@ -219,12 +226,12 @@ const SignUpScreen = () => {
           <img
             src={require("../../components/images/login/logo.png")}
             alt="ProudME mini official Logo"
-            style={{ position: "absolute", top: 20, right: 20 }}
+            style={{ position: "absolute", top: isMobile ? 10 : 20, right: isMobile ? 10 : 20, width: isMobile ? 20 : 40 }}
           />
           <div
             style={{
               fontFamily: "Montserrat",
-              fontSize: 38,
+              fontSize: isMobile ? 24 : 38,
               width: "70%",
               margin: "0 auto",
               textAlign: "left",
@@ -233,7 +240,7 @@ const SignUpScreen = () => {
           >
             Thank you for joining ProudME!
           </div>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", margin: "0 auto", width: "100%"}}>
             <div className="input-container">
               <label>Username: </label>
               <input
@@ -461,31 +468,36 @@ const SignUpScreen = () => {
                 </FormGroup>
               </div>
             </div>
-              <Tooltip 
-              title={registrationError ? "Please fix errors in your information before continuing!" : ""}>
-            <div className="button-container">
-              <Button
-                style={{
-                  backgroundColor: "#3C3293",
-                  color: "white",
-                  padding: "10px 50px 10px 50px",
-                  borderRadius: "20px",
-                  textTransform: "none",
-                  marginTop: "3%",
-                  margin: "auto",
-                  height: "60px",
-                  width: "25%",
-                  fontSize: "25px",
-                  opacity: (registrationError) && 0.4
-                }}
-                type="submit"
-                disabled={(registrationError) && true}
-                value="Register user"
-              >
-                Register
-              </Button>
-            </div>
-              </Tooltip>
+            <Tooltip
+              title={
+                registrationError
+                  ? "Please fix errors in your information before continuing!"
+                  : ""
+              }
+            >
+              <div className="button-container">
+                <Button
+                  style={{
+                    backgroundColor: "#3C3293",
+                    color: "white",
+                    padding: "10px 50px 10px 50px",
+                    borderRadius: "20px",
+                    textTransform: "none",
+                    marginTop: "3%",
+                    margin: "auto",
+                    height: "60px",
+                    width: "25%",
+                    fontSize: "25px",
+                    opacity: registrationError && 0.4,
+                  }}
+                  type="submit"
+                  disabled={registrationError && true}
+                  value="Register user"
+                >
+                  Register
+                </Button>
+              </div>
+            </Tooltip>
           </form>
           {confirming && (
             <div style={{ marginTop: "2%" }}>

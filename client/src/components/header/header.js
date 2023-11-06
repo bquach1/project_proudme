@@ -12,7 +12,9 @@ const LeftNav = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-`
+  flex-wrap: wrap;
+  overflow: auto;
+`;
 
 const buttonStyles = (mediaType) => {
   return {
@@ -39,14 +41,14 @@ const Header = () => {
 
   return (
     <nav>
+      <Button onClick={() => navigate("/home")} style={{marginLeft: "1%"}}>
+        <img
+          style={{ width: isMobile ? 20 : 40 }}
+          src={require("components/images/white_proudme_logo.png")}
+          alt="White mini ProudMe logo"
+        />
+      </Button>
       <LeftNav>
-        <Button onClick={() => navigate("/home")}>
-          <img
-            style={{ width: isMobile ? 20 : 40 }}
-            src={require("components/images/white_proudme_logo.png")}
-            alt="White mini ProudMe logo"
-          />
-        </Button>
         <Button
           style={
             isMobile

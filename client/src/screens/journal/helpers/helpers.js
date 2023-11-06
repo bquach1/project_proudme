@@ -32,24 +32,47 @@ export const createChatbotRequest = (
   setGoalResponseLoading
 ) => {
   setGoalResponseLoading(true);
+  console.log(goal);
   axios
     .post(`${DATABASE_URL}/chatbot`, {
       prompt: [
         {
           role: "system",
-          content: `Health goal type: ${goal[0].goalType}, Recommended value: ${
-            goal[0].recommendedValue
-          }, Actual Goal Value: ${goal[0].goalValue}, ' \
+          content:
+            goal[0].goalType === "screentime" &&
+            goal[0].behaviorValue > goal[0].goalValue
+              ? "category1"
+              : goal[0].goalType === "screentime" &&
+                goal[0].behaviorValue > goal[0].goalValue
+              ? "category2"
+              : goal[0].goalType === "screentime" &&
+                goal[0].behaviorValue <= goal[0].goalValue &&
+                goal[0].behaviorValue > goal[0].recommendedValue
+              ? "category3"
+              : goal[0].goalType === "screentime" &&
+                goal[0].behaviorValue <= goal[0].goalValue &&
+                goal[0].behaviorValue * 2 >= goal[0].goalValue &&
+                goal[0].goalValue <= goal[0].recommendedValue
+              ? "category4"
+              : goal[0].goalType === "screentime" &&
+                goal[0].behaviorValue * 2 <= goal[0].goalValue &&
+                goal[0].goalValue <= goal[0].recommendedValue
+              ? "category5"
+              : goal[0].goalType === "screentime"
+              ? "category6"
+              : `Health goal type: ${goal[0].goalType}, Recommended value: ${
+                  goal[0].recommendedValue
+                }, Actual Goal Value: ${goal[0].goalValue}, ' \
 f'Actual behavior value achieved: ${
-            goal[0].behaviorValue
-          }, percentage of actual goal achieved: ${
-            parseFloat(goal[0].behaviorValue).toFixed(2) /
-            parseFloat(goal[0].goalValue).toFixed(2)
-          }, ' \
+                  goal[0].behaviorValue
+                }, percentage of actual goal achieved: ${
+                  parseFloat(goal[0].behaviorValue).toFixed(2) /
+                  parseFloat(goal[0].goalValue).toFixed(2)
+                }, ' \
 f'percentage of recommended goal achieved: ${
-            parseFloat(goal[0].behaviorValue).toFixed(2) /
-            parseFloat(goal[0].recommendedValue).toFixed(2)
-          }, Reflection: ${goal[0].reflection}.`,
+                  parseFloat(goal[0].behaviorValue).toFixed(2) /
+                  parseFloat(goal[0].recommendedValue).toFixed(2)
+                }, Reflection: ${goal[0].reflection}.`,
         },
       ],
     })

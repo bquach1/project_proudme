@@ -27,7 +27,6 @@ const FormWrapper = styled.div`
 `;
 
 const SuccessWrapper = styled.div`
-
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -229,7 +228,7 @@ const LoginScreen = () => {
                   display: "flex",
                   justifyContent: "center",
                   flexDirection: isMobile || isTablet ? "column" : "row",
-                  fontSize: isMobile || isTablet ? 22 : 28,
+                  fontSize: isMobile || isTablet ? 20 : 28,
                 }}
               >
                 Forgot your
@@ -247,7 +246,7 @@ const LoginScreen = () => {
                   display: "flex",
                   justifyContent: "center",
                   flexDirection: isMobile || isTablet ? "column" : "row",
-                  fontSize: isMobile || isTablet ? 22 : 28,
+                  fontSize: isMobile || isTablet ? 20 : 28,
                 }}
               >
                 Don't have an account?{" "}

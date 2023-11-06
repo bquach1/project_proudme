@@ -7,6 +7,7 @@ import { THEME_COLORS } from "constants";
 import { useMediaQuery } from "react-responsive";
 
 const Wrapper = styled.div`
+width: 100%;
   .title-container {
     position: absolute;
     height: 100%;
