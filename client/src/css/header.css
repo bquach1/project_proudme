@@ -6,14 +6,6 @@ nav {
     align-items: center;
 }
 
-.left-nav {
-    margin-left: 2%;
-    width: 80%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 .right-nav {
     color: #2E6AA1;
     font-weight: bold;

@@ -21,28 +21,27 @@ const Wrapper = styled.div`
 `;
 
 const HomeWrapper = styled.div`
+
   width: 90%;
   margin: 0 auto;
   margin-top: 1%;
   text-align: left;
-
   font-family: Montserrat;
-  font-size: 20px;
 
   .home {
     text-align: center;
   }
 
   .title-text-box {
-    font-size: 24px;
+    font-size: ${(props) => props.mobile === "true" || props.tablet === "true" ? 16 : 24 }px;
     margin-top: 2%;
   }
 
   .text-box {
     width: 50%;
-    font-size: 18px;
+    font-size: ${(props) => props.mobile === "true" || props.tablet === "true" ? 12 : 18 }px;
     margin-top: 2%;
-    padding: 30px;
+    padding: ${(props) => props.mobile === "true" || props.tablet === "true" ? 10 : 30 }px;
 
     li {
       list-style-position: inside;
@@ -117,8 +116,7 @@ const HomeScreen = () => {
           Welcome to ProudME!
         </h1>
       </div>
-      <HomeWrapper>
-        <div className="home"></div>
+      <HomeWrapper mobile={isMobile.toString()} tablet={isTablet.toString()}>
         <div style={{ margin: 0 }}>
           <div className="title-text-box">
             ProudMe is an adolescent obesity prevention intervention in
@@ -134,7 +132,7 @@ const HomeScreen = () => {
               <strong
                 style={{
                   color: THEME_COLORS.PURPLE,
-                  fontSize: 24,
+                  fontSize: isMobile ? 16 : 24,
                   display: "flex",
                   justifyContent: "center",
                 }}
@@ -185,7 +183,7 @@ const HomeScreen = () => {
               <strong
                 style={{
                   color: THEME_COLORS.PURPLE,
-                  fontSize: 24,
+                  fontSize: isMobile ? 16 : 24,
                   display: "flex",
                   justifyContent: "center",
                 }}

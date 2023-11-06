@@ -4,6 +4,15 @@ import { useNavigate } from "react-router-dom";
 
 import "css/header.css";
 import { useMediaQuery } from "react-responsive";
+import styled from "styled-components";
+
+const LeftNav = styled.div`
+  margin-left: 1%;
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
 
 const buttonStyles = (mediaType) => {
   return {
@@ -30,7 +39,7 @@ const Header = () => {
 
   return (
     <nav>
-      <div className="left-nav">
+      <LeftNav>
         <Button onClick={() => navigate("/home")}>
           <img
             style={{ width: isMobile ? 20 : 40 }}
@@ -110,7 +119,7 @@ const Header = () => {
         >
           Pet Store
         </Button>
-      </div>
+      </LeftNav>
 
       <div className="right-nav">
         {token === null ? (

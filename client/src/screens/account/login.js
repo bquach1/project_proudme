@@ -27,6 +27,12 @@ const FormWrapper = styled.div`
 `;
 
 const SuccessWrapper = styled.div`
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+
   .loading-dots {
     text-align: center;
   }
