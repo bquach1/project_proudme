@@ -28,6 +28,9 @@ const FormWrapper = styled.div`
   font-family: Roboto;
   height: 140vh;
 
+  display: flex;
+  justify-content: center;
+
   flex-wrap: wrap;
   overflow: auto;
 `;
@@ -226,7 +229,12 @@ const SignUpScreen = () => {
           <img
             src={require("../../components/images/login/logo.png")}
             alt="ProudME mini official Logo"
-            style={{ position: "absolute", top: isMobile ? 10 : 20, right: isMobile ? 10 : 20, width: isMobile ? 20 : 40 }}
+            style={{
+              position: "absolute",
+              top: isMobile ? 10 : 20,
+              right: isMobile ? 10 : 20,
+              width: isMobile ? 20 : 40,
+            }}
           />
           <div
             style={{
@@ -240,7 +248,15 @@ const SignUpScreen = () => {
           >
             Thank you for joining ProudME!
           </div>
-          <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", margin: "0 auto", width: "100%"}}>
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              margin: "0 auto",
+              width: "100%",
+            }}
+          >
             <div className="input-container">
               <label>Username: </label>
               <input
@@ -333,10 +349,10 @@ const SignUpScreen = () => {
                   required
                   displayEmpty
                   value={form.birthMonth}
-                  style={{ backgroundColor: "white", width: 175 }}
+                  style={{ backgroundColor: "white", width: 150 }}
                 >
                   <MenuItem disabled value="">
-                    <div style={{ opacity: 0.6 }}>Select an Option</div>
+                    <div style={{ opacity: 0.6 }}>Select Option</div>
                   </MenuItem>
                   <MenuItem value="January">January</MenuItem>
                   <MenuItem value="February">February</MenuItem>
@@ -361,10 +377,10 @@ const SignUpScreen = () => {
                   required
                   displayEmpty
                   value={form.birthYear}
-                  style={{ backgroundColor: "white", width: 175 }}
+                  style={{ backgroundColor: "white", width: 150 }}
                 >
                   <MenuItem disabled value="">
-                    <div style={{ opacity: 0.6 }}>Select an Option</div>
+                    <div style={{ opacity: 0.6 }}>Select Option</div>
                   </MenuItem>
                   <MenuItem value="2008">2008</MenuItem>
                   <MenuItem value="2009">2009</MenuItem>
@@ -385,13 +401,13 @@ const SignUpScreen = () => {
                   className="dropdown"
                   name="grade"
                   onChange={(e) => updateForm({ gradeLevel: e.target.value })}
-                  style={{ backgroundColor: "white", width: 175 }}
+                  style={{ backgroundColor: "white", width: 150 }}
                   value={form.gradeLevel}
                   required
                   displayEmpty
                 >
                   <MenuItem disabled value="">
-                    <div style={{ opacity: 0.6 }}>Select an Option</div>
+                    <div style={{ opacity: 0.6 }}>Select Option</div>
                   </MenuItem>
                   <MenuItem value="fifth">5th</MenuItem>
                   <MenuItem value="sixth">6th</MenuItem>
@@ -411,10 +427,10 @@ const SignUpScreen = () => {
                   onChange={(e) => updateForm({ gender: e.target.value })}
                   required
                   displayEmpty
-                  style={{ width: 200, backgroundColor: "white" }}
+                  style={{ width: 150, backgroundColor: "white" }}
                 >
                   <MenuItem disabled value="">
-                    <div style={{ opacity: 0.6 }}>Select an Option</div>
+                    <div style={{ opacity: 0.6 }}>Select Option</div>
                   </MenuItem>
                   <MenuItem value="male">Male</MenuItem>
                   <MenuItem value="female">Female</MenuItem>
@@ -422,7 +438,7 @@ const SignUpScreen = () => {
                   <MenuItem value="none">Prefer not to tell</MenuItem>
                 </Select>
               </div>
-              <div className="overflow-row-container">
+              <div className="overflow-row-container" style={{maxWidth: isMobile || isTablet ? "80%" : "40%"}}>
                 <label>Email Address: </label>
                 <input
                   className={emailError ? "error-signup-input" : "signup-input"}
@@ -445,7 +461,7 @@ const SignUpScreen = () => {
                   <FormControlLabel
                     control={<Checkbox required />}
                     label={
-                      <Typography style={{ color: "black" }}>
+                      <Typography style={{ color: "black", textAlign: "left", fontSize: isMobile || isTablet ? 12 : 18 }}>
                         I agree to the{" "}
                         <a
                           target="blank"
@@ -459,7 +475,7 @@ const SignUpScreen = () => {
                   <FormControlLabel
                     control={<Checkbox required />}
                     label={
-                      <Typography style={{ color: "black" }}>
+                      <Typography style={{ color: "black", textAlign: "left", fontSize: isMobile || isTablet ? 12 : 18, }}>
                         I agree to receive news ad updates by email from
                         ProudME.
                       </Typography>
@@ -483,7 +499,6 @@ const SignUpScreen = () => {
                     padding: "10px 50px 10px 50px",
                     borderRadius: "20px",
                     textTransform: "none",
-                    marginTop: "3%",
                     margin: "auto",
                     height: "60px",
                     width: "25%",
@@ -532,7 +547,7 @@ const SignUpScreen = () => {
               </form>
             </div>
           )}
-          <div className="signup-registration">
+          <div className="signup-registration" style={{fontSize: isMobile || isTablet ? 14 : 16 }}>
             <h2>
               Already have an account?{" "}
               <a className="nav-select" onClick={() => navigate("/login")}>
