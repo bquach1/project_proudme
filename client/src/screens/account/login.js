@@ -183,7 +183,7 @@ const LoginScreen = () => {
               required
             />
           </div>
-          <div className="button-container">
+          <div className="button-container" style={{height: 60,}}>
             {loading ? (
               <div
                 style={{
