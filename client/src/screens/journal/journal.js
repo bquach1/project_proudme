@@ -79,13 +79,11 @@ const JournalWrapper = styled.table`
   @media (max-width: 1190px) {
     width: 90%;
     font-size: 14px;
-    background-color: black;
   }
 
   @media (max-width: 768px) {
     width: 100%;
     font-size: 14px;
-    background-color: black;
   }
 
   @media (max-width: 480px) {
@@ -449,7 +447,6 @@ const JournalScreen = () => {
 
   const dates = [activityDate, screentimeDate, eatingDate, sleepDate];
 
-  // Filter out invalid dates (undefined or falsy) and find the most recent date
   const validDates = dates.filter((date) => date);
   const mostRecentDate = new Date(Math.max(...validDates)),
     mostRecentDay = mostRecentDate.toLocaleDateString(),

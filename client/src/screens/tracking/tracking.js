@@ -26,6 +26,7 @@ import { has } from "lodash";
 import { BehaviorTrackingCSV } from "screens/journal/csv";
 import { DATABASE_URL } from "constants";
 import withAuth from "components/auth/withAuth";
+import { useMediaQuery } from "react-responsive";
 
 const TrackingWrapper = styled.div`
   padding-bottom: 50px;
@@ -47,6 +48,10 @@ const TrackingWrapper = styled.div`
 
 // Render the chart component
 const TrackingScreen = () => {
+
+  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
+
   const [user, setUser] = useState([]);
   const [shownUser, setShownUser] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
@@ -72,7 +77,7 @@ const TrackingScreen = () => {
 
   const [dateRange, setDateRange] = useState([
     {
-      startDate: subDays(new Date(), 7),
+      startDate: subDays(new Date(), isMobile ? 5 : 7),
       endDate: addDays(subDays(new Date(), 7), 7),
       key: "selection",
     },
@@ -359,8 +364,10 @@ const TrackingScreen = () => {
         }}
       >
         {chartType === "line" ? (
-          <div style={{width: "90%"}}>
-            <h1 style={{marginTop: "1%"}}>{shownUser.firstName}'s Physical Activity Behavior Data</h1>
+          <div style={{ width: "90%" }}>
+            <h1 style={{ marginTop: "1%" }}>
+              {shownUser.firstName}'s Physical Activity Behavior Data
+            </h1>
             <BehaviorLineChart
               data={filteredActivityBehaviorData}
               chartGoalType={"activity"}

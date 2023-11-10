@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   LineChart,
   CartesianGrid,
@@ -10,12 +10,13 @@ import {
   Legend,
   ReferenceLine,
   ResponsiveContainer,
-} from 'recharts';
+} from "recharts";
 
 import { CustomTooltip } from "screens/tracking/components/customAuxiliary/CustomTooltip";
 import { CustomLegend } from "screens/tracking/components/customAuxiliary/CustomLegend";
 
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
 
 const CurrentLineChart = styled(LineChart)`
   .bold-label {
@@ -25,6 +26,10 @@ const CurrentLineChart = styled(LineChart)`
 `;
 
 const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
+  const isSmallMobile = useMediaQuery({ query: "(max-width: 600px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
+
   const maxBehaviorVal =
     data &&
     data.reduce((max, current) => {
@@ -37,11 +42,16 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
         width={1350}
         height={750}
         data={data}
-        margin={{ top: 30, right: 120, left: 120, bottom: 70 }}
+        margin={{
+          top: 30,
+          right: isSmallMobile ? 0 : 120,
+          left: isSmallMobile ? 20 : 120,
+          bottom: 70,
+        }}
       >
         <CartesianGrid strokeDasharray="3 3" fill="white" />
 
-        <XAxis dataKey="date" className="bold-label">
+        <XAxis dataKey="date" className="bold-label" style={{fontSize: isMobile ? 10 : "auto"}}>
           <Label value="Date" position="bottom" />
         </XAxis>
 
@@ -66,7 +76,10 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
           ]}
           allowDataOverflow={true}
           className="bold-label"
-          tickFormatter={(value) => (value % 1 !== 0 ? value.toFixed(2) : value)}
+          style={{fontSize: isMobile ? 10 : "auto"}}
+          tickFormatter={(value) =>
+            value % 1 !== 0 ? value.toFixed(2) : value
+          }
         >
           <Label
             value={
@@ -77,8 +90,9 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
                 : "minutes/day"
             }
             position="left"
-            dx={5}
+            dx={isMobile || isSmallMobile ? 40 : 5}
             className="custom-label"
+            style={{fontSize: isSmallMobile || isMobile ? 10 : "auto" }}
           />
         </YAxis>
 
@@ -143,9 +157,9 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
           />
         )}
         <Legend
-          layout="vertical"
+          layout={isMobile || isTablet ? "horizontal" : "vertical"}
           align="right"
-          verticalAlign="middle"
+          verticalAlign={isMobile || isTablet ? "bottom" : "middle"}
           wrapperStyle={{ paddingLeft: 20 }}
           content={<CustomLegend />}
         />
