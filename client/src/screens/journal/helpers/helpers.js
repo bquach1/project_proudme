@@ -32,7 +32,6 @@ export const createChatbotRequest = (
   setGoalResponseLoading
 ) => {
   setGoalResponseLoading(true);
-  console.log(goal);
   axios
     .post(`${DATABASE_URL}/chatbot`, {
       prompt: [
@@ -66,12 +65,14 @@ export const createChatbotRequest = (
 f'Actual behavior value achieved: ${
                   goal[0].behaviorValue
                 }, percentage of actual goal achieved: ${
-                  parseFloat(goal[0].behaviorValue).toFixed(2) /
-                  parseFloat(goal[0].goalValue).toFixed(2)
+                  `${(parseFloat(goal[0].behaviorValue).toFixed(2) /
+                    parseFloat(goal[0].goalValue).toFixed(2)) *
+                  100}%`
                 }, ' \
 f'percentage of recommended goal achieved: ${
-                  parseFloat(goal[0].behaviorValue).toFixed(2) /
-                  parseFloat(goal[0].recommendedValue).toFixed(2)
+                  `${(parseFloat(goal[0].behaviorValue).toFixed(2) /
+                    parseFloat(goal[0].recommendedValue).toFixed(2)) *
+                  100}%`
                 }, Reflection: ${goal[0].reflection}.`,
         },
       ],
@@ -139,9 +140,6 @@ export async function updateBehaviorValue(
           dateToday: new Date(),
           recommendedValue: recommendedValue,
         })
-        .then((response) => {
-          console.log(response.data);
-        })
         .catch((error) => {
           console.error(error);
         });
@@ -174,9 +172,6 @@ export async function updateBehaviorValue(
           reflection: newReflection,
           recommendedValue: recommendedValue,
           feedback: currentGoal[0].feedback,
-        })
-        .then((response) => {
-          console.log(response.data);
         })
         .catch((error) => {
           console.error(error);
