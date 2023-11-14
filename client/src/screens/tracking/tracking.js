@@ -16,7 +16,7 @@ import {
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { DateRange } from "react-date-range";
-import { format, addDays, subDays } from "date-fns";
+import { format, addDays, subDays, subMonths, addMonths } from "date-fns";
 
 import BehaviorProgressBar from "screens/tracking/components/charts/BehaviorProgressBar";
 import BehaviorLineChart from "screens/tracking/components/charts/BehaviorLineChart";
@@ -48,7 +48,6 @@ const TrackingWrapper = styled.div`
 
 // Render the chart component
 const TrackingScreen = () => {
-
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
   const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
@@ -349,7 +348,7 @@ const TrackingScreen = () => {
             editableDateInputs={true}
             moveRangeOnFirstSelection={false}
             ranges={dateRange}
-            months={1}
+            months={3}
             direction="horizontal"
             className="calendarElement"
           />

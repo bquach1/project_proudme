@@ -129,7 +129,6 @@ const SignUpScreen = () => {
           setConfirming(false);
         })
         .catch((error) => {
-          console.log(error);
           if (error.response.data === "Email is already in use") {
             alert(
               "Email is already in use. Please try signing up again with a different email account."
@@ -438,7 +437,10 @@ const SignUpScreen = () => {
                   <MenuItem value="none">Prefer not to tell</MenuItem>
                 </Select>
               </div>
-              <div className="overflow-row-container" style={{maxWidth: isMobile || isTablet ? "80%" : "40%"}}>
+              <div
+                className="overflow-row-container"
+                style={{ maxWidth: isMobile || isTablet ? "80%" : "40%" }}
+              >
                 <label>Email Address: </label>
                 <input
                   className={emailError ? "error-signup-input" : "signup-input"}
@@ -461,7 +463,13 @@ const SignUpScreen = () => {
                   <FormControlLabel
                     control={<Checkbox required />}
                     label={
-                      <Typography style={{ color: "black", textAlign: "left", fontSize: isMobile || isTablet ? 12 : 18 }}>
+                      <Typography
+                        style={{
+                          color: "black",
+                          textAlign: "left",
+                          fontSize: isMobile || isTablet ? 12 : 18,
+                        }}
+                      >
                         I agree to the{" "}
                         <a
                           target="blank"
@@ -475,7 +483,13 @@ const SignUpScreen = () => {
                   <FormControlLabel
                     control={<Checkbox required />}
                     label={
-                      <Typography style={{ color: "black", textAlign: "left", fontSize: isMobile || isTablet ? 12 : 18, }}>
+                      <Typography
+                        style={{
+                          color: "black",
+                          textAlign: "left",
+                          fontSize: isMobile || isTablet ? 12 : 18,
+                        }}
+                      >
                         I agree to receive news ad updates by email from
                         ProudME.
                       </Typography>
@@ -547,7 +561,10 @@ const SignUpScreen = () => {
               </form>
             </div>
           )}
-          <div className="signup-registration" style={{fontSize: isMobile || isTablet ? 14 : 16 }}>
+          <div
+            className="signup-registration"
+            style={{ fontSize: isMobile || isTablet ? 14 : 16 }}
+          >
             <h2>
               Already have an account?{" "}
               <a className="nav-select" onClick={() => navigate("/login")}>
