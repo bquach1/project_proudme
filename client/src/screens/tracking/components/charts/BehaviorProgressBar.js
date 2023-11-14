@@ -2,6 +2,7 @@ import React from "react";
 import { Box, LinearProgress, Tooltip } from "@mui/material";
 import styled from "styled-components";
 import { BEHAVIOR_COLORS } from "constants";
+import { useMediaQuery } from "react-responsive";
 
 const ProgressBox = styled(Box)``;
 
@@ -17,12 +18,16 @@ const BehaviorProgressBar = ({ data, chartGoalType }) => {
     0
   );
 
+  const isSmallMobile = useMediaQuery({ query: "(max-width: 600px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
+
   const overallProgress = (totalBehaviorValue / totalRecommendedValue) * 100;
 
   const averageBehaviorVal = totalBehaviorValue / data.length;
 
   return (
-    <ProgressBox sx={{ width: "80%", marginBottom: "5%" }} position="relative">
+    <ProgressBox sx={{ width: "80%", marginBottom: isMobile || isSmallMobile ? "20%" : "5%" }} position="relative">
       <ProgressBar
         style={{
           display: "flex",
