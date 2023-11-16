@@ -1075,7 +1075,7 @@ const JournalScreen = () => {
                       </Button>
                     </Tooltip>
                   </ReflectionContainer>
-                  <td style={{ width: "50%", maxHeight: 101, fontSize: 12, fontWeight: "normal" }}>
+                  <td style={{ width: "50%", maxHeight: 101 }}>
                     {activityResponseLoading ? (
                       <CircularProgress />
                     ) : !activityGoal[0].feedback ? (
@@ -1419,6 +1419,7 @@ const JournalScreen = () => {
           </div>
         </div>
       </JournalWrapper>
+      <img src={require("../../components/images/journal/tiger.jpg")} style={{width: 200, position: "absolute", right: 100, top: 200}} />
     </Wrapper>
   );
 };
