@@ -20,6 +20,7 @@ import {
   createChatbotRequest,
   updateBehaviorValue,
 } from "screens/journal/helpers/helpers";
+import { useSpring, animated } from "react-spring";
 import ExpandableText from "screens/journal/components/ExpandableText";
 import { DATABASE_URL } from "constants";
 
@@ -134,6 +135,19 @@ const ReflectionContainer = styled.td`
 `;
 
 const JournalScreen = () => {
+  const [forward, setForward] = useState(true);
+
+  const props = useSpring({
+    opacity: 1,
+    transform: `translateY(${forward ? -1000 : -1050}px)`,
+    from: { transform: "translateY(-1250px)" },
+    onRest: () => {
+      setForward(!forward);
+    },
+    config: { duration: 1000 },
+    translateX: 50,
+  });
+
   const [user, setUser] = useState([]);
   const [goalData, setGoalData] = useState([]);
 
@@ -1419,7 +1433,13 @@ const JournalScreen = () => {
           </div>
         </div>
       </JournalWrapper>
-      <img src={require("../../components/images/journal/tiger.jpg")} style={{width: 200, position: "absolute", right: 100, top: 200}} />
+      <animated.div style={props}>
+        <img
+          src={require("../../components/images/journal/tiger.jpg")}
+          alt="Tiger custom"
+          style={{ width: 75, position: "absolute", right: 0, top: 300 }}
+        />
+      </animated.div>
     </Wrapper>
   );
 };
