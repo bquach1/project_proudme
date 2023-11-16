@@ -12,6 +12,7 @@ import LockIcon from "@mui/icons-material/Lock";
 
 import {
   SAVE_ICON_COLORS,
+  MAX_FEEDBACK_LINES,
   generateSaveTooltipMessage,
 } from "screens/journal/constants/constants";
 import {
@@ -1074,7 +1075,7 @@ const JournalScreen = () => {
                       </Button>
                     </Tooltip>
                   </ReflectionContainer>
-                  <td style={{ width: "50%", maxHeight: 101 }}>
+                  <td style={{ width: "50%", maxHeight: 101, fontSize: 12, fontWeight: "normal" }}>
                     {activityResponseLoading ? (
                       <CircularProgress />
                     ) : !activityGoal[0].feedback ? (
@@ -1082,7 +1083,7 @@ const JournalScreen = () => {
                     ) : activityData.length ? (
                       <ExpandableText
                         text={activityGoal[0].feedback}
-                        maxLines={4}
+                        maxLines={MAX_FEEDBACK_LINES}
                       />
                     ) : (
                       <Tooltip title="Set an Activity goal today to see feedback!">
@@ -1182,7 +1183,7 @@ const JournalScreen = () => {
                     ) : screentimeData.length ? (
                       <ExpandableText
                         text={screentimeGoal[0].feedback}
-                        maxLines={4}
+                        maxLines={MAX_FEEDBACK_LINES}
                       />
                     ) : (
                       <Tooltip title="Set a Screentime goal today to see feedback!">
@@ -1283,7 +1284,7 @@ const JournalScreen = () => {
                     ) : eatingData.length ? (
                       <ExpandableText
                         text={eatingGoal[0].feedback}
-                        maxLines={4}
+                        maxLines={MAX_FEEDBACK_LINES}
                       />
                     ) : (
                       <Tooltip title="Set an Eating goal today to see feedback!">
@@ -1382,7 +1383,7 @@ const JournalScreen = () => {
                     ) : sleepData.length ? (
                       <ExpandableText
                         text={sleepGoal[0].feedback}
-                        maxLines={4}
+                        maxLines={MAX_FEEDBACK_LINES}
                       />
                     ) : (
                       <Tooltip title="Set a Sleep goal today to see feedback!">

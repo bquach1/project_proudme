@@ -6,7 +6,6 @@ import {
   Button,
   MenuItem,
   FormControl,
-  InputLabel,
   Radio,
   FormLabel,
   RadioGroup,
@@ -16,7 +15,7 @@ import {
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { DateRange } from "react-date-range";
-import { format, addDays, subDays, subMonths, addMonths } from "date-fns";
+import { format, addDays, subDays } from "date-fns";
 
 import BehaviorProgressBar from "screens/tracking/components/charts/BehaviorProgressBar";
 import BehaviorLineChart from "screens/tracking/components/charts/BehaviorLineChart";
@@ -49,7 +48,6 @@ const TrackingWrapper = styled.div`
 // Render the chart component
 const TrackingScreen = () => {
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
-  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   const [user, setUser] = useState([]);
   const [shownUser, setShownUser] = useState([]);
@@ -305,6 +303,7 @@ const TrackingScreen = () => {
           defaultValue="line"
           name="radio-buttons-group"
           onChange={(e) => setChartType(e.target.value)}
+          style={{display: "flex", flexDirection: "row"}}
         >
           <FormControlLabel value="line" control={<Radio />} label="Line" />
           <FormControlLabel
@@ -314,23 +313,6 @@ const TrackingScreen = () => {
           />
         </RadioGroup>
       </FormControl>
-
-      {chartType === "line" && (
-        <FormControl style={{ margin: "10px 0px" }}>
-          <InputLabel id="line-chart-view">Line View</InputLabel>
-          <Select
-            labelId="line-chart-view"
-            id="line-view"
-            value={lineChartView}
-            label="Line View"
-            onChange={(e) => setLineChartView(e.target.value)}
-          >
-            <MenuItem value="bothLines">Goal and Behavior Lines</MenuItem>
-            <MenuItem value="goalOnly">Goal Line</MenuItem>
-            <MenuItem value="behaviorOnly">Behavior Line</MenuItem>
-          </Select>
-        </FormControl>
-      )}
 
       <div>
         <input

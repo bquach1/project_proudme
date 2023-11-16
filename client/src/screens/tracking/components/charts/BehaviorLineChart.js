@@ -7,13 +7,11 @@ import {
   YAxis,
   Tooltip,
   Line,
-  Legend,
   ReferenceLine,
   ResponsiveContainer,
 } from "recharts";
 
 import { CustomTooltip } from "screens/tracking/components/customAuxiliary/CustomTooltip";
-import { CustomLegend } from "screens/tracking/components/customAuxiliary/CustomLegend";
 
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
@@ -28,7 +26,6 @@ const CurrentLineChart = styled(LineChart)`
 const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
   const isSmallMobile = useMediaQuery({ query: "(max-width: 600px)" });
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
-  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   const maxBehaviorVal =
     data &&
@@ -51,7 +48,11 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
       >
         <CartesianGrid strokeDasharray="3 3" fill="white" />
 
-        <XAxis dataKey="date" className="bold-label" style={{fontSize: isMobile ? 10 : "auto"}}>
+        <XAxis
+          dataKey="date"
+          className="bold-label"
+          style={{ fontSize: isMobile ? 10 : "auto" }}
+        >
           <Label value="Date" position="bottom" />
         </XAxis>
 
@@ -76,7 +77,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
           ]}
           allowDataOverflow={true}
           className="bold-label"
-          style={{fontSize: isMobile ? 10 : "auto"}}
+          style={{ fontSize: isMobile ? 10 : "auto" }}
           tickFormatter={(value) =>
             value % 1 !== 0 ? value.toFixed(2) : value
           }
@@ -92,7 +93,7 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
             position="left"
             dx={isMobile || isSmallMobile ? 40 : 5}
             className="custom-label"
-            style={{fontSize: isSmallMobile || isMobile ? 10 : "auto" }}
+            style={{ fontSize: isSmallMobile || isMobile ? 8 : "auto" }}
           />
         </YAxis>
 
@@ -156,13 +157,6 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
             activeDot={{ r: 6 }}
           />
         )}
-        <Legend
-          layout={isMobile || isTablet ? "horizontal" : "vertical"}
-          align="right"
-          verticalAlign={isMobile || isTablet ? "bottom" : "middle"}
-          wrapperStyle={{ paddingLeft: 20 }}
-          content={<CustomLegend />}
-        />
         <ReferenceLine
           y={
             chartGoalType === "activity"

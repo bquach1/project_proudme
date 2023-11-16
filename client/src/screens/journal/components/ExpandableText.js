@@ -23,9 +23,9 @@ const ExpandableTextWrapper = styled.div`
 function ExpandableText({ text, maxLines }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
+  // const toggleExpand = () => {
+  //   setIsExpanded(!isExpanded);
+  // };
 
   const textStyles = {
     maxHeight: isExpanded ? "none" : `${maxLines * 1.2}em`,
@@ -34,8 +34,8 @@ function ExpandableText({ text, maxLines }) {
 
   return (
     <ExpandableTextWrapper style={styles.feedback}>
-      <h4 style={textStyles}>{text}</h4>
-      {isExpanded ? (
+      <p style={textStyles}>{text}</p>
+      {/* {isExpanded ? (
         <ExpandLessIcon
           className="expand-icon"
           onClick={() => toggleExpand()}
@@ -45,7 +45,7 @@ function ExpandableText({ text, maxLines }) {
           className="expand-icon"
           onClick={() => toggleExpand()}
         />
-      )}
+      )} */}
     </ExpandableTextWrapper>
   );
 }
@@ -58,5 +58,8 @@ const styles = {
     padding: 5,
     overflowY: "scroll",
     maxHeight: 101,
+    marginRight: -45,
+    fontSize: 12,
+    width: "110%",
   },
 };

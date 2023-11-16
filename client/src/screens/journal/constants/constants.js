@@ -21,3 +21,5 @@ export const generateSaveTooltipMessage = (
       goalData[0].reflection !== goal[0].reflection
     ? `Save changes to today's ${goalType} goal`
     : `No ${goalType} Data found`;
+
+export const MAX_FEEDBACK_LINES = 7;
