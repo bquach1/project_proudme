@@ -163,7 +163,6 @@ const SignUpScreen = () => {
         email: form.name,
       },
     });
-    console.log(response);
     if (!response.data) {
       setUsernameError(false);
     } else {

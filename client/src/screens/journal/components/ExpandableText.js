@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
@@ -16,36 +16,39 @@ const ExpandableTextWrapper = styled.div`
     transition: background 0.4s;
     background-color: #ccc;
   }
-  
+
   max-height: 100px;
 `;
 
 function ExpandableText({ text, maxLines }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [displayedText, setDisplayedText] = useState("");
 
-  // const toggleExpand = () => {
-  //   setIsExpanded(!isExpanded);
-  // };
+  useEffect(() => {
+    let intervalId;
+
+    let currentIndex = -1;
+    intervalId = setInterval(() => {
+      currentIndex++;
+
+      if (currentIndex === text.length - 1) {
+        clearInterval(intervalId);
+      }
+      setDisplayedText((prevText) => prevText + text[currentIndex]);
+    }, 20);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [text]);
 
   const textStyles = {
-    maxHeight: isExpanded ? "none" : `${maxLines * 1.2}em`,
+    maxHeight: `${maxLines * 1.2}em`,
     overflow: "clip",
   };
 
   return (
     <ExpandableTextWrapper style={styles.feedback}>
-      <p style={textStyles}>{text}</p>
-      {/* {isExpanded ? (
-        <ExpandLessIcon
-          className="expand-icon"
-          onClick={() => toggleExpand()}
-        />
-      ) : (
-        <ExpandMoreIcon
-          className="expand-icon"
-          onClick={() => toggleExpand()}
-        />
-      )} */}
+      <p style={textStyles}>{displayedText}</p>
     </ExpandableTextWrapper>
   );
 }

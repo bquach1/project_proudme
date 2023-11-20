@@ -22,4 +22,4 @@ export const generateSaveTooltipMessage = (
     ? `Save changes to today's ${goalType} goal`
     : `No ${goalType} Data found`;
 
-export const MAX_FEEDBACK_LINES = 7;
+export const MAX_FEEDBACK_LINES = 10;

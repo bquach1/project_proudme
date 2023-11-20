@@ -39,7 +39,7 @@ export const createChatbotRequest = (
           role: "system",
           content:
             goal[0].goalType === "screentime" &&
-            goal[0].behaviorValue > goal[0].goalValue
+            goal[0].behaviorValue > goal[0].goalValue * 2
               ? "category1"
               : goal[0].goalType === "screentime" &&
                 goal[0].behaviorValue > goal[0].goalValue
