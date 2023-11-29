@@ -34,7 +34,7 @@ function ExpandableText({ text, maxLines }) {
         clearInterval(intervalId);
       }
       setDisplayedText((prevText) => prevText + text[currentIndex]);
-    }, 20);
+    }, 30);
 
     return () => {
       clearInterval(intervalId);

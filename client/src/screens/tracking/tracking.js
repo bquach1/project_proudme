@@ -57,7 +57,6 @@ const TrackingScreen = () => {
   const [userBehaviorData, setUserBehaviorData] = useState([]);
 
   const [chartType, setChartType] = useState("line");
-  const [lineChartView, setLineChartView] = useState("behaviorOnly");
 
   const [activityBehaviorData, setActivityBehaviorData] = useState([]);
   const [filteredActivityBehaviorData, setFilteredActivityBehaviorData] =
@@ -303,7 +302,7 @@ const TrackingScreen = () => {
           defaultValue="line"
           name="radio-buttons-group"
           onChange={(e) => setChartType(e.target.value)}
-          style={{display: "flex", flexDirection: "row"}}
+          style={{ display: "flex", flexDirection: "row" }}
         >
           <FormControlLabel value="line" control={<Radio />} label="Line" />
           <FormControlLabel
@@ -352,13 +351,11 @@ const TrackingScreen = () => {
             <BehaviorLineChart
               data={filteredActivityBehaviorData}
               chartGoalType={"activity"}
-              lineChartView={lineChartView}
             />
             <h1>{shownUser.firstName}'s Screen Time Behavior Data</h1>
             <BehaviorLineChart
               data={filteredScreentimeBehaviorData}
               chartGoalType={"screentime"}
-              lineChartView={lineChartView}
             />
             <h1>
               {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data
@@ -366,13 +363,11 @@ const TrackingScreen = () => {
             <BehaviorLineChart
               data={filteredEatingBehaviorData}
               chartGoalType={"eating"}
-              lineChartView={lineChartView}
             />
             <h1>{shownUser.firstName}'s Sleep Behavior Data</h1>
             <BehaviorLineChart
               data={filteredSleepBehaviorData}
               chartGoalType={"sleep"}
-              lineChartView={lineChartView}
             />
           </div>
         ) : (
@@ -381,13 +376,11 @@ const TrackingScreen = () => {
             <BehaviorProgressBar
               data={filteredActivityBehaviorData}
               chartGoalType={"activity"}
-              lineChartView={lineChartView}
             />
             <h1>{shownUser.firstName}'s Screen Time Behavior Data</h1>
             <BehaviorProgressBar
               data={filteredScreentimeBehaviorData}
               chartGoalType={"screentime"}
-              lineChartView={lineChartView}
             />
             <h1>
               {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data
@@ -395,13 +388,11 @@ const TrackingScreen = () => {
             <BehaviorProgressBar
               data={filteredEatingBehaviorData}
               chartGoalType={"eating"}
-              lineChartView={lineChartView}
             />
             <h1>{shownUser.firstName}'s Sleep Behavior Data</h1>
             <BehaviorProgressBar
               data={filteredSleepBehaviorData}
               chartGoalType={"sleep"}
-              lineChartView={lineChartView}
             />
           </>
         )}

@@ -23,7 +23,7 @@ const CurrentLineChart = styled(LineChart)`
   }
 `;
 
-const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
+const BehaviorLineChart = ({ data, chartGoalType }) => {
   const isSmallMobile = useMediaQuery({ query: "(max-width: 600px)" });
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
 
@@ -105,7 +105,6 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
           stroke="#A7C7E7"
           strokeWidth={5}
           activeDot={{ r: 6 }}
-          style={lineChartView === "behaviorOnly" ? { display: "none" } : {}}
         />
 
         <defs>
@@ -147,16 +146,14 @@ const BehaviorLineChart = ({ data, chartGoalType, lineChartView }) => {
           </linearGradient>
         </defs>
 
-        {lineChartView !== "goalOnly" && (
-          <Line
-            type="linear"
-            dataKey="behaviorValue"
-            connectNulls={true}
-            stroke={`url(#colorUv${chartGoalType})`}
-            strokeWidth={5}
-            activeDot={{ r: 6 }}
-          />
-        )}
+        <Line
+          type="linear"
+          dataKey="behaviorValue"
+          connectNulls={true}
+          stroke={`url(#colorUv${chartGoalType})`}
+          strokeWidth={5}
+          activeDot={{ r: 6 }}
+        />
         <ReferenceLine
           y={
             chartGoalType === "activity"

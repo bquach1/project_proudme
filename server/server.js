@@ -537,7 +537,8 @@ app.post("/chatbot", (req, res) => {
               category 4: User achieved their set goal and recommended goal, congratulate them got meeting goal and praise them for setting goal better then recommended value \
               category 5: User has reduced their screen time by more than half of their goal value, they are champion and achiever, praise them for their achievement. \
               category 6: Praise the user for working towards their goal \
-              Keep your feedback encouraging and limited to 60 words"
+              Keep your feedback encouraging and limited to 60 words\
+              If there is a reflection provided as an input, incorporate it into your feedback."
               : "you will be provided a list of behavior/activity types, recommended goals, actual goals, actual values, percentage of actual goal achieved, percenatge of recommended goal achieved \
         you have to provide feedback based on percentage of goal achieved \
         If goal achieved is less than 50%, tell user to put extra effort and give them tips \

@@ -2,12 +2,12 @@ import React from "react";
 import "css/home.css";
 import styled from "styled-components";
 
-import withAuth from "components/auth/withAuth";
 import { THEME_COLORS } from "constants";
 import { useMediaQuery } from "react-responsive";
+import { useNavigate } from "react-router";
 
 const Wrapper = styled.div`
-width: 100%;
+  width: 100%;
   .title-container {
     position: absolute;
     height: 100%;
@@ -22,7 +22,6 @@ width: 100%;
 `;
 
 const HomeWrapper = styled.div`
-
   width: 90%;
   margin: 0 auto;
   margin-top: 1%;
@@ -34,15 +33,18 @@ const HomeWrapper = styled.div`
   }
 
   .title-text-box {
-    font-size: ${(props) => props.mobile === "true" || props.tablet === "true" ? 16 : 24 }px;
+    font-size: ${(props) =>
+      props.mobile === "true" || props.tablet === "true" ? 16 : 24}px;
     margin-top: 2%;
   }
 
   .text-box {
     width: 50%;
-    font-size: ${(props) => props.mobile === "true" || props.tablet === "true" ? 12 : 18 }px;
+    font-size: ${(props) =>
+      props.mobile === "true" || props.tablet === "true" ? 12 : 18}px;
     margin-top: 2%;
-    padding: ${(props) => props.mobile === "true" || props.tablet === "true" ? 10 : 30 }px;
+    padding: ${(props) =>
+      props.mobile === "true" || props.tablet === "true" ? 10 : 30}px;
 
     li {
       list-style-position: inside;
@@ -88,6 +90,8 @@ const HomeScreen = () => {
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
   const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
+  const navigate = useNavigate();
+
   return (
     <Wrapper>
       <img
@@ -111,11 +115,27 @@ const HomeScreen = () => {
       />
       <div
         className="title-container"
-        style={{ top: isMobile || isTablet ? "12.5%" : "30%" }}
+        style={{ top: isMobile || isTablet ? "11%" : "20%" }}
       >
         <h1 style={{ fontSize: isMobile ? 32 : isTablet ? 48 : 64 }}>
           Welcome to ProudME!
         </h1>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div
+            className="home-nav-select"
+            onClick={() => navigate("/login")}
+            style={{ fontSize: isMobile ? 32 : isTablet ? 48 : 64 }}
+          >
+            Login
+          </div>
+          <div
+            className="home-nav-select"
+            onClick={() => navigate("/signup")}
+            style={{ fontSize: isMobile ? 32 : isTablet ? 48 : 64 }}
+          >
+            Or Register
+          </div>
+        </div>
       </div>
       <HomeWrapper mobile={isMobile.toString()} tablet={isTablet.toString()}>
         <div style={{ margin: 0 }}>
@@ -227,4 +247,4 @@ const HomeScreen = () => {
   );
 };
 
-export default withAuth(HomeScreen);
+export default HomeScreen;

@@ -41,7 +41,7 @@ const Header = () => {
 
   return (
     <nav>
-      <Button onClick={() => navigate("/home")} style={{marginLeft: "1%"}}>
+      <Button onClick={() => navigate("/home")} style={{ marginLeft: "1%" }}>
         <img
           style={{ width: isMobile ? 20 : 40 }}
           src={require("components/images/white_proudme_logo.png")}
@@ -57,70 +57,86 @@ const Header = () => {
               ? buttonStyles("isTablet")
               : buttonStyles()
           }
-          onClick={() => navigate("/journal")}
+          onClick={() => navigate("/team")}
         >
-          My Journal
+          Our Team
         </Button>
-        <Button
-          style={
-            isMobile
-              ? buttonStyles("isMobile")
-              : isTablet
-              ? buttonStyles("isTablet")
-              : buttonStyles()
-          }
-          onClick={() => navigate("/tracking")}
-        >
-          Track Behaviors
-        </Button>
-        <Button
-          style={
-            isMobile
-              ? buttonStyles("isMobile")
-              : isTablet
-              ? buttonStyles("isTablet")
-              : buttonStyles()
-          }
-          onClick={() => navigate("/pe")}
-        >
-          ProudME PE
-        </Button>
-        <Button
-          style={
-            isMobile
-              ? buttonStyles("isMobile")
-              : isTablet
-              ? buttonStyles("isTablet")
-              : buttonStyles()
-          }
-          onClick={() => navigate("/cafeteria")}
-        >
-          ProudME Cafeteria
-        </Button>
-        <Button
-          style={
-            isMobile
-              ? buttonStyles("isMobile")
-              : isTablet
-              ? buttonStyles("isTablet")
-              : buttonStyles()
-          }
-          onClick={() => navigate("/pet")}
-        >
-          My Pet
-        </Button>
-        <Button
-          style={
-            isMobile
-              ? buttonStyles("isMobile")
-              : isTablet
-              ? buttonStyles("isTablet")
-              : buttonStyles()
-          }
-          onClick={() => navigate("/pet")}
-        >
-          Pet Store
-        </Button>
+        {token && (
+          <>
+            <Button
+              style={
+                isMobile
+                  ? buttonStyles("isMobile")
+                  : isTablet
+                  ? buttonStyles("isTablet")
+                  : buttonStyles()
+              }
+              onClick={() => navigate("/journal")}
+            >
+              My Journal
+            </Button>
+            <Button
+              style={
+                isMobile
+                  ? buttonStyles("isMobile")
+                  : isTablet
+                  ? buttonStyles("isTablet")
+                  : buttonStyles()
+              }
+              onClick={() => navigate("/tracking")}
+            >
+              Track Behaviors
+            </Button>
+            <Button
+              style={
+                isMobile
+                  ? buttonStyles("isMobile")
+                  : isTablet
+                  ? buttonStyles("isTablet")
+                  : buttonStyles()
+              }
+              onClick={() => navigate("/pe")}
+            >
+              ProudME PE
+            </Button>
+            <Button
+              style={
+                isMobile
+                  ? buttonStyles("isMobile")
+                  : isTablet
+                  ? buttonStyles("isTablet")
+                  : buttonStyles()
+              }
+              onClick={() => navigate("/cafeteria")}
+            >
+              ProudME Cafeteria
+            </Button>
+            <Button
+              style={
+                isMobile
+                  ? buttonStyles("isMobile")
+                  : isTablet
+                  ? buttonStyles("isTablet")
+                  : buttonStyles()
+              }
+              onClick={() => navigate("/pet")}
+            >
+              My Pet
+            </Button>
+            <Button
+              style={
+                isMobile
+                  ? buttonStyles("isMobile")
+                  : isTablet
+                  ? buttonStyles("isTablet")
+                  : buttonStyles()
+              }
+              onClick={() => navigate("/pet")}
+            >
+              Pet Store
+            </Button>
+          </>
+        )}
       </LeftNav>
 
       <div className="right-nav">

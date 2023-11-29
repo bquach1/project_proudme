@@ -5,6 +5,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import SignUpScreen from "screens/account/signup.js";
 import LoginScreen from "screens/account/login.js";
 import HomeScreen from "screens/home.js";
+import TeamScreen from "screens/team.js";
 import JournalScreen from "screens/journal/journal.js";
 import GalleryScreen from "screens/journal/gallery.js";
 import PetScreen from "screens/pet/pet.js";
@@ -22,15 +23,15 @@ function App() {
     <div className="App">
       {location.pathname !== "/login" &&
         location.pathname !== "/recovery" &&
-        location.pathname !== "/signup" &&
-        location.pathname !== "/" && <Header />}
+        location.pathname !== "/signup" && <Header />}
       <Routes>
-        <Route path="/" element={<LoginScreen />} />
+        <Route path="/" element={<HomeScreen />} />
         <Route path="/project-proudme" element={<LoginScreen />} />
         <Route path="/login" element={<LoginScreen />} />
         <Route path="/signup" element={<SignUpScreen />} />
         <Route path="/recovery" element={<RecoveryScreen />} />
         <Route path="/home" element={<HomeScreen />} />
+        <Route path="/team" element={<TeamScreen />} />
         <Route path="/journal" element={<JournalScreen />} />
         <Route path="/gallery" element={<GalleryScreen />} />
         <Route path="/pet" element={<PetScreen />} />

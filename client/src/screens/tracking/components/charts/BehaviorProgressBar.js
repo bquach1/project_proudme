@@ -20,7 +20,6 @@ const BehaviorProgressBar = ({ data, chartGoalType }) => {
 
   const isSmallMobile = useMediaQuery({ query: "(max-width: 600px)" });
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
-  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   const overallProgress = (totalBehaviorValue / totalRecommendedValue) * 100;
 

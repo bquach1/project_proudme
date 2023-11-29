@@ -23,6 +23,7 @@ import {
 import { useSpring, animated } from "react-spring";
 import ExpandableText from "screens/journal/components/ExpandableText";
 import { DATABASE_URL } from "constants";
+import { useMediaQuery } from "react-responsive";
 
 const Wrapper = styled.div`
   padding-bottom: 5%;
@@ -65,33 +66,36 @@ const Wrapper = styled.div`
 `;
 
 const JournalWrapper = styled.table`
-  display: flex;
-  align-items: center;
+display: flex;
+align-items: center;
+width: 100%;
+justify-content: center;
+position: relative;
+margin: 0 auto;
+
+.lock-icon {
+  &:hover {
+    color: #800000;
+  }
+}
+
+@media (max-width: 1190px) {
+  width: 90%;
+  font-size: 14px;
+  flex-direction: column; /* Switch to a vertical layout */
+}
+
+@media (max-width: 768px) {
   width: 100%;
-  justify-content: center;
-  position: relative;
-  margin: 0 auto;
+  font-size: 14px;
+  flex-direction: column; /* Switch to a vertical layout */
+}
 
-  .lock-icon {
-    &:hover {
-      color: #800000;
-    }
-  }
-
-  @media (max-width: 1190px) {
-    width: 90%;
-    font-size: 14px;
-  }
-
-  @media (max-width: 768px) {
-    width: 100%;
-    font-size: 14px;
-  }
-
-  @media (max-width: 480px) {
-    width: 100%;
-    font-size: 12px;
-  }
+@media (max-width: 480px) {
+  width: 100%;
+  font-size: 12px;
+  flex-direction: column; /* Switch to a vertical layout */
+}
 `;
 
 const BehaviorInfoText = styled.div`
@@ -135,7 +139,7 @@ const ReflectionContainer = styled.td`
 `;
 
 const JournalScreen = () => {
-  const [forward, setForward] = useState(true);
+  const [forward, setForward] = useState(true);  
 
   const props = useSpring({
     opacity: 1,
@@ -147,6 +151,9 @@ const JournalScreen = () => {
     config: { duration: 1000 },
     translateX: 50,
   });
+
+  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   const [user, setUser] = useState([]);
   const [goalData, setGoalData] = useState([]);
@@ -498,11 +505,10 @@ const JournalScreen = () => {
               margin: "0 auto",
               display: "flex",
               justifyContent: "center",
-              // alignItems: "center",
               position: "absolute",
             }}
           >
-            <div className="leftPageWrapper">
+            <div className="leftPageWrapper" style={{width: isMobile ? "50%" : "auto"}}>
               <div style={styles.goalScreen}>
                 <GoalContainer style={styles.goalRow}>
                   <th>Health Behaviors</th>
@@ -1433,13 +1439,13 @@ const JournalScreen = () => {
           </div>
         </div>
       </JournalWrapper>
-      <animated.div style={props}>
+      {/* <animated.div style={props}>
         <img
           src={require("../../components/images/journal/tiger.jpg")}
           alt="Tiger custom"
           style={{ width: 75, position: "absolute", right: 0, top: 300 }}
         />
-      </animated.div>
+      </animated.div> */}
     </Wrapper>
   );
 };
