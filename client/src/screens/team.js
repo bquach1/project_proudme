@@ -69,6 +69,23 @@ const TeamScreen = () => {
           </div>
         </Bio>
         <Bio>
+          <BioImage src={require("components/images/team/rachel.jpeg")} />
+          <strong>Rachel Hunter</strong>
+          <strong>Kinesiology Undergraduate Researcher</strong>
+          <div>
+            My name is Rachel Hunter and I’m in my second year as an
+            undergraduate student at LSU. I am pursuing a degree in Kinesiology
+            with the plan to attend Physical Therapy school in the coming years.
+            Project Proud Me’s objective is to implement healthier nutrition,
+            physical activity, sleep, and screen time habits among middle school
+            aged children in and around the greater Baton Rouge area. My passion
+            for fitness and health along with my love for young children has
+            encouraged my engagement and research in Project Proud Me.
+          </div>
+        </Bio>
+      </BioRow>
+      <BioRow>
+        <Bio>
           <BioImage src={require("components/images/team/bruce.jpeg")} />
           <strong>Bruce Quach</strong>
           <strong>Web Developer</strong>
@@ -80,8 +97,6 @@ const TeamScreen = () => {
             free time.
           </div>
         </Bio>
-      </BioRow>
-      <BioRow>
         <Bio>
           <BioImage src={require("components/images/team/ashish.jpeg")} />
           <strong>Ashish Kumar</strong>
