@@ -18,6 +18,23 @@ const ExpandableTextWrapper = styled.div`
   }
 
   max-height: 100px;
+
+  position: relative;
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 10px;
+  max-width: 300px;
+
+  &:before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -15px; /* Half of the width of the triangle */
+    border-width: 15px;
+    border-style: solid;
+    border-color: transparent transparent #f0f0f0 transparent;
+  }
 `;
 
 function ExpandableText({ text, maxLines }) {
