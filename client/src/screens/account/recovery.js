@@ -72,12 +72,12 @@ const Recovery = () => {
         },
       });
       const newEmailData = {
-        subject: "Project ProudME Password Recovery",
+        subject: "Project ProudMe Password Recovery",
         to: email,
         text:
-          `Hi ${response.data[0].firstName},\n\nYou are receiving this email because you requested a password reset on the Project ProudME webpage. \n\nEnter the confirmation code listed to reset your password: ` +
+          `Hi ${response.data[0].firstName},\n\nYou are receiving this email because you requested a password reset on the Project ProudMe webpage. \n\nEnter the confirmation code listed to reset your password: ` +
           verificationCode +
-          " \n\nProject ProudME Team \nLouisiana State University \nPedagogical Kinesiology Lab",
+          " \n\nProject ProudMe Team \nLouisiana State University \nPedagogical Kinesiology Lab",
       };
 
       await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
@@ -112,11 +112,11 @@ const Recovery = () => {
         },
       });
       const newEmailData = {
-        subject: "Project ProudME Username Recovery",
+        subject: "Project ProudMe Username Recovery",
         to: email,
         text:
-          `Hi ${response.data[0].firstName},\n\nYou are receiving this email because you requested a username reminder on the Project ProudME webpage. \n\nThe username associated with this email account is ${response.data[0].name}.` +
-          "\n\nProject ProudME Team \nLouisiana State University \nPedagogical Kinesiology Lab",
+          `Hi ${response.data[0].firstName},\n\nYou are receiving this email because you requested a username reminder on the Project ProudMe webpage. \n\nThe username associated with this email account is ${response.data[0].name}.` +
+          "\n\nProject ProudMe Team \nLouisiana State University \nPedagogical Kinesiology Lab",
       };
 
       await axios.post(`${DATABASE_URL}/send-email`, newEmailData);

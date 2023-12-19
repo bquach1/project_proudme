@@ -174,12 +174,12 @@ const SignUpScreen = () => {
     event.preventDefault();
     try {
       const newEmailData = {
-        subject: "Project ProudME Registration Confirmation",
+        subject: "Project ProudMe Registration Confirmation",
         to: form.email,
         text:
-          `Hi ${form.name},\n\nYou are receiving this email because you recently registered a new account on the Project ProudME webpage. \n\nEnter the confirmation code listed to confirm your email account: ` +
+          `Hi ${form.name},\n\nYou are receiving this email because you recently registered a new account on the Project ProudMe webpage. \n\nEnter the confirmation code listed to confirm your email account: ` +
           verificationCode +
-          " \n\nProject ProudME Team \nLouisiana State University \nPedagogical Kinesiology Lab",
+          " \n\nProject ProudMe Team \nLouisiana State University \nPedagogical Kinesiology Lab",
       };
       await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
       setConfirming(true);
@@ -226,7 +226,7 @@ const SignUpScreen = () => {
         >
           <img
             src={require("../../components/images/login/logo.png")}
-            alt="ProudME mini official Logo"
+            alt="ProudMe mini official Logo"
             style={{
               position: "absolute",
               top: isMobile ? 10 : 20,
@@ -244,7 +244,7 @@ const SignUpScreen = () => {
               paddingTop: "5%",
             }}
           >
-            Thank you for joining ProudME!
+            Thank you for joining ProudMe!
           </div>
           <form
             onSubmit={handleSubmit}
@@ -490,7 +490,7 @@ const SignUpScreen = () => {
                         }}
                       >
                         I agree to receive news ad updates by email from
-                        ProudME.
+                        ProudMe.
                       </Typography>
                     }
                   />

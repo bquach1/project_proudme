@@ -97,7 +97,7 @@ const Header = () => {
               }
               onClick={() => navigate("/pe")}
             >
-              ProudME PE
+              ProudMe PE
             </Button>
             <Button
               style={
@@ -109,7 +109,7 @@ const Header = () => {
               }
               onClick={() => navigate("/cafeteria")}
             >
-              ProudME Cafeteria
+              ProudMe Cafeteria
             </Button>
             <Button
               style={

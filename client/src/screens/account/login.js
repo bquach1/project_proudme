@@ -125,12 +125,12 @@ const LoginScreen = () => {
       <FormWrapper>
         <img
           src={require("../../components/images/login/proudme_logo.png")}
-          alt="ProudME official Logo"
+          alt="ProudMe official Logo"
           style={{ width: isTablet ? "30%" : "50%", margin: "0 auto" }}
         />
         <img
           src={require("../../components/images/login/logo.png")}
-          alt="ProudME mini official Logo"
+          alt="ProudMe mini official Logo"
           style={{
             position: "absolute",
             width: isMobile ? 20 : 40,
@@ -148,7 +148,7 @@ const LoginScreen = () => {
             marginTop: "1%",
           }}
         >
-          Login to your ProudME dashboard
+          Login to your ProudMe dashboard
         </div>
         <form onSubmit={handleSubmit}>
           <div className="input-container">
@@ -276,7 +276,7 @@ const LoginScreen = () => {
         </div>
         <img
           src={require("../../components/images/login/proudme_logo.png")}
-          alt="ProudME official logo"
+          alt="ProudMe official logo"
           style={{
             width: "20%",
             height: "auto",
