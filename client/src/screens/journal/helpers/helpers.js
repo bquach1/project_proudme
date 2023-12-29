@@ -39,7 +39,15 @@ export const createChatbotRequest = (
           role: "system",
           content:
             goal[0].goalType === "screentime" &&
-            goal[0].behaviorValue > goal[0].goalValue * 2
+            goal[0].goalValue === 0 &&
+            goal[0].behaviorValue === 0
+              ? "category6"
+              : goal[0].goalType === "screentime" && goal[0].behaviorValue === 0
+              ? "category7"
+              : goal[0].goalType === "screentime" && goal[0].goalValue === 0
+              ? "category8"
+              : goal[0].goalType === "screentime" &&
+                goal[0].behaviorValue > goal[0].goalValue * 2
               ? "category1"
               : goal[0].goalType === "screentime" &&
                 goal[0].behaviorValue > goal[0].goalValue
@@ -58,22 +66,22 @@ export const createChatbotRequest = (
                 goal[0].goalValue <= goal[0].recommendedValue
               ? "category5"
               : goal[0].goalType === "screentime"
-              ? "category6"
+              ? "category9"
               : `Health goal type: ${goal[0].goalType}, Recommended value: ${
                   goal[0].recommendedValue
                 }, Actual Goal Value: ${goal[0].goalValue}, ' \
 f'Actual behavior value achieved: ${
                   goal[0].behaviorValue
-                }, percentage of actual goal achieved: ${
-                  `${(parseFloat(goal[0].behaviorValue).toFixed(2) /
+                }, percentage of actual goal achieved: ${`${
+                  (parseFloat(goal[0].behaviorValue).toFixed(2) /
                     parseFloat(goal[0].goalValue).toFixed(2)) *
-                  100}%`
-                }, ' \
-f'percentage of recommended goal achieved: ${
-                  `${(parseFloat(goal[0].behaviorValue).toFixed(2) /
+                  100
+                }%`}, ' \
+f'percentage of recommended goal achieved: ${`${
+                  (parseFloat(goal[0].behaviorValue).toFixed(2) /
                     parseFloat(goal[0].recommendedValue).toFixed(2)) *
-                  100}%`
-                }, Reflection: ${goal[0].reflection}.`,
+                  100
+                }%`}, Reflection: ${goal[0].reflection}.`,
         },
       ],
     })

@@ -519,7 +519,7 @@ const openaiInstance = new openai({ apiKey: process.env.OPEN_AI_API_KEY });
 
 app.post("/chatbot", (req, res) => {
   const prompt = req.body.prompt;
-
+console.log(prompt);
   try {
     openaiInstance.chat.completions
       .create({
@@ -530,13 +530,16 @@ app.post("/chatbot", (req, res) => {
             role: "system",
             content: /category\d/.test(JSON.stringify(prompt))
               ? "You are an feedback provider who provides feedback to user based on their screen time values\
-              You are provided one of 6 categories listed below: based on categories. provide feedback \
+              You are provided one of 9 categories listed below: based on categories. provide feedback \
               category 1: User did not achieve their goal and their screen time is more than double of their set goal, ask them to reduce there screen time further\
               category 2: User missed their goal but not by more than double, encourage them to work harder and reach the goal\
               category 3: User achieved their screen time goal, congratulate them and ask them to set their actual goal to recommended value \
               category 4: User achieved their set goal and recommended goal, congratulate them got meeting goal and praise them for setting goal better then recommended value \
               category 5: User has reduced their screen time by more than half of their goal value, they are champion and achiever, praise them for their achievement. \
-              category 6: Praise the user for working towards their goal \
+              category 6: User has not yet set their goal or behavior values for screentime; tell them to enter valid values.\
+              category 7: User has not yet set a behavior value, tell them that they haven't started working towards their goal yet.\
+              category 8: Uer has not yet set a goal value, tell them to remember to set a goal before starting their behaviors.\
+              category 9: Praise the user for working towards their goal \
               Keep your feedback encouraging and limited to 60 words\
               If there is a reflection provided as an input, incorporate it into your feedback."
               : "you will be provided a list of behavior/activity types, recommended goals, actual goals, actual values, percentage of actual goal achieved, percenatge of recommended goal achieved \
@@ -552,6 +555,7 @@ app.post("/chatbot", (req, res) => {
         Provide realistic feedback on how they can improve in the future\
         relevant to the goal type; for example, specific fruits/veggies to eat for eating, specific exercise methods for activity,\
         specific alternatives to laptops for screentime, specific sleep methods for sleep.\
+        If the set goal is 0, tell the user to set a valid amount for their goal; if their behavior value is 0, tell them that they need to get started. If both values are 0, tell them that they need to save their progress for that goal.\
         If the user provides a reflection associated with the given behavior,\
         incorporate it into your feedback.",
           },
