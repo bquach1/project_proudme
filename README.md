@@ -18,12 +18,45 @@ Backend/Middleware
 * [![MongoDB][MongoDB]][MongoDB-url]
 * SendGrid and OpenAI API's for email/chatbot purposes.
 * bcrypt.js for secure MongoDB encryption.
+* Deployment on Render.com for live access through a cloud-hosted database and static site.
   
 # Application Features
+Aside from the designed home, team, and other pages optimized for middle schooler user experiences and interfaces, Project ProudMe's site features a few specific features for the interaction of middle school kids, ranging a span of tech stacks from front to back end.
+1. Secure Authentication
+* Login information stored with MongoDB and encrypted with bcrypt.js hashing algorithms.
+* Accordance with public privacy policies and security of personal information, JWT user tokens with session storage to maintain login states.
+* SendGrid API emails to access forgot username/login functionalities, validate emails.
 <p align="center">
-  <img src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjM3d280OXg5ZTV3cmZ0MmcxcXUyc2VzeGQ4aGI1MHMya2I3dGo2aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YbXLZ6dymH758xSEbM/giphy.gif" alt="Alt Text">
+  <img src="./assets/proudme_login.png" alt="ProudMe login page">
 </p>
 
+2. Journal Page
+* Material UI and React components for users to track goals/reflections for 4 specified behaviors and receive AI-generated feedback through an OpenAI API request.
+* Responsive information tracking last logged dates, daily values and feedback, and personalized goals based on MongoDB user-specific data.
+* Multiple iterations of Figma designs and user experience reports in collaboration with frontend development for middle schooler user experience.
+<p align="center">
+  <img src="./assets/proudme_journal.png" alt="ProudMe My Journal">
+</p>
+
+3. Tracking Behaviors
+* Admin features for tracking other mapped users' data in a specific time range (using react-calendar) and downloading via react-csv.
+* Responsive line charts created using Recharts, color-coded based on relative achievements of goals and recommended values.
+* Responsive progress bar charts created using Recharts, color-coded based on relative achievements of goals and recommended values.
+<p align="center">
+  <img src="./assets/proudme_linechart.png" alt="ProudMe Line Chart" width="45%">
+  <img src="./assets/proudme_progressbar.png" alt="ProudMe Progress Bar" width="45%">
+</p>
+
+4. Other Features
+* ProudMe PE module with embedded links to Youtube videos for physical education (WIP).
+* ProudMe Cafeteria module for visual interaction and healthy eating (WIP).
+<p align="center">
+  <img src="./assets/proudme_pe.png" alt="ProudMe PE">
+</p>
+
+# More Information
+* To access the site, see https://projectproudme.com/ to register an account and interact with the features.
+* For further inquiries, please contact me at quachbruce@gmail.com, or find my LinkedIn at https://linkedin.com/in/bruce-quach
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
