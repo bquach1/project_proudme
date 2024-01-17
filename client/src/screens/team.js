@@ -163,15 +163,15 @@ const TeamScreen = () => {
           <strong>PhD Researcher</strong>
           <div>
             My name is Yuxin Nie, PhD student working under Dr. Chen at PK Lab
-            LSU. I am a former strength and conditioning coach of Chinese
+            LSU. I am a former strength and conditioning coach of the Chinese
             rhythmic gymnastic national team. My research field includes public
             health behavior, physical activity and fitness, athletic performance
-            and youth health development. I received National Scholarship during
-            my time in Beijing Sport University. I hope to apply what I learn
-            into practice and help children establish lifelong healthy
-            behaviors. In the process of participating in ProudMe, I hope to
-            further put theory into practice and enhance theoretical learning in
-            practice.
+            and youth health development. I received National Scholarship
+            recognition during my time in Beijing Sport University. I hope to
+            apply what I learn into practice and help children establish
+            lifelong healthy behaviors. In the process of participating in
+            ProudMe, I hope to further put theory into practice and enhance
+            theoretical learning in practice.
           </div>
         </Bio>
         <Bio>
