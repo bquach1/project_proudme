@@ -50,9 +50,10 @@ export const BehaviorTrackingCSV = ({ behaviorData, user }) => {
     { label: "Type of Goal", key: "goalType" },
     { label: "Goal Quantity", key: "goalValue" },
     { label: "Daily Value", key: "behaviorValue" },
-    { label: "Recommended Level", key: "recommendedValue"},
+    { label: "Recommended Level", key: "recommendedValue" },
     { label: "Goal Met?", key: "goalStatus" },
     { label: "Reflection", key: "reflection" },
+    { label: "AI Feedback", key: "feedback" },
   ];
 
   return (
