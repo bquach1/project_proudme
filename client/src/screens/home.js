@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { THEME_COLORS } from "constants";
 import { useMediaQuery } from "react-responsive";
 import { useNavigate } from "react-router";
+import { BEHAVIOR_COLORS } from "constants";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -120,20 +121,44 @@ const HomeScreen = () => {
         <h1 style={{ fontSize: isMobile ? 32 : isTablet ? 48 : 64 }}>
           Welcome to ProudMe!
         </h1>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <div
             className="home-nav-select"
             onClick={() => navigate("/login")}
-            style={{ fontSize: isMobile ? 32 : isTablet ? 48 : 64 }}
+            style={{
+              fontSize: isMobile ? 28 : isTablet ? 44 : 60,
+              backgroundColor: BEHAVIOR_COLORS.PURPLE,
+              borderRadius: 20,
+              padding: isMobile || isTablet ? "0px 10px 5px" : "0px 10px 15px",
+            }}
           >
             Login
           </div>
           <div
+            style={{
+              fontSize: isMobile ? 28 : isTablet ? 44 : 60,
+              padding: isMobile || isTablet ? "0px 10px 5px" : "0px 10px 15px",
+            }}
+          >
+            &nbsp;or&nbsp;
+          </div>
+          <div
             className="home-nav-select"
             onClick={() => navigate("/signup")}
-            style={{ fontSize: isMobile ? 32 : isTablet ? 48 : 64 }}
+            style={{
+              fontSize: isMobile ? 28 : isTablet ? 44 : 60,
+              backgroundColor: BEHAVIOR_COLORS.PURPLE,
+              borderRadius: 20,
+              padding: isMobile || isTablet ? "0px 10px 5px" : "0px 10px 15px",
+            }}
           >
-            Or Register
+            Register
           </div>
         </div>
       </div>

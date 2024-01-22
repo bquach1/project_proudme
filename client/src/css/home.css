@@ -2,42 +2,53 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
 .petRoom {
-    width: 40%;
-    background-color: #D3C5C5;
-    border-radius: 90px;
-    padding: 5px;
+  width: 40%;
+  background-color: #d3c5c5;
+  border-radius: 90px;
+  padding: 5px;
 }
 
 .imageWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .title {
-    color: #2E6AA1;
+  color: #2e6aa1;
 }
 
 .right-icons {
-    margin-left: 10%;
-    width: 7%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  margin-left: 10%;
+  width: 7%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .left-icons {
-    margin-right: 10%;
-    width: 7%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  margin-right: 10%;
+  width: 7%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .click-icons {
-    margin-bottom: 20%;
+  margin-bottom: 20%;
 }
 
 .click-icons:hover {
-    cursor: pointer;
+  cursor: pointer;
+}
+
+.home-nav-select {
+  color: white;
+}
+
+.home-nav-select:hover {
+  color: lightblue;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: 0.2s;
 }

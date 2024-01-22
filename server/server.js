@@ -519,7 +519,7 @@ const openaiInstance = new openai({ apiKey: process.env.OPEN_AI_API_KEY });
 
 app.post("/chatbot", (req, res) => {
   const prompt = req.body.prompt;
-console.log(prompt);
+  console.log(prompt);
   try {
     openaiInstance.chat.completions
       .create({

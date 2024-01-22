@@ -1,11 +1,2 @@
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,500,700");
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
-
-.home-nav-select {
-  color: white;
-}
-
-.home-nav-select:hover {
-  color: lightblue;
-  cursor: pointer;
-}
