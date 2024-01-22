@@ -29,7 +29,7 @@ const BioImage = styled.img`
   width: 100%;
   margin-bottom: 2%;
   height: ${(props) =>
-    props.isMobile ? "100px" : props.isTablet ? "300px" : "550px"};
+    props.isMobile ? "100px" : props.isTablet ? "300px" : "500px"};
   object-fit: cover;
 `;
 
@@ -222,6 +222,26 @@ const TeamScreen = () => {
         </Bio>
         <Bio>
           <BioImage
+            src={require("components/images/team/paul.jpeg")}
+            isMobile={isMobile}
+            isTablet={isTablet}
+          />
+          <strong>Dongin (Paul) Son</strong>
+          <strong>PhD Researcher</strong>
+          <div>
+            My name is Dongin Son, also referred to as Paul Son. I hold a
+            bachelor’s and a master’s degree in Physical Education and am
+            currently pursuing my doctoral studies at the PK lab under the
+            supervision of Dr. Chen. My research goal is to produce meaningful
+            insights that improve the health of adolescents. Specifically, my
+            research focuses on the impact of physical activity on health and
+            the behavioral and socio-cultural determinants of physical activity.
+          </div>
+        </Bio>
+      </BioRow>
+      <BioRow>
+        <Bio>
+          <BioImage
             src={require("components/images/team/jena.jpg")}
             isMobile={isMobile}
             isTablet={isTablet}
@@ -241,8 +261,6 @@ const TeamScreen = () => {
             involvement with Project ProudMe.
           </div>
         </Bio>
-      </BioRow>
-      <BioRow>
         <Bio>
           <BioImage
             src={require("components/images/team/rachel.jpeg")}
@@ -281,6 +299,8 @@ const TeamScreen = () => {
             my food account in my free time.
           </div>
         </Bio>
+      </BioRow>
+      <BioRow>
         <Bio>
           <BioImage
             src={require("components/images/team/ashish.jpeg")}

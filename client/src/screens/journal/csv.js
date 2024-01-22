@@ -17,7 +17,6 @@ export const BehaviorTrackingCSV = ({ behaviorData, user }) => {
           },
         });
 
-        // Move the code for generating finalData here
         const finalData = behaviorData.map((obj) => ({
           ...obj,
           gradeLevel: response.data[0].gradeLevel,
@@ -28,7 +27,6 @@ export const BehaviorTrackingCSV = ({ behaviorData, user }) => {
           timeLogged: new Date(obj.dateToday).toLocaleTimeString(),
         }));
 
-        // Set finalData state if needed
         setInputData(finalData);
       } catch (error) {
         console.error(error);
