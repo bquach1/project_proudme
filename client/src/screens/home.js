@@ -128,38 +128,45 @@ const HomeScreen = () => {
             alignItems: "center",
           }}
         >
-          <div
-            className="home-nav-select"
-            onClick={() => navigate("/login")}
-            style={{
-              fontSize: isMobile ? 28 : isTablet ? 44 : 60,
-              backgroundColor: BEHAVIOR_COLORS.PURPLE,
-              borderRadius: 20,
-              padding: isMobile || isTablet ? "0px 10px 5px" : "0px 10px 15px",
-            }}
-          >
-            Login
-          </div>
-          <div
-            style={{
-              fontSize: isMobile ? 28 : isTablet ? 44 : 60,
-              padding: isMobile || isTablet ? "0px 10px 5px" : "0px 10px 15px",
-            }}
-          >
-            &nbsp;or&nbsp;
-          </div>
-          <div
-            className="home-nav-select"
-            onClick={() => navigate("/signup")}
-            style={{
-              fontSize: isMobile ? 28 : isTablet ? 44 : 60,
-              backgroundColor: BEHAVIOR_COLORS.PURPLE,
-              borderRadius: 20,
-              padding: isMobile || isTablet ? "0px 10px 5px" : "0px 10px 15px",
-            }}
-          >
-            Register
-          </div>
+          {!localStorage.getItem("authToken") && (
+            <>
+              <div
+                className="home-nav-select"
+                onClick={() => navigate("/login")}
+                style={{
+                  fontSize: isMobile ? 28 : isTablet ? 44 : 60,
+                  backgroundColor: BEHAVIOR_COLORS.PURPLE,
+                  borderRadius: 20,
+                  padding:
+                    isMobile || isTablet ? "0px 10px 5px" : "0px 10px 15px",
+                }}
+              >
+                Login
+              </div>
+              <div
+                style={{
+                  fontSize: isMobile ? 28 : isTablet ? 44 : 60,
+                  padding:
+                    isMobile || isTablet ? "0px 10px 5px" : "0px 10px 15px",
+                }}
+              >
+                &nbsp;or&nbsp;
+              </div>
+              <div
+                className="home-nav-select"
+                onClick={() => navigate("/signup")}
+                style={{
+                  fontSize: isMobile ? 28 : isTablet ? 44 : 60,
+                  backgroundColor: BEHAVIOR_COLORS.PURPLE,
+                  borderRadius: 20,
+                  padding:
+                    isMobile || isTablet ? "0px 10px 5px" : "0px 10px 15px",
+                }}
+              >
+                Register
+              </div>
+            </>
+          )}
         </div>
       </div>
       <HomeWrapper mobile={isMobile.toString()} tablet={isTablet.toString()}>
@@ -171,7 +178,7 @@ const HomeScreen = () => {
           </div>
           <div className="title-text-box">
             This website includes three main components of the intervention:
-            SMART Goal-Setting (My Journal + Track Behaviors), ProudMe PE, and
+            SMART Goal-Setting (My Journal + Behavior Charts), ProudMe PE, and
             ProudMe Cafeteria.
           </div>
           <div style={{ display: "flex" }}>
@@ -211,7 +218,7 @@ const HomeScreen = () => {
                   sleep time) (4) type their reflective thoughts to
                   self-evaluate goal attainment (5) receive AI-generated
                   feedback to make SMARTer goals in the future (6) review the
-                  Figures (under “Track Behaviors”) to visualize progress and
+                  Figures (under "Behavior Charts") to visualize progress and
                   achievement.
                 </li>
                 <li>

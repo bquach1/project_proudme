@@ -289,7 +289,7 @@ const TeamScreen = () => {
           <strong>Bruce Quach</strong>
           <strong>Web Developer</strong>
           <div>
-            My name is Bruce, and I'm currently a senior undergraduate student
+            My name is Bruce Quach, and I'm currently a senior undergraduate student
             at Louisiana State University majoring in computer science with a
             concentration in software engineering. My primary role in Project
             ProudMe is creating the web application for SMART journaling and

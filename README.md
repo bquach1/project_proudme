@@ -1,5 +1,5 @@
 # About Project ProudMe
-Project ProudMe is an adolescent obesity prevention intervention based in Louisiana led by Dr. Senlin Chen of the Pedagogical Kinesiology lab and his team. I've served as the fullstack software developer for the project since December 2022, creating the components for the website for middle schoolers to interact with along with Figma and UX designers. This website includes three main components of the intervention: SMART Goal-Setting (My Journal + Track Behaviors), ProudMe PE, and ProudMe Cafeteria, all built using JavaScript and React.js.
+Project ProudMe is an adolescent obesity prevention intervention based in Louisiana led by Dr. Senlin Chen of the Pedagogical Kinesiology lab and his team. I've served as the fullstack software developer for the project since December 2022, creating the components for the website for middle schoolers to interact with along with Figma and UX designers. This website includes three main components of the intervention: SMART Goal-Setting (My Journal + Behavior Charts), ProudMe PE, and ProudMe Cafeteria, all built using JavaScript and React.js.
 
 # Tech Stack
 Frontend

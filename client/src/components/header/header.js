@@ -85,7 +85,7 @@ const Header = () => {
               }
               onClick={() => navigate("/tracking")}
             >
-              Track Behaviors
+              Behavior Charts
             </Button>
             <Button
               style={
@@ -110,30 +110,6 @@ const Header = () => {
               onClick={() => navigate("/cafeteria")}
             >
               ProudMe Cafeteria
-            </Button>
-            <Button
-              style={
-                isMobile
-                  ? buttonStyles("isMobile")
-                  : isTablet
-                  ? buttonStyles("isTablet")
-                  : buttonStyles()
-              }
-              onClick={() => navigate("/pet")}
-            >
-              My Pet
-            </Button>
-            <Button
-              style={
-                isMobile
-                  ? buttonStyles("isMobile")
-                  : isTablet
-                  ? buttonStyles("isTablet")
-                  : buttonStyles()
-              }
-              onClick={() => navigate("/pet")}
-            >
-              Pet Store
             </Button>
           </>
         )}

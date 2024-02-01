@@ -376,11 +376,23 @@ const TrackingScreen = () => {
             <BehaviorProgressBar
               data={filteredActivityBehaviorData}
               chartGoalType={"activity"}
+              type="goal"
+            />
+            <BehaviorProgressBar
+              data={filteredActivityBehaviorData}
+              chartGoalType={"activity"}
+              type="behavior"
             />
             <h1>{shownUser.firstName}'s Screen Time Behavior Data</h1>
             <BehaviorProgressBar
               data={filteredScreentimeBehaviorData}
               chartGoalType={"screentime"}
+              type="goal"
+            />
+            <BehaviorProgressBar
+              data={filteredScreentimeBehaviorData}
+              chartGoalType={"screentime"}
+              type="behavior"
             />
             <h1>
               {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data
@@ -388,11 +400,23 @@ const TrackingScreen = () => {
             <BehaviorProgressBar
               data={filteredEatingBehaviorData}
               chartGoalType={"eating"}
+              type="goal"
+            />
+            <BehaviorProgressBar
+              data={filteredEatingBehaviorData}
+              chartGoalType={"eating"}
+              type="behavior"
             />
             <h1>{shownUser.firstName}'s Sleep Behavior Data</h1>
             <BehaviorProgressBar
               data={filteredSleepBehaviorData}
               chartGoalType={"sleep"}
+              type="goal"
+            />
+            <BehaviorProgressBar
+              data={filteredSleepBehaviorData}
+              chartGoalType={"sleep"}
+              type="behavior"
             />
           </>
         )}
