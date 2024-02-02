@@ -20,7 +20,7 @@ import {
   createChatbotRequest,
   updateBehaviorValue,
 } from "screens/journal/helpers/helpers";
-import { useSpring, animated } from "react-spring";
+import { useSpring } from "react-spring";
 import ExpandableText from "screens/journal/components/ExpandableText";
 import { DATABASE_URL } from "constants";
 import { useMediaQuery } from "react-responsive";
@@ -31,6 +31,10 @@ const Wrapper = styled.div`
   width: 90%;
   margin: auto;
   font-family: Montserrat;
+
+  .information-text {
+    font-size: 14px;
+  }
 
   .disabled-behavior:hover {
     border-radius: 5px;
@@ -66,36 +70,36 @@ const Wrapper = styled.div`
 `;
 
 const JournalWrapper = styled.table`
-display: flex;
-align-items: center;
-width: 100%;
-justify-content: center;
-position: relative;
-margin: 0 auto;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  position: relative;
+  margin: 0 auto;
 
-.lock-icon {
-  &:hover {
-    color: #800000;
+  .lock-icon {
+    &:hover {
+      color: #800000;
+    }
   }
-}
 
-@media (max-width: 1190px) {
-  width: 90%;
-  font-size: 14px;
-  flex-direction: column; /* Switch to a vertical layout */
-}
+  @media (max-width: 1190px) {
+    width: 90%;
+    font-size: 14px;
+    flex-direction: column; /* Switch to a vertical layout */
+  }
 
-@media (max-width: 768px) {
-  width: 100%;
-  font-size: 14px;
-  flex-direction: column; /* Switch to a vertical layout */
-}
+  @media (max-width: 768px) {
+    width: 100%;
+    font-size: 14px;
+    flex-direction: column; /* Switch to a vertical layout */
+  }
 
-@media (max-width: 480px) {
-  width: 100%;
-  font-size: 12px;
-  flex-direction: column; /* Switch to a vertical layout */
-}
+  @media (max-width: 480px) {
+    width: 100%;
+    font-size: 12px;
+    flex-direction: column; /* Switch to a vertical layout */
+  }
 `;
 
 const BehaviorInfoText = styled.div`
@@ -139,7 +143,7 @@ const ReflectionContainer = styled.td`
 `;
 
 const JournalScreen = () => {
-  const [forward, setForward] = useState(true);  
+  const [forward, setForward] = useState(true);
 
   const props = useSpring({
     opacity: 1,
@@ -508,7 +512,10 @@ const JournalScreen = () => {
               position: "absolute",
             }}
           >
-            <div className="leftPageWrapper" style={{width: isMobile ? "50%" : "auto"}}>
+            <div
+              className="leftPageWrapper"
+              style={{ width: isMobile ? "50%" : "auto" }}
+            >
               <div style={styles.goalScreen}>
                 <GoalContainer style={styles.goalRow}>
                   <th>Health Behaviors</th>
@@ -609,6 +616,7 @@ const JournalScreen = () => {
                       style={{
                         width: "30%",
                       }}
+                      className="information-text"
                     >
                       &nbsp;Recommended: 60 minutes/day
                     </strong>
@@ -616,6 +624,7 @@ const JournalScreen = () => {
                       style={{
                         width: "70%",
                       }}
+                      className="information-text"
                     >
                       <strong>Goal:</strong> Get a good amount of physical
                       activity every day to improve fitness and physical/mental
@@ -722,6 +731,7 @@ const JournalScreen = () => {
                       style={{
                         width: "30%",
                       }}
+                      className="information-text"
                     >
                       &nbsp;Recommended: 120 minutes/day
                     </strong>
@@ -729,6 +739,7 @@ const JournalScreen = () => {
                       style={{
                         width: "70%",
                       }}
+                      className="information-text"
                     >
                       <strong>Goal:</strong> Limit screentime to at most 2 hours
                       a day to improve focus and productive time.
@@ -885,6 +896,7 @@ const JournalScreen = () => {
                       style={{
                         width: "30%",
                       }}
+                      className="information-text"
                     >
                       &nbsp;Recommended: 5 servings/day
                     </strong>
@@ -892,6 +904,7 @@ const JournalScreen = () => {
                       style={{
                         width: "70%",
                       }}
+                      className="information-text"
                     >
                       <strong>Goal:</strong> Eat servings of healthy fruits and
                       vegetables for a balanced diet and a healthy lifestyle.
@@ -992,6 +1005,7 @@ const JournalScreen = () => {
                       style={{
                         width: "30%",
                       }}
+                      className="information-text"
                     >
                       &nbsp;Recommended: 9 hours/day
                     </strong>
@@ -999,6 +1013,7 @@ const JournalScreen = () => {
                       style={{
                         width: "70%",
                       }}
+                      className="information-text"
                     >
                       <strong>Goal:</strong> Get sufficient sleep every night to
                       improve daily productivity and prevent any sleep-related
@@ -1031,6 +1046,8 @@ const JournalScreen = () => {
                     <TextField
                       type="text"
                       placeholder="Type my thoughts"
+                      multiline
+                      rows={2}
                       style={{ width: "80%" }}
                       value={activityGoal.length && activityGoal[0].reflection}
                       onChange={(e) => {
@@ -1118,7 +1135,7 @@ const JournalScreen = () => {
 
                 <GoalContainer>
                   <BehaviorInfoText>
-                    <div style={{ width: "100%" }}>
+                    <div style={{ width: "100%" }} className="information-text">
                       <strong>How to Achieve:</strong> Exercise (run, play
                       sports, lift weights) at a local gym, park, or at home, do
                       chores, or just perform light movements.
@@ -1131,6 +1148,8 @@ const JournalScreen = () => {
                     <TextField
                       type="text"
                       placeholder="Type my thoughts"
+                      multiline
+                      rows={2}
                       style={{ width: "80%" }}
                       value={screentimeGoal[0].reflection}
                       onChange={(e) => {
@@ -1218,7 +1237,7 @@ const JournalScreen = () => {
 
                 <GoalContainer>
                   <BehaviorInfoText>
-                    <div style={{ width: "100%" }}>
+                    <div style={{ width: "100%" }} className="information-text">
                       <strong>How to Achieve:</strong> Assign time slots to use
                       computers/phones for schoolwork, video games, or other
                       activities. Relax and have fun outside or with
@@ -1232,6 +1251,8 @@ const JournalScreen = () => {
                     <TextField
                       type="text"
                       placeholder="Type my thoughts"
+                      multiline
+                      rows={2}
                       style={{ width: "80%" }}
                       value={eatingGoal.length && eatingGoal[0].reflection}
                       onChange={(e) => {
@@ -1319,7 +1340,7 @@ const JournalScreen = () => {
 
                 <GoalContainer>
                   <BehaviorInfoText>
-                    <div style={{ width: "100%" }}>
+                    <div style={{ width: "100%" }} className="information-text">
                       <strong>How to Achieve:</strong> Incorporate
                       fruits/veggies into snacktimes. Eating easy to eat fruits
                       (bananas, grapes, apples, etc.) or vegetables
@@ -1333,6 +1354,8 @@ const JournalScreen = () => {
                     <TextField
                       type="text"
                       placeholder="Type my thoughts"
+                      multiline
+                      rows={2}
                       style={{ width: "80%" }}
                       value={sleepGoal.length && sleepGoal[0].reflection}
                       onChange={(e) => {
@@ -1422,7 +1445,7 @@ const JournalScreen = () => {
 
                 <GoalContainer>
                   <BehaviorInfoText>
-                    <div style={{ width: "100%" }}>
+                    <div style={{ width: "100%" }} className="information-text">
                       <strong>How to Achieve:</strong> Put devices away before
                       sleeping, and focus on making a routine time to go to bed
                       and wake up every morning!

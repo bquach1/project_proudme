@@ -7,8 +7,24 @@ const PEScreen = () => {
   return (
     <div className="pe">
       <h1 className="pe-header">ProudMe PE Video Lessons</h1>
+      <div className="info-text">
+        This website publishes important resources related to the ProudMe PE
+        curriculum. This is a 12-lesson curriculum unit that educates middle
+        school students important knowledge, skill, and disposition needed for
+        adopting health-enhancing behaviors (more physical activity, less screen
+        time, more fruits/vegetables, and get enough sleep).
+      </div>
+      <br />
+      <div className="info-text">
+        The website contains lesson plans for the curriculum unit that are
+        accessible for teacher users. The demo videos and other resources are
+        also available for teachers to conveniently teach the ProudMe PE
+        lessons.
+      </div>
       <div className="video-list">
-        <h3 style={{ marginBottom: "1%", marginTop: "1%" }}>Do (Physical Activity)</h3>
+        <h3 style={{ marginBottom: "1%", marginTop: "1%" }}>
+          Do (Physical Activity)
+        </h3>
         <YoutubeEmbed embedId="-d-v4lq9Vd4" />
         <YoutubeEmbed embedId="DMR6ZS_TDZo" />
         <YoutubeEmbed embedId="JOwu_5rqU0U" />

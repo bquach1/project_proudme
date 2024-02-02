@@ -1,0 +1,20 @@
+.cafeteria-header {
+  margin-top: 1%;
+}
+
+.info-text {
+  width: 80%;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.pdf-container {
+  display: flex;
+  flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pdf-page {
+  margin: 8px;
+  width: 40%;
+}

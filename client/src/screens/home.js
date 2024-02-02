@@ -245,7 +245,7 @@ const HomeScreen = () => {
               </strong>
               <div className="info-text">
                 This website publishes important resources related to the
-                ProudMe PE curriculum. This is a 12- lesson curriculum unit that
+                ProudMe PE curriculum. This is a 12-lesson curriculum unit that
                 educates middle school students important knowledge, skill, and
                 disposition needed for adopting health-enhancing behaviors (more
                 physical activity, less screen time, more fruits/vegetables, and
