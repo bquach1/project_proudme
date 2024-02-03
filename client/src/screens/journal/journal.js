@@ -1047,7 +1047,7 @@ const JournalScreen = () => {
                       type="text"
                       placeholder="Type my thoughts"
                       multiline
-                      rows={2}
+                      rows={activityGoal[0].reflection.length > 20 ? 2 : 1}
                       style={{ width: "80%" }}
                       value={activityGoal.length && activityGoal[0].reflection}
                       onChange={(e) => {
@@ -1149,7 +1149,7 @@ const JournalScreen = () => {
                       type="text"
                       placeholder="Type my thoughts"
                       multiline
-                      rows={2}
+                      rows={screentimeGoal[0].reflection.length > 20 ? 2 : 1}
                       style={{ width: "80%" }}
                       value={screentimeGoal[0].reflection}
                       onChange={(e) => {
@@ -1252,7 +1252,7 @@ const JournalScreen = () => {
                       type="text"
                       placeholder="Type my thoughts"
                       multiline
-                      rows={2}
+                      rows={eatingGoal[0].reflection.length > 20 ? 2 : 1}
                       style={{ width: "80%" }}
                       value={eatingGoal.length && eatingGoal[0].reflection}
                       onChange={(e) => {
@@ -1355,7 +1355,7 @@ const JournalScreen = () => {
                       type="text"
                       placeholder="Type my thoughts"
                       multiline
-                      rows={2}
+                      rows={sleepGoal[0].reflection.length > 20 ? 2 : 1}
                       style={{ width: "80%" }}
                       value={sleepGoal.length && sleepGoal[0].reflection}
                       onChange={(e) => {
