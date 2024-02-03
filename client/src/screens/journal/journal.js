@@ -125,7 +125,8 @@ const GoalContainer = styled.tr`
 const ReflectionContainer = styled.td`
   display: flex;
   flex-direction: row;
-  width: 50%;
+  width: 60%;
+  margin-left: -5%;
 
   .edit-icon {
     margin-left: 3%;
@@ -1047,7 +1048,7 @@ const JournalScreen = () => {
                       type="text"
                       placeholder="Type my thoughts"
                       multiline
-                      rows={activityGoal[0].reflection.length > 20 ? 2 : 1}
+                      rows={activityGoal[0].reflection.length > 25 ? 2 : 1}
                       style={{ width: "80%" }}
                       value={activityGoal.length && activityGoal[0].reflection}
                       onChange={(e) => {
@@ -1149,7 +1150,7 @@ const JournalScreen = () => {
                       type="text"
                       placeholder="Type my thoughts"
                       multiline
-                      rows={screentimeGoal[0].reflection.length > 20 ? 2 : 1}
+                      rows={screentimeGoal[0].reflection.length > 25 ? 2 : 1}
                       style={{ width: "80%" }}
                       value={screentimeGoal[0].reflection}
                       onChange={(e) => {
@@ -1252,7 +1253,7 @@ const JournalScreen = () => {
                       type="text"
                       placeholder="Type my thoughts"
                       multiline
-                      rows={eatingGoal[0].reflection.length > 20 ? 2 : 1}
+                      rows={eatingGoal[0].reflection.length > 25 ? 2 : 1}
                       style={{ width: "80%" }}
                       value={eatingGoal.length && eatingGoal[0].reflection}
                       onChange={(e) => {
@@ -1355,7 +1356,7 @@ const JournalScreen = () => {
                       type="text"
                       placeholder="Type my thoughts"
                       multiline
-                      rows={sleepGoal[0].reflection.length > 20 ? 2 : 1}
+                      rows={sleepGoal[0].reflection.length > 27 ? 2 : 1}
                       style={{ width: "80%" }}
                       value={sleepGoal.length && sleepGoal[0].reflection}
                       onChange={(e) => {
