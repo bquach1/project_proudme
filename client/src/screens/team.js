@@ -1,7 +1,9 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import "css/team.css";
 import styled from "styled-components";
+import { MenuItem, Menu, Button } from "@mui/material";
 import { useMediaQuery } from "react-responsive";
+import { HashLink as Link } from 'react-router-hash-link';
 
 const TeamWrapper = styled.div`
   font-family: Montserrat;
@@ -9,7 +11,7 @@ const TeamWrapper = styled.div`
 `;
 
 const BioRow = styled.div`
-  padding-top: 2%;
+  padding-top: 1%;
   display: flex;
   justify-content: space-between;
   margin: 0 auto;
@@ -37,9 +39,32 @@ const TeamScreen = () => {
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
   const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleClick = () => {
+    setMenuOpen(!menuOpen);
+  }
+
+  const handleClose = () => {
+    setMenuOpen(false);
+  }
+
   return (
     <TeamWrapper style={{ fontSize: isMobile ? "12px" : "16px" }}>
       <h1 style={{ color: "#2E6AA1", marginTop: "1%" }}>Our Team</h1>
+      <div>
+      <Button onClick={handleClick}>
+        Open Menu
+      </Button>
+      <Menu
+        open={menuOpen}
+        onClose={handleClose}
+      >
+        <MenuItem><Link to="/team#teacher">Teacher</Link></MenuItem>
+        <MenuItem><Link to="/team#student-researchers">Student Researcher</Link></MenuItem>
+        <MenuItem><Link to="/team#student-developers">Student Developer</Link></MenuItem>
+      </Menu>
+      </div>
       <h3
         style={{
           color: "#2E6AA1",
@@ -47,6 +72,7 @@ const TeamScreen = () => {
           textAlign: "center",
           margin: "0 auto",
         }}
+        id="teacher"
       >
         Faculty
       </h3>
@@ -177,6 +203,17 @@ const TeamScreen = () => {
       >
         Students
       </h3>
+      <h4
+        style={{
+          color: "#2E6AA1",
+          paddingTop: "1%",
+          textAlign: "center",
+          margin: "0 auto",
+        }}
+        id="student-researchers"
+      >
+        Student Researchers
+      </h4>
       <BioRow style={{ marginTop: "1%" }}>
         <Bio>
           <BioImage
@@ -280,6 +317,19 @@ const TeamScreen = () => {
             encouraged my engagement and research in Project Proud Me.
           </div>
         </Bio>
+      </BioRow>
+      <h4
+        style={{
+          color: "#2E6AA1",
+          paddingTop: "1%",
+          textAlign: "center",
+          margin: "0 auto",
+        }}
+        id="student-developers"
+      >
+        Tech Team
+      </h4>
+      <BioRow>
         <Bio>
           <BioImage
             src={require("components/images/team/bruce.jpeg")}
@@ -289,18 +339,16 @@ const TeamScreen = () => {
           <strong>Bruce Quach</strong>
           <strong>Web Developer</strong>
           <div>
-            My name is Bruce Quach, and I'm currently a senior undergraduate student
-            at Louisiana State University majoring in computer science with a
-            concentration in software engineering. My primary role in Project
-            ProudMe is creating the web application for SMART journaling and
-            goal setting and making many of the modules for obesity prevention
-            realized on software/mobile applications. I have a passion for web
-            development and enjoy watching shows, playing games, and posting on
-            my food account in my free time.
+            My name is Bruce Quach, and I'm currently a senior undergraduate
+            student at Louisiana State University majoring in computer science
+            with a concentration in software engineering. My primary role in
+            Project ProudMe is creating the web application for SMART journaling
+            and goal setting and making many of the modules for obesity
+            prevention realized on software/mobile applications. I have a
+            passion for web development and enjoy watching shows, playing games,
+            and posting on my food account in my free time.
           </div>
         </Bio>
-      </BioRow>
-      <BioRow>
         <Bio>
           <BioImage
             src={require("components/images/team/ashish.jpeg")}
