@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "css/team.css";
 import styled from "styled-components";
 import { MenuItem, Menu, Button } from "@mui/material";
 import { useMediaQuery } from "react-responsive";
-import { HashLink as Link } from 'react-router-hash-link';
+import { HashLink as Link } from "react-router-hash-link";
+import { BEHAVIOR_COLORS } from "constants";
 
 const TeamWrapper = styled.div`
   font-family: Montserrat;
@@ -39,31 +40,51 @@ const TeamScreen = () => {
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
   const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleClick = () => {
-    setMenuOpen(!menuOpen);
-  }
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   const handleClose = () => {
-    setMenuOpen(false);
-  }
+    setAnchorEl(null);
+  };
 
   return (
     <TeamWrapper style={{ fontSize: isMobile ? "12px" : "16px" }}>
       <h1 style={{ color: "#2E6AA1", marginTop: "1%" }}>Our Team</h1>
       <div>
-      <Button onClick={handleClick}>
-        Open Menu
-      </Button>
-      <Menu
-        open={menuOpen}
-        onClose={handleClose}
-      >
-        <MenuItem><Link to="/team#teacher">Teacher</Link></MenuItem>
-        <MenuItem><Link to="/team#student-researchers">Student Researcher</Link></MenuItem>
-        <MenuItem><Link to="/team#student-developers">Student Developer</Link></MenuItem>
-      </Menu>
+        <Button
+          onClick={handleClick}
+          style={{
+            textTransform: "none",
+            backgroundColor: BEHAVIOR_COLORS.PURPLE,
+            color: "white",
+            marginTop: "1%",
+            marginBottom: "1%",
+            padding: 10,
+          }}
+        >
+          Quick Navigate
+        </Button>
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <Link to="/team#teacher" onClick={() => setAnchorEl(null)}>
+            <MenuItem>Faculty</MenuItem>
+          </Link>
+          <Link
+            to="/team#student-researchers"
+            onClick={() => setAnchorEl(null)}
+          >
+            <MenuItem>Student Researchers</MenuItem>
+          </Link>
+          <Link to="/team#student-developers" onClick={() => setAnchorEl(null)}>
+            <MenuItem>Student Developers</MenuItem>
+          </Link>
+        </Menu>
       </div>
       <h3
         style={{
