@@ -372,52 +372,100 @@ const TrackingScreen = () => {
           </div>
         ) : (
           <>
-            <h1>{shownUser.firstName}'s Physical Activity Behavior Data</h1>
-            <BehaviorProgressBar
-              data={filteredActivityBehaviorData}
-              chartGoalType={"activity"}
-              type="goal"
-            />
-            <BehaviorProgressBar
-              data={filteredActivityBehaviorData}
-              chartGoalType={"activity"}
-              type="behavior"
-            />
-            <h1>{shownUser.firstName}'s Screen Time Behavior Data</h1>
-            <BehaviorProgressBar
-              data={filteredScreentimeBehaviorData}
-              chartGoalType={"screentime"}
-              type="goal"
-            />
-            <BehaviorProgressBar
-              data={filteredScreentimeBehaviorData}
-              chartGoalType={"screentime"}
-              type="behavior"
-            />
-            <h1>
-              {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data
-            </h1>
-            <BehaviorProgressBar
-              data={filteredEatingBehaviorData}
-              chartGoalType={"eating"}
-              type="goal"
-            />
-            <BehaviorProgressBar
-              data={filteredEatingBehaviorData}
-              chartGoalType={"eating"}
-              type="behavior"
-            />
-            <h1>{shownUser.firstName}'s Sleep Behavior Data</h1>
-            <BehaviorProgressBar
-              data={filteredSleepBehaviorData}
-              chartGoalType={"sleep"}
-              type="goal"
-            />
-            <BehaviorProgressBar
-              data={filteredSleepBehaviorData}
-              chartGoalType={"sleep"}
-              type="behavior"
-            />
+            <div
+              style={{
+                width: "90%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                border: "1px solid black",
+                padding: 20,
+                margin: 50,
+              }}
+            >
+              <h1>{shownUser.firstName}'s Physical Activity Behavior Data</h1>
+              <BehaviorProgressBar
+                data={filteredActivityBehaviorData}
+                chartGoalType={"activity"}
+                type="goal"
+              />
+              <BehaviorProgressBar
+                data={filteredActivityBehaviorData}
+                chartGoalType={"activity"}
+                type="behavior"
+              />
+            </div>
+            <div
+              style={{
+                width: "90%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                border: "1px solid black",
+                padding: 20,
+                margin: 50,
+              }}
+            >
+              <h1>{shownUser.firstName}'s Screen Time Behavior Data</h1>
+              <BehaviorProgressBar
+                data={filteredScreentimeBehaviorData}
+                chartGoalType={"screentime"}
+                type="goal"
+              />
+              <BehaviorProgressBar
+                data={filteredScreentimeBehaviorData}
+                chartGoalType={"screentime"}
+                type="behavior"
+              />
+            </div>
+            <div
+              style={{
+                width: "90%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                border: "1px solid black",
+                padding: 20,
+                margin: 50,
+              }}
+            >
+              <h1>
+                {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data
+              </h1>
+              <BehaviorProgressBar
+                data={filteredEatingBehaviorData}
+                chartGoalType={"eating"}
+                type="goal"
+              />
+              <BehaviorProgressBar
+                data={filteredEatingBehaviorData}
+                chartGoalType={"eating"}
+                type="behavior"
+              />
+            </div>
+            <div
+              style={{
+                width: "90%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                border: "1px solid black",
+                padding: 20,
+                margin: 50,
+              }}
+            >
+              <h1>{shownUser.firstName}'s Sleep Behavior Data</h1>
+              <BehaviorProgressBar
+                data={filteredSleepBehaviorData}
+                chartGoalType={"sleep"}
+                type="goal"
+              />
+              <BehaviorProgressBar
+                data={filteredSleepBehaviorData}
+                chartGoalType={"sleep"}
+                type="behavior"
+              />
+            </div>
           </>
         )}
       </div>

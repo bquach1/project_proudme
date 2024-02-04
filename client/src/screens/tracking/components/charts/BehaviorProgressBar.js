@@ -22,21 +22,23 @@ const BehaviorProgressBar = ({ data, chartGoalType, type }) => {
     0
   );
 
-  console.log(totalGoalValue);
-
   const isSmallMobile = useMediaQuery({ query: "(max-width: 600px)" });
   const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
 
-  const overallProgress = (totalBehaviorValue / Math.max(totalGoalValue, totalRecommendedValue)) * 100;
+  const overallProgress =
+    (totalBehaviorValue / Math.max(totalGoalValue, totalRecommendedValue)) *
+    100;
 
-  const goalProgress = (totalGoalValue / totalRecommendedValue) * 100;
+  const goalProgress =
+    (totalGoalValue / Math.max(totalRecommendedValue, totalBehaviorValue)) *
+    100;
 
   const averageBehaviorVal = totalBehaviorValue / data.length;
 
   return (
     <ProgressBox
       sx={{
-        width: "80%",
+        width: "95%",
         marginBottom: isMobile || isSmallMobile ? "20%" : "5%",
       }}
       position="relative"
@@ -67,12 +69,16 @@ const BehaviorProgressBar = ({ data, chartGoalType, type }) => {
                   bottom: 0,
                   zIndex: 1,
                   left:
-                    goalProgress > 100
+                    chartGoalType === "screentime" && goalProgress < 100
                       ? `calc(${
-                          (totalRecommendedValue / totalGoalValue) * 100
+                        (totalGoalValue / Math.max(totalRecommendedValue, totalBehaviorValue)) * 100
+                        }% - 6px)`
+                      : goalProgress > 100
+                      ? `calc(${
+                          (totalRecommendedValue / Math.max(totalGoalValue, totalBehaviorValue)) * 100
                         }% - 6px)`
                       : `calc(${
-                          (totalGoalValue / totalRecommendedValue) * 100
+                          (totalGoalValue / Math.max(totalRecommendedValue, totalBehaviorValue)) * 100
                         }% - 6px)`,
                 }}
               />
@@ -138,15 +144,15 @@ const BehaviorProgressBar = ({ data, chartGoalType, type }) => {
                 },
               }}
             />
-            <div style={{ width: "10%", position: "absolute", right: 0 }}>
-              {+parseFloat(totalBehaviorValue).toFixed(2)} /{" "}
-              {Math.max(totalRecommendedValue, totalGoalValue)}
+            <div style={{ width: "20%", position: "absolute", left: "40%" }}>
+              Total Behavior Value: {+parseFloat(totalBehaviorValue).toFixed(2)}{" "}
+              / {Math.max(totalRecommendedValue, totalGoalValue)}
             </div>
             <div style={{ width: "20%", position: "absolute", left: 0 }}>
               Number of Days Logged:&nbsp;
               {data.length}
             </div>
-            <div style={{ width: "20%", position: "absolute", left: "40%" }}>
+            <div style={{ width: "20%", position: "absolute", right: 0 }}>
               Average Behavior Value:&nbsp;
               {+parseFloat(averageBehaviorVal).toFixed(2)}
             </div>
