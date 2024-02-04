@@ -338,6 +338,26 @@ const TeamScreen = () => {
             encouraged my engagement and research in Project Proud Me.
           </div>
         </Bio>
+        <Bio>
+          <BioImage
+            src={require("components/images/team/katherine.jpeg")}
+            isMobile={isMobile}
+            isTablet={isTablet}
+          />
+          <strong>Katherine Christie</strong>
+          <strong>Undergraduate Researcher</strong>
+          <div>
+            My name is Katherine Christie, and I am a first-year undergraduate
+            student at LSU. I am working towards a pre-medical degree in
+            kinesiology. I am extremely excited to work under Dr. Chen on a
+            topic I am very passionate about. Project ProudMe is a program to
+            help children achieve better health and fitness. My goal through
+            this program is to help as many children as possible to achieve
+            their maximum potential. This is an often under-addressed area of
+            development that I hope to continue to address and impact in my
+            future career.
+          </div>
+        </Bio>
       </BioRow>
       <h4
         style={{
