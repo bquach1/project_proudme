@@ -125,7 +125,7 @@ const GoalContainer = styled.tr`
 const ReflectionContainer = styled.td`
   display: flex;
   flex-direction: row;
-  width: 60%;
+  width: 55%;
   margin-left: -5%;
 
   .edit-icon {
@@ -1048,8 +1048,8 @@ const JournalScreen = () => {
                       type="text"
                       placeholder="Type my thoughts"
                       multiline
-                      rows={activityGoal[0].reflection.length > 25 ? 2 : 1}
-                      style={{ width: "80%" }}
+                      rows={activityGoal[0].reflection.length > 27 ? 2 : 1}
+                      style={{ width: "90%" }}
                       value={activityGoal.length && activityGoal[0].reflection}
                       onChange={(e) => {
                         setActivityGoal((prevActivityGoal) => {
@@ -1356,7 +1356,7 @@ const JournalScreen = () => {
                       type="text"
                       placeholder="Type my thoughts"
                       multiline
-                      rows={sleepGoal[0].reflection.length > 27 ? 2 : 1}
+                      rows={sleepGoal[0].reflection.length > 25 ? 2 : 1}
                       style={{ width: "80%" }}
                       value={sleepGoal.length && sleepGoal[0].reflection}
                       onChange={(e) => {
@@ -1419,7 +1419,7 @@ const JournalScreen = () => {
                       </Button>
                     </Tooltip>
                   </ReflectionContainer>
-                  <td style={{ width: "50%", maxHeight: 101 }}>
+                  <td style={{ width: "50", maxHeight: 101 }}>
                     {sleepResponseLoading ? (
                       <CircularProgress />
                     ) : !sleepGoal[0].feedback ? (
