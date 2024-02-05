@@ -359,6 +359,29 @@ const TeamScreen = () => {
           </div>
         </Bio>
       </BioRow>
+      <BioRow>
+        <Bio>
+          <BioImage
+            src={require("components/images/team/anna.jpeg")}
+            isMobile={isMobile}
+            isTablet={isTablet}
+          />
+          <strong>Anna Whitfield</strong>
+          <strong>Undergraduate Researcher</strong>
+          <div>
+            My name is Anna Whitfield, and I am a third-year LSU undergraduate
+            student pursuing a kinesiology degree with minors in psychology and
+            biological sciences. I plan to attend Physician Assistant school and
+            am beyond excited to participate in this project. I have always had
+            a passion for health and wellness, especially in pediatrics.
+            Children of this generation are faced with so many new struggles
+            throughout development and an emphasis on health is needed now more
+            than ever. I am thrilled to enhance childhood health, in a multitude
+            of realms, and hopefully inspire children to invest in their
+            knowledge of physical and emotional wellness.
+          </div>
+        </Bio>
+      </BioRow>
       <h4
         style={{
           color: "#2E6AA1",
