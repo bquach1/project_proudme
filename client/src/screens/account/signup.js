@@ -50,8 +50,8 @@ const generateVerificationCode = () => {
 const SignUpScreen = () => {
   const navigate = useNavigate();
 
-  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
-  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
+  const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const istablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   // States for checking the errors
   const [submitted, setSubmitted] = useState(false);
@@ -229,15 +229,15 @@ const SignUpScreen = () => {
             alt="ProudMe mini official Logo"
             style={{
               position: "absolute",
-              top: isMobile ? 10 : 20,
-              right: isMobile ? 10 : 20,
-              width: isMobile ? 20 : 40,
+              top: ismobile ? 10 : 20,
+              right: ismobile ? 10 : 20,
+              width: ismobile ? 20 : 40,
             }}
           />
           <div
             style={{
               fontFamily: "Montserrat",
-              fontSize: isMobile ? 24 : 38,
+              fontSize: ismobile ? 24 : 38,
               width: "70%",
               margin: "0 auto",
               textAlign: "left",
@@ -438,7 +438,7 @@ const SignUpScreen = () => {
               </div>
               <div
                 className="overflow-row-container"
-                style={{ maxWidth: isMobile || isTablet ? "80%" : "40%" }}
+                style={{ maxWidth: ismobile || istablet ? "80%" : "40%" }}
               >
                 <label>Email Address: </label>
                 <input
@@ -466,7 +466,7 @@ const SignUpScreen = () => {
                         style={{
                           color: "black",
                           textAlign: "left",
-                          fontSize: isMobile || isTablet ? 12 : 18,
+                          fontSize: ismobile || istablet ? 12 : 18,
                         }}
                       >
                         I agree to the{" "}
@@ -486,7 +486,7 @@ const SignUpScreen = () => {
                         style={{
                           color: "black",
                           textAlign: "left",
-                          fontSize: isMobile || isTablet ? 12 : 18,
+                          fontSize: ismobile || istablet ? 12 : 18,
                         }}
                       >
                         I agree to receive news ad updates by email from
@@ -562,7 +562,7 @@ const SignUpScreen = () => {
           )}
           <div
             className="signup-registration"
-            style={{ fontSize: isMobile || isTablet ? 14 : 16 }}
+            style={{ fontSize: ismobile || istablet ? 14 : 16 }}
           >
             <h2>
               Already have an account?{" "}

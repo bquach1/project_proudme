@@ -91,8 +91,8 @@ const LoginScreen = () => {
       });
   };
 
-  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
-  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
+  const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const istablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   const renderForm = (
     <PageWrapper>
@@ -126,23 +126,23 @@ const LoginScreen = () => {
         <img
           src={require("../../components/images/login/proudme_logo.png")}
           alt="ProudMe official Logo"
-          style={{ width: isTablet ? "30%" : "50%", margin: "0 auto" }}
+          style={{ width: istablet ? "30%" : "50%", margin: "0 auto" }}
         />
         <img
           src={require("../../components/images/login/logo.png")}
           alt="ProudMe mini official Logo"
           style={{
             position: "absolute",
-            width: isMobile ? 20 : 40,
-            top: isMobile ? 10 : 20,
-            right: isMobile ? 10 : 20,
+            width: ismobile ? 20 : 40,
+            top: ismobile ? 10 : 20,
+            right: ismobile ? 10 : 20,
           }}
         />
         <div
           style={{
             fontFamily: "Montserrat",
-            fontSize: isMobile ? 20 : isTablet ? 32 : 46,
-            width: isMobile ? "50%" : "70%",
+            fontSize: ismobile ? 20 : istablet ? 32 : 46,
+            width: ismobile ? "50%" : "70%",
             margin: "0 auto",
             textAlign: "left",
             marginTop: "1%",
@@ -152,7 +152,7 @@ const LoginScreen = () => {
         </div>
         <form onSubmit={handleSubmit}>
           <div className="input-container">
-            <label style={{ width: "100%", fontSize: isMobile ? 16 : 20 }}>
+            <label style={{ width: "100%", fontSize: ismobile ? 16 : 20 }}>
               Email or Username:{" "}
             </label>
             <input
@@ -161,14 +161,14 @@ const LoginScreen = () => {
               name="emailInput"
               className="login-input"
               style={{
-                width: isMobile ? "80%" : "100%",
-                height: isMobile || isTablet ? 20 : 40,
+                width: ismobile ? "80%" : "100%",
+                height: ismobile || istablet ? 20 : 40,
               }}
               required
             />
           </div>
           <div className="input-container">
-            <label style={{ width: "100%", fontSize: isMobile ? 16 : 20 }}>
+            <label style={{ width: "100%", fontSize: ismobile ? 16 : 20 }}>
               Password:{" "}
             </label>
             <input
@@ -177,8 +177,8 @@ const LoginScreen = () => {
               name="passwordInput"
               className="login-input"
               style={{
-                width: isMobile ? "80%" : "100%",
-                height: isMobile || isTablet ? 20 : 40,
+                width: ismobile ? "80%" : "100%",
+                height: ismobile || istablet ? 20 : 40,
               }}
               required
             />
@@ -206,9 +206,9 @@ const LoginScreen = () => {
                   borderRadius: "25px",
                   textTransform: "none",
                   marginTop: "2%",
-                  height: isMobile ? 50 : 60,
+                  height: ismobile ? 50 : 60,
                   width: "40%",
-                  fontSize: isMobile ? 15 : isTablet ? 20 : 25,
+                  fontSize: ismobile ? 15 : istablet ? 20 : 25,
                   fontWeight: 500,
                   margin: "auto",
                 }}
@@ -227,8 +227,8 @@ const LoginScreen = () => {
                 style={{
                   display: "flex",
                   justifyContent: "center",
-                  flexDirection: isMobile || isTablet ? "column" : "row",
-                  fontSize: isMobile || isTablet ? 20 : 28,
+                  flexDirection: ismobile || istablet ? "column" : "row",
+                  fontSize: ismobile || istablet ? 20 : 28,
                 }}
               >
                 Forgot your
@@ -245,8 +245,8 @@ const LoginScreen = () => {
                 style={{
                   display: "flex",
                   justifyContent: "center",
-                  flexDirection: isMobile || isTablet ? "column" : "row",
-                  fontSize: isMobile || isTablet ? 20 : 28,
+                  flexDirection: ismobile || istablet ? "column" : "row",
+                  fontSize: ismobile || istablet ? 20 : 28,
                 }}
               >
                 Don't have an account?{" "}

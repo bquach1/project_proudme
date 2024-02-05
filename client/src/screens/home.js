@@ -88,8 +88,8 @@ const HomeWrapper = styled.div`
 `;
 
 const HomeScreen = () => {
-  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
-  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
+  const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const istablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   const navigate = useNavigate();
 
@@ -116,9 +116,9 @@ const HomeScreen = () => {
       />
       <div
         className="title-container"
-        style={{ top: isMobile || isTablet ? "11%" : "20%" }}
+        style={{ top: ismobile || istablet ? "11%" : "20%" }}
       >
-        <h1 style={{ fontSize: isMobile ? 32 : isTablet ? 48 : 64 }}>
+        <h1 style={{ fontSize: ismobile ? 32 : istablet ? 48 : 64 }}>
           Welcome to ProudMe!
         </h1>
         <div
@@ -134,20 +134,20 @@ const HomeScreen = () => {
                 className="home-nav-select"
                 onClick={() => navigate("/login")}
                 style={{
-                  fontSize: isMobile ? 28 : isTablet ? 44 : 60,
+                  fontSize: ismobile ? 28 : istablet ? 44 : 60,
                   backgroundColor: BEHAVIOR_COLORS.PURPLE,
                   borderRadius: 20,
                   padding:
-                    isMobile || isTablet ? "0px 10px 5px" : "0px 10px 15px",
+                    ismobile || istablet ? "0px 10px 5px" : "0px 10px 15px",
                 }}
               >
                 Login
               </div>
               <div
                 style={{
-                  fontSize: isMobile ? 28 : isTablet ? 44 : 60,
+                  fontSize: ismobile ? 28 : istablet ? 44 : 60,
                   padding:
-                    isMobile || isTablet ? "0px 10px 5px" : "0px 10px 15px",
+                    ismobile || istablet ? "0px 10px 5px" : "0px 10px 15px",
                 }}
               >
                 &nbsp;or&nbsp;
@@ -156,11 +156,11 @@ const HomeScreen = () => {
                 className="home-nav-select"
                 onClick={() => navigate("/signup")}
                 style={{
-                  fontSize: isMobile ? 28 : isTablet ? 44 : 60,
+                  fontSize: ismobile ? 28 : istablet ? 44 : 60,
                   backgroundColor: BEHAVIOR_COLORS.PURPLE,
                   borderRadius: 20,
                   padding:
-                    isMobile || isTablet ? "0px 10px 5px" : "0px 10px 15px",
+                    ismobile || istablet ? "0px 10px 5px" : "0px 10px 15px",
                 }}
               >
                 Register
@@ -169,7 +169,7 @@ const HomeScreen = () => {
           )}
         </div>
       </div>
-      <HomeWrapper mobile={isMobile.toString()} tablet={isTablet.toString()}>
+      <HomeWrapper mobile={ismobile.toString()} tablet={istablet.toString()}>
         <div style={{ margin: 0 }}>
           <div className="title-text-box">
             Welcome to the home page of Project ProudMe! Project ProudMe is an
@@ -186,7 +186,7 @@ const HomeScreen = () => {
               <strong
                 style={{
                   color: THEME_COLORS.PURPLE,
-                  fontSize: isMobile ? 16 : 24,
+                  fontSize: ismobile ? 16 : 24,
                   display: "flex",
                   justifyContent: "center",
                 }}
@@ -236,7 +236,7 @@ const HomeScreen = () => {
               <strong
                 style={{
                   color: THEME_COLORS.PURPLE,
-                  fontSize: isMobile ? 16 : 24,
+                  fontSize: ismobile ? 16 : 24,
                   display: "flex",
                   justifyContent: "center",
                 }}
@@ -265,7 +265,7 @@ const HomeScreen = () => {
               <strong
                 style={{
                   color: THEME_COLORS.PURPLE,
-                  fontSize: isMobile ? 16 : 24,
+                  fontSize: ismobile ? 16 : 24,
                   display: "flex",
                   justifyContent: "center",
                 }}

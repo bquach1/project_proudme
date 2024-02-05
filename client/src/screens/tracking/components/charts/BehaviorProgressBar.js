@@ -23,7 +23,7 @@ const BehaviorProgressBar = ({ data, chartGoalType, type }) => {
   );
 
   const isSmallMobile = useMediaQuery({ query: "(max-width: 600px)" });
-  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
 
   const overallProgress =
     (totalBehaviorValue / Math.max(totalGoalValue, totalRecommendedValue)) *
@@ -39,7 +39,7 @@ const BehaviorProgressBar = ({ data, chartGoalType, type }) => {
     <ProgressBox
       sx={{
         width: "95%",
-        marginBottom: isMobile || isSmallMobile ? "20%" : "5%",
+        marginBottom: ismobile || isSmallMobile ? "20%" : "5%",
       }}
       position="relative"
     >

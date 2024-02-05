@@ -47,7 +47,7 @@ const TrackingWrapper = styled.div`
 
 // Render the chart component
 const TrackingScreen = () => {
-  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
 
   const [user, setUser] = useState([]);
   const [shownUser, setShownUser] = useState([]);
@@ -73,7 +73,7 @@ const TrackingScreen = () => {
 
   const [dateRange, setDateRange] = useState([
     {
-      startDate: subDays(new Date(), isMobile ? 5 : 7),
+      startDate: subDays(new Date(), ismobile ? 5 : 7),
       endDate: addDays(subDays(new Date(), 7), 7),
       key: "selection",
     },

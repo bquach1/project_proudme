@@ -25,7 +25,7 @@ const CurrentLineChart = styled(LineChart)`
 
 const BehaviorLineChart = ({ data, chartGoalType }) => {
   const isSmallMobile = useMediaQuery({ query: "(max-width: 600px)" });
-  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
 
   const maxBehaviorVal =
     data &&
@@ -51,7 +51,7 @@ const BehaviorLineChart = ({ data, chartGoalType }) => {
         <XAxis
           dataKey="date"
           className="bold-label"
-          style={{ fontSize: isMobile ? 10 : "auto" }}
+          style={{ fontSize: ismobile ? 10 : "auto" }}
         >
           <Label value="Date" position="bottom" />
         </XAxis>
@@ -77,7 +77,7 @@ const BehaviorLineChart = ({ data, chartGoalType }) => {
           ]}
           allowDataOverflow={true}
           className="bold-label"
-          style={{ fontSize: isMobile ? 10 : "auto" }}
+          style={{ fontSize: ismobile ? 10 : "auto" }}
           tickFormatter={(value) =>
             value % 1 !== 0 ? value.toFixed(2) : value
           }
@@ -91,9 +91,9 @@ const BehaviorLineChart = ({ data, chartGoalType }) => {
                 : "minutes/day"
             }
             position="left"
-            dx={isMobile || isSmallMobile ? 40 : 5}
+            dx={ismobile || isSmallMobile ? 40 : 5}
             className="custom-label"
-            style={{ fontSize: isSmallMobile || isMobile ? 8 : "auto" }}
+            style={{ fontSize: isSmallMobile || ismobile ? 8 : "auto" }}
           />
         </YAxis>
 

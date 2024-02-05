@@ -20,14 +20,14 @@ const buttonStyles = (mediaType) => {
   return {
     backgroundColor: "transparent",
     padding:
-      mediaType === "isMobile" || mediaType === "isTablet"
+      mediaType === "ismobile" || mediaType === "istablet"
         ? 2
         : "5px 15px 5px 15px",
     borderRadius: "25px",
     color: "white",
     fontWeight: "bold",
     textTransform: "none",
-    fontSize: mediaType === "isMobile" || mediaType === "isTablet" ? 10 : 16,
+    fontSize: mediaType === "ismobile" || mediaType === "istablet" ? 10 : 16,
   };
 };
 
@@ -36,14 +36,14 @@ const Header = () => {
 
   const token = localStorage.getItem("authToken");
 
-  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
-  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
+  const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const istablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   return (
     <nav>
       <Button onClick={() => navigate("/home")} style={{ marginLeft: "1%" }}>
         <img
-          style={{ width: isMobile ? 20 : 40 }}
+          style={{ width: ismobile ? 20 : 40 }}
           src={require("components/images/white_proudme_logo.png")}
           alt="White mini ProudMe logo"
         />
@@ -51,24 +51,24 @@ const Header = () => {
       <LeftNav>
         <Button
           style={
-            isMobile
-              ? buttonStyles("isMobile")
-              : isTablet
-              ? buttonStyles("isTablet")
+            ismobile
+              ? buttonStyles("ismobile")
+              : istablet
+              ? buttonStyles("istablet")
               : buttonStyles()
           }
           onClick={() => navigate("/team")}
         >
-          Our Team
+          Project Team
         </Button>
         {token && (
           <>
             <Button
               style={
-                isMobile
-                  ? buttonStyles("isMobile")
-                  : isTablet
-                  ? buttonStyles("isTablet")
+                ismobile
+                  ? buttonStyles("ismobile")
+                  : istablet
+                  ? buttonStyles("istablet")
                   : buttonStyles()
               }
               onClick={() => navigate("/journal")}
@@ -77,10 +77,10 @@ const Header = () => {
             </Button>
             <Button
               style={
-                isMobile
-                  ? buttonStyles("isMobile")
-                  : isTablet
-                  ? buttonStyles("isTablet")
+                ismobile
+                  ? buttonStyles("ismobile")
+                  : istablet
+                  ? buttonStyles("istablet")
                   : buttonStyles()
               }
               onClick={() => navigate("/tracking")}
@@ -89,10 +89,10 @@ const Header = () => {
             </Button>
             <Button
               style={
-                isMobile
-                  ? buttonStyles("isMobile")
-                  : isTablet
-                  ? buttonStyles("isTablet")
+                ismobile
+                  ? buttonStyles("ismobile")
+                  : istablet
+                  ? buttonStyles("istablet")
                   : buttonStyles()
               }
               onClick={() => navigate("/pe")}
@@ -101,15 +101,27 @@ const Header = () => {
             </Button>
             <Button
               style={
-                isMobile
-                  ? buttonStyles("isMobile")
-                  : isTablet
-                  ? buttonStyles("isTablet")
+                ismobile
+                  ? buttonStyles("ismobile")
+                  : istablet
+                  ? buttonStyles("istablet")
                   : buttonStyles()
               }
               onClick={() => navigate("/cafeteria")}
             >
               ProudMe Cafeteria
+            </Button>
+            <Button
+              style={
+                ismobile
+                  ? buttonStyles("ismobile")
+                  : istablet
+                  ? buttonStyles("istablet")
+                  : buttonStyles()
+              }
+              onClick={() => navigate("/tech-help")}
+            >
+              ProudMe Tech
             </Button>
           </>
         )}

@@ -32,13 +32,13 @@ const BioImage = styled.img`
   width: 100%;
   margin-bottom: 2%;
   height: ${(props) =>
-    props.isMobile ? "100px" : props.isTablet ? "300px" : "500px"};
+    props.ismobile ? "100px" : props.istablet ? "300px" : "500px"};
   object-fit: cover;
 `;
 
 const TeamScreen = () => {
-  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
-  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
+  const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const istablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -51,8 +51,8 @@ const TeamScreen = () => {
   };
 
   return (
-    <TeamWrapper style={{ fontSize: isMobile ? "12px" : "16px" }}>
-      <h1 style={{ color: "#2E6AA1", marginTop: "1%" }}>Our Team</h1>
+    <TeamWrapper style={{ fontSize: ismobile ? "12px" : "16px" }}>
+      <h1 style={{ color: "#2E6AA1", marginTop: "1%" }}>Project Team</h1>
       <div>
         <Button
           onClick={handleClick}
@@ -101,8 +101,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/senlin_chen.png")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Senlin Chen, PhD</strong>
           <strong>
@@ -125,8 +125,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/amanda_staiano.jpeg")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Amanda E. Staiano, PhD</strong>
           <strong>Associate Professor, Pennington Biomedical Research</strong>
@@ -143,8 +143,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/richard_rosenkranz.png")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Richard Rosenkranz, PhD</strong>
           <strong>
@@ -169,8 +169,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/xin_li.png")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Xin (Shane) Li, PhD</strong>
           <strong>
@@ -193,8 +193,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/lsu_logo.jpeg")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Beibei Guo, PhD</strong>
           <strong>
@@ -239,8 +239,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/yuxin.png")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Yuxin (Larry) Nie</strong>
           <strong>PhD Researcher</strong>
@@ -260,8 +260,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/qiaoyin.png")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Qiaoyin (Joy) Tan</strong>
           <strong>PhD Researcher</strong>
@@ -281,8 +281,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/paul.jpeg")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Dongin (Paul) Son</strong>
           <strong>PhD Researcher</strong>
@@ -301,8 +301,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/jena.jpg")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Virginia Bordelon</strong>
           <strong>Undergraduate Researcher</strong>
@@ -322,8 +322,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/rachel.jpeg")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Rachel Hunter</strong>
           <strong>Undergraduate Researcher</strong>
@@ -341,8 +341,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/katherine.jpeg")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Katherine Christie</strong>
           <strong>Undergraduate Researcher</strong>
@@ -374,8 +374,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/bruce.jpeg")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Bruce Quach</strong>
           <strong>Web Developer</strong>
@@ -393,8 +393,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/ashish.jpeg")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Ashish Kumar</strong>
           <strong>AI Developer</strong>

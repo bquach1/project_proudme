@@ -157,8 +157,8 @@ const JournalScreen = () => {
     translateX: 50,
   });
 
-  const isMobile = useMediaQuery({ query: "(max-width: 800px)" });
-  const isTablet = useMediaQuery({ query: "(max-width: 1200px)" });
+  const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const istablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   const [user, setUser] = useState([]);
   const [goalData, setGoalData] = useState([]);
@@ -515,7 +515,7 @@ const JournalScreen = () => {
           >
             <div
               className="leftPageWrapper"
-              style={{ width: isMobile ? "50%" : "auto" }}
+              style={{ width: ismobile ? "50%" : "auto" }}
             >
               <div style={styles.goalScreen}>
                 <GoalContainer style={styles.goalRow}>
