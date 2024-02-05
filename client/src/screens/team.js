@@ -363,8 +363,8 @@ const TeamScreen = () => {
         <Bio>
           <BioImage
             src={require("components/images/team/anna.jpeg")}
-            isMobile={isMobile}
-            isTablet={isTablet}
+            ismobile={ismobile}
+            istablet={istablet}
           />
           <strong>Anna Whitfield</strong>
           <strong>Undergraduate Researcher</strong>
