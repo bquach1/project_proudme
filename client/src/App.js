@@ -13,6 +13,7 @@ import PEScreen from "screens/pe/pe.js";
 import TrackingScreen from "screens/tracking/tracking";
 import RecoveryScreen from "screens/account/recovery";
 import CafeteriaScreen from "screens/cafeteria/cafeteria";
+import TechScreen from "screens/tech.js";
 
 import Header from "components/header/header";
 
@@ -38,6 +39,7 @@ function App() {
         <Route path="/pe" element={<PEScreen />} />
         <Route path="/tracking" element={<TrackingScreen />} />
         <Route path="/cafeteria" element={<CafeteriaScreen />} />
+        <Route path="/tech-help" element={<TechScreen />} />
       </Routes>
     </div>
   );

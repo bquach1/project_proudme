@@ -1,0 +1,25 @@
+.video-responsive {
+  position: relative;
+  height: 80vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+  margin-bottom: 5%;
+}
+
+.video-responsive iframe {
+  height: 70%;
+  width: 80%;
+  position: absolute;
+}
+
+.tech-header {
+  margin-top: 1%;
+}
+
+.tech {
+  height: 100%;
+  width: 100%;
+}
