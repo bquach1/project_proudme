@@ -65,6 +65,7 @@ const SignUpScreen = () => {
   const [usernameError, setUsernameError] = useState(false);
 
   const [accountConfirm, setAccountConfirm] = useState("");
+  const [emailApiError, setEmailApiError] = useState(false);
 
   const registrationError = emailError || usernameError || !passwordMatch;
 
@@ -173,17 +174,44 @@ const SignUpScreen = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const newEmailData = {
-        subject: "Project ProudMe Registration Confirmation",
-        to: form.email,
-        text:
-          `Hi ${form.name},\n\nYou are receiving this email because you recently registered a new account on the Project ProudMe webpage. \n\nEnter the confirmation code listed to confirm your email account: ` +
-          verificationCode +
-          " \n\nProject ProudMe Team \nLouisiana State University \nPedagogical Kinesiology Lab",
-      };
-      await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
-      setConfirming(true);
+      if (emailApiError) {
+        await axios
+          .post(`${DATABASE_URL}/signup`, {
+            email: form.email,
+            password: form.password,
+            confirmPassword: form.confirmPassword,
+            name: form.name,
+            firstName: form.firstName,
+            lastName: form.lastName,
+            schoolName: form.schoolAttending,
+            birthMonth: form.birthMonth,
+            birthYear: form.birthYear,
+            gradeLevel: form.gradeLevel,
+            gender: form.gender,
+          })
+          .then(() => {
+            setLoading(false);
+            setSubmitted(true);
+            setConfirming(false);
+          });
+      } else {
+        const newEmailData = {
+          subject: "Project ProudMe Registration Confirmation",
+          to: form.email,
+          text:
+            `Hi ${form.name},\n\nYou are receiving this email because you recently registered a new account on the Project ProudMe webpage. \n\nEnter the confirmation code listed to confirm your email account: ` +
+            verificationCode +
+            " \n\nProject ProudMe Team \nLouisiana State University \nPedagogical Kinesiology Lab",
+        };
+
+        await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
+        setConfirming(true);
+      }
     } catch (error) {
+      alert(
+        "Email service is currently overloaded. You can disregard the email confirmation and sign up immediately by clicking the 'Register' button again."
+      );
+      setEmailApiError(true);
       console.error(error);
     }
   };
