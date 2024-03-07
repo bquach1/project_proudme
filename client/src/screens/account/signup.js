@@ -82,6 +82,26 @@ const SignUpScreen = () => {
     birthYear: "",
     email: "",
   });
+  const [count, setCount] = useState(3);
+
+  useEffect(() => {
+    console.log(count);
+  });
+
+  useEffect(() => {
+    if (submitted) {
+      const interval = setInterval(() => {
+        setCount((prevCount) => {
+          if (prevCount === 0) {
+            clearInterval(interval);
+          }
+          return prevCount - 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [submitted]);
 
   useEffect(() => {
     if (
@@ -201,7 +221,7 @@ const SignUpScreen = () => {
           text:
             `Hi ${form.name},\n\nYou are receiving this email because you recently registered a new account on the Project ProudMe webpage. \n\nEnter the confirmation code listed to confirm your email account: ` +
             verificationCode +
-            " \n\nProject ProudMe Team \nLouisiana State University \nPedagogical Kinesiology Lab",
+            "\n\nBest Regards, \nProject ProudMe Team \nLouisiana State University \nPedagogical Kinesiology Lab\n\n---\nThis email was sent from an account associated with Louisiana State University.",
         };
 
         await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
@@ -609,18 +629,26 @@ const SignUpScreen = () => {
       navigate("/");
     }, 3000);
     return (
-      <div className="success" style={styles.messageText}>
-        User {form.name} successfully registered!
-      </div>
+      <>
+        <div
+          className="success"
+          style={{ fontSize: 30, fontWeight: "bold", paddingTop: "20%" }}
+        >
+          User {form.name} successfully registered!
+        </div>
+        <div>Routing to home in {count} seconds...</div>
+      </>
     );
   }
 
   return (
-    <div style={{ height: "140vh" }}>
+    <div style={{ margin: "auto" }}>
       {submitted ? (
         successMessage()
       ) : loading ? (
-        <CircularProgress />
+        <div style={{ paddingTop: "20%" }}>
+          <CircularProgress />
+        </div>
       ) : (
         renderForm
       )}
@@ -629,10 +657,3 @@ const SignUpScreen = () => {
 };
 
 export default SignUpScreen;
-
-const styles = {
-  messageText: {
-    fontSize: "30px",
-    fontWeight: "bold",
-  },
-};

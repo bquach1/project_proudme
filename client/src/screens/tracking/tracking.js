@@ -55,6 +55,7 @@ const TrackingScreen = () => {
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(true);
   const [userBehaviorData, setUserBehaviorData] = useState([]);
+  const [allBehaviorData, setAllBehaviorData] = useState([]);
 
   const [chartType, setChartType] = useState("line");
 
@@ -215,11 +216,22 @@ const TrackingScreen = () => {
       }
     };
 
+    const fetchAllUserBehaviors = async () => {
+      try {
+        const response = await axios.get(`${DATABASE_URL}/allBehaviors`, {
+        });
+        setAllBehaviorData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchActivityBehaviors();
     fetchScreentimeBehaviors();
     fetchEatingBehaviors();
     fetchSleepBehaviors();
     fetchUserBehaviors();
+    fetchAllUserBehaviors();
   }, [shownUser]);
 
   return (
@@ -283,6 +295,7 @@ const TrackingScreen = () => {
           </Button>
           <BehaviorTrackingCSV
             behaviorData={userBehaviorData}
+            allBehaviorData={allBehaviorData}
             user={shownUser.name}
             userData={shownUser}
           />
