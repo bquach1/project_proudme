@@ -62,6 +62,7 @@ const SignUpScreen = () => {
   );
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [emailError, setEmailError] = useState(false);
+  const [emailFormatError, setEmailFormatError] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
 
   const [accountConfirm, setAccountConfirm] = useState("");
@@ -171,10 +172,21 @@ const SignUpScreen = () => {
         email: form.email,
       },
     });
+    // Regular expression for email format validation
+    const emailRegex = /^[^\s@]+@[^@]+\.[^@]+$/;
+
+    // Check if 'email' field is being updated and validate it
     if (!response.data) {
       setEmailError(false);
     } else {
       setEmailError(true);
+      return;
+    }
+
+    if (form.email && !emailRegex.test(form.email)) {
+      setEmailFormatError(true);
+    } else if (form.email && emailRegex.test(form.email)) {
+      setEmailFormatError(false);
     }
   };
 
@@ -490,18 +502,27 @@ const SignUpScreen = () => {
               >
                 <label>Email Address: </label>
                 <input
-                  className={emailError ? "error-signup-input" : "signup-input"}
-                  type="text"
+                  className={
+                    emailError || emailFormatError
+                      ? "error-signup-input"
+                      : "signup-input"
+                  }
+                  type="email"
                   onChange={(e) => updateForm({ email: e.target.value })}
                   onBlur={handleEmailBlur}
                   value={form.email}
                   required
                 />
-                {emailError && (
+                {emailError ? (
                   <h4 style={{ color: "rgb(255, 0, 0, 0.8)" }}>
                     Email in use. Please login or use a different email.
                   </h4>
-                )}
+                ) : emailFormatError ? (
+                  <h4 style={{ color: "rgb(255, 0, 0, 0.8)" }}>
+                    Email is improperly formatted. Please check the email you
+                    entered.
+                  </h4>
+                ) : null}
               </div>
             </div>
             <div className="row-container">
