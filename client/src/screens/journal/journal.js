@@ -3,13 +3,20 @@ import "css/journal.css";
 import withAuth from "components/auth/withAuth";
 import DurationPicker from "components/journal/durationPicker";
 import axios from "axios";
-
-import { TextField, Tooltip, Button, CircularProgress } from "@mui/material";
+import {
+  TextField,
+  Tooltip,
+  Button,
+  CircularProgress,
+  FormControl,
+  MenuItem,
+  InputLabel,
+  Select,
+} from "@mui/material";
 import styled from "styled-components";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import LockIcon from "@mui/icons-material/Lock";
-
 import {
   SAVE_ICON_COLORS,
   MAX_FEEDBACK_LINES,
@@ -141,6 +148,13 @@ const ReflectionContainer = styled.td`
       background-color: green;
     }
   }
+`;
+
+const SelectedActivity = styled.div`
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
 `;
 
 const JournalScreen = () => {
@@ -479,6 +493,233 @@ const JournalScreen = () => {
     mostRecentDay = mostRecentDate.toLocaleDateString(),
     mostRecentTime = mostRecentDate.toLocaleTimeString();
 
+  const activities = [
+    {
+      category: "STRENUOUS EXERCISE – HEART BEATS RAPIDLY",
+      items: [
+        "running",
+        "jogging",
+        "hockey",
+        "football",
+        "soccer",
+        "squash",
+        "basketball",
+        "judo",
+        "roller skating",
+        "vigorous swimming",
+        "vigorous long distance bicycling",
+      ],
+    },
+    {
+      category: "MODERATE EXERCISE – NOT EXHAUSTING",
+      items: [
+        "fast walking",
+        "baseball",
+        "tennis",
+        "easy bicycling",
+        "volleyball",
+        "badminton",
+        "easy swimming",
+        "dancing",
+      ],
+    },
+    {
+      category: "MILD EXERCISE – MINIMAL EFFORT",
+      items: [
+        "yoga",
+        "archery",
+        "fishing from riverbank",
+        "bowling",
+        "horseshoes",
+        "golf",
+        "easy walking",
+      ],
+    },
+  ];
+
+  const screentimeActivities = [
+    {
+      category: "Gaming and Video Chatting",
+      items: [
+        "looking at photos",
+        "video chatting",
+        "laptops",
+        "video games ",
+        "tablets",
+        "phones",
+        "other",
+      ],
+    },
+    {
+      category: "Academic screen time",
+      items: ["online learning", "online homework/research", "other"],
+    },
+  ];
+
+  const fruits = ["Apple", "Banana", "Orange", "Grapes", "Berries"];
+  const vegetables = ["Carrots", "Broccoli", "Spinach", "Peppers", "Tomatoes"];
+
+  const [selectedActivities, setSelectedActivities] = useState([]);
+  const [selectedScreentimeActivities, setSelectedScreentimeActivities] =
+    useState([]);
+  const [totalTime, setTotalTime] = useState({ hours: 0, minutes: 0 });
+  const [totalScreentime, setTotalScreentime] = useState({ hours: 0, minutes: 0 });
+
+  const [activityCategory, setActivityCategory] = useState("");
+  const [screentimeCategory, setScreentimeCategory] = useState("");
+  const [selectedActivity, setSelectedActivity] = useState("");
+  const [selectedScreentimeActivity, setSelectedScreentimeActivity] =
+    useState("");
+
+  const [selectedFruit, setSelectedFruit] = useState("");
+  const [selectedVegetable, setSelectedVegetable] = useState("");
+  const [fruitServings, setFruitServings] = useState(0);
+  const [vegetableServings, setVegetableServings] = useState(0);
+  const [selectedFruitsAndVegetables, setSelectedFruitsAndVegetables] = useState([]);
+
+  const handleActivityChange = (event) => {
+    const value = event.target.value;
+    if (activities.some((group) => group.category === value)) {
+      setActivityCategory(value);
+      setSelectedActivity("");
+    } else {
+      setSelectedActivity(value);
+    }
+  };
+
+  const handleScreentimeChange = (event) => {
+    const value = event.target.value;
+    if (screentimeActivities.some((group) => group.category === value)) {
+      setScreentimeCategory(value);
+      setSelectedScreentimeActivity("");
+    } else {
+      setSelectedScreentimeActivity(value);
+    }
+  };
+
+  const handleFruitChange = (event) => {
+    setSelectedFruit(event.target.value);
+  };
+
+  const handleVegetableChange = (event) => {
+    setSelectedVegetable(event.target.value);
+  };
+
+  const handleFruitServingsChange = (event) => {
+    setFruitServings(event.target.value);
+  };
+
+  const handleVegetableServingsChange = (event) => {
+    setVegetableServings(event.target.value);
+  };
+
+  const handleAddActivity = () => {
+    if (selectedActivity && selectedActivities.length < 3) {
+      setSelectedActivities([
+        ...selectedActivities,
+        { activity: selectedActivity, time: totalTime },
+      ]);
+      setActivityCategory("");
+      setSelectedActivity("");
+      setTotalTime({ hours: 0, minutes: 0 });
+    }
+  };
+
+  const handleAddScreentimeActivity = () => {
+    if (selectedScreentimeActivity && selectedScreentimeActivities.length < 3) {
+      setSelectedScreentimeActivities([
+        ...selectedScreentimeActivities,
+        { activity: selectedScreentimeActivity, time: totalScreentime },
+      ]);
+      setScreentimeCategory("");
+      setSelectedScreentimeActivity("");
+      setTotalScreentime({ hours: 0, minutes: 0 });
+    }
+  };
+
+  const handleAddFruitOrVegetable = () => {
+    if (
+      (selectedFruit || selectedVegetable) &&
+      selectedFruitsAndVegetables.length < 3
+    ) {
+      const item = selectedFruit
+        ? { type: "fruit", name: selectedFruit, servings: fruitServings }
+        : { type: "vegetable", name: selectedVegetable, servings: vegetableServings };
+      setSelectedFruitsAndVegetables([...selectedFruitsAndVegetables, item]);
+      setSelectedFruit("");
+      setSelectedVegetable("");
+      setFruitServings(0);
+      setVegetableServings(0);
+    }
+  };
+
+  const handleTotalTimeChange = (event) => {
+    const { name, value } = event.target;
+    setTotalTime((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleTotalScreentimeChange = (event) => {
+    const { name, value } = event.target;
+    setTotalScreentime((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleBedTimeChange = (event) => {
+    const { name, value } = event.target;
+    setSleepGoal((prevSleepGoal) => {
+      const updatedSleepGoal = prevSleepGoal.map((goal) => {
+        const newSleepGoal = {
+          ...goal,
+          [name]: value,
+        };
+        return newSleepGoal;
+      });
+      return updatedSleepGoal;
+    });
+  };
+
+  const calculateSleepHours = (bedTime, wakeUpTime) => {
+    const [bedHour, bedMinute] = bedTime.split(':').map(Number);
+    const [wakeHour, wakeMinute] = wakeUpTime.split(':').map(Number);
+
+    const bedDate = new Date();
+    bedDate.setHours(bedHour, bedMinute);
+
+    const wakeDate = new Date();
+    wakeDate.setHours(wakeHour, wakeMinute);
+
+    // Handle cases where wake-up time is after midnight
+    if (wakeDate < bedDate) {
+      wakeDate.setDate(wakeDate.getDate() + 1);
+    }
+
+    const sleepDuration = (wakeDate - bedDate) / (1000 * 60 * 60); // Convert ms to hours
+    return sleepDuration;
+  };
+
+  const getSelectedActivitiesText = () => {
+    return selectedActivities
+      .map((activity) => `${activity.activity} (${activity.time.hours}h ${activity.time.minutes}m)`)
+      .join(", ");
+  };
+
+  const getSelectedScreentimeActivitiesText = () => {
+    return selectedScreentimeActivities
+      .map((activity) => `${activity.activity} (${activity.time.hours}h ${activity.time.minutes}m)`)
+      .join(", ");
+  };
+
+  const getSelectedFruitsAndVegetablesText = () => {
+    return selectedFruitsAndVegetables
+      .map((item) => `${item.name} (${item.servings} servings)`)
+      .join(", ");
+  };
+
   return (
     <Wrapper>
       <h1 style={{ color: "#2E6AA1", marginTop: "1%" }}>My Journal</h1>
@@ -492,6 +733,17 @@ const JournalScreen = () => {
           <div className="timeload-dots">...</div>
         )}
       </strong>
+
+      <SelectedActivity>
+        Selected Activities: {getSelectedActivitiesText()}
+      </SelectedActivity>
+      <SelectedActivity>
+        Selected Screentime Activities: {getSelectedScreentimeActivitiesText()}
+      </SelectedActivity>
+      <SelectedActivity>
+        Selected Fruits and Vegetables: {getSelectedFruitsAndVegetablesText()}
+      </SelectedActivity>
+
       <JournalWrapper>
         <div
           style={{
@@ -561,28 +813,69 @@ const JournalScreen = () => {
                     </Tooltip>
                   </td>
                   <td style={{ width: "50%" }}>
-                    <Tooltip
-                      title={
-                        loggedActivityToday && editingBehaviorId !== 0
-                          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <DurationPicker
-                        loggedGoalToday={loggedActivityToday}
-                        editingBehaviorId={editingBehaviorId}
-                        goalData={activityData}
-                        goal={activityGoal}
-                        setGoalData={setActivityGoal}
-                        editingId={0}
-                      />
-                    </Tooltip>
+                    <FormControl fullWidth style={{ maxWidth: "300px" }}>
+                      <InputLabel id="activity-label">Select Phyiscal Activity</InputLabel>
+                      <Select
+                        labelId="activity-label"
+                        id="activity"
+                        value={activityCategory || selectedActivity}
+                        onChange={handleActivityChange}
+                      >
+                        {!activityCategory &&
+                          activities.map((group) => (
+                            <MenuItem key={group.category} value={group.category}>
+                              {group.category}
+                            </MenuItem>
+                          ))}
+                        {activityCategory &&
+                          activities
+                            .find((group) => group.category === activityCategory)
+                            .items.map((activity) => (
+                              <MenuItem key={activity} value={activity}>
+                                {activity}
+                              </MenuItem>
+                            ))}
+                      </Select>
+                    </FormControl>
+                    {selectedActivity && (
+                      <>
+                        <h3 style={{ fontSize: "14px" }}>Total Time</h3>
+                        <TextField
+                          label="Hours"
+                          type="number"
+                          name="hours"
+                          value={totalTime.hours}
+                          onChange={handleTotalTimeChange}
+                          inputProps={{ min: 0 }}
+                          style={{
+                            marginRight: "10px",
+                            width: "80px",
+                            fontSize: "12px",
+                          }}
+                        />
+                        <TextField
+                          label="Minutes"
+                          type="number"
+                          name="minutes"
+                          value={totalTime.minutes}
+                          onChange={handleTotalTimeChange}
+                          inputProps={{ min: 0, max: 59 }}
+                          style={{ width: "80px", fontSize: "12px" }}
+                        />
+                        <Button
+                          onClick={handleAddActivity}
+                          style={{ marginTop: "10px" }}
+                        >
+                          Add Activity
+                        </Button>
+                      </>
+                    )}
                   </td>
                   <td style={{ width: "50%" }}>
                     <Tooltip
                       title={
                         loggedActivityToday && editingBehaviorId !== 0
-                          ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
+                          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
                           : ""
                       }
                     >
@@ -642,7 +935,6 @@ const JournalScreen = () => {
                       alt="Tablet for screentime goals"
                     />
                     <h2 style={styles.goalLabel}>Screen Time</h2>
-
                     <Tooltip
                       title={
                         <div>
@@ -675,29 +967,69 @@ const JournalScreen = () => {
                     </Tooltip>
                   </td>
                   <td style={{ width: "50%" }}>
-                    <Tooltip
-                      title={
-                        loggedScreentimeToday && editingBehaviorId !== 1
-                          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <DurationPicker
-                        loggedGoalToday={loggedScreentimeToday}
-                        editingBehaviorId={editingBehaviorId}
-                        goalData={screentimeData}
-                        goal={screentimeGoal}
-                        setGoalData={setScreentimeGoal}
-                        editingId={1}
-                      />
-                    </Tooltip>
+                    <FormControl fullWidth style={{ maxWidth: "300px" }}>
+                      <InputLabel id="screentime-label"> Select Type </InputLabel>
+                      <Select
+                        labelId="screentime-label"
+                        id="screentime"
+                        value={screentimeCategory || selectedScreentimeActivity}
+                        onChange={handleScreentimeChange}
+                      >
+                        {!screentimeCategory &&
+                          screentimeActivities.map((group) => (
+                            <MenuItem key={group.category} value={group.category}>
+                              {group.category}
+                            </MenuItem>
+                          ))}
+                        {screentimeCategory &&
+                          screentimeActivities
+                            .find((group) => group.category === screentimeCategory)
+                            .items.map((activity) => (
+                              <MenuItem key={activity} value={activity}>
+                                {activity}
+                              </MenuItem>
+                            ))}
+                      </Select>
+                    </FormControl>
+                    {selectedScreentimeActivity && (
+                      <>
+                        <h3 style={{ fontSize: "14px" }}>Total Time</h3>
+                        <TextField
+                          label="Hours"
+                          type="number"
+                          name="hours"
+                          value={totalScreentime.hours}
+                          onChange={handleTotalScreentimeChange}
+                          inputProps={{ min: 0 }}
+                          style={{
+                            marginRight: "10px",
+                            width: "80px",
+                            fontSize: "12px",
+                          }}
+                        />
+                        <TextField
+                          label="Minutes"
+                          type="number"
+                          name="minutes"
+                          value={totalScreentime.minutes}
+                          onChange={handleTotalScreentimeChange}
+                          inputProps={{ min: 0, max: 59 }}
+                          style={{ width: "80px", fontSize: "12px" }}
+                        />
+                        <Button
+                          onClick={handleAddScreentimeActivity}
+                          style={{ marginTop: "20px" }}
+                        >
+                          Add Activity
+                        </Button>
+                      </>
+                    )}
                   </td>
-
                   <td style={{ width: "50%" }}>
                     <Tooltip
                       title={
                         loggedScreentimeToday && editingBehaviorId !== 1
-                          ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
+                          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
                           : ""
                       }
                     >
@@ -784,53 +1116,65 @@ const JournalScreen = () => {
                       />
                     </Tooltip>
                   </td>
-
-                  <td>
-                    <Tooltip
-                      title={
-                        loggedEatingToday && editingBehaviorId !== 2
-                          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <TextField
-                        className={
-                          loggedEatingToday && editingBehaviorId !== 2
-                            ? "disabled-behavior"
-                            : "behavior"
-                        }
-                        disabled={
-                          loggedEatingToday && editingBehaviorId !== 2
-                            ? true
-                            : false
-                        }
-                        style={styles.inputBox}
-                        label="servings/day"
-                        type="number"
-                        value={eatingGoal.length ? eatingGoal[0].goalValue : ""}
-                        onChange={(e) => {
-                          if (e.target.value < 0) {
-                            e.target.value = 0;
-                          } else if (e.target.value > 50) {
-                            e.target.value = 50;
+                  <td style={{ width: "50%" }}>
+                    <FormControl fullWidth style={{ maxWidth: "300px" }}>
+                      <InputLabel id="food-category-label">Select Fruit/Veg</InputLabel>
+                      <Select
+                        labelId="food-category-label"
+                        id="food-category"
+                        value={selectedFruit || selectedVegetable}
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          if (fruits.includes(value)) {
+                            setSelectedFruit(value);
+                            setSelectedVegetable("");
+                          } else {
+                            setSelectedVegetable(value);
+                            setSelectedFruit("");
                           }
-                          setEatingGoal((prevEatingGoal) => {
-                            const updatedEatingGoal = prevEatingGoal.map(
-                              (goal) => {
-                                const newEatingGoalValue = {
-                                  ...goal,
-                                  goalValue: e.target.value,
-                                };
-                                return newEatingGoalValue;
-                              }
-                            );
-                            return updatedEatingGoal;
-                          });
                         }}
-                      />
-                    </Tooltip>
+                      >
+                        <MenuItem value="" disabled>
+                          Select Fruit or Vegetable
+                        </MenuItem>
+                        {fruits.map((fruit) => (
+                          <MenuItem key={fruit} value={fruit}>
+                            {fruit}
+                          </MenuItem>
+                        ))}
+                        {vegetables.map((vegetable) => (
+                          <MenuItem key={vegetable} value={vegetable}>
+                            {vegetable}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                    {(selectedFruit || selectedVegetable) && (
+                      <>
+                        <TextField
+                          label="Servings"
+                          type="number"
+                          value={
+                            selectedFruit ? fruitServings : vegetableServings
+                          }
+                          onChange={
+                            selectedFruit
+                              ? handleFruitServingsChange
+                              : handleVegetableServingsChange
+                          }
+                          inputProps={{ min: 0 }}
+                          style={{ width: "80px", marginTop: "20px" }}
+                        />
+                        <Button
+                          onClick={handleAddFruitOrVegetable}
+                          style={{ marginTop: "10px" }}
+                        >
+                          Add Fruit/Vegetable
+                        </Button>
+                      </>
+                    )}
                   </td>
-                  <td>
+                  <td style={{ width: "50%" }}>
                     <Tooltip
                       title={
                         loggedEatingToday && editingBehaviorId !== 2
@@ -850,30 +1194,13 @@ const JournalScreen = () => {
                             : "behavior"
                         }
                         style={styles.inputBox}
-                        label="servings/day"
+                        label="Total servings/day"
                         type="number"
-                        value={
-                          eatingGoal.length ? eatingGoal[0].behaviorValue : ""
-                        }
-                        onChange={(e) => {
-                          if (e.target.value < 0) {
-                            e.target.value = 0;
-                          } else if (e.target.value > 50) {
-                            e.target.value = 50;
-                          }
-                          setEatingGoal((prevEatingGoal) => {
-                            const updatedEatingGoal = prevEatingGoal.map(
-                              (goal) => {
-                                const newEatingGoalValue = {
-                                  ...goal,
-                                  behaviorValue: Number(e.target.value),
-                                };
-                                return newEatingGoalValue;
-                              }
-                            );
-                            return updatedEatingGoal;
-                          });
-                        }}
+                        value={selectedFruitsAndVegetables.reduce(
+                          (total, item) => total + parseInt(item.servings),
+                          0
+                        )}
+                        onChange={() => {}}
                       />
                     </Tooltip>
                   </td>
@@ -950,42 +1277,25 @@ const JournalScreen = () => {
                   </td>
 
                   <td style={{ width: "50%" }}>
-                    <Tooltip
-                      title={
-                        loggedSleepToday && editingBehaviorId !== 3
-                          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <DurationPicker
-                        loggedGoalToday={loggedSleepToday}
-                        editingBehaviorId={editingBehaviorId}
-                        goalData={sleepData}
-                        goal={sleepGoal}
-                        setGoalData={setSleepGoal}
-                        editingId={3}
-                      />
-                    </Tooltip>
+                    <TextField
+                      label="Went to Bed At"
+                      type="time"
+                      name="bedTime"
+                      value={sleepGoal[0].bedTime || ""}
+                      onChange={handleBedTimeChange}
+                      style={{ width: "140px", fontSize: "16px" }}
+                    />
                   </td>
 
                   <td style={{ width: "50%" }}>
-                    <Tooltip
-                      title={
-                        loggedSleepToday && editingBehaviorId !== 3
-                          ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <DurationPicker
-                        loggedGoalToday={loggedSleepToday}
-                        editingBehaviorId={editingBehaviorId}
-                        goalData={sleepData}
-                        goal={sleepGoal}
-                        setGoalData={setSleepGoal}
-                        editingId={3}
-                        type={"behavior"}
-                      />
-                    </Tooltip>
+                    <TextField
+                      label="Woke Up At"
+                      type="time"
+                      name="wakeUpTime"
+                      value={sleepGoal[0].wakeUpTime || ""}
+                      onChange={handleBedTimeChange}
+                      style={{ width: "140px", fontSize: "16px" }}
+                    />
                   </td>
                   {loggedSleepToday && editingBehaviorId !== 3 && (
                     <Tooltip title="Edit Existing Daily Behavior">
@@ -1000,6 +1310,7 @@ const JournalScreen = () => {
                     </Tooltip>
                   )}
                 </GoalContainer>
+
                 <GoalContainer>
                   <BehaviorInfoText>
                     <strong
@@ -1239,10 +1550,9 @@ const JournalScreen = () => {
                 <GoalContainer>
                   <BehaviorInfoText>
                     <div style={{ width: "100%" }} className="information-text">
-                      <strong>How to Achieve:</strong> Assign time slots to use
-                      computers/phones for schoolwork, video games, or other
-                      activities. Relax and have fun outside or with
-                      friends/family in other hours!{" "}
+                      <strong>How to Achieve:</strong> Put devices away, try
+                      screen-time control apps, and make plans to go outside and
+                      do activities with friends or family!
                     </div>
                   </BehaviorInfoText>
                 </GoalContainer>
@@ -1255,7 +1565,7 @@ const JournalScreen = () => {
                       multiline
                       rows={eatingGoal[0].reflection.length > 25 ? 2 : 1}
                       style={{ width: "80%" }}
-                      value={eatingGoal.length && eatingGoal[0].reflection}
+                      value={eatingGoal[0].reflection}
                       onChange={(e) => {
                         setEatingGoal((prevEatingGoal) => {
                           const updatedEatingGoal = prevEatingGoal.map(
@@ -1342,10 +1652,11 @@ const JournalScreen = () => {
                 <GoalContainer>
                   <BehaviorInfoText>
                     <div style={{ width: "100%" }} className="information-text">
-                      <strong>How to Achieve:</strong> Incorporate
-                      fruits/veggies into snacktimes. Eating easy to eat fruits
-                      (bananas, grapes, apples, etc.) or vegetables
-                      (carrots/celery sticks, broccoli, etc.) helps!
+                      <strong>How to Achieve:</strong> Substitute healthy food
+                      options (fruit, vegetables) instead of unhealthy foods.
+                      Also, try to cook meals using healthy ingredients, and
+                      note if eating certain foods (e.g. apples, broccoli, etc.)
+                      helps!
                     </div>
                   </BehaviorInfoText>
                 </GoalContainer>
@@ -1358,15 +1669,15 @@ const JournalScreen = () => {
                       multiline
                       rows={sleepGoal[0].reflection.length > 25 ? 2 : 1}
                       style={{ width: "80%" }}
-                      value={sleepGoal.length && sleepGoal[0].reflection}
+                      value={sleepGoal[0].reflection}
                       onChange={(e) => {
                         setSleepGoal((prevSleepGoal) => {
                           const updatedSleepGoal = prevSleepGoal.map((goal) => {
-                            const newSleepGoal = {
+                            const newSleepReflection = {
                               ...goal,
                               reflection: e.target.value,
                             };
-                            return newSleepGoal;
+                            return newSleepReflection;
                           });
                           return updatedSleepGoal;
                         });
@@ -1419,7 +1730,7 @@ const JournalScreen = () => {
                       </Button>
                     </Tooltip>
                   </ReflectionContainer>
-                  <td style={{ width: "50", maxHeight: 101 }}>
+                  <td style={{ width: "50%", maxHeight: 101 }}>
                     {sleepResponseLoading ? (
                       <CircularProgress />
                     ) : !sleepGoal[0].feedback ? (
@@ -1432,11 +1743,7 @@ const JournalScreen = () => {
                     ) : (
                       <Tooltip title="Set a Sleep goal today to see feedback!">
                         <LockIcon
-                          style={{
-                            width: "30%",
-                            display: "flex",
-                            margin: "0 auto",
-                          }}
+                          style={{ margin: "auto", width: "30%" }}
                           className="lock-icon"
                         />
                       </Tooltip>
@@ -1463,13 +1770,6 @@ const JournalScreen = () => {
           </div>
         </div>
       </JournalWrapper>
-      {/* <animated.div style={props}>
-        <img
-          src={require("../../components/images/journal/tiger.jpg")}
-          alt="Tiger custom"
-          style={{ width: 75, position: "absolute", right: 0, top: 300 }}
-        />
-      </animated.div> */}
     </Wrapper>
   );
 };
@@ -1507,7 +1807,7 @@ let styles = {
   goalLabel: {
     width: "auto",
     margin: "5%",
-    fontSize: 22,
+    fontSize: 18,
   },
   inputBox: {
     width: "70%",

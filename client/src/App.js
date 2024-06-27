@@ -14,6 +14,7 @@ import TrackingScreen from "screens/tracking/tracking";
 import RecoveryScreen from "screens/account/recovery";
 import CafeteriaScreen from "screens/cafeteria/cafeteria";
 import TechScreen from "screens/tech.js";
+import LearnMoreScreen from "./screens/learnmore.js";
 
 import Header from "components/header/header";
 
@@ -40,6 +41,7 @@ function App() {
         <Route path="/tracking" element={<TrackingScreen />} />
         <Route path="/cafeteria" element={<CafeteriaScreen />} />
         <Route path="/tech-help" element={<TechScreen />} />
+        <Route path="/learnmore" element={<LearnMoreScreen />} />
       </Routes>
     </div>
   );

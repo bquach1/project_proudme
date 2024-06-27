@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
@@ -17,6 +17,12 @@ const uri = process.env.REACT_APP_MONGODB_URI;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+
+app.use(express.json());
+
 
 // Connect to MongoDB
 mongoose
@@ -43,6 +49,8 @@ const userSchema = new mongoose.Schema({
   birthYear: { type: String, required: true },
   gradeLevel: { type: String, required: true },
   gender: { type: String, required: true },
+  isVerifiedEmail: { type: Boolean, default: false },
+  verificationCode: { type: String },
 });
 
 const goalSchema = new mongoose.Schema({
@@ -132,16 +140,32 @@ const behaviorSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  // New fields
+  activities: {
+    type: Map,
+    of: new mongoose.Schema({
+      goal: Number,
+      behavior: Number,
+    }),
+  },
+  servings: {
+    fruits: Number,
+    vegetables: Number,
+  },
+  sleep: {
+    bedGoal: Number,
+    wakeUpGoal: Number,
+    bedBehavior: Number,
+    wakeUpBehavior: Number,
+  },
 });
 
-const Goal = mongoose.model("Goal", goalSchema);
-const User = mongoose.model("User", userSchema);
 const Behavior = mongoose.model("Behavior", behaviorSchema);
+
 
 // Login endpoint
 app.post("/login", async (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  const { email, password } = req.body;
 
   try {
     // Check email and password against database
@@ -151,16 +175,129 @@ app.post("/login", async (req, res) => {
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
       // If login fails, return an error response
-      res.status(401).send("Incorrect email or password");
-      return;
+      return res.status(401).send("Incorrect email or password");
     }
 
-    // If login is successful, return a success response
+    if (!user.isVerifiedEmail) {
+      return res.status(403).send("Email not verified");
+    }
+
     const token = jwt.sign({ userId: user._id }, "secret_key");
     res.send(token);
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal server error");
+  }
+});
+
+// Registration endpoint
+app.post("/register", async (req, res) => {
+  const { email, password, confirmPassword, name, firstName, lastName, schoolName, birthMonth, birthYear, gradeLevel, gender } = req.body;
+
+  if (password !== confirmPassword) {
+    return res.status(400).send("Passwords do not match");
+  }
+
+  const salt = bcrypt.genSaltSync(10);
+  const hashedPassword = bcrypt.hashSync(password, salt);
+  const verificationCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
+
+  try {
+    const newUser = new User({
+      email,
+      password: hashedPassword,
+      name,
+      firstName,
+      lastName,
+      schoolName,
+      birthMonth,
+      birthYear,
+      gradeLevel,
+      gender,
+      isVerifiedEmail: false,
+      verificationCode
+    });
+    await newUser.save();
+
+    const msg = {
+      to: email,
+      from: "pklab@projectproudme.com",
+      subject: "Email Verification",
+      text: `Your verification code is: ${verificationCode}`,
+    };
+
+    sgMail.send(msg)
+      .then(() => res.status(200).send("User registered. Please verify your email."))
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Failed to send verification email");
+      });
+  } catch (error) {
+    res.status(500).send("Internal server error");
+    console.error(error);
+  }
+});
+
+// Email verification endpoint
+app.post("/verify", async (req, res) => {
+  const { email, code } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).send("User not found");
+    }
+
+    if (user.verificationCode === code) {
+      user.isVerifiedEmail = true;
+      user.verificationCode = null; // Clear the verification code
+      await user.save();
+      res.status(200).send("Email verified successfully");
+    } else {
+      res.status(400).send("Invalid verification code");
+    }
+  } catch (error) {
+    res.status(500).send("Internal server error");
+    console.error(error);
+  }
+});
+
+// Resend verification email endpoint
+app.post("/send-code", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).send("User not found");
+    }
+
+    if (user.isVerifiedEmail) {
+      return res.status(400).send("Email is already verified");
+    }
+
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+    user.verificationCode = verificationCode;
+    await user.save();
+
+    const msg = {
+      to: email,
+      from: "pklab@projectproudme.com",
+      subject: "Email Verification",
+      text: `Your verification code is: ${verificationCode}`,
+    };
+
+    sgMail.send(msg)
+      .then(() => res.send("Verification email sent successfully"))
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Failed to send verification email");
+      });
+  } catch (error) {
+    res.status(500).send("Internal server error");
+    console.error(error);
   }
 });
 
@@ -227,6 +364,29 @@ app.post("/behaviors", async (req, res) => {
       goalType: req.body.goalType,
       date: req.body.date,
     });
+    
+    const newBehaviorData = {
+      dateToday: req.body.dateToday,
+      behaviorValue: req.body.behaviorValue,
+      name: req.body.name,
+      goalValue: req.body.goalValue,
+      goalStatus: req.body.goalStatus,
+      divInfo1: req.body.divInfo1,
+      divInfo2: req.body.divInfo2,
+      reflection: req.body.reflection,
+      recommendedValue: req.body.recommendedValue,
+      feedback: req.body.feedback,
+    };
+
+    // Add new fields based on goalType
+    if (req.body.goalType === "activity" || req.body.goalType === "screentime") {
+      newBehaviorData.activities = req.body.activities;
+    } else if (req.body.goalType === "eating") {
+      newBehaviorData.servings = req.body.servings;
+    } else if (req.body.goalType === "sleep") {
+      newBehaviorData.sleep = req.body.sleep;
+    }
+
     if (existingBehavior) {
       const behavior = await Behavior.findOneAndUpdate(
         {
@@ -234,39 +394,16 @@ app.post("/behaviors", async (req, res) => {
           goalType: req.body.goalType,
           date: req.body.date,
         },
-        {
-          $set: {
-            dateToday: req.body.dateToday,
-            behaviorValue: req.body.behaviorValue,
-            name: req.body.name,
-            goalValue: req.body.goalValue,
-            goalStatus: req.body.goalStatus,
-            divInfo1: req.body.divInfo1,
-            divInfo2: req.body.divInfo2,
-            reflection: req.body.reflection,
-            recommendedValue: req.body.recommendedValue,
-            feedback: req.body.feedback,
-          },
-        },
-        {
-          new: true,
-        }
+        { $set: newBehaviorData },
+        { new: true }
       );
       res.status(200).json(behavior);
     } else {
       const behavior = new Behavior({
         user: req.body.user,
-        name: req.body.name,
+        ...newBehaviorData,
         goalType: req.body.goalType,
-        goalValue: req.body.goalValue,
-        behaviorValue: req.body.behaviorValue,
         date: req.body.date,
-        dateToday: req.body.dateToday,
-        goalStatus: req.body.goalStatus,
-        divInfo1: req.body.divInfo1,
-        divInfo2: req.body.divInfo2,
-        reflection: req.body.reflection,
-        recommendedValue: req.body.recommendedValue,
       });
       const savedBehavior = await behavior.save();
       res.status(201).json(savedBehavior);
@@ -276,58 +413,34 @@ app.post("/behaviors", async (req, res) => {
   }
 });
 
+
 // Signup endpoint
 app.post("/signup", async (req, res) => {
-  const email = req.body.email;
-  let password = req.body.password;
-  let confirmPassword = req.body.confirmPassword;
-  const name = req.body.name;
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const schoolName = req.body.schoolName;
-  const birthMonth = req.body.birthMonth;
-  const birthYear = req.body.birthYear;
-  const gradeLevel = req.body.gradeLevel;
-  const gender = req.body.gender;
+  const { email, password, confirmPassword, name, firstName, lastName, schoolName, birthMonth, birthYear, gradeLevel, gender } = req.body;
+
+  if (password !== confirmPassword) {
+    return res.status(400).send("Passwords do not match");
+  }
 
   const salt = bcrypt.genSaltSync(10);
-
   const hashedPassword = bcrypt.hashSync(password, salt);
-  password = hashedPassword;
-  const hashedConfirmPassword = bcrypt.hashSync(confirmPassword, salt);
 
   try {
-    // Check email against database to ensure it is not already in use
-    const existingUser = await User.findOne({ email });
-    const existingUsername = await User.findOne({ name });
+    const newUser = new User({
+      email,
+      password: hashedPassword,
+      name,
+      firstName,
+      lastName,
+      schoolName,
+      birthMonth,
+      birthYear,
+      gradeLevel,
+      gender,
+    });
+    await newUser.save();
 
-    if (existingUser) {
-      // If email is already in use, return an error response
-      res.status(400).send("Email is already in use");
-    } else if (password !== hashedConfirmPassword) {
-      // If password and confirmPassword do not match, return an error response
-      res.status(400).send("Passwords do not match");
-    } else if (existingUsername) {
-      res.status(400).send("Username is already in use!");
-    } else {
-      // Create new user and save to database
-      const newUser = new User({
-        email,
-        password,
-        name,
-        firstName,
-        lastName,
-        schoolName,
-        birthMonth,
-        birthYear,
-        gradeLevel,
-        gender,
-      });
-      await newUser.save();
-
-      // Return a success response
-      res.status(200).send(newUser);
-    }
+    res.status(200).send(newUser);
   } catch (error) {
     res.status(500).send("Internal server error");
     console.error(error);
@@ -335,20 +448,15 @@ app.post("/signup", async (req, res) => {
 });
 
 // User endpoint
-app.get(
-  "/users",
-  authMiddleware.verifyToken,
-  authMiddleware.attachUserId,
-  async (req, res) => {
-    try {
-      const user = await User.findById(req._id);
-      res.json(user);
-    } catch (error) {
-      res.status(500).send("Internal server error");
-      console.error(error);
-    }
+app.get("/users", authMiddleware.verifyToken, authMiddleware.attachUserId, async (req, res) => {
+  try {
+    const user = await User.findById(req._id);
+    res.json(user);
+  } catch (error) {
+    res.status(500).send("Internal server error");
+    console.error(error);
   }
-);
+});
 
 app.get("/user", async (req, res) => {
   try {
@@ -524,45 +632,23 @@ app.post("/chatbot", (req, res) => {
     openaiInstance.chat.completions
       .create({
         model: "gpt-3.5-turbo",
-        // model="gpt-4",
         messages: [
           {
             role: "system",
-            content: /category\d/.test(JSON.stringify(prompt))
-              ? "You are an feedback provider who provides feedback to user based on their screen time values\
-              You are provided one of 9 categories listed below: based on categories. provide feedback \
-              category 1: User did not achieve their goal and their screen time is more than double of their set goal, ask them to reduce there screen time further\
-              category 2: User missed their goal but not by more than double, encourage them to work harder and reach the goal\
-              category 3: User achieved their screen time goal, congratulate them and ask them to set their actual goal to recommended value \
-              category 4: User achieved their set goal and recommended goal, congratulate them got meeting goal and praise them for setting goal better then recommended value \
-              category 5: User has reduced their screen time by more than half of their goal value, they are champion and achiever, praise them for their achievement. \
-              category 6: User has not yet set their goal or behavior values for screentime; tell them to enter valid values.\
-              category 7: User has not yet set a behavior value, tell them that they haven't started working towards their goal yet.\
-              category 8: Uer has not yet set a goal value, tell them to remember to set a goal before starting their behaviors.\
-              category 9: Praise the user for working towards their goal \
-              Keep your feedback encouraging and limited to 60 words\
-              If there is a reflection provided as an input, incorporate it into your feedback."
-              : "you will be provided a list of behavior/activity types, recommended goals, actual goals, actual values, percentage of actual goal achieved, percenatge of recommended goal achieved \
-        you have to provide feedback based on percentage of goal achieved \
-        If goal achieved is less than 50%, tell user to put extra effort and give them tips \
-        If goal achieved is more than 50%, encourage them to reach the goal and keep it up \
-        If they meet their goal, congratulate them and give high five\
-        If their set goal is more than the recommended goal, praise them for setting goal more than recommended value \
-        If the goal type is screentime, it is better if they do less than the specified goal/recommendation \
-        so give feedback for the opposite case.\
-        If they achieve more than 120% of goal, They nailed it. \
-        Keep your feedback encouraging and limited to 50 words\
-        Provide realistic feedback on how they can improve in the future\
-        relevant to the goal type; for example, specific fruits/veggies to eat for eating, specific exercise methods for activity,\
-        specific alternatives to laptops for screentime, specific sleep methods for sleep.\
-        If the set goal is 0, tell the user to set a valid amount for their goal; if their behavior value is 0, tell them that they need to get started. If both values are 0, tell them that they need to save their progress for that goal.\
-        If the user provides a reflection associated with the given behavior,\
-        incorporate it into your feedback.",
+            content: `You are a feedback provider for health behaviors. Provide feedback based on the type of activity and user inputs. 
+            Here are the options:
+            - Physical Activity: Recommend at least 60 minutes of exercise daily.
+            - Screentime: Suggest limiting screen time to under 2 hours daily.
+            - Eating: Recommend consuming at least 5 servings of fruits and vegetables daily.
+            - Sleep: Advise getting 9-11 hours of sleep nightly.
+            There are no set goals for fruits and vegetables so dont talk about it for that category.
+            If no goal is set for behaviors like eating or sleep, base feedback on recommended values only.
+            Keep feedback encouraging and specific to the selected activities.`,
           },
           { role: "user", content: JSON.stringify(prompt) },
         ],
         temperature: 0.9,
-        max_tokens: 75,
+        max_tokens: 100,
         top_p: 1,
         frequency_penalty: 0,
         presence_penalty: 0.6,
@@ -577,6 +663,8 @@ app.post("/chatbot", (req, res) => {
   }
 });
 
+
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+

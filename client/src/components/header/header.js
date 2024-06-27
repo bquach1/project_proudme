@@ -125,6 +125,19 @@ const Header = () => {
             </Button>
           </>
         )}
+        {/* Add Learn More Button */}
+        <Button
+          style={
+            ismobile
+              ? buttonStyles("ismobile")
+              : istablet
+              ? buttonStyles("istablet")
+              : buttonStyles()
+          }
+          onClick={() => navigate("/learnmore")}
+        >
+          Learn More
+        </Button>
       </LeftNav>
 
       <div className="right-nav">

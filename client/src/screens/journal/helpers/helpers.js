@@ -24,64 +24,33 @@ export const getSaveButtonColor = (loggedGoalToday, goalData, goal) => {
   }
 };
 
-export const createChatbotRequest = (
-  goal,
-  setGoal,
-  user,
-  date,
-  setGoalResponseLoading
-) => {
+export const createChatbotRequest = (goal, setGoal, user, date, setGoalResponseLoading) => {
   setGoalResponseLoading(true);
+
+  const goalType = goal[0].goalType;
+  const behaviorValue = goal[0].behaviorValue;
+  const reflection = goal[0].reflection || "None";
+
+  let additionalInfo = "";
+
+  if (goalType === "eating") {
+    additionalInfo = `Servings: ${goal[0].behaviorValue}`;
+  } else if (goalType === "sleep") {
+    additionalInfo = `Hours of sleep: ${goal[0].behaviorValue}`;
+  } else if (goalType === "activity" || goalType === "screentime") {
+    additionalInfo = `Activities: ${goal[0].activities ? goal[0].activities.join(", ") : "None"}`;
+  }
+
   axios
     .post(`${DATABASE_URL}/chatbot`, {
       prompt: [
         {
           role: "system",
-          content:
-            goal[0].goalType === "screentime" &&
-            goal[0].goalValue === 0 &&
-            goal[0].behaviorValue === 0
-              ? "category6"
-              : goal[0].goalType === "screentime" && goal[0].behaviorValue === 0
-              ? "category7"
-              : goal[0].goalType === "screentime" && goal[0].goalValue === 0
-              ? "category8"
-              : goal[0].goalType === "screentime" &&
-                goal[0].behaviorValue > goal[0].goalValue * 2
-              ? "category1"
-              : goal[0].goalType === "screentime" &&
-                goal[0].behaviorValue > goal[0].goalValue
-              ? "category2"
-              : goal[0].goalType === "screentime" &&
-                goal[0].behaviorValue <= goal[0].goalValue &&
-                goal[0].behaviorValue > goal[0].recommendedValue
-              ? "category3"
-              : goal[0].goalType === "screentime" &&
-                goal[0].behaviorValue <= goal[0].goalValue &&
-                goal[0].behaviorValue * 2 >= goal[0].goalValue &&
-                goal[0].goalValue <= goal[0].recommendedValue
-              ? "category4"
-              : goal[0].goalType === "screentime" &&
-                goal[0].behaviorValue * 2 <= goal[0].goalValue &&
-                goal[0].goalValue <= goal[0].recommendedValue
-              ? "category5"
-              : goal[0].goalType === "screentime"
-              ? "category9"
-              : `Health goal type: ${goal[0].goalType}, Recommended value: ${
-                  goal[0].recommendedValue
-                }, Actual Goal Value: ${goal[0].goalValue}, ' \
-f'Actual behavior value achieved: ${
-                  goal[0].behaviorValue
-                }, percentage of actual goal achieved: ${`${
-                  (parseFloat(goal[0].behaviorValue).toFixed(2) /
-                    parseFloat(goal[0].goalValue).toFixed(2)) *
-                  100
-                }%`}, ' \
-f'percentage of recommended goal achieved: ${`${
-                  (parseFloat(goal[0].behaviorValue).toFixed(2) /
-                    parseFloat(goal[0].recommendedValue).toFixed(2)) *
-                  100
-                }%`}, Reflection: ${goal[0].reflection}.`,
+          content: `Goal Type: ${goalType}, 
+                    Recommended Value: ${goal[0].recommendedValue}, 
+                    Actual Value: ${behaviorValue}, 
+                    ${additionalInfo}, 
+                    Reflection: ${reflection}`,
         },
       ],
     })
@@ -96,16 +65,19 @@ f'percentage of recommended goal achieved: ${`${
         });
         return updatedGoal;
       });
+
       axios.post(`${DATABASE_URL}/behaviors`, {
         user: user._id,
         name: user.name,
-        goalType: goal[0].goalType,
+        goalType: goalType,
         date: date,
         feedback: response.data.chat_reply,
       });
+
       setGoalResponseLoading(false);
     });
 };
+
 
 export async function updateBehaviorValue(
   user,
@@ -117,11 +89,21 @@ export async function updateBehaviorValue(
   goalData,
   goalType,
   date,
-  recommendedValue
+  recommendedValue,
+  activities = {},
+  servings = { fruits: 0, vegetables: 0 },
+  sleep = { bedGoal: 0, wakeUpGoal: 0, bedBehavior: 0, wakeUpBehavior: 0 }
 ) {
   setGoal((prevGoal) => {
     const updatedBehaviorGoal = prevGoal.map((goal) => {
-      const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
+      const updatedGoal = {
+        ...goal,
+        behaviorValue: +newBehaviorValue,
+        activities,
+        servings,
+        sleep,
+      };
+
       axios
         .post(`${DATABASE_URL}/goals`, {
           user: user._id,
@@ -129,21 +111,19 @@ export async function updateBehaviorValue(
           goalType: goalType,
           goalValue: +newGoalValue,
           behaviorValue: newBehaviorValue,
-          goalStatus: goalData.length
-            ? newBehaviorValue > goalData[0].goalValue &&
-              goalType === "screentime"
-              ? "no"
-              : newBehaviorValue >= goalData[0].goalValue &&
-                goalType !== "screentime"
-              ? "yes"
-              : "no"
-            : newBehaviorValue > currentGoal[0].goalValue &&
-              goalType === "screentime"
-            ? "no"
-            : newBehaviorValue >= currentGoal[0].goalValue &&
-              goalType !== "screentime"
-            ? "yes"
-            : "no",
+          activities,
+          servings,
+          sleep,
+          goalStatus:
+            goalData.length && goalType !== "screentime"
+              ? newBehaviorValue >= goalData[0].goalValue
+                ? "yes"
+                : "no"
+              : goalType === "screentime"
+              ? newBehaviorValue > goalData[0].goalValue
+                ? "no"
+                : "yes"
+              : "no",
           reflection: newReflection,
           dateToday: new Date(),
           recommendedValue: recommendedValue,
@@ -151,6 +131,7 @@ export async function updateBehaviorValue(
         .catch((error) => {
           console.error(error);
         });
+
       axios
         .post(`${DATABASE_URL}/behaviors`, {
           user: user._id,
@@ -160,21 +141,19 @@ export async function updateBehaviorValue(
           dateToday: new Date(),
           goalValue: +newGoalValue,
           behaviorValue: newBehaviorValue,
-          goalStatus: goalData.length
-            ? newBehaviorValue > goalData[0].goalValue &&
-              goalType === "screentime"
-              ? "no"
-              : newBehaviorValue >= goalData[0].goalValue &&
-                goalType !== "screentime"
-              ? "yes"
-              : "no"
-            : newBehaviorValue > currentGoal[0].goalValue &&
-              goalType === "screentime"
-            ? "no"
-            : newBehaviorValue >= currentGoal[0].goalValue &&
-              goalType !== "screentime"
-            ? "yes"
-            : "no",
+          activities,
+          servings,
+          sleep,
+          goalStatus:
+            goalData.length && goalType !== "screentime"
+              ? newBehaviorValue >= goalData[0].goalValue
+                ? "yes"
+                : "no"
+              : goalType === "screentime"
+              ? newBehaviorValue > goalData[0].goalValue
+                ? "no"
+                : "yes"
+              : "no",
           divInfo1: currentGoal[0].divInfo1,
           divInfo2: currentGoal[0].divInfo2,
           reflection: newReflection,
@@ -184,6 +163,7 @@ export async function updateBehaviorValue(
         .catch((error) => {
           console.error(error);
         });
+
       return updatedGoal;
     });
     return updatedBehaviorGoal;
