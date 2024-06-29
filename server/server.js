@@ -148,7 +148,7 @@ const behaviorSchema = new mongoose.Schema({
       behavior: Number,
     }),
   },
-  screen: {
+  screentime: {
     type: Map,
     of: new mongoose.Schema({
       goal: Number,
@@ -274,7 +274,7 @@ app.post("/send-code", async (req, res) => {
   const { email } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }) || await User.findOne({name: email});
 
     if (!user) {
       return res.status(400).send("User not found");
@@ -289,7 +289,7 @@ app.post("/send-code", async (req, res) => {
     await user.save();
 
     const msg = {
-      to: email,
+      to: user.email,
       from: "pklab@projectproudme.com",
       subject: "Email Verification",
       text: `Your verification code is: ${verificationCode}`,
