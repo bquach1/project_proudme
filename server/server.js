@@ -148,18 +148,24 @@ const behaviorSchema = new mongoose.Schema({
       behavior: Number,
     }),
   },
+  screen: {
+    type: Map,
+    of: new mongoose.Schema({
+      goal: Number,
+      behavior: Number,
+    }),
+  },
   servings: {
     fruits: Number,
     vegetables: Number,
   },
   sleep: {
-    bedGoal: Number,
-    wakeUpGoal: Number,
     bedBehavior: Number,
     wakeUpBehavior: Number,
   },
 });
 
+const User = mongoose.model("User", userSchema);
 const Behavior = mongoose.model("Behavior", behaviorSchema);
 
 
@@ -379,8 +385,10 @@ app.post("/behaviors", async (req, res) => {
     };
 
     // Add new fields based on goalType
-    if (req.body.goalType === "activity" || req.body.goalType === "screentime") {
+    if (req.body.goalType === "activity") {
       newBehaviorData.activities = req.body.activities;
+    } else if (req.body.goalType === "screentime") {
+      newBehaviorData.screentime = req.body.screentime;
     } else if (req.body.goalType === "eating") {
       newBehaviorData.servings = req.body.servings;
     } else if (req.body.goalType === "sleep") {
