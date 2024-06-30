@@ -142,22 +142,16 @@ const behaviorSchema = new mongoose.Schema({
   },
   // New fields
   activities: {
-    type: Map,
-    of: new mongoose.Schema({
-      goal: Number,
-      behavior: Number,
-    }),
+    type: Object,
+    default: {}
   },
   screentime: {
-    type: Map,
-    of: new mongoose.Schema({
-      goal: Number,
-      behavior: Number,
-    }),
+    type: Object,
+    default: {}
   },
   servings: {
-    fruits: Number,
-    vegetables: Number,
+    type: Object,
+    default: {}
   },
   sleep: {
     bedBehavior: Number,
