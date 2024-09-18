@@ -625,45 +625,99 @@ app.post("/send-email", (req, res) => {
     });
 });
 
+const handleSave = async () => {
+  // Log current selected items, goal inputs, and behavior inputs
+  console.log("Selected Items: ", selectedItems);
+  console.log("Goal Inputs: ", goalInputs);
+  console.log("Behavior Inputs: ", behaviorInputs);
+
+  // Prepare the data to be sent
+  const data = {
+    user: user._id,
+    // For activity, screentime, eating, and sleep, make sure values are passed correctly
+    activities: selectedItems.activity.reduce((acc, item) => {
+      acc[item] = {
+        goal: `${goalInputs.activity[item]?.hours || 0} hours ${goalInputs.activity[item]?.minutes || 0} minutes`,
+        behavior: `${behaviorInputs.activity[item]?.hours || 0} hours ${behaviorInputs.activity[item]?.minutes || 0} minutes`
+      };
+      return acc;
+    }, {}),
+    screentime: selectedItems.screentime.reduce((acc, item) => {
+      acc[item] = {
+        goal: `${goalInputs.screentime[item]?.hours || 0} hours ${goalInputs.screentime[item]?.minutes || 0} minutes`,
+        behavior: `${behaviorInputs.screentime[item]?.hours || 0} hours ${behaviorInputs.screentime[item]?.minutes || 0} minutes`
+      };
+      return acc;
+    }, {}),
+    servings: selectedItems.eating.reduce((acc, item) => {
+      acc[item] = {
+        goal: `${goalInputs.eating[item]?.servings || 0} servings`,
+        behavior: `${behaviorInputs.eating[item]?.servings || 0} servings`
+      };
+      return acc;
+    }, {}),
+    sleep: {
+      bedGoal: goalInputs.sleep["Expected Sleep"]?.bedTime || "0",
+      wakeUpGoal: goalInputs.sleep["Expected Sleep"]?.wakeUpTime || "0",
+      bedBehavior: behaviorInputs.sleep["Actual Sleep"]?.bedTime || "0",
+      wakeUpBehavior: behaviorInputs.sleep["Actual Sleep"]?.wakeUpTime || "0",
+    },
+  };
+
+  // Log data before sending to the server
+  console.log("Data to send to server: ", data);
+
+  try {
+    const response = await axios.post("/chatbot", data);
+    setAiResponse(response.data.chat_reply);
+  } catch (error) {
+    console.error("Error saving behavior: ", error);
+  }
+};
+
+
 const openaiInstance = new openai({ apiKey: process.env.OPEN_AI_API_KEY });
 
-app.post("/chatbot", (req, res) => {
-  const prompt = req.body.prompt;
-  console.log(prompt);
-  try {
-    openaiInstance.chat.completions
-      .create({
-        model: "gpt-3.5-turbo",
-        messages: [
-          {
-            role: "system",
-            content: `You are a feedback provider for health behaviors. Provide feedback based on the type of activity and user inputs. 
-            Here are the options:
-            - Physical Activity: Recommend at least 60 minutes of exercise daily.
-            - Screentime: Suggest limiting screen time to under 2 hours daily.
-            - Eating: Recommend consuming at least 5 servings of fruits and vegetables daily.
-            - Sleep: Advise getting 9-11 hours of sleep nightly.
-            There are no set goals for fruits and vegetables so dont talk about it for that category.
-            If no goal is set for behaviors like eating or sleep, base feedback on recommended values only.
-            Keep feedback encouraging and specific to the selected activities.`,
-          },
-          { role: "user", content: JSON.stringify(prompt) },
-        ],
-        temperature: 0.9,
-        max_tokens: 100,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0.6,
-      })
-      .then((response) => {
-        const chat_reply = response.choices[0].message.content;
-        res.json({ chat_reply });
-      });
-  } catch (error) {
-    console.error("Chatbot error: ", error);
-    res.status(500).json({ error: "Chatbot request failed" });
-  }
+app.post("/chatbot", async (req, res) => {
+  const { activityGoal, activityBehavior, screentimeGoal, screentimeBehavior, eatingGoal, eatingBehavior, sleepGoal, sleepBehavior } = req.body;
+
+  const prompt = `Compare the following user goals and behaviors:
+    - Activity Goal: ${activityGoal}
+    - Activity Behavior: ${activityBehavior}
+    - Screentime Goal: ${screentimeGoal}
+    - Screentime Behavior: ${screentimeBehavior}
+    - Eating Goal: ${eatingGoal}
+    - Eating Behavior: ${eatingBehavior}
+    - Sleep Goal: ${sleepGoal}
+    - Sleep Behavior: ${sleepBehavior}
+    Provide feedback on whether the user met their goals. Here are the reccoment goals for everything and give suggestions for imporvemnt:
+    - Activity Goal: 60 minutes of physical activity or above
+    - Screentime Goal: 2 hours or less of screen time
+    - Eating Goal: 5 servings of fruits and vegetables
+    - Sleep Goal: 8-10 hours of sleep
+    `;
+
+  const openaiResponse = await openaiInstance.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        role: "system",
+        content: `You are a feedback provider for health behaviors. Provide feedback based on the type of activity and user inputs. Keep feedback encouraging and specific to the selected activities.`,
+      },
+      { role: "user", content: prompt },
+    ],
+    temperature: 0.9,
+    max_tokens: 300,
+    top_p: 1,
+    frequency_penalty: 0,
+    presence_penalty: 0.6,
+  });
+
+  const chat_reply = openaiResponse.choices[0].message.content;
+  res.json({ chat_reply });
 });
+
+
 
 
 app.listen(port, () => {

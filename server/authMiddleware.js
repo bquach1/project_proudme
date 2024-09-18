@@ -22,3 +22,4 @@ function attachUserId(req, res, next) {
 }
 
 module.exports = { verifyToken, attachUserId };
+
