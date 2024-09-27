@@ -42,8 +42,8 @@ export const createChatbotRequest = (
   const reflection = goal[0].reflection || "None";
   let additionalInfo = "";
   let goalMet = false;
-  let recommendedValue = ""; // To hold the recommended goal value with units
-  let actualValue = ""; // To hold the actual tracked value with units
+  let recommendedValue = "";
+  let actualValue = ""; 
 
   if (!goalInputs || Object.keys(goalInputs).length === 0 || !selectedItems || Object.keys(selectedItems).length === 0) {
     console.error("No goal or selected items found. Ensure the user has selected items in the popups.");
@@ -123,7 +123,7 @@ export const createChatbotRequest = (
       prompt: [
         {
           role: "system",
-          content: `Provide feedback based on the user's actual behavior compared to their set goals.`,
+          content: `Provide feedback based on the user's actual behavior compared to their set goals. Do not response using percentages`,
         },
         {
           role: "user",
@@ -147,6 +147,7 @@ export const createChatbotRequest = (
       setGoalResponseLoading(false);
     });
 };
+
 
 
 const calculateSleepDuration = (bedTime, wakeUpTime) => {
