@@ -42,6 +42,8 @@ export const createChatbotRequest = (
   const reflection = goal[0].reflection || "None";
   let additionalInfo = "";
   let goalMet = false;
+  let recommendedValue = ""; // To hold the recommended goal value with units
+  let actualValue = ""; // To hold the actual tracked value with units
 
   if (!goalInputs || Object.keys(goalInputs).length === 0 || !selectedItems || Object.keys(selectedItems).length === 0) {
     console.error("No goal or selected items found. Ensure the user has selected items in the popups.");
@@ -49,42 +51,61 @@ export const createChatbotRequest = (
     return;
   }
 
+  // Activity tracking
   if (goalType === "activity") {
     const activities = selectedItems?.activity || [];
     additionalInfo = `Activities: ${activities.map(item =>
       `${item}: Expected ${goalInputs?.activity?.[item]?.hours || 0}h ${goalInputs?.activity?.[item]?.minutes || 0}m, 
       Tracked ${behaviorInputs?.activity?.[item]?.hours || 0}h ${behaviorInputs?.activity?.[item]?.minutes || 0}m`
     ).join(", ")}`;
-    goalMet = totalTrackedTime?.activity >= 60;
+    
+    recommendedValue = "60 minutes";
+    const totalMinutesTracked = totalTrackedTime?.activity || 0;
+    const hours = Math.floor(totalMinutesTracked / 60);
+    const minutes = totalMinutesTracked % 60;
+    actualValue = `${hours}h ${minutes}m`;
+    goalMet = totalTrackedTime?.activity >= 60; // Goal is 60 minutes
   }
+
+  // Screentime tracking
   else if (goalType === "screentime") {
     const screentimeActivities = selectedItems?.screentime || [];
-
     additionalInfo = `Screentime Activities: ${screentimeActivities.map(item =>
       `${item}: Expected ${goalInputs?.screentime?.[item]?.hours || 0}h ${goalInputs?.screentime?.[item]?.minutes || 0}m, 
       Tracked ${behaviorInputs?.screentime?.[item]?.hours || 0}h ${behaviorInputs?.screentime?.[item]?.minutes || 0}m`
     ).join(", ")}`;
-
+    
+    recommendedValue = "120 minutes";
+    const totalMinutesTracked = totalTrackedTime?.screentime || 0;
+    const hours = Math.floor(totalMinutesTracked / 60);
+    const minutes = totalMinutesTracked % 60;
+    actualValue = `${hours}h ${minutes}m`;
 
     const schoolWorkRelated = screentimeActivities.some(item => item.toLowerCase().includes("school") || item.toLowerCase().includes("work"));
-
-    if (schoolWorkRelated) {
-      goalMet = true; // Screentime is acceptable if related to school/work
-    } else {
-      goalMet = totalTrackedTime?.screentime <= 120; // Exceeding 120 minutes for non-school/work screentime is not recommended
-    }
+    goalMet = schoolWorkRelated || totalTrackedTime?.screentime <= 120;
   }
 
+  // Eating fruits and vegetables tracking
   else if (goalType === "eating") {
     const eatingItems = selectedItems?.eating || [];
-
     additionalInfo = `Eating Activities: ${eatingItems.map(item =>
       `${item}: Expected ${goalInputs?.eating?.[item]?.servings || 0} servings, 
       Tracked ${behaviorInputs?.eating?.[item]?.servings || 0} servings`
     ).join(", ")}`;
-    goalMet = totalTrackedTime?.eating >= 5; // Target for eating is 5 servings
+    
+    recommendedValue = "5 servings";
+    actualValue = `${totalTrackedTime?.eating || 0} servings`;
+    goalMet = totalTrackedTime?.eating >= 5; // Goal is 5 servings
   }
+
+  // Sleep tracking
   else if (goalType === "sleep") {
+    const totalMinutesTracked = totalTrackedTime?.sleep || 0;
+    const hours = Math.floor(totalMinutesTracked / 60);
+    const minutes = totalMinutesTracked % 60;
+    recommendedValue = "9 hours";
+    actualValue = `${hours}h ${minutes}m`;
+
     const bedTime = goalInputs?.sleep?.["Expected Sleep"]?.bedTime || "";
     const wakeUpTime = goalInputs?.sleep?.["Expected Sleep"]?.wakeUpTime || "";
     const trackedBedTime = behaviorInputs?.sleep?.["Actual Sleep"]?.bedTime || "";
@@ -92,13 +113,11 @@ export const createChatbotRequest = (
 
     additionalInfo = `Expected Sleep: Bed Time - ${bedTime}, Wake Up Time - ${wakeUpTime}, 
       Tracked Sleep: Bed Time - ${trackedBedTime}, Wake Up Time - ${trackedWakeUpTime}`;
-
-
-    const totalSleepTime = calculateSleepDuration(trackedBedTime, trackedWakeUpTime);
-    goalMet = totalTrackedTime?.sleep >= (9 * 60);
+    
+    goalMet = totalTrackedTime?.sleep >= (9 * 60); // Goal is 9 hours of sleep
   }
 
-
+  // Send the request to the chatbot with the actual value in appropriate units
   axios
     .post(`${DATABASE_URL}/chatbot`, {
       prompt: [
@@ -108,7 +127,7 @@ export const createChatbotRequest = (
         },
         {
           role: "user",
-          content: `Goal Type: ${goalType}, Recommended Value: ${goal[0].recommendedValue} in appropriate units, Actual Value: ${totalTrackedTime[goalType] || 0} in appropriate units, ${additionalInfo}, Reflection: ${reflection}, Goal Met: ${goalMet ? "Yes" : "No"}`,
+          content: `Goal Type: ${goalType}, Recommended Value: ${recommendedValue}, Actual Value: ${actualValue}, ${additionalInfo}, Reflection: ${reflection}, Goal Met: ${goalMet ? "Yes" : "No"}`,
         },
       ],
     })
@@ -128,6 +147,7 @@ export const createChatbotRequest = (
       setGoalResponseLoading(false);
     });
 };
+
 
 const calculateSleepDuration = (bedTime, wakeUpTime) => {
   if (!bedTime || !wakeUpTime) return "";

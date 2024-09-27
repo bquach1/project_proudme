@@ -603,9 +603,53 @@ const JournalScreen = () => {
           ? [...prev[section], name]
           : prev[section].filter((item) => item !== name),
       };
+
+      if (!checked) {
+        const goalHours = parseInt(goalInputs[section][name]?.hours || 0);
+        const goalMinutes = parseInt(goalInputs[section][name]?.minutes || 0);
+        const trackedHours = parseInt(behaviorInputs[section][name]?.hours || 0);
+        const trackedMinutes = parseInt(behaviorInputs[section][name]?.minutes || 0);
+
+        const totalGoalTimeToSubtract = goalHours * 60 + goalMinutes;
+        const totalTrackedTimeToSubtract = trackedHours * 60 + trackedMinutes;
+
+        setTotalExpectedTime((prev) => ({
+          ...prev,
+          [section]: Math.max(prev[section] - totalGoalTimeToSubtract, 0),
+        }));
+
+        setTotalTrackedTime((prev) => ({
+          ...prev,
+          [section]: Math.max(prev[section] - totalTrackedTimeToSubtract, 0),
+        }));
+
+        setGoalInputs((prev) => ({
+          ...prev,
+          [section]: {
+            ...prev[section],
+            [name]: {
+              hours: 0,
+              minutes: 0,
+            },
+          },
+        }));
+        setBehaviorInputs((prev) => ({
+          ...prev,
+          [section]: {
+            ...prev[section],
+            [name]: {
+              hours: 0,
+              minutes: 0,
+            },
+          },
+        }));
+      }
+
       return updated;
     });
   };
+
+
 
   const handleInputChange = (event, name, type, inputType, section) => {
     const { value } = event.target;
@@ -896,7 +940,6 @@ const JournalScreen = () => {
                       <h2 style={styles.goalLabel}>Physical Activity</h2>
                       <p style={{ fontSize: "16px", color: "#555", fontWeight: "bold" }}>Recommended: 60 minutes/day</p>
                     </div>
-
                     <Tooltip
                       title={
                         <div>
@@ -940,8 +983,24 @@ const JournalScreen = () => {
                         Set and Track
                       </StyledButton>
                     </Tooltip>
+
+                    {/* Tracking under the buttons*/}
+                    {selectedItems.activity.length > 0 && (
+                      <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
+                        <strong>Selected: </strong>
+                        {selectedItems.activity.map((item, index) => (
+                          <span key={item}>
+                            {item}: {goalInputs.activity[item]?.hours || 0}h {goalInputs.activity[item]?.minutes || 0}m /
+                            Tracked: {behaviorInputs.activity[item]?.hours || 0}h {behaviorInputs.activity[item]?.minutes || 0}m
+                            {index < selectedItems.activity.length - 1 && ", "}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </td>
                 </GoalContainer>
+
+
 
                 <GoalContainer style={styles.goalRow}>
                   <td style={styles.titleGroup}>
@@ -986,20 +1045,24 @@ const JournalScreen = () => {
                     </Tooltip>
                   </td>
                   <td style={{ width: "50%" }}>
-                    <Tooltip
-                      title={
-                        loggedScreentimeToday && editingBehaviorId !== 1
-                          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <StyledButton
-                        variant="contained"
-                        onClick={() => handleOpenPopup("screentime")}
-                      >
+                    <Tooltip title={loggedScreentimeToday && editingBehaviorId !== 1 ? "You've already logged this goal today!" : ""}>
+                      <StyledButton variant="contained" onClick={() => handleOpenPopup("screentime")}>
                         Set and Track
                       </StyledButton>
                     </Tooltip>
+                    {selectedItems.screentime.length > 0 && (
+                      <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
+                        <strong>Selected: </strong>
+                        {selectedItems.screentime.map((item, index) => (
+                          <span key={item}>
+                            {item}: {goalInputs.screentime[item]?.hours || 0}h {goalInputs.screentime[item]?.minutes || 0}m /
+                            Tracked: {behaviorInputs.screentime[item]?.hours || 0}h {behaviorInputs.screentime[item]?.minutes || 0}m
+                            {index < selectedItems.screentime.length - 1 && ", "}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
                   </td>
                 </GoalContainer>
 
@@ -1043,20 +1106,24 @@ const JournalScreen = () => {
                     </Tooltip>
                   </td>
                   <td style={{ width: "50%" }}>
-                    <Tooltip
-                      title={
-                        loggedEatingToday && editingBehaviorId !== 2
-                          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <StyledButton
-                        variant="contained"
-                        onClick={() => handleOpenPopup("eating")}
-                      >
+                    <Tooltip title={loggedEatingToday && editingBehaviorId !== 2 ? "You've already logged this goal today!" : ""}>
+                      <StyledButton variant="contained" onClick={() => handleOpenPopup("eating")}>
                         Set and Track
                       </StyledButton>
                     </Tooltip>
+                    {selectedItems.eating.length > 0 && (
+                      <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
+                        <strong>Selected: </strong>
+                        {selectedItems.eating.map((item, index) => (
+                          <span key={item}>
+                            {item}: {goalInputs.eating[item]?.servings || 0} servings /
+                            Tracked: {behaviorInputs.eating[item]?.servings || 0} servings
+                            {index < selectedItems.eating.length - 1 && ", "}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
                   </td>
                 </GoalContainer>
 
@@ -1099,20 +1166,59 @@ const JournalScreen = () => {
                     </Tooltip>
                   </td>
                   <td style={{ width: "50%" }}>
-                    <Tooltip
-                      title={
-                        loggedSleepToday && editingBehaviorId !== 3
-                          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <StyledButton
-                        variant="contained"
-                        onClick={() => handleOpenPopup("sleep")}
-                      >
+                    <Tooltip title={loggedSleepToday && editingBehaviorId !== 3 ? "You've already logged this goal today!" : ""}>
+                      <StyledButton variant="contained" onClick={() => handleOpenPopup("sleep")}>
                         Set and Track
                       </StyledButton>
                     </Tooltip>
+                    {selectedItems.sleep.length > 0 && (
+                      <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
+                        <strong>Selected: </strong>
+                        {selectedItems.sleep.includes("Track Sleep") && (
+                          <>
+                            {/* Inline calculation of expected sleep duration */}
+                            Expected Sleep: {(() => {
+                              const bedTime = goalInputs.sleep["Expected Sleep"]?.bedTime;
+                              const wakeUpTime = goalInputs.sleep["Expected Sleep"]?.wakeUpTime;
+
+                              if (!bedTime || !wakeUpTime) return "0h 0m";
+
+                              const [bedHour, bedMinute] = bedTime.split(":").map(Number);
+                              const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
+
+                              let totalMinutes = (wakeHour * 60 + wakeMinute) - (bedHour * 60 + bedMinute);
+                              if (totalMinutes < 0) totalMinutes += 24 * 60;
+
+                              const hours = Math.floor(totalMinutes / 60);
+                              const minutes = totalMinutes % 60;
+
+                              return `${hours}h ${minutes}m`;
+                            })()} /
+
+                            {/* Inline calculation of tracked sleep duration */}
+                            Tracked Sleep: {(() => {
+                              const bedTime = behaviorInputs.sleep["Actual Sleep"]?.bedTime;
+                              const wakeUpTime = behaviorInputs.sleep["Actual Sleep"]?.wakeUpTime;
+
+                              if (!bedTime || !wakeUpTime) return "0h 0m";
+
+                              const [bedHour, bedMinute] = bedTime.split(":").map(Number);
+                              const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
+
+                              let totalMinutes = (wakeHour * 60 + wakeMinute) - (bedHour * 60 + bedMinute);
+                              if (totalMinutes < 0) totalMinutes += 24 * 60;
+
+                              const hours = Math.floor(totalMinutes / 60);
+                              const minutes = totalMinutes % 60;
+
+                              return `${hours}h ${minutes}m`;
+                            })()}
+                          </>
+                        )}
+                      </div>
+                    )}
+
+
                   </td>
                 </GoalContainer>
               </div>
@@ -1559,6 +1665,7 @@ const JournalScreen = () => {
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
                         />
                       </Grid>
                       <Grid item xs={2} style={{ paddingLeft: '65px', paddingRight: '5px' }}>
@@ -1571,6 +1678,7 @@ const JournalScreen = () => {
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
                         />
                       </Grid>
                       <Grid item xs={1} style={{ paddingLeft: '150px' }}>
@@ -1583,6 +1691,7 @@ const JournalScreen = () => {
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
                         />
                       </Grid>
                       <Grid item xs={2} style={{ paddingLeft: '65px' }}>
@@ -1595,6 +1704,7 @@ const JournalScreen = () => {
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
                         />
                       </Grid>
                     </>
@@ -1663,6 +1773,7 @@ const JournalScreen = () => {
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
                         />
                       </Grid>
                       <Grid item xs={2} style={{ paddingLeft: '65px', paddingRight: '5px' }}>
@@ -1675,6 +1786,7 @@ const JournalScreen = () => {
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
                         />
                       </Grid>
 
@@ -1689,6 +1801,7 @@ const JournalScreen = () => {
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
                         />
                       </Grid>
                       <Grid item xs={2} style={{ paddingLeft: '65px' }}>
@@ -1701,6 +1814,7 @@ const JournalScreen = () => {
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
                         />
                       </Grid>
                     </>
