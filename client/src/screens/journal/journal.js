@@ -156,6 +156,7 @@ const StyledButton = styled(Button)`
 `;
 
 const JournalScreen = () => {
+  const [customActivity, setCustomActivity] = useState("");
   const [forward, setForward] = useState(true);
   const props = useSpring({
     opacity: 1,
@@ -167,6 +168,7 @@ const JournalScreen = () => {
     config: { duration: 1000 },
     translateX: 50,
   });
+
 
   const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
   const istablet = useMediaQuery({ query: "(max-width: 1200px)" });
@@ -756,9 +758,9 @@ const JournalScreen = () => {
   const [readyToRequest, setReadyToRequest] = useState(false);
 
   const handleDone = (section) => {
-    // Close the popup for the respective section
     setPopupOpen((prev) => ({ ...prev, [section]: false }));
   };
+
 
 
 
@@ -845,47 +847,123 @@ const JournalScreen = () => {
 
 
 
-  const activities = [
+  const physicalActivities = [
     {
-      category: "HARD EXERCISE",
+      category: "Strenuous Exercise",
       items: [
         "Running",
         "Jogging",
-        "Vigorous long-distance bicycling",
-        "Other strenuous activities",
+        "Hockey",
+        "Football",
+        "Soccer",
+        "Squash",
+        "Basketball",
+        "Judo",
+        "Roller Skating",
+        "Vigorous Swimming",
+        "Vigorous Long-Distance Bicycling",
       ],
     },
     {
-      category: "MEDIUM EXERCISE",
-      items: ["Walking", "Cycling", "Dancing", "Other moderate activities"],
+      category: "Moderate Exercise",
+      items: [
+        "Fast Walking",
+        "Baseball",
+        "Tennis",
+        "Easy Bicycling",
+        "Volleyball",
+        "Badminton",
+        "Easy Swimming",
+        "Popular and Folk Dancing",
+      ],
     },
     {
-      category: "MILD EXERCISE",
-      items: ["Yoga", "Stretching", "Other mild activities"],
+      category: "Mild Exercise",
+      items: [
+        "Yoga",
+        "Archery",
+        "Fishing from Riverbank",
+        "Bowling",
+        "Horseshoes",
+        "Golf",
+        "Easy Walking",
+      ],
     },
   ];
+
+  const [customActivityInput, setCustomActivityInput] = useState({
+    activity: "",
+    screentime: "",
+    eating: "",
+  });
+
+  const [otherChecked, setOtherChecked] = useState({
+    activity: false,
+    screentime: false,
+    eating: false,
+  });
+
+  const handleOtherCheckboxChange = (event, section) => {
+    const { checked } = event.target;
+    setOtherChecked((prev) => ({
+      ...prev,
+      [section]: checked,
+    }));
+  };
+
+  const handleCustomActivityChange = (e, section) => {
+    const { value } = e.target;
+    setCustomActivityInput((prev) => ({
+      ...prev,
+      [section]: value,
+    }));
+  };
+
+
+  const handleAddCustomActivity = (section) => {
+    if (customActivityInput[section]) {
+      setSelectedItems((prev) => ({
+        ...prev,
+        [section]: [...prev[section], customActivityInput[section]],
+      }));
+      setCustomActivityInput((prev) => ({
+        ...prev,
+        [section]: "",
+      }));
+      setOtherChecked((prev) => ({
+        ...prev,
+        [section]: false,
+      }));
+    }
+  };
 
   const screentimeActivities = [
     {
       category: "Gaming and Video Chatting",
-      items: ["Video Games", "Video Chatting", "Other gaming activities"],
+      items: [
+        "Playing Games",
+        "Looking at Photos",
+        "Video Chatting",
+        "Other Gaming",
+      ],
     },
     {
       category: "Academic Screen Time",
-      items: ["Online Learning", "Research", "Other academic activities"],
+      items: ["Online Learning", "Homework", "Other Academic Work"],
     },
   ];
 
   const fruitsAndVegetables = [
     {
       category: "Fruits",
-      items: ["Apples", "Bananas", "Oranges", "Other fruits"],
+      items: ["Apples", "Bananas", "Oranges", "Other Fruits"],
     },
     {
       category: "Vegetables",
-      items: ["Carrots", "Broccoli", "Spinach", "Other vegetables"],
+      items: ["Carrots", "Broccoli", "Spinach", "Other Vegetables"],
     },
   ];
+
 
   return (
     <Wrapper>
@@ -1618,6 +1696,7 @@ const JournalScreen = () => {
         </div>
       </JournalWrapper>
 
+
       {/* Physical Activity Dialog */}
       <Dialog
         open={popupOpen.activity}
@@ -1627,16 +1706,17 @@ const JournalScreen = () => {
       >
         <DialogTitle>Set Physical Activity Goals and Track Behavior</DialogTitle>
         <DialogContent>
-          {activities.map((activity) => (
+          {/* Predefined activities */}
+          {physicalActivities.map((activity) => (
             <div key={activity.category} style={{ marginBottom: "10px" }}>
-              <h3 style={{ marginBottom: "2px" }}>{activity.category}</h3>
+              <h3>{activity.category}</h3>
               <Grid container spacing={1} style={{ marginTop: '-5px' }}>
                 <Grid item xs={2}></Grid>
                 <Grid item xs={4} style={{ textAlign: "center", fontWeight: "bold" }}>
-                  Expected
+                  What I Will Do
                 </Grid>
                 <Grid item xs={4} style={{ textAlign: "center", fontWeight: "bold" }}>
-                  Tracked
+                  What I Did
                 </Grid>
               </Grid>
               {activity.items.map((item) => (
@@ -1713,10 +1793,87 @@ const JournalScreen = () => {
               ))}
             </div>
           ))}
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
-            <strong>Total Expected Time: {Math.floor(totalExpectedTime.activity / 60)} hours {totalExpectedTime.activity % 60} minutes</strong>
-            <strong>Total Tracked Time: {Math.floor(totalTrackedTime.activity / 60)} hours {totalTrackedTime.activity % 60} minutes</strong>
-          </div>
+
+          {/* Custom "Other" Activity Section */}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={otherChecked.activity}
+                onChange={(event) => handleOtherCheckboxChange(event, "activity")}
+              />
+            }
+            label="Other"
+          />
+          {otherChecked.activity && (
+            <Grid container spacing={1} alignItems="center">
+              <Grid item xs={2}>
+                <TextField
+                  label="Other Activity"
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  value={customActivityInput.activity}
+                  onChange={(e) => handleCustomActivityChange(e, "activity")}
+                  style={{ width: "100%" }}
+                />
+              </Grid>
+              <Grid item xs={1} style={{ paddingLeft: '80px' }}>
+                <TextField
+                  label="Hours"
+                  type="number"
+                  name="other-goal-hours"
+                  value={goalInputs.activity[customActivityInput.activity]?.hours || ""}
+                  onChange={(event) => handleInputChange(event, customActivityInput.activity, "hours", "goal", "activity")}
+                  fullWidth
+                  size="small"
+                  style={{ width: '60px' }}
+                  inputProps={{ min: "0" }}
+                />
+              </Grid>
+              <Grid item xs={2} style={{ paddingLeft: '65px', paddingRight: '5px' }}>
+                <TextField
+                  label="Minutes"
+                  type="number"
+                  name="other-goal-minutes"
+                  value={goalInputs.activity[customActivityInput.activity]?.minutes || ""}
+                  onChange={(event) => handleInputChange(event, customActivityInput.activity, "minutes", "goal", "activity")}
+                  fullWidth
+                  size="small"
+                  style={{ width: '60px' }}
+                  inputProps={{ min: "0" }}
+                />
+              </Grid>
+              <Grid item xs={1} style={{ paddingLeft: '150px' }}>
+                <TextField
+                  label="Hours"
+                  type="number"
+                  name="other-behavior-hours"
+                  value={behaviorInputs.activity[customActivityInput.activity]?.hours || ""}
+                  onChange={(event) => handleInputChange(event, customActivityInput.activity, "hours", "behavior", "activity")}
+                  fullWidth
+                  size="small"
+                  style={{ width: '60px' }}
+                  inputProps={{ min: "0" }}
+                />
+              </Grid>
+              <Grid item xs={2} style={{ paddingLeft: '65px' }}>
+                <TextField
+                  label="Minutes"
+                  type="number"
+                  name="other-behavior-minutes"
+                  value={behaviorInputs.activity[customActivityInput.activity]?.minutes || ""}
+                  onChange={(event) => handleInputChange(event, customActivityInput.activity, "minutes", "behavior", "activity")}
+                  fullWidth
+                  size="small"
+                  style={{ width: '60px' }}
+                  inputProps={{ min: "0" }}
+                />
+              </Grid>
+            </Grid>
+          )}
+          <Button onClick={() => handleAddCustomActivity("activity")}>
+            Add Activity
+          </Button>
         </DialogContent>
         <DialogActions>
           <StyledButton onClick={() => handleDone("activity")} color="primary">
@@ -1725,6 +1882,8 @@ const JournalScreen = () => {
         </DialogActions>
       </Dialog>
 
+
+
       {/* Screen Time Dialog */}
       <Dialog
         open={popupOpen.screentime}
@@ -1732,18 +1891,18 @@ const JournalScreen = () => {
         maxWidth="md"
         fullWidth
       >
-        <DialogTitle>Set Screen Time Goals and Track Behavior</DialogTitle>
+        <DialogTitle>Set Screentime Goals and Track Behavior</DialogTitle>
         <DialogContent>
           {screentimeActivities.map((activity) => (
             <div key={activity.category} style={{ marginBottom: "10px" }}>
-              <h3 style={{ marginBottom: "2px" }}>{activity.category}</h3>
+              <h3>{activity.category}</h3>
               <Grid container spacing={1} style={{ marginTop: '-5px' }}>
                 <Grid item xs={2}></Grid>
                 <Grid item xs={4} style={{ textAlign: "center", fontWeight: "bold" }}>
-                  Expected
+                  What I Will Do
                 </Grid>
                 <Grid item xs={4} style={{ textAlign: "center", fontWeight: "bold" }}>
-                  Tracked
+                  What I Did
                 </Grid>
               </Grid>
               {activity.items.map((item) => (
@@ -1762,7 +1921,6 @@ const JournalScreen = () => {
                   </Grid>
                   {selectedItems.screentime.includes(item) && (
                     <>
-                      {/* Expected (Goal) Section */}
                       <Grid item xs={1} style={{ paddingLeft: '80px' }}>
                         <TextField
                           label="Hours"
@@ -1789,8 +1947,6 @@ const JournalScreen = () => {
                           inputProps={{ min: "0" }}
                         />
                       </Grid>
-
-                      {/* Tracked (Behavior) Section */}
                       <Grid item xs={1} style={{ paddingLeft: '150px' }}>
                         <TextField
                           label="Hours"
@@ -1823,10 +1979,87 @@ const JournalScreen = () => {
               ))}
             </div>
           ))}
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
-            <strong>Total Expected Time: {Math.floor(totalExpectedTime.screentime / 60)} hours {totalExpectedTime.screentime % 60} minutes</strong>
-            <strong>Total Tracked Time: {Math.floor(totalTrackedTime.screentime / 60)} hours {totalTrackedTime.screentime % 60} minutes</strong>
-          </div>
+
+          {/* Custom "Other" Screentime Activity */}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={otherChecked.screentime}
+                onChange={(event) => handleOtherCheckboxChange(event, "screentime")}
+              />
+            }
+            label="Other"
+          />
+          {otherChecked.screentime && (
+            <Grid container spacing={1} alignItems="center">
+              <Grid item xs={2}>
+                <TextField
+                  label="Other Screentime Activity"
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  value={customActivityInput.screentime}
+                  onChange={(e) => handleCustomActivityChange(e, "screentime")}
+                  style={{ width: "100%" }}
+                />
+              </Grid>
+              <Grid item xs={1} style={{ paddingLeft: '80px' }}>
+                <TextField
+                  label="Hours"
+                  type="number"
+                  name="other-goal-hours"
+                  value={goalInputs.screentime[customActivityInput.screentime]?.hours || ""}
+                  onChange={(event) => handleInputChange(event, customActivityInput.screentime, "hours", "goal", "screentime")}
+                  fullWidth
+                  size="small"
+                  style={{ width: '60px' }}
+                  inputProps={{ min: "0" }}
+                />
+              </Grid>
+              <Grid item xs={2} style={{ paddingLeft: '65px', paddingRight: '5px' }}>
+                <TextField
+                  label="Minutes"
+                  type="number"
+                  name="other-goal-minutes"
+                  value={goalInputs.screentime[customActivityInput.screentime]?.minutes || ""}
+                  onChange={(event) => handleInputChange(event, customActivityInput.screentime, "minutes", "goal", "screentime")}
+                  fullWidth
+                  size="small"
+                  style={{ width: '60px' }}
+                  inputProps={{ min: "0" }}
+                />
+              </Grid>
+              <Grid item xs={1} style={{ paddingLeft: '150px' }}>
+                <TextField
+                  label="Hours"
+                  type="number"
+                  name="other-behavior-hours"
+                  value={behaviorInputs.screentime[customActivityInput.screentime]?.hours || ""}
+                  onChange={(event) => handleInputChange(event, customActivityInput.screentime, "hours", "behavior", "screentime")}
+                  fullWidth
+                  size="small"
+                  style={{ width: '60px' }}
+                  inputProps={{ min: "0" }}
+                />
+              </Grid>
+              <Grid item xs={2} style={{ paddingLeft: '65px' }}>
+                <TextField
+                  label="Minutes"
+                  type="number"
+                  name="other-behavior-minutes"
+                  value={behaviorInputs.screentime[customActivityInput.screentime]?.minutes || ""}
+                  onChange={(event) => handleInputChange(event, customActivityInput.screentime, "minutes", "behavior", "screentime")}
+                  fullWidth
+                  size="small"
+                  style={{ width: '60px' }}
+                  inputProps={{ min: "0" }}
+                />
+              </Grid>
+            </Grid>
+          )}
+          <Button onClick={() => handleAddCustomActivity("screentime")}>
+            Add Screentime Activity
+          </Button>
         </DialogContent>
         <DialogActions>
           <StyledButton onClick={() => handleDone("screentime")} color="primary">
@@ -1847,14 +2080,14 @@ const JournalScreen = () => {
         <DialogContent>
           {fruitsAndVegetables.map((category) => (
             <div key={category.category} style={{ marginBottom: "10px" }}>
-              <h3 style={{ marginBottom: "2px" }}>{category.category}</h3>
+              <h3>{category.category}</h3>
               <Grid container spacing={1} style={{ marginTop: '-5px' }}>
                 <Grid item xs={2}></Grid>
                 <Grid item xs={5} style={{ textAlign: "center", fontWeight: "bold" }}>
-                  Expected
+                  What I Will Eat
                 </Grid>
                 <Grid item xs={5} style={{ textAlign: "center", fontWeight: "bold" }}>
-                  Tracked
+                  What I Ate
                 </Grid>
               </Grid>
               {category.items.map((item) => (
@@ -1903,10 +2136,59 @@ const JournalScreen = () => {
               ))}
             </div>
           ))}
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
-            <strong>Total Expected Servings: {totalExpectedTime.eating} servings</strong>
-            <strong>Total Tracked Servings: {totalTrackedTime.eating} servings</strong>
-          </div>
+
+          {/* Custom "Other" Eating Activity */}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={otherChecked.eating}
+                onChange={(event) => handleOtherCheckboxChange(event, "eating")}
+              />
+            }
+            label="Other"
+          />
+          {otherChecked.eating && (
+            <Grid container spacing={1} alignItems="center">
+              <Grid item xs={2}>
+                <TextField
+                  label="Other Fruit/Vegetable"
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                  value={customActivityInput.eating}
+                  onChange={(e) => handleCustomActivityChange(e, "eating")}
+                  style={{ width: "100%" }}
+                />
+              </Grid>
+              <Grid item xs={5} style={{ textAlign: 'center' }}>
+                <TextField
+                  label="Servings"
+                  type="number"
+                  name="other-goal-servings"
+                  value={goalInputs.eating[customActivityInput.eating]?.servings || ""}
+                  onChange={(event) => handleInputChange(event, customActivityInput.eating, "servings", "goal", "eating")}
+                  fullWidth
+                  size="small"
+                  style={{ width: '100px' }}
+                />
+              </Grid>
+              <Grid item xs={5} style={{ textAlign: 'center' }}>
+                <TextField
+                  label="Servings"
+                  type="number"
+                  name="other-behavior-servings"
+                  value={behaviorInputs.eating[customActivityInput.eating]?.servings || ""}
+                  onChange={(event) => handleInputChange(event, customActivityInput.eating, "servings", "behavior", "eating")}
+                  fullWidth
+                  size="small"
+                  style={{ width: '100px' }}
+                />
+              </Grid>
+            </Grid>
+          )}
+          <Button onClick={() => handleAddCustomActivity("eating")}>
+            Add Eating Activity
+          </Button>
         </DialogContent>
         <DialogActions>
           <StyledButton onClick={() => handleDone("eating")} color="primary">

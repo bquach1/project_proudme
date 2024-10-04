@@ -43,6 +43,7 @@ export const createChatbotRequest = (
   let additionalInfo = "";
   let goalMet = false;
   let recommendedValue = "";
+  let personalGoalMet = false;
   let actualValue = ""; 
 
   if (!goalInputs || Object.keys(goalInputs).length === 0 || !selectedItems || Object.keys(selectedItems).length === 0) {
@@ -51,60 +52,67 @@ export const createChatbotRequest = (
     return;
   }
 
+  // Helper function to calculate time (hours and minutes) for tracking
+  const formatTime = (totalMinutes) => {
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours}h ${minutes}m`;
+  };
+
+  // Handling custom "Other" activities
+  const handleCustomActivity = (activityName, section) => {
+    return `${activityName}: Expected ${goalInputs?.[section]?.[activityName]?.hours || 0}h ${goalInputs?.[section]?.[activityName]?.minutes || 0}m, 
+            Tracked ${behaviorInputs?.[section]?.[activityName]?.hours || 0}h ${behaviorInputs?.[section]?.[activityName]?.minutes || 0}m`;
+  };
+
   // Activity tracking
   if (goalType === "activity") {
     const activities = selectedItems?.activity || [];
     additionalInfo = `Activities: ${activities.map(item =>
-      `${item}: Expected ${goalInputs?.activity?.[item]?.hours || 0}h ${goalInputs?.activity?.[item]?.minutes || 0}m, 
-      Tracked ${behaviorInputs?.activity?.[item]?.hours || 0}h ${behaviorInputs?.activity?.[item]?.minutes || 0}m`
+      handleCustomActivity(item, 'activity')
     ).join(", ")}`;
     
     recommendedValue = "60 minutes";
     const totalMinutesTracked = totalTrackedTime?.activity || 0;
-    const hours = Math.floor(totalMinutesTracked / 60);
-    const minutes = totalMinutesTracked % 60;
-    actualValue = `${hours}h ${minutes}m`;
-    goalMet = totalTrackedTime?.activity >= 60; // Goal is 60 minutes
+    actualValue = formatTime(totalMinutesTracked);
+    goalMet = totalTrackedTime?.activity >= 60; // Recommended goal is 60 minutes
+    personalGoalMet = totalTrackedTime?.activity >= (goal[0].goalValue * 60); 
   }
 
   // Screentime tracking
   else if (goalType === "screentime") {
     const screentimeActivities = selectedItems?.screentime || [];
     additionalInfo = `Screentime Activities: ${screentimeActivities.map(item =>
-      `${item}: Expected ${goalInputs?.screentime?.[item]?.hours || 0}h ${goalInputs?.screentime?.[item]?.minutes || 0}m, 
-      Tracked ${behaviorInputs?.screentime?.[item]?.hours || 0}h ${behaviorInputs?.screentime?.[item]?.minutes || 0}m`
+      handleCustomActivity(item, 'screentime')
     ).join(", ")}`;
     
     recommendedValue = "120 minutes";
     const totalMinutesTracked = totalTrackedTime?.screentime || 0;
-    const hours = Math.floor(totalMinutesTracked / 60);
-    const minutes = totalMinutesTracked % 60;
-    actualValue = `${hours}h ${minutes}m`;
+    actualValue = formatTime(totalMinutesTracked);
 
     const schoolWorkRelated = screentimeActivities.some(item => item.toLowerCase().includes("school") || item.toLowerCase().includes("work"));
     goalMet = schoolWorkRelated || totalTrackedTime?.screentime <= 120;
+    personalGoalMet = totalTrackedTime?.screentime <= (goal[0].goalValue * 60); 
   }
 
   // Eating fruits and vegetables tracking
   else if (goalType === "eating") {
     const eatingItems = selectedItems?.eating || [];
     additionalInfo = `Eating Activities: ${eatingItems.map(item =>
-      `${item}: Expected ${goalInputs?.eating?.[item]?.servings || 0} servings, 
-      Tracked ${behaviorInputs?.eating?.[item]?.servings || 0} servings`
+      handleCustomActivity(item, 'eating')
     ).join(", ")}`;
     
     recommendedValue = "5 servings";
     actualValue = `${totalTrackedTime?.eating || 0} servings`;
-    goalMet = totalTrackedTime?.eating >= 5; // Goal is 5 servings
+    goalMet = totalTrackedTime?.eating >= 5; // Recommended goal is 5 servings
+    personalGoalMet = totalTrackedTime?.eating >= goal[0].goalValue; 
   }
 
   // Sleep tracking
   else if (goalType === "sleep") {
     const totalMinutesTracked = totalTrackedTime?.sleep || 0;
-    const hours = Math.floor(totalMinutesTracked / 60);
-    const minutes = totalMinutesTracked % 60;
+    actualValue = formatTime(totalMinutesTracked);
     recommendedValue = "9 hours";
-    actualValue = `${hours}h ${minutes}m`;
 
     const bedTime = goalInputs?.sleep?.["Expected Sleep"]?.bedTime || "";
     const wakeUpTime = goalInputs?.sleep?.["Expected Sleep"]?.wakeUpTime || "";
@@ -114,20 +122,21 @@ export const createChatbotRequest = (
     additionalInfo = `Expected Sleep: Bed Time - ${bedTime}, Wake Up Time - ${wakeUpTime}, 
       Tracked Sleep: Bed Time - ${trackedBedTime}, Wake Up Time - ${trackedWakeUpTime}`;
     
-    goalMet = totalTrackedTime?.sleep >= (9 * 60); // Goal is 9 hours of sleep
+    goalMet = totalTrackedTime?.sleep >= (9 * 60); // Recommended goal is 9 hours of sleep
+    personalGoalMet = totalTrackedTime?.sleep >= (goal[0].goalValue * 60); 
   }
 
-  // Send the request to the chatbot with the actual value in appropriate units
+  // Send the request to the chatbot
   axios
     .post(`${DATABASE_URL}/chatbot`, {
       prompt: [
         {
           role: "system",
-          content: `Provide feedback based on the user's actual behavior compared to their set goals. Do not response using percentages`,
+          content: `Provide feedback based on the user's actual behavior compared to both their set personal goals and recommended goals. Do not respond using percentages`,
         },
         {
           role: "user",
-          content: `Goal Type: ${goalType}, Recommended Value: ${recommendedValue}, Actual Value: ${actualValue}, ${additionalInfo}, Reflection: ${reflection}, Goal Met: ${goalMet ? "Yes" : "No"}`,
+          content: `Goal Type: ${goalType}, Recommended Value: ${recommendedValue}, Personal Goal Met: ${personalGoalMet ? "Yes" : "No"}, Recommended Goal Met: ${goalMet ? "Yes" : "No"}, Actual Value: ${actualValue}, ${additionalInfo}, Reflection: ${reflection}`,
         },
       ],
     })
@@ -147,6 +156,8 @@ export const createChatbotRequest = (
       setGoalResponseLoading(false);
     });
 };
+
+
 
 
 
