@@ -44,7 +44,15 @@ export const createChatbotRequest = (
   let goalMet = false;
   let recommendedValue = "";
   let personalGoalMet = false;
-  let actualValue = ""; 
+  let actualValue = "";
+  let warningMessage = ""; 
+
+  const UNREALISTIC_THRESHOLD = {
+    activity: 10 * 60, // 10 hours for physical activity
+    screentime: 10 * 60, // 10 hours for screentime
+    eating: 20, // 20 servings for fruits and vegetables
+    sleep: 15 * 60 // 15 hours for sleep
+  };
 
   if (!goalInputs || Object.keys(goalInputs).length === 0 || !selectedItems || Object.keys(selectedItems).length === 0) {
     console.error("No goal or selected items found. Ensure the user has selected items in the popups.");
@@ -52,14 +60,12 @@ export const createChatbotRequest = (
     return;
   }
 
-  // Helper function to calculate time (hours and minutes) for tracking
   const formatTime = (totalMinutes) => {
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
     return `${hours}h ${minutes}m`;
   };
 
-  // Handling custom "Other" activities
   const handleCustomActivity = (activityName, section) => {
     return `${activityName}: Expected ${goalInputs?.[section]?.[activityName]?.hours || 0}h ${goalInputs?.[section]?.[activityName]?.minutes || 0}m, 
             Tracked ${behaviorInputs?.[section]?.[activityName]?.hours || 0}h ${behaviorInputs?.[section]?.[activityName]?.minutes || 0}m`;
@@ -77,6 +83,11 @@ export const createChatbotRequest = (
     actualValue = formatTime(totalMinutesTracked);
     goalMet = totalTrackedTime?.activity >= 60; // Recommended goal is 60 minutes
     personalGoalMet = totalTrackedTime?.activity >= (goal[0].goalValue * 60); 
+    
+    // Check for unrealistic goal (e.g., 40 hours of soccer)
+    if (totalMinutesTracked > UNREALISTIC_THRESHOLD.activity) {
+      warningMessage = "It looks like you've tracked a very high amount of activity. Overexerting yourself could lead to injury, so try to moderate your exercise.";
+    }
   }
 
   // Screentime tracking
@@ -93,6 +104,11 @@ export const createChatbotRequest = (
     const schoolWorkRelated = screentimeActivities.some(item => item.toLowerCase().includes("school") || item.toLowerCase().includes("work"));
     goalMet = schoolWorkRelated || totalTrackedTime?.screentime <= 120;
     personalGoalMet = totalTrackedTime?.screentime <= (goal[0].goalValue * 60); 
+    
+    // Check for unrealistic screentime
+    if (!schoolWorkRelated && totalMinutesTracked > UNREALISTIC_THRESHOLD.screentime) {
+      warningMessage = "You're tracking a lot of screentime today. It’s important to take breaks to avoid eye strain and fatigue.";
+    }
   }
 
   // Eating fruits and vegetables tracking
@@ -106,6 +122,11 @@ export const createChatbotRequest = (
     actualValue = `${totalTrackedTime?.eating || 0} servings`;
     goalMet = totalTrackedTime?.eating >= 5; // Recommended goal is 5 servings
     personalGoalMet = totalTrackedTime?.eating >= goal[0].goalValue; 
+    
+    // Check for unrealistic food
+    if (totalTrackedTime?.eating > UNREALISTIC_THRESHOLD.eating) {
+      warningMessage = "You’ve eaten quite a lot of servings today. Eating in moderation is important for maintaining a healthy diet.";
+    }
   }
 
   // Sleep tracking
@@ -124,19 +145,24 @@ export const createChatbotRequest = (
     
     goalMet = totalTrackedTime?.sleep >= (9 * 60); // Recommended goal is 9 hours of sleep
     personalGoalMet = totalTrackedTime?.sleep >= (goal[0].goalValue * 60); 
+
+    // Check for unrealistic sleep duration
+    if (totalMinutesTracked > UNREALISTIC_THRESHOLD.sleep) {
+      warningMessage = "You’ve tracked a lot of sleep today. Oversleeping can sometimes be an indicator of fatigue or other health concerns.";
+    }
   }
 
-  // Send the request to the chatbot
+  // chatbot request
   axios
     .post(`${DATABASE_URL}/chatbot`, {
       prompt: [
         {
           role: "system",
-          content: `Provide feedback based on the user's actual behavior compared to both their set personal goals and recommended goals. Do not respond using percentages`,
+          content: `Provide feedback based on the user's actual behavior compared to both their set personal goals and recommended goals. Do not respond using percentages. Consider whether the tracked behavior is within a healthy range.`,
         },
         {
           role: "user",
-          content: `Goal Type: ${goalType}, Recommended Value: ${recommendedValue}, Personal Goal Met: ${personalGoalMet ? "Yes" : "No"}, Recommended Goal Met: ${goalMet ? "Yes" : "No"}, Actual Value: ${actualValue}, ${additionalInfo}, Reflection: ${reflection}`,
+          content: `Goal Type: ${goalType}, Recommended Value: ${recommendedValue}, Personal Goal Met: ${personalGoalMet ? "Yes" : "No"}, Recommended Goal Met: ${goalMet ? "Yes" : "No"}, Actual Value: ${actualValue}, ${additionalInfo}, Reflection: ${reflection}, ${warningMessage}`,
         },
       ],
     })
@@ -156,10 +182,6 @@ export const createChatbotRequest = (
       setGoalResponseLoading(false);
     });
 };
-
-
-
-
 
 const calculateSleepDuration = (bedTime, wakeUpTime) => {
   if (!bedTime || !wakeUpTime) return "";
