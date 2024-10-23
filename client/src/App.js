@@ -13,8 +13,15 @@ import PEScreen from "screens/pe/pe.js";
 import TrackingScreen from "screens/tracking/tracking";
 import RecoveryScreen from "screens/account/recovery";
 import CafeteriaScreen from "screens/cafeteria/cafeteria";
-import TechScreen from "screens/tech.js";
-
+import TechScreen from "screens/tech.js"; 
+import ActivityScreen from "screens/journal/phone/activitiy.js"; 
+import EatScreen from "screens/journal/phone/eat.js"; 
+import ScreenScreen from "screens/journal/phone/screen.js"; 
+import SleepScreen from "screens/journal/phone/sleep.js"; 
+import ActivityData from "screens/tracking/phone/activityData";
+import EatData from "screens/tracking/phone/eatData";
+import ScreenData from "screens/tracking/phone/screenData";
+import SleepData from "screens/tracking/phone/sleepData";
 import Header from "components/header/header";
 
 function App() {
@@ -33,11 +40,21 @@ function App() {
         <Route path="/recovery" element={<RecoveryScreen />} />
         <Route path="/home" element={<HomeScreen />} />
         <Route path="/team" element={<TeamScreen />} />
-        <Route path="/journal" element={<JournalScreen />} />
+        <Route path="/journal" element={<JournalScreen />}>
+          <Route path="activity" element={<ActivityScreen />} />
+          <Route path="eat" element={<EatScreen />} />
+          <Route path="screen" element={<ScreenScreen />} />
+          <Route path="sleep" element={<SleepScreen />} />
+        </Route>
         <Route path="/gallery" element={<GalleryScreen />} />
         <Route path="/pet" element={<PetScreen />} />
         <Route path="/pe" element={<PEScreen />} />
-        <Route path="/tracking" element={<TrackingScreen />} />
+        <Route path="/tracking" element={<TrackingScreen />}>
+          <Route path="activityData" element={<ActivityData />} />
+          <Route path="eatData" element={<EatData />} />
+          <Route path="screenData" element={<ScreenData />} /> 
+          <Route path="sleepData" element={<SleepData />} /> 
+        </Route>    
         <Route path="/cafeteria" element={<CafeteriaScreen />} />
         <Route path="/tech-help" element={<TechScreen />} />
       </Routes>

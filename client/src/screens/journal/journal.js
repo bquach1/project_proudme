@@ -3,12 +3,21 @@ import "css/journal.css";
 import withAuth from "components/auth/withAuth";
 import DurationPicker from "components/journal/durationPicker";
 import axios from "axios";
-
-import { TextField, Tooltip, Button, CircularProgress } from "@mui/material";
 import styled from "styled-components";
+import { TextField, Tooltip, Button, CircularProgress } from "@mui/material";
+
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import LockIcon from "@mui/icons-material/Lock";
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Grow from '@mui/material/Grow';
+import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
+import MenuItem from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
+import Stack from '@mui/material/Stack';
+
+import { Link, Outlet } from 'react-router-dom';
 
 import {
   SAVE_ICON_COLORS,
@@ -28,7 +37,7 @@ import { useMediaQuery } from "react-responsive";
 const Wrapper = styled.div`
   padding-bottom: 5%;
   height: 100vh;
-  width: 90%;
+  width: 100%; /* Change to 100% for mobile */
   margin: auto;
   font-family: Montserrat;
 
@@ -41,31 +50,11 @@ const Wrapper = styled.div`
     background-color: #90ee90;
   }
 
-  .pending-behavior {
-    background-color: ${SAVE_ICON_COLORS.YELLOW};
-  }
-
-  @keyframes shake {
-    0% {
-      transform: translateX(0);
-    }
-    25% {
-      transform: translateX(-5px);
-    }
-    50% {
-      transform: translateX(5px);
-    }
-    75% {
-      transform: translateX(-5px);
-    }
-    100% {
-      transform: translateX(0);
-    }
-  }
-
-  .timeload-dots {
-    margin-left: 1%;
-    animation: shake 1s infinite;
+  @media only screen and (max-width: 600px) {
+    width: 100%;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100vh; 
   }
 `;
 
@@ -76,6 +65,7 @@ const JournalWrapper = styled.table`
   justify-content: center;
   position: relative;
   margin: 0 auto;
+  flex-direction: column; /* Use column for better alignment */
 
   .lock-icon {
     &:hover {
@@ -83,24 +73,13 @@ const JournalWrapper = styled.table`
     }
   }
 
-  @media (max-width: 1190px) {
-    width: 90%;
-    font-size: 14px;
-    flex-direction: column; /* Switch to a vertical layout */
-  }
 
-  @media (max-width: 768px) {
-    width: 100%;
-    font-size: 14px;
-    flex-direction: column; /* Switch to a vertical layout */
-  }
-
-  @media (max-width: 480px) {
-    width: 100%;
-    font-size: 12px;
-    flex-direction: column; /* Switch to a vertical layout */
+  @media only screen and (max-width: 600px) {
+    display: none;
+    overflow: hidden;
   }
 `;
+
 
 const BehaviorInfoText = styled.div`
   display: flex;
@@ -157,8 +136,6 @@ const JournalScreen = () => {
     translateX: 50,
   });
 
-  const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
-  const istablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   const [user, setUser] = useState([]);
   const [goalData, setGoalData] = useState([]);
@@ -232,7 +209,7 @@ const JournalScreen = () => {
       recommendedValue: 9,
     },
   ]);
-
+  const ismobile = useMediaQuery({ query: "(max-width: 600px)" });
   const [activityResponseLoading, setActivityResponseLoading] = useState(false);
   const [screentimeResponseLoading, setScreentimeResponseLoading] =
     useState(false);
@@ -478,7 +455,39 @@ const JournalScreen = () => {
   const mostRecentDate = new Date(Math.max(...validDates)),
     mostRecentDay = mostRecentDate.toLocaleDateString(),
     mostRecentTime = mostRecentDate.toLocaleTimeString();
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef(null);
 
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === 'Escape') {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open);
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
   return (
     <Wrapper>
       <h1 style={{ color: "#2E6AA1", marginTop: "1%" }}>My Journal</h1>
@@ -492,6 +501,92 @@ const JournalScreen = () => {
           <div className="timeload-dots">...</div>
         )}
       </strong>
+      {/* phone version */}
+      {(ismobile && 
+        <Stack direction="row" spacing={2} justifyContent="flex-end">
+          <div style={{opacity: 1}}>
+            
+            <Button
+              ref={anchorRef}
+              id="composition-button"
+              aria-controls={open ? 'composition-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+              style={{
+                marginTop: '10px',   
+                padding: '12px 24px', 
+                fontSize: '1.2rem',   
+              }}
+            >
+              journal
+            </Button>
+            <Popper
+              open={open}
+              anchorEl={anchorRef.current}
+              role={undefined}
+              placement="bottom-start"
+              transition
+              disablePortal
+              style={{
+                marginTop: '10px',   
+                padding: '12px 24px', 
+                fontSize: '1.2rem',  
+                opacity: 1,
+                zIndex: "10000"
+              }}
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin:
+                      placement === 'bottom-start' ? 'left top' : 'left bottom',
+                  }}
+                >
+                  <Paper style={{opacity: 1}}>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList
+                        autoFocusItem={open}
+                        id="composition-menu"
+                        aria-labelledby="composition-button"
+                        onKeyDown={handleListKeyDown}
+                        style={{
+                          backgroundColor: 'white',
+                          opacity: 1,
+                        }}
+                      >
+                        <MenuItem onClick={handleClose} style={{zIndex: 1000}}>
+                          <Link to = "/journal/activity">
+                            Physical Activity
+                          </Link>
+                        </MenuItem>
+                        <MenuItem onClick={handleClose} style={{zIndex: 1000}}>
+                          <Link to = "screen">
+                            Screen Time
+                          </Link>
+                        </MenuItem>
+                        <MenuItem onClick={handleClose}>
+                          <Link to = "eat">
+                            Eating
+                          </Link>
+                        </MenuItem>
+                        <MenuItem onClick={handleClose}>
+                          <Link to = "sleep">
+                            sleep
+                          </Link>
+                        </MenuItem>
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+          </div>
+          <Outlet/>
+        </Stack>
+      )}
+
       <JournalWrapper>
         <div
           style={{
@@ -515,7 +610,6 @@ const JournalScreen = () => {
           >
             <div
               className="leftPageWrapper"
-              style={{ width: ismobile ? "50%" : "auto" }}
             >
               <div style={styles.goalScreen}>
                 <GoalContainer style={styles.goalRow}>

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
@@ -53,9 +54,8 @@ const TrackingWrapper = styled.div`
   }
 `;
 
-// Render the chart component
-const TrackingScreen = () => {
-  const ismobile = useMediaQuery({ query: "(max-width: 600px)" });
+const SleepData = () => {
+    const ismobile = useMediaQuery({ query: "(max-width: 600px)" });
   const navigate = useNavigate();
   const [user, setUser] = useState([]);
   const [shownUser, setShownUser] = useState([]);
@@ -248,54 +248,7 @@ const TrackingScreen = () => {
     setValue(newValue);
   }
   return (
-    <div>
-      {ismobile && (
-        <>
-          <BottomNavigation style={{width: "100%", position: "fixed", bottom: 0, left: 0, zIndex: 1000, height: "10%", backgroundColor:  "#3C3293"}} value={value} onChange={handleChange}>
-            <BottomNavigationAction
-              label="Recents"
-              value="recents"
-              icon={<RestoreIcon />}
-              onClick={() => navigate('/tracking/activityData')}
-              sx={{
-                "& .MuiBottomNavigationAction-label": {
-                color: "white",  // Default color
-                },
-              }}
-            />
-            <BottomNavigationAction
-              label="Favorites"
-              value="favorites"
-              icon={<FavoriteIcon />}
-              onClick={() => navigate('/tracking/eatData')}
-              sx={{
-                "& .MuiBottomNavigationAction-label": {
-                color: "white",  // Default color
-                },
-              }}
-            />
-            <BottomNavigationAction
-              label="Nearby"
-              value="nearby"
-              icon={<LocationOnIcon />}
-              onClick={() => navigate('/tracking/screenData')}
-              sx={{
-                "& .MuiBottomNavigationAction-label": {
-                color: "white",  // Default color
-                },
-              }}
-            />
-            <BottomNavigationAction label="Folder" value="folder" icon={<FolderIcon />} onClick={() => navigate('/tracking/sleepData')}sx={{
-                "& .MuiBottomNavigationAction-label": {
-                color: "white",  // Default color
-                },
-              }}/>
-          </BottomNavigation>
-          <Outlet/>
-        </>
-      )}
-      {!ismobile && (
-        <TrackingWrapper>
+    <TrackingWrapper>
           {!has(user, "admin") ? (
             <div
               style={{
@@ -386,7 +339,7 @@ const TrackingScreen = () => {
             </RadioGroup>
           </FormControl>
     
-          <div>
+        <div>
             <input
               value={`${format(dateRange[0].startDate, "MM/dd/yyyy")} to ${format(
                 dateRange[0].endDate,
@@ -409,145 +362,36 @@ const TrackingScreen = () => {
             )}
           </div>
     
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
+        <div style={{display: "flex", flexDirection: "column", alignItems: "center",}}></div>
             {chartType === "line" ? (
-              <div style={{ width: "90%" }}>
-                <h1 style={{ marginTop: "1%" }}>
-                  {shownUser.firstName}'s Physical Activity Behavior Data
-                </h1>
-                <BehaviorLineChart
-                  data={filteredActivityBehaviorData}
-                  chartGoalType={"activity"}
-                />
-                <h1>{shownUser.firstName}'s Screen Time Behavior Data</h1>
-                <BehaviorLineChart
-                  data={filteredScreentimeBehaviorData}
-                  chartGoalType={"screentime"}
-                />
-                <h1>
-                  {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data
-                </h1>
-                <BehaviorLineChart
-                  data={filteredEatingBehaviorData}
-                  chartGoalType={"eating"}
-                />
-                <h1>{shownUser.firstName}'s Sleep Behavior Data</h1>
-                <BehaviorLineChart
-                  data={filteredSleepBehaviorData}
-                  chartGoalType={"sleep"}
-                />
-              </div>
+                <div style={{ width: "90%" }}>
+                    <h1 style={{ marginTop: "1%" }}>
+                    {shownUser.firstName}'s Physical Activity Behavior Data
+                    </h1>
+                    <BehaviorLineChart
+                    data={filteredActivityBehaviorData}
+                    chartGoalType={"activity"}
+                    />
+                </div>
             ) : (
-              <>
-                <div
-                  style={{
-                    width: "90%",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    border: "1px solid black",
-                    padding: 20,
-                    margin: 50,
-                  }}
-                >
-                  <h1>{shownUser.firstName}'s Physical Activity Behavior Data</h1>
-                  <BehaviorProgressBar
+            <>
+                <div style={{width: "90%", display: "flex", flexDirection: "column", alignItems: "center", border: "1px solid black", padding: 20, margin: 50,}}>
+                    <h1>{shownUser.firstName}'s Physical Activity Behavior Data</h1>
+                    <BehaviorProgressBar
                     data={filteredActivityBehaviorData}
                     chartGoalType={"activity"}
                     type="goal"
-                  />
-                  <BehaviorProgressBar
+                    />
+                    <BehaviorProgressBar
                     data={filteredActivityBehaviorData}
                     chartGoalType={"activity"}
                     type="behavior"
-                  />
+                />
                 </div>
-                <div
-                  style={{
-                    width: "90%",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    border: "1px solid black",
-                    padding: 20,
-                    margin: 50,
-                  }}
-                >
-                  <h1>{shownUser.firstName}'s Screen Time Behavior Data</h1>
-                  <BehaviorProgressBar
-                    data={filteredScreentimeBehaviorData}
-                    chartGoalType={"screentime"}
-                    type="goal"
-                  />
-                  <BehaviorProgressBar
-                    data={filteredScreentimeBehaviorData}
-                    chartGoalType={"screentime"}
-                    type="behavior"
-                  />
-                </div>
-                <div
-                  style={{
-                    width: "90%",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    border: "1px solid black",
-                    padding: 20,
-                    margin: 50,
-                  }}
-                >
-                  <h1>
-                    {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data
-                  </h1>
-                  <BehaviorProgressBar
-                    data={filteredEatingBehaviorData}
-                    chartGoalType={"eating"}
-                    type="goal"
-                  />
-                  <BehaviorProgressBar
-                    data={filteredEatingBehaviorData}
-                    chartGoalType={"eating"}
-                    type="behavior"
-                  />
-                </div>
-                <div
-                  style={{
-                    width: "90%",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    border: "1px solid black",
-                    padding: 20,
-                    margin: 50,
-                  }}
-                >
-                  <h1>{shownUser.firstName}'s Sleep Behavior Data</h1>
-                  <BehaviorProgressBar
-                    data={filteredSleepBehaviorData}
-                    chartGoalType={"sleep"}
-                    type="goal"
-                  />
-                  <BehaviorProgressBar
-                    data={filteredSleepBehaviorData}
-                    chartGoalType={"sleep"}
-                    type="behavior"
-                  />
-                </div>
-              </>
-            )}
-          </div>
-        </TrackingWrapper>
-      )}
-    
-    </div>
-    
-  );
-};
+            </>
+        )} 
+    </TrackingWrapper>
+  )
+}
 
-export default withAuth(TrackingScreen);
+export default SleepData

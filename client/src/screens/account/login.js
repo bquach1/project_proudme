@@ -10,21 +10,12 @@ import { useMediaQuery } from "react-responsive";
 
 const PageWrapper = styled.div`
   @media (max-width: 600px) {
+    width: 100%;
     font-size: 20px;
   }
 `;
 
-const FormWrapper = styled.div`
-  background-color: white;
-  width: 50%;
-  height: 100%;
-  position: absolute;
-  right: 0;
-  font-family: Roboto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
+
 
 const SuccessWrapper = styled.div`
   display: flex;
@@ -91,7 +82,7 @@ const LoginScreen = () => {
       });
   };
 
-  const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const ismobile = useMediaQuery({ query: "(max-width: 600px)" });
   const istablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   const renderForm = (
@@ -107,6 +98,7 @@ const LoginScreen = () => {
             position: "absolute",
             left: 0,
             top: 0,
+            display: ismobile ? "none" : "block", // Hide the image on mobile
           }}
         />
         <img
@@ -119,10 +111,17 @@ const LoginScreen = () => {
             left: 0,
             top: 0,
             opacity: 0.8,
+            display: ismobile ? "none" : "block",
           }}
         />
       </div>
-      <FormWrapper>
+      <div className="FormWrapper">
+        <div className="backGround">
+          <img
+            src = {require("../../components/images/login/schoolkids.png")}
+            alt = "logo"
+          />
+        </div>
         <img
           src={require("../../components/images/login/proudme_logo.png")}
           alt="ProudMe official Logo"
@@ -257,13 +256,14 @@ const LoginScreen = () => {
             </div>
           </div>
         </form>
-      </FormWrapper>
+      </div>
+      
     </PageWrapper>
   );
 
   function successfulLogin() {
     setTimeout(() => {
-      navigate("/journal");
+      navigate("/tracking");
     }, 3000);
     return (
       <SuccessWrapper className="success-login">

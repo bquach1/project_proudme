@@ -386,3 +386,31 @@
 .modal-text {
   margin: auto;
 }
+
+@media only screen and (max-width: 600px) {
+  .leftPageWrapper
+  .rightPageWrapper {
+      position: relative;
+      width: 100%;
+      left: 0;
+      right: 0;
+  }
+
+  .goal-box {
+      width: 90%;
+      margin-left: 5%;
+      top: 5%;
+  }
+
+  .modal {
+      width: 90%;
+      margin-left: 5%;
+      height: auto;
+  }
+
+  .recommendation-container,
+  .goal-container {
+      width: 95%;
+      margin: auto;
+  }
+}

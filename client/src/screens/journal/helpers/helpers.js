@@ -2,6 +2,7 @@ import { SAVE_ICON_COLORS } from "screens/journal/constants/constants";
 import axios from "axios";
 import { DATABASE_URL } from "constants";
 
+
 export const getSaveButtonColor = (loggedGoalToday, goalData, goal) => {
   if (
     loggedGoalToday &&

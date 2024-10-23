@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
@@ -13,7 +13,7 @@ const app = express();
 const port = 3001;
 
 const uri = process.env.REACT_APP_MONGODB_URI;
-
+console.log(process.env.REACT_APP_MONGODB_URI);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
