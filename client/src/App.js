@@ -22,6 +22,9 @@ import ActivityData from "screens/tracking/phone/activityData";
 import EatData from "screens/tracking/phone/eatData";
 import ScreenData from "screens/tracking/phone/screenData";
 import SleepData from "screens/tracking/phone/sleepData";
+import TechScreen from "screens/tech.js";
+import LearnMoreScreen from "./screens/learnmore.js";
+
 import Header from "components/header/header";
 
 function App() {
@@ -57,6 +60,7 @@ function App() {
         </Route>    
         <Route path="/cafeteria" element={<CafeteriaScreen />} />
         <Route path="/tech-help" element={<TechScreen />} />
+        <Route path="/learnmore" element={<LearnMoreScreen />} />
       </Routes>
     </div>
   );

@@ -5,7 +5,9 @@
   align-items: center;
   right: 49%;
   position: absolute;
+  
 }
+
 
 .new_left_page {
   grid-row: 2;
@@ -382,6 +384,7 @@
   height: 80%;
   margin-top: 9%;
 }
+
 
 .modal-text {
   margin: auto;
