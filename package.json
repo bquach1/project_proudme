@@ -5,7 +5,7 @@
   "main": "./server/server.js",
   "scripts": {
     "client-install": "npm install --prefix client",
-    "deploy": "react-scripts build && render deploy",
+    "deploy": "cd client && npm run build && cd .. && node server/server.js",
     "start": "cd ./server && node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
