@@ -5,9 +5,7 @@
   "main": "./server/server.js",
   "scripts": {
     "client-install": "npm install --prefix client",
-    "deploy": "react-scripts build && rengit add .
-git commit -m "Committing local changes"
-der deploy",
+    "deploy": "react-scripts build && render deploy",
     "start": "cd ./server && node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
@@ -45,6 +43,7 @@ der deploy",
     "passport-jwt": "^4.0.1",
     "react-app-rewired": "^2.2.1",
     "react-csv": "^2.2.2",
+    "react-scripts": "^5.0.1",
     "react-date-range": "^1.0.0-beta",
     "react-responsive": "^10.0.0",
     "react-router-dom": "^6.26.2",
