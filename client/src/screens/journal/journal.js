@@ -4,11 +4,22 @@ import withAuth from "components/auth/withAuth";
 import DurationPicker from "components/journal/durationPicker";
 import axios from "axios";
 
-import { TextField, Tooltip, Button, CircularProgress } from "@mui/material";
+import { TextField, Tooltip, Button, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Checkbox, FormControlLabel, Grid } from "@mui/material";
 import styled from "styled-components";
+
+
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
 import LockIcon from "@mui/icons-material/Lock";
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Grow from '@mui/material/Grow';
+import Paper from '@mui/material/Paper';
+import Popper from '@mui/material/Popper';
+import MenuItem from '@mui/material/MenuItem';
+import MenuList from '@mui/material/MenuList';
+import Stack from '@mui/material/Stack';
+
+import { Link, Outlet } from 'react-router-dom';
 
 import {
   SAVE_ICON_COLORS,
@@ -25,10 +36,16 @@ import ExpandableText from "screens/journal/components/ExpandableText";
 import { DATABASE_URL } from "constants";
 import { useMediaQuery } from "react-responsive";
 
+const BehaviorInfoText = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 1%;
+`;
+
 const Wrapper = styled.div`
   padding-bottom: 5%;
   height: 100vh;
-  width: 90%;
+  width: 100%; /* Change to 100% for mobile */
   margin: auto;
   font-family: Montserrat;
 
@@ -41,31 +58,11 @@ const Wrapper = styled.div`
     background-color: #90ee90;
   }
 
-  .pending-behavior {
-    background-color: ${SAVE_ICON_COLORS.YELLOW};
-  }
-
-  @keyframes shake {
-    0% {
-      transform: translateX(0);
-    }
-    25% {
-      transform: translateX(-5px);
-    }
-    50% {
-      transform: translateX(5px);
-    }
-    75% {
-      transform: translateX(-5px);
-    }
-    100% {
-      transform: translateX(0);
-    }
-  }
-
-  .timeload-dots {
-    margin-left: 1%;
-    animation: shake 1s infinite;
+  @media only screen and (max-width: 600px) {
+    width: 100%;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100vh; 
   }
 `;
 
@@ -76,6 +73,7 @@ const JournalWrapper = styled.table`
   justify-content: center;
   position: relative;
   margin: 0 auto;
+  flex-direction: column; /* Use column for better alignment */
 
   .lock-icon {
     &:hover {
@@ -83,29 +81,11 @@ const JournalWrapper = styled.table`
     }
   }
 
-  @media (max-width: 1190px) {
-    width: 90%;
-    font-size: 14px;
-    flex-direction: column; /* Switch to a vertical layout */
-  }
 
-  @media (max-width: 768px) {
-    width: 100%;
-    font-size: 14px;
-    flex-direction: column; /* Switch to a vertical layout */
+  @media only screen and (max-width: 600px) {
+    display: none;
+    overflow: hidden;
   }
-
-  @media (max-width: 480px) {
-    width: 100%;
-    font-size: 12px;
-    flex-direction: column; /* Switch to a vertical layout */
-  }
-`;
-
-const BehaviorInfoText = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 1%;
 `;
 
 const GoalContainer = styled.tr`
@@ -143,9 +123,21 @@ const ReflectionContainer = styled.td`
   }
 `;
 
-const JournalScreen = () => {
-  const [forward, setForward] = useState(true);
+const StyledButton = styled(Button)`
+  background-color: #6a1b9a !important;
+  color: white !important;
+  font-weight: bold !important;
+  transition: all 0.3s ease-in-out !important;
 
+  &:hover {
+    background-color: #4a148c !important;
+    transform: scale(1.05) !important;
+  }
+`;
+
+const JournalScreen = () => {
+  const [customActivity, setCustomActivity] = useState("");
+  const [forward, setForward] = useState(true);
   const props = useSpring({
     opacity: 1,
     transform: `translateY(${forward ? -1000 : -1050}px)`,
@@ -157,18 +149,66 @@ const JournalScreen = () => {
     translateX: 50,
   });
 
-  const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
-  const istablet = useMediaQuery({ query: "(max-width: 1200px)" });
+
 
   const [user, setUser] = useState([]);
   const [goalData, setGoalData] = useState([]);
-
   const [loggedActivityToday, setLoggedActivityToday] = useState(false);
   const [loggedScreentimeToday, setLoggedScreentimeToday] = useState(false);
   const [loggedEatingToday, setLoggedEatingToday] = useState(false);
   const [loggedSleepToday, setLoggedSleepToday] = useState(false);
-
   const [editingBehaviorId, setEditingBehaviorId] = useState(-1);
+
+  const [popupOpen, setPopupOpen] = useState({
+    activity: false,
+    screentime: false,
+    eating: false,
+    sleep: false,
+  });
+
+  const [selectedItems, setSelectedItems] = useState({
+    activity: [],
+    screentime: [],
+    eating: [],
+    sleep: [],
+  });
+
+  const [goalInputs, setGoalInputs] = useState({
+    activity: {},
+    screentime: {},
+    eating: {},
+    sleep: {
+      "Expected Sleep": {
+        bedtime: "22:00", // Default bedtime
+        wakeUpTime: "06:00", // Default wake-up time
+      },
+    },
+  });
+  const [behaviorInputs, setBehaviorInputs] = useState({
+    activity: {},
+    screentime: {},
+    eating: {},
+    sleep: {
+      "Actual Sleep": {
+        bedtime: "22:00", // Default bedtime
+        wakeUpTime: "06:00", // Default wake-up time
+      },
+    },
+  });
+
+  const [totalTrackedTime, setTotalTrackedTime] = useState({
+    activity: 0,
+    screentime: 0,
+    eating: 0,
+    sleep: 480,
+  });
+
+  const [totalExpectedTime, setTotalExpectedTime] = useState({
+    activity: 0,
+    screentime: 0,
+    eating: 0,
+    sleep: 480,
+  });
 
   var dateToday = new Date(),
     month = dateToday.getMonth(),
@@ -176,7 +216,6 @@ const JournalScreen = () => {
     year = dateToday.getFullYear(),
     date = month + 1 + "/" + day + "/" + year;
 
-  // Local states to manage event changes in React.
   const [activityGoal, setActivityGoal] = useState([
     {
       id: 0,
@@ -232,18 +271,75 @@ const JournalScreen = () => {
       recommendedValue: 9,
     },
   ]);
-
+  const ismobile = useMediaQuery({ query: "(max-width: 600px)" });
   const [activityResponseLoading, setActivityResponseLoading] = useState(false);
   const [screentimeResponseLoading, setScreentimeResponseLoading] =
     useState(false);
   const [eatingResponseLoading, setEatingResponseLoading] = useState(false);
   const [sleepResponseLoading, setSleepResponseLoading] = useState(false);
 
-  // Stores goal data pulled from MongoDB.
   const [activityData, setActivityData] = useState({});
   const [screentimeData, setScreentimeData] = useState({});
   const [eatingData, setEatingData] = useState({});
   const [sleepData, setSleepData] = useState({});
+  useEffect(() => {
+    if (user.length && goalData.length) {
+      createChatbotRequest(
+        activityGoal,
+        setActivityGoal,
+        user,
+        new Date().toLocaleDateString(),
+        setActivityResponseLoading,
+        selectedItems,
+        goalInputs,
+        behaviorInputs,
+        totalExpectedTime,
+        totalTrackedTime
+      );
+
+      createChatbotRequest(
+        screentimeGoal,
+        setScreentimeGoal,
+        user,
+        new Date().toLocaleDateString(),
+        setScreentimeResponseLoading,
+        selectedItems,
+        goalInputs,
+        behaviorInputs,
+        totalExpectedTime,
+        totalTrackedTime
+      );
+      console.log("Selected Items (before request): ", selectedItems);
+      console.log("Goal Inputs (before request): ", goalInputs);
+      console.log("Behavior Inputs (before request): ", behaviorInputs);
+
+      createChatbotRequest(
+        eatingGoal,
+        setEatingGoal,
+        user,
+        new Date().toLocaleDateString(),
+        setEatingResponseLoading,
+        selectedItems,
+        goalInputs,
+        behaviorInputs,
+        totalExpectedTime,
+        totalTrackedTime
+      );
+
+      createChatbotRequest(
+        sleepGoal,
+        setSleepGoal,
+        user,
+        new Date().toLocaleDateString(),
+        setSleepResponseLoading,
+        selectedItems,
+        goalInputs,
+        behaviorInputs,
+        totalExpectedTime,
+        totalTrackedTime
+      );
+    }
+  }, [user, goalData, selectedItems, goalInputs, behaviorInputs, totalExpectedTime, totalTrackedTime]);
 
   useEffect(() => {
     const fetchDailyBehavior = async (goalType) => {
@@ -301,6 +397,7 @@ const JournalScreen = () => {
             user: user,
           },
         });
+        console.log("response.data", response.data)
         setGoalData(response.data);
       } catch (error) {
         console.error(error);
@@ -377,6 +474,7 @@ const JournalScreen = () => {
           },
         });
         if (response.data.length && loggedActivityToday) {
+          console.log("setActivityGoal", response.data)
           setActivityGoal(response.data);
         }
       } catch (error) {
@@ -454,6 +552,7 @@ const JournalScreen = () => {
           },
         });
         if (response.data.length && loggedScreentimeToday) {
+          console.log(response.data);
           setScreentimeGoal(response.data);
         }
       } catch (error) {
@@ -473,11 +572,533 @@ const JournalScreen = () => {
   const sleepDate = new Date(sleepData.length && sleepData[0].dateToday);
 
   const dates = [activityDate, screentimeDate, eatingDate, sleepDate];
-
   const validDates = dates.filter((date) => date);
   const mostRecentDate = new Date(Math.max(...validDates)),
     mostRecentDay = mostRecentDate.toLocaleDateString(),
     mostRecentTime = mostRecentDate.toLocaleTimeString();
+  const [open, setOpen] = React.useState(false);
+  const anchorRef = React.useRef(null);
+
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === 'Escape') {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open);
+  React.useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
+  const handleOpenPopup = (section) => {
+    setPopupOpen((prev) => ({ ...prev, [section]: true }));
+  };
+
+  const handleClosePopup = (section) => {
+    setPopupOpen((prev) => ({ ...prev, [section]: false }));
+  };
+
+  const handleCheckboxChange = (event, section) => {
+    const { name, checked } = event.target;
+
+    setSelectedItems((prev) => {
+      const updated = {
+        ...prev,
+        [section]: checked
+          ? [...prev[section], name]
+          : prev[section].filter((item) => item !== name),
+      };
+
+      if (!checked) {
+        const goalHours = parseInt(goalInputs[section][name]?.hours || 0);
+        const goalMinutes = parseInt(goalInputs[section][name]?.minutes || 0);
+        const trackedHours = parseInt(behaviorInputs[section][name]?.hours || 0);
+        const trackedMinutes = parseInt(behaviorInputs[section][name]?.minutes || 0);
+
+        const totalGoalTimeToSubtract = goalHours * 60 + goalMinutes;
+        const totalTrackedTimeToSubtract = trackedHours * 60 + trackedMinutes;
+
+        setTotalExpectedTime((prev) => ({
+          ...prev,
+          [section]: Math.max(prev[section] - totalGoalTimeToSubtract, 0),
+        }));
+
+        setTotalTrackedTime((prev) => ({
+          ...prev,
+          [section]: Math.max(prev[section] - totalTrackedTimeToSubtract, 0),
+        }));
+
+        setGoalInputs((prev) => ({
+          ...prev,
+          [section]: {
+            ...prev[section],
+            [name]: {
+              hours: 0,
+              minutes: 0,
+            },
+          },
+        }));
+        setBehaviorInputs((prev) => ({
+          ...prev,
+          [section]: {
+            ...prev[section],
+            [name]: {
+              hours: 0,
+              minutes: 0,
+            },
+          },
+        }));
+      }
+
+      return updated;
+    });
+  };
+
+
+
+  const handleInputChange = (event, name, type, inputType, section) => {
+    const { value } = event.target;
+
+    const inputs = inputType === "goal" ? goalInputs[section] : behaviorInputs[section];
+    const updatedInputs = {
+      ...inputs,
+      [name]: {
+        ...inputs[name],
+        [type]: value,
+      },
+    };
+
+    if (inputType === "goal") {
+      setGoalInputs((prev) => ({
+        ...prev,
+        [section]: updatedInputs,
+      }));
+    } else {
+      setBehaviorInputs((prev) => ({
+        ...prev,
+        [section]: updatedInputs,
+      }));
+    }
+
+    // calculate sleep duration
+    if (section === "sleep") {
+      calculateSleepDuration(updatedInputs, inputType);
+    } else {
+      calculateTotal(updatedInputs, inputType, section);
+    }
+  };
+
+  
+
+
+
+  // Calculate the total time/servings
+  const calculateTotal = (inputs, inputType, section) => {
+    let total = 0;
+    if (section === "eating") {
+      total = Object.values(inputs).reduce(
+        (acc, curr) => acc + parseInt(curr.servings || 0),
+        0
+      );
+    } else {
+      total = Object.values(inputs).reduce(
+        (acc, curr) =>
+          acc + (parseInt(curr.hours || 0) * 60 + parseInt(curr.minutes || 0)),
+        0
+      );
+    }
+
+    if (inputType === "goal") {
+      setTotalExpectedTime((prev) => ({
+        ...prev,
+        [section]: total,
+      }));
+    } else {
+      setTotalTrackedTime((prev) => ({
+        ...prev,
+        [section]: total,
+      }));
+    }
+  };
+
+  const calculateSleepDuration = (inputs, inputType) => {
+    const bedTime = inputs[inputType === "goal" ? "Expected Sleep" : "Actual Sleep"]?.bedTime || "";
+    const wakeUpTime = inputs[inputType === "goal" ? "Expected Sleep" : "Actual Sleep"]?.wakeUpTime || "";
+
+    if (bedTime && wakeUpTime) {
+      const totalMinutes = getSleepDurationInMinutes(bedTime, wakeUpTime);
+
+      if (inputType === "goal") {
+        setTotalExpectedTime((prev) => ({
+          ...prev,
+          sleep: totalMinutes,
+        }));
+      } else {
+        setTotalTrackedTime((prev) => ({
+          ...prev,
+          sleep: totalMinutes,
+        }));
+      }
+    } else {
+      console.log("Missing bedTime or wakeUpTime for sleep duration calculation.");
+    }
+  };
+
+
+  const getSleepDurationInMinutes = (bedTime, wakeUpTime) => {
+    const [bedHour, bedMinute] = bedTime.split(":").map(Number);
+    const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
+
+    let totalMinutes = (wakeHour * 60 + wakeMinute) - (bedHour * 60 + bedMinute);
+    if (totalMinutes < 0) {
+      totalMinutes += 24 * 60;
+    }
+
+    return totalMinutes;
+  };
+
+  const [popupClosed, setPopupClosed] = useState(false);
+  const [readyToRequest, setReadyToRequest] = useState(false);
+
+  const handleDone = (section) => {
+    setPopupOpen((prev) => ({ ...prev, [section]: false }));
+  };
+
+
+
+
+
+
+
+
+
+  // useEffect(() => {
+  //   console.log("Selected Items:", selectedItems);
+  //   console.log("Goal Inputs:", goalInputs);
+  //   console.log("Behavior Inputs:", behaviorInputs);
+  // }, [selectedItems, goalInputs, behaviorInputs]);
+
+  useEffect(() => {
+    if (readyToRequest) {
+      console.log("Final Selected Items:", selectedItems);
+      console.log("Final Goal Inputs:", goalInputs);
+      console.log("Final Behavior Inputs:", behaviorInputs);
+      //triggers chatbox
+      if (user.length && goalData.length) {
+        createChatbotRequest(
+          eatingGoal,
+          setEatingGoal,
+          user,
+          new Date().toLocaleDateString(),
+          setEatingResponseLoading,
+          selectedItems,
+          goalInputs,
+          behaviorInputs,
+          totalExpectedTime,
+          totalTrackedTime
+        );
+
+        createChatbotRequest(
+          sleepGoal,
+          setSleepGoal,
+          user,
+          new Date().toLocaleDateString(),
+          setSleepResponseLoading,
+          selectedItems,
+          goalInputs,
+          behaviorInputs,
+          totalExpectedTime,
+          totalTrackedTime
+        );
+      }
+      setReadyToRequest(false);
+    }
+  }, [readyToRequest, selectedItems, goalInputs, behaviorInputs, user, goalData, eatingGoal, sleepGoal, totalExpectedTime, totalTrackedTime]);
+
+
+
+  const handleSave = (goalType, goal, setGoal, goalData, setResponseLoading) => {
+    console.log("goalvalue", goal[0].goalValue)
+    // Update the behavior value and trigger the AI request
+    updateBehaviorValue(
+      user,
+      goal[0].goalValue,
+      goal[0].behaviorValue,
+      goal[0].reflection,
+      setGoal,
+      goal,
+      goalData,
+      goalType,
+      date,
+      goal[0].recommendedValue
+    );
+
+    // Trigger chatbot AI request with the current goal and tracked inputs
+    createChatbotRequest(
+      goal,
+      setGoal,
+      user,
+      date,
+      setResponseLoading,
+      selectedItems,
+      goalInputs,
+      behaviorInputs,
+      totalExpectedTime,
+      totalTrackedTime
+    );
+  };
+
+
+  const [physicalActivities, setphysicalActivities] = useState([
+    {
+      category: "Strenuous Exercise",
+      items: [
+        "Running",
+        "Jogging",
+        "Hockey",
+        "Football",
+        "Soccer",
+        "Squash",
+        "Basketball",
+        "Judo",
+        "Roller Skating",
+        "Vigorous Swimming",
+        "Vigorous Long-Distance Bicycling",
+      ],
+    },
+    {
+      category: "Moderate Exercise",
+      items: [
+        "Fast Walking",
+        "Baseball",
+        "Tennis",
+        "Easy Bicycling",
+        "Volleyball",
+        "Badminton",
+        "Easy Swimming",
+        "Popular and Folk Dancing",
+      ],
+    },
+    {
+      category: "Mild Exercise",
+      items: [
+        "Yoga",
+        "Archery",
+        "Fishing from Riverbank",
+        "Bowling",
+        "Horseshoes",
+        "Golf",
+        "Easy Walking",
+      ],
+    },
+  ]);
+
+  const [customActivityInput, setCustomActivityInput] = useState({
+    activity: "",
+    screentime: "",
+    eating: "",
+  });
+
+  const [otherChecked, setOtherChecked] = useState({
+    activity: false,
+    screentime: false,
+    eating: false,
+  });
+
+  const handleOtherCheckboxChange = (event, section) => {
+    const { checked } = event.target;
+    setOtherChecked((prev) => ({
+      ...prev,
+      [section]: checked,
+    }));
+  };
+
+  const handleCustomActivityChange = (e, section) => {
+    const { value } = e.target;
+    setCustomActivityInput((prev) => ({
+      ...prev,
+      [section]: value,
+    }));
+  };
+
+
+  const handleAddCustomActivity = (section) => {
+    if (customActivityInput[section]) {
+      setSelectedItems((prev) => ({
+        ...prev,
+        [section]: [...prev[section], customActivityInput[section]],
+      }));
+      setCustomActivityInput((prev) => ({
+        ...prev,
+        [section]: "",
+      }));
+      setOtherChecked((prev) => ({
+        ...prev,
+        [section]: false,
+      }));
+    }
+  };
+
+  const [screentimeActivities, setscreentimeActivities] = useState([
+    {
+      category: "Gaming and Video Chatting",
+      items: [
+        "Playing Games",
+        "Looking at Photos",
+        "Video Chatting",
+        "Other Gaming",
+      ],
+    },
+    {
+      category: "Academic Screen Time",
+      items: ["Online Learning", "Homework", "Other Academic Work"],
+    },
+  ]);
+
+  const [fruitsAndVegetables, setFruitsAndVegetables] = useState([
+    {
+      category: "Fruits",
+      items: ["Apples", "Bananas", "Oranges", "Strawberries", "Grapes", "Watermelon"],
+    },
+    {
+      category: "Vegetables",
+      items: ["Carrots", "Broccoli", "Spinach", "Potatoes", "Tomatoes"],
+    }
+  ]);
+  
+  const [newFruit, setNewFruit] = useState('');
+  const [newVegetable, setNewVegetable] = useState('');
+  const [newStrenuous, setStrenuous] = useState('');
+  const [newModerate, setModerate] = useState('');
+  const [newMild , setMild ] = useState('');
+  const [newGame , setGame ] = useState('');
+  const [newAcademic , setAcademic ] = useState('');
+
+
+  // Function to handle adding a new item to a category
+  const handleAddItemClick = (category) => {
+    if (category === 'Fruits' && newFruit.trim()) {
+      setFruitsAndVegetables((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Fruits'
+            ? { ...cat, items: [...cat.items, newFruit] }
+            : cat
+        )
+      );
+      setNewFruit(''); // Reset input
+    }
+    if (category === 'Vegetables' && newVegetable.trim()) {
+      setFruitsAndVegetables((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Vegetables'
+            ? { ...cat, items: [...cat.items, newVegetable] }
+            : cat
+        )
+      );
+      setNewVegetable(''); // Reset input
+    }
+    if (category === 'Strenuous Exercise' && newStrenuous.trim()) {
+      setphysicalActivities((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Strenuous Exercise'
+            ? { ...cat, items: [...cat.items, newStrenuous] }
+            : cat
+        )
+      );
+      setStrenuous(''); // Reset input
+    }
+    if (category === 'Moderate Exercise' && newModerate.trim()) {
+      setphysicalActivities((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Moderate Exercise'
+            ? { ...cat, items: [...cat.items, newModerate] }
+            : cat
+        )
+      );
+      setModerate(''); // Reset input
+    }
+    if (category === 'Mild Exercise' && newMild.trim()) {
+      setphysicalActivities((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Mild Exercise'
+            ? { ...cat, items: [...cat.items, newMild] }
+            : cat
+        )
+      );
+      setMild(''); // Reset input
+    }
+    if (category === 'Gaming and Video Chatting' && newGame.trim()) {
+      setscreentimeActivities((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Gaming and Video Chatting'
+            ? { ...cat, items: [...cat.items, newGame] }
+            : cat
+        )
+      );
+      setGame(''); // Reset input
+    }
+    if (category === 'Academic Screen Time' && newAcademic.trim()) {
+      setscreentimeActivities((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Academic Screen Time'
+            ? { ...cat, items: [...cat.items, newAcademic] }
+            : cat
+        )
+      );
+      setAcademic(''); // Reset input
+    }
+  };
+const [sleepDuration, setSleepDuration] = useState({ hours: 0, minutes: 0 });
+
+useEffect(() => {
+  const calculateSleepDuration = () => {
+    const bedTime = goalInputs.sleep?.["Expected Sleep"]?.bedtime || "22:00";
+    const wakeUpTime = goalInputs.sleep?.["Expected Sleep"]?.wakeUpTime || "06:00";
+
+    if (!bedTime || !wakeUpTime) return;
+
+    const [bedHour, bedMinute] = bedTime.split(":").map(Number);
+    const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
+
+    let totalMinutes = (wakeHour * 60 + wakeMinute) - (bedHour * 60 + bedMinute);
+    if (totalMinutes < 0) totalMinutes += 24 * 60;
+
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    // Update state
+    setSleepDuration({ hours, minutes });
+  };
+
+  calculateSleepDuration();
+}, [goalInputs.sleep]); // Recalculate when sleep data changes
+
+
+
+
+
+
+  
+
 
   return (
     <Wrapper>
@@ -492,6 +1113,92 @@ const JournalScreen = () => {
           <div className="timeload-dots">...</div>
         )}
       </strong>
+      {/* phone version */}
+      {(ismobile && 
+        <Stack direction="row" spacing={2} justifyContent="flex-end">
+          <div style={{opacity: 1}}>
+            
+            <Button
+              ref={anchorRef}
+              id="composition-button"
+              aria-controls={open ? 'composition-menu' : undefined}
+              aria-expanded={open ? 'true' : undefined}
+              aria-haspopup="true"
+              onClick={handleToggle}
+              style={{
+                marginTop: '10px',   
+                padding: '12px 24px', 
+                fontSize: '1.2rem',   
+              }}
+            >
+              journal
+            </Button>
+            <Popper
+              open={open}
+              anchorEl={anchorRef.current}
+              role={undefined}
+              placement="bottom-start"
+              transition
+              disablePortal
+              style={{
+                marginTop: '10px',   
+                padding: '12px 24px', 
+                fontSize: '1.2rem',  
+                opacity: 1,
+                zIndex: "10000"
+              }}
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin:
+                      placement === 'bottom-start' ? 'left top' : 'left bottom',
+                  }}
+                >
+                  <Paper style={{opacity: 1}}>
+                    <ClickAwayListener onClickAway={handleClose}>
+                      <MenuList
+                        autoFocusItem={open}
+                        id="composition-menu"
+                        aria-labelledby="composition-button"
+                        onKeyDown={handleListKeyDown}
+                        style={{
+                          backgroundColor: 'white',
+                          opacity: 1,
+                        }}
+                      >
+                        <MenuItem onClick={handleClose} style={{zIndex: 1000}}>
+                          <Link to = "/journal/activity">
+                            Physical Activity
+                          </Link>
+                        </MenuItem>
+                        <MenuItem onClick={handleClose} style={{zIndex: 1000}}>
+                          <Link to = "screen">
+                            Screen Time
+                          </Link>
+                        </MenuItem>
+                        <MenuItem onClick={handleClose}>
+                          <Link to = "eat">
+                            Eating
+                          </Link>
+                        </MenuItem>
+                        <MenuItem onClick={handleClose}>
+                          <Link to = "sleep">
+                            sleep
+                          </Link>
+                        </MenuItem>
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+          </div>
+          <Outlet/>
+        </Stack>
+      )}
+
       <JournalWrapper>
         <div
           style={{
@@ -515,13 +1222,9 @@ const JournalScreen = () => {
           >
             <div
               className="leftPageWrapper"
-              style={{ width: ismobile ? "50%" : "auto" }}
             >
               <div style={styles.goalScreen}>
                 <GoalContainer style={styles.goalRow}>
-                  <th>Health Behaviors</th>
-                  <th>Set My Goal</th>
-                  <th>Track My Behavior</th>
                 </GoalContainer>
 
                 <GoalContainer style={styles.goalRow}>
@@ -531,7 +1234,10 @@ const JournalScreen = () => {
                       src={require("../../components/images/journal/activity_goals.png")}
                       alt="Activity goals icon on activity goals page"
                     />
-                    <h2 style={styles.goalLabel}>Physical Activity</h2>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                      <h2 style={styles.goalLabel}>Physical Activity</h2>
+                      <p style={{ fontSize: "16px", color: "#555", fontWeight: "bold" }}>Recommended: 60 minutes/day</p>
+                    </div>
                     <Tooltip
                       title={
                         <div>
@@ -568,71 +1274,31 @@ const JournalScreen = () => {
                           : ""
                       }
                     >
-                      <DurationPicker
-                        loggedGoalToday={loggedActivityToday}
-                        editingBehaviorId={editingBehaviorId}
-                        goalData={activityData}
-                        goal={activityGoal}
-                        setGoalData={setActivityGoal}
-                        editingId={0}
-                      />
+                      <StyledButton
+                        variant="contained"
+                        onClick={() => handleOpenPopup("activity")}
+                      >
+                        Set and Track
+                      </StyledButton>
                     </Tooltip>
+
+                    {/* Tracking under the buttons*/}
+                    {selectedItems.activity.length > 0 && (
+                      <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
+                        <strong>Selected: </strong>
+                        {selectedItems.activity.map((item, index) => (
+                          <span key={item}>
+                            {item}: {goalInputs.activity[item]?.hours || 0}h {goalInputs.activity[item]?.minutes || 0}m /
+                            Tracked: {behaviorInputs.activity[item]?.hours || 0}h {behaviorInputs.activity[item]?.minutes || 0}m
+                            {index < selectedItems.activity.length - 1 && ", "}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </td>
-                  <td style={{ width: "50%" }}>
-                    <Tooltip
-                      title={
-                        loggedActivityToday && editingBehaviorId !== 0
-                          ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <DurationPicker
-                        loggedGoalToday={loggedActivityToday}
-                        editingBehaviorId={editingBehaviorId}
-                        goalData={activityData}
-                        goal={activityGoal}
-                        setGoalData={setActivityGoal}
-                        editingId={0}
-                        type={"behavior"}
-                      />
-                    </Tooltip>
-                  </td>
-                  {loggedActivityToday && editingBehaviorId !== 0 && (
-                    <Tooltip title="Edit Existing Daily Behavior">
-                      <EditIcon
-                        className="save edit-icon"
-                        onClick={() => {
-                          if (editingBehaviorId !== 0) {
-                            setEditingBehaviorId(0);
-                          }
-                        }}
-                      />
-                    </Tooltip>
-                  )}
                 </GoalContainer>
 
-                <GoalContainer>
-                  <BehaviorInfoText>
-                    <strong
-                      style={{
-                        width: "30%",
-                      }}
-                      className="information-text"
-                    >
-                      &nbsp;Recommended: 60 minutes/day
-                    </strong>
-                    <div
-                      style={{
-                        width: "70%",
-                      }}
-                      className="information-text"
-                    >
-                      <strong>Goal:</strong> Get a good amount of physical
-                      activity every day to improve fitness and physical/mental
-                      health.
-                    </div>
-                  </BehaviorInfoText>
-                </GoalContainer>
+
 
                 <GoalContainer style={styles.goalRow}>
                   <td style={styles.titleGroup}>
@@ -641,8 +1307,10 @@ const JournalScreen = () => {
                       src={require("../../components/images/journal/tablet_icon.png")}
                       alt="Tablet for screentime goals"
                     />
-                    <h2 style={styles.goalLabel}>Screen Time</h2>
-
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                      <h2 style={styles.goalLabel}>Screen Time</h2>
+                      <p style={{ fontSize: "16px", color: "#555", fontWeight: "bold" }}>Recommended: 120 minutes/day</p>
+                    </div>
                     <Tooltip
                       title={
                         <div>
@@ -675,77 +1343,25 @@ const JournalScreen = () => {
                     </Tooltip>
                   </td>
                   <td style={{ width: "50%" }}>
-                    <Tooltip
-                      title={
-                        loggedScreentimeToday && editingBehaviorId !== 1
-                          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <DurationPicker
-                        loggedGoalToday={loggedScreentimeToday}
-                        editingBehaviorId={editingBehaviorId}
-                        goalData={screentimeData}
-                        goal={screentimeGoal}
-                        setGoalData={setScreentimeGoal}
-                        editingId={1}
-                      />
+                    <Tooltip title={loggedScreentimeToday && editingBehaviorId !== 1 ? "You've already logged this goal today!" : ""}>
+                      <StyledButton variant="contained" onClick={() => handleOpenPopup("screentime")}>
+                        Set and Track
+                      </StyledButton>
                     </Tooltip>
-                  </td>
+                    {selectedItems.screentime.length > 0 && (
+                      <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
+                        <strong>Selected: </strong>
+                        {selectedItems.screentime.map((item, index) => (
+                          <span key={item}>
+                            {item}: {goalInputs.screentime[item]?.hours || 0}h {goalInputs.screentime[item]?.minutes || 0}m /
+                            Tracked: {behaviorInputs.screentime[item]?.hours || 0}h {behaviorInputs.screentime[item]?.minutes || 0}m
+                            {index < selectedItems.screentime.length - 1 && ", "}
+                          </span>
+                        ))}
+                      </div>
+                    )}
 
-                  <td style={{ width: "50%" }}>
-                    <Tooltip
-                      title={
-                        loggedScreentimeToday && editingBehaviorId !== 1
-                          ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <DurationPicker
-                        loggedGoalToday={loggedScreentimeToday}
-                        editingBehaviorId={editingBehaviorId}
-                        goalData={screentimeData}
-                        goal={screentimeGoal}
-                        setGoalData={setScreentimeGoal}
-                        editingId={1}
-                        type={"behavior"}
-                      />
-                    </Tooltip>
                   </td>
-                  {loggedScreentimeToday && editingBehaviorId !== 1 && (
-                    <Tooltip title="Edit Existing Daily Behavior">
-                      <EditIcon
-                        className="save edit-icon"
-                        onClick={() => {
-                          if (editingBehaviorId !== 1) {
-                            setEditingBehaviorId(1);
-                          }
-                        }}
-                      />
-                    </Tooltip>
-                  )}
-                </GoalContainer>
-
-                <GoalContainer>
-                  <BehaviorInfoText>
-                    <strong
-                      style={{
-                        width: "30%",
-                      }}
-                      className="information-text"
-                    >
-                      &nbsp;Recommended: 120 minutes/day
-                    </strong>
-                    <div
-                      style={{
-                        width: "70%",
-                      }}
-                      className="information-text"
-                    >
-                      <strong>Goal:</strong> Limit screentime to at most 2 hours
-                      a day to improve focus and productive time.
-                    </div>
-                  </BehaviorInfoText>
                 </GoalContainer>
 
                 <GoalContainer style={styles.goalRow}>
@@ -755,7 +1371,10 @@ const JournalScreen = () => {
                       src={require("../../components/images/journal/apple.png")}
                       alt="Apple for servings goal"
                     />
-                    <h2 style={styles.goalLabel}>Eating Fruits & Vegetables</h2>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                      <h2 style={styles.goalLabel}>Eating Fruits & Vegetables</h2>
+                      <p style={{ fontSize: "16px", color: "#555", fontWeight: "bold" }}>Recommended: 5 servings/day</p>
+                    </div>
                     <Tooltip
                       title={
                         <div>
@@ -784,133 +1403,26 @@ const JournalScreen = () => {
                       />
                     </Tooltip>
                   </td>
+                  <td style={{ width: "50%" }}>
+                    <Tooltip title={loggedEatingToday && editingBehaviorId !== 2 ? "You've already logged this goal today!" : ""}>
+                      <StyledButton variant="contained" onClick={() => handleOpenPopup("eating")}>
+                        Set and Track
+                      </StyledButton>
+                    </Tooltip>
+                    {selectedItems.eating.length > 0 && (
+                      <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
+                        <strong>Selected: </strong>
+                        {selectedItems.eating.map((item, index) => (
+                          <span key={item}>
+                            {item}: {goalInputs.eating[item]?.servings || 0} servings /
+                            Tracked: {behaviorInputs.eating[item]?.servings || 0} servings
+                            {index < selectedItems.eating.length - 1 && ", "}
+                          </span>
+                        ))}
+                      </div>
+                    )}
 
-                  <td>
-                    <Tooltip
-                      title={
-                        loggedEatingToday && editingBehaviorId !== 2
-                          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <TextField
-                        className={
-                          loggedEatingToday && editingBehaviorId !== 2
-                            ? "disabled-behavior"
-                            : "behavior"
-                        }
-                        disabled={
-                          loggedEatingToday && editingBehaviorId !== 2
-                            ? true
-                            : false
-                        }
-                        style={styles.inputBox}
-                        label="servings/day"
-                        type="number"
-                        value={eatingGoal.length ? eatingGoal[0].goalValue : ""}
-                        onChange={(e) => {
-                          if (e.target.value < 0) {
-                            e.target.value = 0;
-                          } else if (e.target.value > 50) {
-                            e.target.value = 50;
-                          }
-                          setEatingGoal((prevEatingGoal) => {
-                            const updatedEatingGoal = prevEatingGoal.map(
-                              (goal) => {
-                                const newEatingGoalValue = {
-                                  ...goal,
-                                  goalValue: e.target.value,
-                                };
-                                return newEatingGoalValue;
-                              }
-                            );
-                            return updatedEatingGoal;
-                          });
-                        }}
-                      />
-                    </Tooltip>
                   </td>
-                  <td>
-                    <Tooltip
-                      title={
-                        loggedEatingToday && editingBehaviorId !== 2
-                          ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <TextField
-                        disabled={
-                          loggedEatingToday && editingBehaviorId !== 2
-                            ? true
-                            : false
-                        }
-                        className={
-                          loggedEatingToday && editingBehaviorId !== 2
-                            ? "disabled-behavior"
-                            : "behavior"
-                        }
-                        style={styles.inputBox}
-                        label="servings/day"
-                        type="number"
-                        value={
-                          eatingGoal.length ? eatingGoal[0].behaviorValue : ""
-                        }
-                        onChange={(e) => {
-                          if (e.target.value < 0) {
-                            e.target.value = 0;
-                          } else if (e.target.value > 50) {
-                            e.target.value = 50;
-                          }
-                          setEatingGoal((prevEatingGoal) => {
-                            const updatedEatingGoal = prevEatingGoal.map(
-                              (goal) => {
-                                const newEatingGoalValue = {
-                                  ...goal,
-                                  behaviorValue: Number(e.target.value),
-                                };
-                                return newEatingGoalValue;
-                              }
-                            );
-                            return updatedEatingGoal;
-                          });
-                        }}
-                      />
-                    </Tooltip>
-                  </td>
-                  {loggedEatingToday && editingBehaviorId !== 2 && (
-                    <Tooltip title="Edit Existing Daily Behavior">
-                      <EditIcon
-                        className="save edit-icon"
-                        onClick={() => {
-                          if (editingBehaviorId !== 2) {
-                            setEditingBehaviorId(2);
-                          }
-                        }}
-                      />
-                    </Tooltip>
-                  )}
-                </GoalContainer>
-
-                <GoalContainer>
-                  <BehaviorInfoText>
-                    <strong
-                      style={{
-                        width: "30%",
-                      }}
-                      className="information-text"
-                    >
-                      &nbsp;Recommended: 5 servings/day
-                    </strong>
-                    <div
-                      style={{
-                        width: "70%",
-                      }}
-                      className="information-text"
-                    >
-                      <strong>Goal:</strong> Eat servings of healthy fruits and
-                      vegetables for a balanced diet and a healthy lifestyle.
-                    </div>
-                  </BehaviorInfoText>
                 </GoalContainer>
 
                 <GoalContainer style={styles.goalRow}>
@@ -920,7 +1432,10 @@ const JournalScreen = () => {
                       src={require("../../components/images/journal/pillow_icon.png")}
                       alt="Pillow icon for sleep"
                     />
-                    <h2 style={styles.goalLabel}>Sleep</h2>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                      <h2 style={styles.goalLabel}>Sleep</h2>
+                      <p style={{ fontSize: "16px", color: "#555", fontWeight: "bold" }}>Recommended: 9 hours/day</p>
+                    </div>
                     <Tooltip
                       title={
                         <div>
@@ -948,79 +1463,61 @@ const JournalScreen = () => {
                       />
                     </Tooltip>
                   </td>
-
                   <td style={{ width: "50%" }}>
-                    <Tooltip
-                      title={
-                        loggedSleepToday && editingBehaviorId !== 3
-                          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <DurationPicker
-                        loggedGoalToday={loggedSleepToday}
-                        editingBehaviorId={editingBehaviorId}
-                        goalData={sleepData}
-                        goal={sleepGoal}
-                        setGoalData={setSleepGoal}
-                        editingId={3}
-                      />
+                    <Tooltip title={loggedSleepToday && editingBehaviorId !== 3 ? "You've already logged this goal today!" : ""}>
+                      <StyledButton variant="contained" onClick={() => handleOpenPopup("sleep")}>
+                        Set and Track
+                      </StyledButton>
                     </Tooltip>
-                  </td>
+                    {selectedItems.sleep.length > 0 && (
+                      <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
+                        <strong>Selected: </strong>
+                        {selectedItems.sleep.includes("Track Sleep") && (
+                          <>
+                            {/* Inline calculation of expected sleep duration */}
+                            Expected Sleep: {(() => {
+                              const bedTime = goalInputs.sleep["Expected Sleep"].bedtime;
+                              const wakeUpTime = goalInputs.sleep["Expected Sleep"].wakeUpTime;
 
-                  <td style={{ width: "50%" }}>
-                    <Tooltip
-                      title={
-                        loggedSleepToday && editingBehaviorId !== 3
-                          ? "You've already logged this behavior today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-                      <DurationPicker
-                        loggedGoalToday={loggedSleepToday}
-                        editingBehaviorId={editingBehaviorId}
-                        goalData={sleepData}
-                        goal={sleepGoal}
-                        setGoalData={setSleepGoal}
-                        editingId={3}
-                        type={"behavior"}
-                      />
-                    </Tooltip>
+                              if (!bedTime || !wakeUpTime) return "0h 0m";
+
+                              const [bedHour, bedMinute] = bedTime.split(":").map(Number);
+                              const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
+
+                              let totalMinutes = (wakeHour * 60 + wakeMinute) - (bedHour * 60 + bedMinute);
+                              if (totalMinutes < 0) totalMinutes += 24 * 60;
+
+                              const hours = Math.floor(totalMinutes / 60);
+                              const minutes = totalMinutes % 60;
+
+                              return `${hours}h ${minutes}m`;
+                            })()} /
+
+                            {/* Inline calculation of tracked sleep duration */}
+                            Tracked Sleep: {(() => {
+                              const bedTime = behaviorInputs.sleep["Actual Sleep"].bedtime;
+                              const wakeUpTime = behaviorInputs.sleep["Actual Sleep"].wakeUpTime;
+
+                              if (!bedTime || !wakeUpTime) return "8h 0m";
+
+                              const [bedHour, bedMinute] = bedTime.split(":").map(Number);
+                              const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
+
+                              let totalMinutes = (wakeHour * 60 + wakeMinute) - (bedHour * 60 + bedMinute);
+                              if (totalMinutes < 0) totalMinutes += 24 * 60;
+
+                              const hours = Math.floor(totalMinutes / 60);
+                              const minutes = totalMinutes % 60;
+
+                              return `${hours}h ${minutes}m`;
+                            })()}
+                          </>
+                        )}
+                      </div>
+                    )}
+
+
                   </td>
-                  {loggedSleepToday && editingBehaviorId !== 3 && (
-                    <Tooltip title="Edit Existing Daily Behavior">
-                      <EditIcon
-                        className="save edit-icon"
-                        onClick={() => {
-                          if (editingBehaviorId !== 3) {
-                            setEditingBehaviorId(3);
-                          }
-                        }}
-                      />
-                    </Tooltip>
-                  )}
-                </GoalContainer>
-                <GoalContainer>
-                  <BehaviorInfoText>
-                    <strong
-                      style={{
-                        width: "30%",
-                      }}
-                      className="information-text"
-                    >
-                      &nbsp;Recommended: 9 hours/day
-                    </strong>
-                    <div
-                      style={{
-                        width: "70%",
-                      }}
-                      className="information-text"
-                    >
-                      <strong>Goal:</strong> Get sufficient sleep every night to
-                      improve daily productivity and prevent any sleep-related
-                      health issues.
-                    </div>
-                  </BehaviorInfoText>
                 </GoalContainer>
               </div>
 
@@ -1074,7 +1571,7 @@ const JournalScreen = () => {
                         "Activity"
                       )}
                     >
-                      <Button
+                      <StyledButton
                         className="save edit-icon"
                         style={{
                           backgroundColor: getSaveButtonColor(
@@ -1086,32 +1583,23 @@ const JournalScreen = () => {
                           border: "1px solid black",
                         }}
                         onClick={() => {
-                          updateBehaviorValue(
-                            user,
-                            activityGoal[0].goalValue,
-                            activityGoal[0].behaviorValue,
-                            activityGoal[0].reflection,
-                            setActivityGoal,
-                            activityGoal,
-                            activityData,
+                          console.log("activityGoal", activityGoal)
+                          handleSave(
+              
                             "activity",
-                            date,
-                            60
+                            activityGoal,
+                            setActivityGoal,
+                            activityData,
+                            setActivityResponseLoading
                           );
                           setLoggedActivityToday(true);
                           setEditingBehaviorId(-1);
-                          createChatbotRequest(
-                            activityGoal,
-                            setActivityGoal,
-                            user,
-                            date,
-                            setActivityResponseLoading
-                          );
                         }}
                       >
                         SAVE
-                      </Button>
+                      </StyledButton>
                     </Tooltip>
+
                   </ReflectionContainer>
                   <td style={{ width: "50%", maxHeight: 101 }}>
                     {activityResponseLoading ? (
@@ -1176,7 +1664,7 @@ const JournalScreen = () => {
                         "Screentime"
                       )}
                     >
-                      <Button
+                      <StyledButton
                         className="save edit-icon"
                         style={{
                           backgroundColor: getSaveButtonColor(
@@ -1188,32 +1676,21 @@ const JournalScreen = () => {
                           border: "1px solid black",
                         }}
                         onClick={() => {
-                          updateBehaviorValue(
-                            user,
-                            screentimeGoal[0].goalValue,
-                            screentimeGoal[0].behaviorValue,
-                            screentimeGoal[0].reflection,
-                            setScreentimeGoal,
-                            screentimeGoal,
-                            screentimeData,
+                          handleSave(
                             "screentime",
-                            date,
-                            120
+                            screentimeGoal,
+                            setScreentimeGoal,
+                            screentimeData,
+                            setScreentimeResponseLoading
                           );
                           setLoggedScreentimeToday(true);
                           setEditingBehaviorId(-1);
-                          createChatbotRequest(
-                            screentimeGoal,
-                            setScreentimeGoal,
-                            user,
-                            date,
-                            setScreentimeResponseLoading
-                          );
                         }}
                       >
                         SAVE
-                      </Button>
+                      </StyledButton>
                     </Tooltip>
+
                   </ReflectionContainer>
                   <td style={{ width: "50%", maxHeight: 101 }}>
                     {screentimeResponseLoading ? (
@@ -1279,7 +1756,7 @@ const JournalScreen = () => {
                         "Eating"
                       )}
                     >
-                      <Button
+                      <StyledButton
                         className="save edit-icon"
                         style={{
                           backgroundColor: getSaveButtonColor(
@@ -1291,31 +1768,22 @@ const JournalScreen = () => {
                           border: "1px solid black",
                         }}
                         onClick={() => {
-                          updateBehaviorValue(
-                            user,
-                            eatingGoal[0].goalValue,
-                            eatingGoal[0].behaviorValue,
-                            eatingGoal[0].reflection,
-                            setEatingGoal,
-                            eatingGoal,
-                            eatingData,
+                          {console.log("eatingData", eatingData)}
+                          {console.log("eatingGoal", eatingGoal)}
+                          handleSave(
                             "eating",
-                            date,
-                            5
+                            eatingGoal,
+                            setEatingGoal,
+                            eatingData,
+                            setEatingResponseLoading
+
                           );
                           setLoggedEatingToday(true);
                           setEditingBehaviorId(-1);
-                          createChatbotRequest(
-                            eatingGoal,
-                            setEatingGoal,
-                            user,
-                            date,
-                            setEatingResponseLoading
-                          );
                         }}
                       >
                         SAVE
-                      </Button>
+                      </StyledButton>
                     </Tooltip>
                   </ReflectionContainer>
                   <td style={{ width: "50%", maxHeight: 101 }}>
@@ -1380,7 +1848,7 @@ const JournalScreen = () => {
                         "Sleep"
                       )}
                     >
-                      <Button
+                      <StyledButton
                         className="save edit-icon"
                         style={{
                           backgroundColor: getSaveButtonColor(
@@ -1392,31 +1860,20 @@ const JournalScreen = () => {
                           border: "1px solid black",
                         }}
                         onClick={() => {
-                          updateBehaviorValue(
-                            user,
-                            sleepGoal[0].goalValue,
-                            sleepGoal[0].behaviorValue,
-                            sleepGoal[0].reflection,
-                            setSleepGoal,
-                            sleepGoal,
-                            sleepData,
+                          handleSave(
                             "sleep",
-                            date,
-                            9
+                            sleepGoal,
+                            setSleepGoal,
+                            sleepData,
+                            setSleepResponseLoading
                           );
                           setLoggedSleepToday(true);
                           setEditingBehaviorId(-1);
-                          createChatbotRequest(
-                            sleepGoal,
-                            setSleepGoal,
-                            user,
-                            date,
-                            setSleepResponseLoading
-                          );
                         }}
                       >
                         SAVE
-                      </Button>
+                      </StyledButton>
+
                     </Tooltip>
                   </ReflectionContainer>
                   <td style={{ width: "50", maxHeight: 101 }}>
@@ -1463,13 +1920,655 @@ const JournalScreen = () => {
           </div>
         </div>
       </JournalWrapper>
-      {/* <animated.div style={props}>
-        <img
-          src={require("../../components/images/journal/tiger.jpg")}
-          alt="Tiger custom"
-          style={{ width: 75, position: "absolute", right: 0, top: 300 }}
-        />
-      </animated.div> */}
+
+
+      {/* Physical Activity Dialog */}
+      <Dialog
+        open={popupOpen.activity}
+        onClose={() => handleClosePopup("activity")}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>Set Physical Activity Goals and Track Behavior</DialogTitle>
+        <DialogContent>
+          {/* Predefined activities */}
+          {physicalActivities.map((activity) => (
+            <div key={activity.category} style={{ marginBottom: "10px" }}>
+              <h3>{activity.category}</h3>
+              <Grid container spacing={1} style={{ marginTop: '-5px' }}>
+                <Grid item xs={2}></Grid>
+                <Grid item xs={4} style={{ textAlign: "center", fontWeight: "bold" }}>
+                  What I Will Do
+                </Grid>
+                <Grid item xs={4} style={{ textAlign: "center", fontWeight: "bold" }}>
+                  What I Did
+                </Grid>
+              </Grid>
+              {activity.items.map((item) => (
+                <Grid container spacing={1} alignItems="center" key={item}>
+                  <Grid item xs={2}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedItems.activity.includes(item)}
+                          onChange={(event) => handleCheckboxChange(event, "activity")}
+                          name={item}
+                        />
+                      }
+                      label={item}
+                    />
+                  </Grid>
+                  {selectedItems.activity.includes(item) && (
+                    <>
+                      <Grid item xs={1} style={{ paddingLeft: '80px' }}>
+                        <TextField
+                          label="Hours"
+                          type="number"
+                          name={`${item}-goal-hours`}
+                          value={goalInputs.activity[item]?.hours || ""}
+                          onChange={(event) => {
+                            const newGoal = 60 * event.target.value;
+                            console.log("newGoal", newGoal);
+                            handleInputChange(event, item, "hours", "goal", "activity");
+                            setActivityGoal((prevActivityGoal) => {
+                              const updatedActivityGoal = prevActivityGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  goalValue: newGoal,
+                                };
+                              });
+                              return updatedActivityGoal;
+                            });
+                          }}
+                          fullWidth
+                          size="small"
+                          style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
+                        />
+                      </Grid>
+                      <Grid item xs={2} style={{ paddingLeft: '65px', paddingRight: '5px' }}>
+                        <TextField
+                          label="Minutes"
+                          type="number"
+                          name={`${item}-goal-minutes`}
+                          value={goalInputs.activity[item]?.minutes || ""}
+                          onChange={(event) => {
+                            const newGoal = 60 * event.target.value;
+                            handleInputChange(event, item, "minutes", "goal", "activity");
+                            setActivityGoal((prevActivityGoal) => {
+                              const updatedActivityGoal = prevActivityGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  goalValue: newGoal, 
+                                };
+                              });
+                              return updatedActivityGoal;
+                            });
+                          }}
+                          fullWidth
+                          size="small"
+                          style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
+                        />
+                      </Grid>
+                      <Grid item xs={1} style={{ paddingLeft: '150px' }}>
+                        <TextField
+                          label="Hours"
+                          type="number"
+                          name={`${item}-behavior-hours`}
+                          value={behaviorInputs.activity[item]?.hours || ""}
+                          onChange={(event) => {
+                            const newGoal = 60 * event.target.value;
+                            handleInputChange(event, item, "hours", "behaviour", "activity");
+                            setActivityGoal((prevActivityGoal) => {
+                              const updatedActivityGoal = prevActivityGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  behaviorValue: newGoal,
+                                };
+                              });
+                              return updatedActivityGoal;
+                            });
+                          }}
+                          fullWidth
+                          size="small"
+                          style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
+                        />
+                      </Grid>
+                      <Grid item xs={2} style={{ paddingLeft: '65px' }}>
+                        <TextField
+                          label="Minutes"
+                          type="number"
+                          name={`${item}-behavior-minutes`}
+                          value={behaviorInputs.activity[item]?.minutes || ""}
+                          onChange={(event) => {
+                            const newGoal = 60 * event.target.value;
+                            handleInputChange(event, item, "minutes", "behaviour", "activity");
+                            setActivityGoal((prevActivityGoal) => {
+                              const updatedActivityGoal = prevActivityGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  behaviorValue: newGoal, 
+                                };
+                              });
+                              return updatedActivityGoal;
+                            });
+                          }}
+                          fullWidth
+                          size="small"
+                          style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
+                        />
+                      </Grid>
+                    </>
+                  )}
+                  
+                </Grid>
+              ))}
+                <StyledButton
+                  onClick={() => handleAddItemClick(activity.category)}
+                  variant="contained"
+                  color="primary"
+                >
+                  Add New {activity.category}
+                </StyledButton>
+                <br/>
+                {(activity.category == "Strenuous Exercise")?
+                <TextField
+                  value={newStrenuous}
+                  onChange={(e) => setStrenuous(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  style={{ marginTop: '10px', marginRight: '10px' }}
+                /> : (activity.category == "Moderate Exercise") ?
+                <TextField
+                  value={newModerate}
+                  onChange={(e) => setModerate(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  style={{ marginTop: '10px', marginRight: '10px' }}
+                /> :  
+                <TextField
+                  value={newMild}
+                  onChange={(e) => setMild(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  style={{ marginTop: '10px', marginRight: '10px' }}
+                />
+              }
+            </div>
+          ))}
+
+        </DialogContent>
+        <DialogActions>
+          <StyledButton onClick={() => handleDone("activity")} color="primary">
+            Done
+          </StyledButton>
+        </DialogActions>
+      </Dialog>
+
+
+
+      {/* Screen Time Dialog */}
+      <Dialog
+        open={popupOpen.screentime}
+        onClose={() => handleClosePopup("screentime")}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>Set Screentime Goals and Track Behavior</DialogTitle>
+        <DialogContent>
+          {screentimeActivities.map((activity) => (
+            <div key={activity.category} style={{ marginBottom: "10px" }}>
+              <h3>{activity.category}</h3>
+              <Grid container spacing={1} style={{ marginTop: '-5px' }}>
+                <Grid item xs={2}></Grid>
+                <Grid item xs={4} style={{ textAlign: "center", fontWeight: "bold" }}>
+                  What I Will Do
+                </Grid>
+                <Grid item xs={4} style={{ textAlign: "center", fontWeight: "bold" }}>
+                  What I Did
+                </Grid>
+              </Grid>
+              {activity.items.map((item) => (
+                <Grid container spacing={1} alignItems="center" key={item}>
+                  <Grid item xs={2}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={selectedItems.screentime.includes(item)}
+                          onChange={(event) => handleCheckboxChange(event, "screentime")}
+                          name={item}
+                        />
+                      }
+                      label={item}
+                    />
+                  </Grid>
+                  {selectedItems.screentime.includes(item) && (
+                    <>
+                      <Grid item xs={1} style={{ paddingLeft: '80px' }}>
+                        <TextField
+                          label="Hours"
+                          type="number"
+                          name={`${item}-goal-hours`}
+                          value={goalInputs.screentime[item]?.hours || ""}
+                          onChange={(event) => {
+                            const newGoal = 60 * event.target.value;
+                            handleInputChange(event, item, "hours", "goal", "screentime");
+                            setScreentimeGoal((prevScreentimeGoal) => {
+                              const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  goalValue: newGoal, 
+                                };
+                              });
+                              return updatedScreentimeGoal;
+                            });
+                          }}
+                          fullWidth
+                          size="small"
+                          style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
+                        />
+                      </Grid>
+                      <Grid item xs={2} style={{ paddingLeft: '65px', paddingRight: '5px' }}>
+                        <TextField
+                          label="Minutes"
+                          type="number"
+                          name={`${item}-goal-minutes`}
+                          value={goalInputs.screentime[item]?.minutes || ""}
+                          onChange={(event) => {
+                            const newGoal = event.target.value;
+                            handleInputChange(event, item, "minutes", "goal", "screentime");
+                            setScreentimeGoal((prevScreentimeGoal) => {
+                              const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  goalValue: newGoal, 
+                                };
+                              });
+                              return updatedScreentimeGoal;
+                            });
+                          }}
+                          fullWidth
+                          size="small"
+                          style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
+                        />
+                      </Grid>
+                      <Grid item xs={1} style={{ paddingLeft: '150px' }}>
+                        <TextField
+                          label="Hours"
+                          type="number"
+                          name={`${item}-behavior-hours`}
+                          value={behaviorInputs.screentime[item]?.hours || ""}
+                          onChange={(event) => {
+                            const newGoal = 60 * event.target.value;
+                            handleInputChange(event, item, "hours", "behaviour", "screentime");
+                            setScreentimeGoal((prevScreentimeGoal) => {
+                              const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  behaviorValue: newGoal, 
+                                };
+                              });
+                              return updatedScreentimeGoal;
+                            });
+                          }}
+                          fullWidth
+                          size="small"
+                          style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
+                        />
+                      </Grid>
+                      <Grid item xs={2} style={{ paddingLeft: '65px' }}>
+                        <TextField
+                          label="Minutes"
+                          type="number"
+                          name={`${item}-behavior-minutes`}
+                          value={behaviorInputs.screentime[item]?.minutes || ""}
+                          onChange={(event) => {
+                            const newGoal = event.target.value;
+                            handleInputChange(event, item, "minutes", "behaviour", "screentime");
+                            setScreentimeGoal((prevScreentimeGoal) => {
+                              const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  behaviorValue: newGoal, 
+                                };
+                              });
+                              return updatedScreentimeGoal;
+                            });
+                          }}
+                          fullWidth
+                          size="small"
+                          style={{ width: '60px' }}
+                          inputProps={{ min: "0" }}
+                        />
+                      </Grid>
+                    </>
+                  )}
+                </Grid>
+              ))}
+               <StyledButton
+                  onClick={() => handleAddItemClick(activity.category)}
+                  variant="contained"
+                  color="primary"
+                >
+                  Add New {activity.category}
+                </StyledButton>
+                <br/>
+                {(activity.category == "Gaming and Video Chatting")?
+                <TextField
+                  value={newGame}
+                  onChange={(e) => setGame(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  style={{ marginTop: '10px', marginRight: '10px' }}
+                /> : 
+                <TextField
+                  value={newAcademic}
+                  onChange={(e) => setAcademic(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  style={{ marginTop: '10px', marginRight: '10px' }}
+                />
+              }
+            </div>
+          ))}
+        </DialogContent>
+        <DialogActions>
+          <StyledButton onClick={() => handleDone("screentime")} color="primary">
+            Done
+          </StyledButton>
+        </DialogActions>
+      </Dialog>
+
+
+      {/* Fruits & Vegetables Dialog */}
+      <Dialog
+        open={popupOpen.eating}
+        onClose={() => handleClosePopup("eating")}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>Set Eating Fruits & Vegetables Goals and Track Behavior</DialogTitle>
+          <DialogContent>
+            {fruitsAndVegetables.map((category) => (
+              <div key={category.category} style={{ marginBottom: "10px" }}>
+                <h3>{category.category}</h3>
+                <Grid container spacing={1} style={{ marginTop: '-5px' }}>
+                  <Grid item xs={2}></Grid>
+                  <Grid item xs={5} style={{ textAlign: "center", fontWeight: "bold" }}>
+                    What I Will Eat
+                  </Grid>
+                  <Grid item xs={5} style={{ textAlign: "center", fontWeight: "bold" }}>
+                    What I Ate
+                  </Grid>
+                </Grid>
+                {category.items.map((item) => (
+                  <Grid container spacing={1} alignItems="center" key={item}>
+                    <Grid item xs={2}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={selectedItems.eating.includes(item)}
+                            onChange={(event) => handleCheckboxChange(event, "eating")}
+                            name={item}
+                          />
+                        }
+                        label={item}
+                      />
+                    </Grid>
+                    {selectedItems.eating.includes(item) && (
+                      <>
+                        <Grid item xs={5} style={{ textAlign: 'center' }}>
+                          <TextField
+                            label="Servings"
+                            type="number"
+                            name={`${item}-goal-servings`}
+                            value={goalInputs.eating[item]?.servings || ""}
+                            onChange={(event) => {
+                              const newGoal = event.target.value;
+                              handleInputChange(event, item, "servings", "goal", "eating");
+                              setEatingGoal((prevEatingGoal) => {
+                                const updatedEatingGoal = prevEatingGoal.map((goal) => {
+                                  return {
+                                    ...goal,
+                                    goalValue: newGoal, 
+                                  };
+                                });
+                                return updatedEatingGoal;
+                              });
+                            }}
+                            fullWidth
+                            size="small"
+                            style={{ width: '100px' }}
+                          />
+                        </Grid>
+                        <Grid item xs={5} style={{ textAlign: 'center' }}>
+                          <TextField
+                            label="Servings"
+                            type="number"
+                            name={`${item}-behavior-servings`}
+                            value={behaviorInputs.eating[item]?.servings || ""}
+                            onChange={(event) => {
+                              const newGoal =  event.target.value;
+                              handleInputChange(event, item, "servings", "behaviour", "eating");
+                              setEatingGoal((prevEatingGoal) => {
+                                const updatedEatingGoal = prevEatingGoal.map((goal) => {
+                                  return {
+                                    ...goal,
+                                    behaviorValue: newGoal, 
+                                  };
+                                });
+                                return updatedEatingGoal;
+                              });
+                            }}
+                            fullWidth
+                            size="small"
+                            style={{ width: '100px' }}
+                          />
+                        </Grid>
+                      </>
+                    )}
+                  </Grid>
+                ))}
+                <StyledButton
+                  onClick={() => handleAddItemClick(category.category)}
+                  variant="contained"
+                  color="primary"
+                >
+                  Add New {category.category}
+                </StyledButton>
+                <br/>
+                {(category.category == "Vegetables")?
+                <TextField
+                  value={newVegetable}
+                  onChange={(e) => setNewVegetable(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  style={{ marginTop: '10px', marginRight: '10px' }}
+                /> :
+                <TextField
+                  value={newFruit}
+                  onChange={(e) => setNewFruit(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  style={{ marginTop: '10px', marginRight: '10px' }}
+                />
+                }
+              </div>
+            ))}
+            
+            {/* Custom "Other" Eating Activity */}
+  
+
+          </DialogContent>
+        <DialogActions>
+          <StyledButton onClick={() => handleDone("eating")} color="primary">
+            Done
+          </StyledButton>
+        </DialogActions>
+      </Dialog>
+
+
+
+      {/* Sleep Dialog */}
+      <Dialog
+        open={popupOpen.sleep}
+        onClose={() => handleClosePopup("sleep")}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>Set Sleep Goals and Track Behavior</DialogTitle>
+        <DialogContent>
+          <div style={{ marginBottom: "10px" }}>
+            <Grid container spacing={1} alignItems="center">
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={selectedItems.sleep.includes("Track Sleep")}
+                      onChange={(event) => handleCheckboxChange(event, "sleep")}
+                      name="Track Sleep"
+                    />
+                  }
+                  label="Track Sleep"
+                />
+              </Grid>
+              {selectedItems.sleep.includes("Track Sleep") && (
+                <>
+                  {/* Expected (Goal) Section */}
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Expected Bed Time"
+                      type="time"
+                      name="bedTime"
+                      value={goalInputs.sleep["Expected Sleep"].bedtime || "22:00"}
+                      onChange={(event) => {
+                        handleInputChange(event, "Expected Sleep", "bedTime", "goal", "sleep")
+                        setGoalInputs(prev => ({
+                        ...prev,
+                        sleep: {
+                          ...prev.sleep,
+                          "Expected Sleep": {
+                            ...prev.sleep["Expected Sleep"],
+                            bedtime: event.target.value
+                          }
+                        }
+                      }))}
+                    }
+                      fullWidth
+                      size="small"
+                      style={{ marginBottom: '10px' }}
+                    />
+                    <TextField
+                    label="Expected Wake up time"
+                      type="time"
+                      name="wakeUpTime"
+                      value={goalInputs.sleep["Expected Sleep"].wakeUpTime || "06:00"}
+                      onChange={(event) => {
+                        handleInputChange(event, "Expected Sleep", "wakeUpTime", "goal", "sleep")
+                        setGoalInputs(prev => ({
+                        ...prev,
+                        sleep: {
+                          ...prev.sleep,
+                          "Expected Sleep": {
+                            ...prev.sleep["Expected Sleep"],
+                            bedtime: event.target.value
+                          }
+                        }
+                      }))}
+                    }
+                      fullWidth
+                      size="small"
+                    />
+                  </Grid>
+
+                  {/* Actual (Behavior) Section */}
+                  <Grid item xs={6}>
+                    <TextField
+                      label="Bed Time"
+                      type="time"
+                      name="bedTime"
+                      value={behaviorInputs.sleep["Actual Sleep"].bedtime || "22:00"}
+                      onChange={(event) => {
+                        handleInputChange(event, "Actual Sleep", "bedTime", "behavior", "sleep")
+                        setBehaviorInputs(prev => ({
+                        ...prev,
+                        sleep: {
+                          ...prev.sleep,
+                          "Actual Sleep": {
+                            ...prev.sleep["Actual Sleep"],
+                            bedtime: event.target.value
+                          }
+                        }
+                      }))}
+                    }
+                      fullWidth
+                      size="small"
+                      style={{ marginBottom: '10px' }}
+                    />
+                    <TextField
+                      label="Wake Time"
+                      type="time"
+                      name="wakeUpTime"
+                      value={behaviorInputs.sleep["Actual Sleep"].wakeUpTime || "06:00"}
+                      onChange={(event) => {
+                        handleInputChange(event, "Actual Sleep", "wakeUpTime", "behavior", "sleep")
+                        setBehaviorInputs(prev => ({
+                          ...prev,
+                          sleep: {
+                            ...prev.sleep,
+                            "Expected Sleep": {
+                              ...prev.sleep["Expected Sleep"],
+                              bedtime: event.target.value
+                            }
+                          }
+                        }))}
+                        
+                      }
+                      fullWidth
+                      size="small"
+                    />
+                  </Grid>
+                </>
+              )}
+            </Grid>
+          </div>
+
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
+            <strong>
+              Total Expected Sleep: {Math.floor(totalExpectedTime.sleep / 60)} hours{" "}
+              {totalExpectedTime.sleep % 60} minutes
+            </strong>
+            <strong>
+              Total Tracked Sleep: {Math.floor(totalTrackedTime.sleep / 60)} hours{" "}
+              {totalTrackedTime.sleep % 60} minutes
+            </strong>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <StyledButton onClick={() => 
+            {
+              setSleepGoal((prevSleepGoal) => {
+                  return prevSleepGoal.map((goal) => {
+                    return {
+                      ...goal,
+                      goalValue: Math.floor(totalExpectedTime.sleep / 60), 
+                      behaviorValue: Math.floor(totalTrackedTime.sleep / 60),
+                    };
+                  });
+              });
+              handleDone("sleep")
+            }
+          } color="primary">
+            Done
+          </StyledButton>
+        </DialogActions>
+      </Dialog>
     </Wrapper>
   );
 };
@@ -1487,6 +2586,7 @@ let styles = {
     width: "80%",
     height: "90%",
     justifyContent: "space-between",
+    marginTop: "-5%"
   },
   rightGoalScreen: {
     position: "absolute",
@@ -1498,15 +2598,17 @@ let styles = {
     width: "80%",
     height: "90%",
     justifyContent: "space-between",
+    marginTop: "5%"
   },
   goalRow: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: "15px"
   },
   goalLabel: {
     width: "auto",
-    margin: "5%",
+    margin: "2% 0 1% 5%",
     fontSize: 22,
   },
   inputBox: {
@@ -1523,6 +2625,7 @@ let styles = {
     width: "30%",
     alignItems: "center",
     justifyContent: "flex-end",
+    marginTop: "5%",
   },
   feedback: {
     color: "#000080",
@@ -1531,3 +2634,4 @@ let styles = {
     maxHeight: 20,
   },
 };
+

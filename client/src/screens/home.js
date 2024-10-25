@@ -20,6 +20,9 @@ const Wrapper = styled.div`
     font-size: 2em;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   }
+  @media only screen and (max-width: 600px) {
+      width: 100%;
+  }
 `;
 
 const HomeWrapper = styled.div`
@@ -84,6 +87,9 @@ const HomeWrapper = styled.div`
 
   .timeload-dots {
     animation: shake 1s infinite;
+  
+  @media only screen and (max-width: 600px) {
+      width: 100%;
   }
 `;
 

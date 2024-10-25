@@ -1,11 +1,11 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-
+import { Link } from 'react-router-dom';
 import "css/header.css";
 import { useMediaQuery } from "react-responsive";
 import styled from "styled-components";
-
+import { useState } from "react";
 const LeftNav = styled.div`
   margin-left: 1%;
   width: 80%;
@@ -14,6 +14,9 @@ const LeftNav = styled.div`
   align-items: center;
   flex-wrap: wrap;
   overflow: auto;
+  @media only screen and (max-width: 600px) {
+    display: none;
+  }
 `;
 
 const buttonStyles = (mediaType) => {
@@ -39,15 +42,83 @@ const Header = () => {
   const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
   const istablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
+  const [isBurgerOpen, setIsBurgerOpen] = useState(false);
+
+  // Function to toggle the burger menu
+  const toggleBurger = () => {
+    setIsBurgerOpen((prev) => !prev);
+  };
+
   return (
     <nav>
-      <Button onClick={() => navigate("/home")} style={{ marginLeft: "1%" }}>
-        <img
-          style={{ width: ismobile ? 20 : 40 }}
-          src={require("components/images/white_proudme_logo.png")}
-          alt="White mini ProudMe logo"
-        />
-      </Button>
+      <>
+        <Button className = "logo" onClick={() => navigate("/home")} style={{ marginLeft: "1%" }}>
+          <img
+            src={require("components/images/white_proudme_logo.png")}
+            alt="White mini ProudMe logo"
+          />
+        </Button>
+        <div className="burger-menu-btn" onClick={toggleBurger}>
+          <img
+            src={
+              isBurgerOpen
+                ? require("components/images/arrow.png") // Image for when burger is open
+                : require("components/images/menu-bar.png")   // Image for when burger is closed
+            }
+            alt={isBurgerOpen ? "Close Menu Icon" : "Menu Icon"}
+          />
+        </div>
+      </>
+
+      {isBurgerOpen && (
+      <div className="burger-menu">
+        <ul>
+          <li>
+            <Link 
+              to= "/tracking/activitydata" 
+              onClick={() => setIsBurgerOpen(false)}
+            >
+              Behaviours Chart
+            </Link>
+          </li>
+          <li>
+            <Link 
+              to= "/journal/activity" 
+              onClick={() => setIsBurgerOpen(false)}
+            >
+              My Journal
+            </Link>
+          </li>
+          <li>
+            <a href="#pe" onClick={() => {navigate("/pe"); setIsBurgerOpen(false);}}>
+              ProudMe PE
+            </a>
+          </li>
+          <li>
+            <a href="#cafeteria" onClick={() => {navigate("/cafeteria"); setIsBurgerOpen(false)}}>
+              Cafeteria
+            </a>
+          </li>
+        </ul>
+        <div className="right-nav">
+          {token === null ? (
+            <p className="nav-link" onClick={() => navigate("/login")}>
+              Sign In
+            </p>
+          ) : (
+            <p
+              className="nav-link"
+              onClick={() => {
+                navigate("/login");
+                localStorage.removeItem("authToken");
+              }}
+            >
+              Sign Out
+            </p>
+          )}
+        </div>
+      </div>
+      )}
       <LeftNav>
         <Button
           style={

@@ -50,7 +50,7 @@ const generateVerificationCode = () => {
 const SignUpScreen = () => {
   const navigate = useNavigate();
 
-  const ismobile = useMediaQuery({ query: "(max-width: 800px)" });
+  const ismobile = useMediaQuery({ query: "(max-width: 600px)" });
   const istablet = useMediaQuery({ query: "(max-width: 1200px)" });
 
   // States for checking the errors

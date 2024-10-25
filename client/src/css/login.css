@@ -112,6 +112,45 @@ label {
   -webkit-animation: fadeIn 1s;
   animation: fadeIn 1s;
 }
+.FormWrapper {
+  background-color: white;
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  font-family: Roboto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+}
+.backGround {
+  display: none;
+}
+@media only screen and (max-width: 600px) {
+  .backGround {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1; /* Ensure it’s behind other content */
+    opacity: 0.3;
+    
+  }
+  .FormWrapper {
+    width: 100%;
+    height: 100vh;
+    top: 0;               
+    left: 0;                   
+    right: 0;                  
+    position: relative;        
+    align-items: center;       
+    text-align: center;  
+  }
+
+}
 
 /* Add animation (fade in the popup) */
 @-webkit-keyframes fadeIn {
