@@ -191,6 +191,7 @@ const TrackingScreen = () => {
             goalType: "eating",
           },
         });
+        console.log("eating behaviour type data", response.data)
         setEatingBehaviorData(response.data);
       } catch (error) {
         console.error(error);
@@ -205,6 +206,7 @@ const TrackingScreen = () => {
             goalType: "sleep",
           },
         });
+        console.log("sleeping behaviour type data", response.data)
         setSleepBehaviorData(response.data);
       } catch (error) {
         console.error(error);

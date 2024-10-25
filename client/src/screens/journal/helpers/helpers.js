@@ -201,14 +201,7 @@ export async function updateBehaviorValue(
 ) {
   setGoal((prevGoal) => {
     const updatedBehaviorGoal = prevGoal.map((goal) => {
-      const updatedGoal = {
-        ...goal,
-        behaviorValue: +newBehaviorValue,
-        activities,
-        servings,
-        sleep,
-      };
-
+      const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
       axios
         .post(`${DATABASE_URL}/goals`, {
           user: user._id,
@@ -216,19 +209,21 @@ export async function updateBehaviorValue(
           goalType: goalType,
           goalValue: +newGoalValue,
           behaviorValue: newBehaviorValue,
-          activities,
-          servings,
-          sleep,
-          goalStatus:
-            goalData.length && goalType !== "screentime"
-              ? newBehaviorValue >= goalData[0].goalValue
-                ? "yes"
-                : "no"
-              : goalType === "screentime"
-                ? newBehaviorValue > goalData[0].goalValue
-                  ? "no"
-                  : "yes"
-                : "no",
+          goalStatus: goalData.length
+            ? newBehaviorValue > goalData[0].goalValue &&
+              goalType === "screentime"
+              ? "no"
+              : newBehaviorValue >= goalData[0].goalValue &&
+                goalType !== "screentime"
+              ? "yes"
+              : "no"
+            : newBehaviorValue > currentGoal[0].goalValue &&
+              goalType === "screentime"
+            ? "no"
+            : newBehaviorValue >= currentGoal[0].goalValue &&
+              goalType !== "screentime"
+            ? "yes"
+            : "no",
           reflection: newReflection,
           dateToday: new Date(),
           recommendedValue: recommendedValue,
@@ -236,7 +231,6 @@ export async function updateBehaviorValue(
         .catch((error) => {
           console.error(error);
         });
-
       axios
         .post(`${DATABASE_URL}/behaviors`, {
           user: user._id,
@@ -246,19 +240,21 @@ export async function updateBehaviorValue(
           dateToday: new Date(),
           goalValue: +newGoalValue,
           behaviorValue: newBehaviorValue,
-          activities,
-          servings,
-          sleep,
-          goalStatus:
-            goalData.length && goalType !== "screentime"
-              ? newBehaviorValue >= goalData[0].goalValue
-                ? "yes"
-                : "no"
-              : goalType === "screentime"
-                ? newBehaviorValue > goalData[0].goalValue
-                  ? "no"
-                  : "yes"
-                : "no",
+          goalStatus: goalData.length
+            ? newBehaviorValue > goalData[0].goalValue &&
+              goalType === "screentime"
+              ? "no"
+              : newBehaviorValue >= goalData[0].goalValue &&
+                goalType !== "screentime"
+              ? "yes"
+              : "no"
+            : newBehaviorValue > currentGoal[0].goalValue &&
+              goalType === "screentime"
+            ? "no"
+            : newBehaviorValue >= currentGoal[0].goalValue &&
+              goalType !== "screentime"
+            ? "yes"
+            : "no",
           divInfo1: currentGoal[0].divInfo1,
           divInfo2: currentGoal[0].divInfo2,
           reflection: newReflection,
@@ -268,7 +264,6 @@ export async function updateBehaviorValue(
         .catch((error) => {
           console.error(error);
         });
-
       return updatedGoal;
     });
     return updatedBehaviorGoal;

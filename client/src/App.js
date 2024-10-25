@@ -22,7 +22,6 @@ import ActivityData from "screens/tracking/phone/activityData";
 import EatData from "screens/tracking/phone/eatData";
 import ScreenData from "screens/tracking/phone/screenData";
 import SleepData from "screens/tracking/phone/sleepData";
-import TechScreen from "screens/tech.js";
 import LearnMoreScreen from "./screens/learnmore.js";
 
 import Header from "components/header/header";

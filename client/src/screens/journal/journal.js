@@ -6,7 +6,7 @@ import axios from "axios";
 
 import { TextField, Tooltip, Button, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Checkbox, FormControlLabel, Grid } from "@mui/material";
 import styled from "styled-components";
-import { TextField, Tooltip, Button, CircularProgress } from "@mui/material";
+
 
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import EditIcon from "@mui/icons-material/Edit";
@@ -177,28 +177,37 @@ const JournalScreen = () => {
     activity: {},
     screentime: {},
     eating: {},
-    sleep: {},
+    sleep: {
+      "Expected Sleep": {
+        bedtime: "22:00", // Default bedtime
+        wakeUpTime: "06:00", // Default wake-up time
+      },
+    },
   });
-
   const [behaviorInputs, setBehaviorInputs] = useState({
     activity: {},
     screentime: {},
     eating: {},
-    sleep: {},
+    sleep: {
+      "Actual Sleep": {
+        bedtime: "22:00", // Default bedtime
+        wakeUpTime: "06:00", // Default wake-up time
+      },
+    },
   });
 
   const [totalTrackedTime, setTotalTrackedTime] = useState({
     activity: 0,
     screentime: 0,
     eating: 0,
-    sleep: 0,
+    sleep: 480,
   });
 
   const [totalExpectedTime, setTotalExpectedTime] = useState({
     activity: 0,
     screentime: 0,
     eating: 0,
-    sleep: 0,
+    sleep: 480,
   });
 
   var dateToday = new Date(),
@@ -388,6 +397,7 @@ const JournalScreen = () => {
             user: user,
           },
         });
+        console.log("response.data", response.data)
         setGoalData(response.data);
       } catch (error) {
         console.error(error);
@@ -464,6 +474,7 @@ const JournalScreen = () => {
           },
         });
         if (response.data.length && loggedActivityToday) {
+          console.log("setActivityGoal", response.data)
           setActivityGoal(response.data);
         }
       } catch (error) {
@@ -541,6 +552,7 @@ const JournalScreen = () => {
           },
         });
         if (response.data.length && loggedScreentimeToday) {
+          console.log(response.data);
           setScreentimeGoal(response.data);
         }
       } catch (error) {
@@ -695,7 +707,7 @@ const JournalScreen = () => {
     }
   };
 
-
+  
 
 
 
@@ -779,11 +791,11 @@ const JournalScreen = () => {
 
 
 
-  useEffect(() => {
-    console.log("Selected Items:", selectedItems);
-    console.log("Goal Inputs:", goalInputs);
-    console.log("Behavior Inputs:", behaviorInputs);
-  }, [selectedItems, goalInputs, behaviorInputs]);
+  // useEffect(() => {
+  //   console.log("Selected Items:", selectedItems);
+  //   console.log("Goal Inputs:", goalInputs);
+  //   console.log("Behavior Inputs:", behaviorInputs);
+  // }, [selectedItems, goalInputs, behaviorInputs]);
 
   useEffect(() => {
     if (readyToRequest) {
@@ -825,6 +837,7 @@ const JournalScreen = () => {
 
 
   const handleSave = (goalType, goal, setGoal, goalData, setResponseLoading) => {
+    console.log("goalvalue", goal[0].goalValue)
     // Update the behavior value and trigger the AI request
     updateBehaviorValue(
       user,
@@ -855,9 +868,7 @@ const JournalScreen = () => {
   };
 
 
-
-
-  const physicalActivities = [
+  const [physicalActivities, setphysicalActivities] = useState([
     {
       category: "Strenuous Exercise",
       items: [
@@ -899,7 +910,7 @@ const JournalScreen = () => {
         "Easy Walking",
       ],
     },
-  ];
+  ]);
 
   const [customActivityInput, setCustomActivityInput] = useState({
     activity: "",
@@ -947,7 +958,7 @@ const JournalScreen = () => {
     }
   };
 
-  const screentimeActivities = [
+  const [screentimeActivities, setscreentimeActivities] = useState([
     {
       category: "Gaming and Video Chatting",
       items: [
@@ -961,18 +972,132 @@ const JournalScreen = () => {
       category: "Academic Screen Time",
       items: ["Online Learning", "Homework", "Other Academic Work"],
     },
-  ];
+  ]);
 
-  const fruitsAndVegetables = [
+  const [fruitsAndVegetables, setFruitsAndVegetables] = useState([
     {
       category: "Fruits",
-      items: ["Apples", "Bananas", "Oranges", "Other Fruits"],
+      items: ["Apples", "Bananas", "Oranges", "Strawberries", "Grapes", "Watermelon"],
     },
     {
       category: "Vegetables",
-      items: ["Carrots", "Broccoli", "Spinach", "Other Vegetables"],
-    },
-  ];
+      items: ["Carrots", "Broccoli", "Spinach", "Potatoes", "Tomatoes"],
+    }
+  ]);
+  
+  const [newFruit, setNewFruit] = useState('');
+  const [newVegetable, setNewVegetable] = useState('');
+  const [newStrenuous, setStrenuous] = useState('');
+  const [newModerate, setModerate] = useState('');
+  const [newMild , setMild ] = useState('');
+  const [newGame , setGame ] = useState('');
+  const [newAcademic , setAcademic ] = useState('');
+
+
+  // Function to handle adding a new item to a category
+  const handleAddItemClick = (category) => {
+    if (category === 'Fruits' && newFruit.trim()) {
+      setFruitsAndVegetables((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Fruits'
+            ? { ...cat, items: [...cat.items, newFruit] }
+            : cat
+        )
+      );
+      setNewFruit(''); // Reset input
+    }
+    if (category === 'Vegetables' && newVegetable.trim()) {
+      setFruitsAndVegetables((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Vegetables'
+            ? { ...cat, items: [...cat.items, newVegetable] }
+            : cat
+        )
+      );
+      setNewVegetable(''); // Reset input
+    }
+    if (category === 'Strenuous Exercise' && newStrenuous.trim()) {
+      setphysicalActivities((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Strenuous Exercise'
+            ? { ...cat, items: [...cat.items, newStrenuous] }
+            : cat
+        )
+      );
+      setStrenuous(''); // Reset input
+    }
+    if (category === 'Moderate Exercise' && newModerate.trim()) {
+      setphysicalActivities((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Moderate Exercise'
+            ? { ...cat, items: [...cat.items, newModerate] }
+            : cat
+        )
+      );
+      setModerate(''); // Reset input
+    }
+    if (category === 'Mild Exercise' && newMild.trim()) {
+      setphysicalActivities((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Mild Exercise'
+            ? { ...cat, items: [...cat.items, newMild] }
+            : cat
+        )
+      );
+      setMild(''); // Reset input
+    }
+    if (category === 'Gaming and Video Chatting' && newGame.trim()) {
+      setscreentimeActivities((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Gaming and Video Chatting'
+            ? { ...cat, items: [...cat.items, newGame] }
+            : cat
+        )
+      );
+      setGame(''); // Reset input
+    }
+    if (category === 'Academic Screen Time' && newAcademic.trim()) {
+      setscreentimeActivities((prevState) =>
+        prevState.map((cat) =>
+          cat.category === 'Academic Screen Time'
+            ? { ...cat, items: [...cat.items, newAcademic] }
+            : cat
+        )
+      );
+      setAcademic(''); // Reset input
+    }
+  };
+const [sleepDuration, setSleepDuration] = useState({ hours: 0, minutes: 0 });
+
+useEffect(() => {
+  const calculateSleepDuration = () => {
+    const bedTime = goalInputs.sleep?.["Expected Sleep"]?.bedtime || "22:00";
+    const wakeUpTime = goalInputs.sleep?.["Expected Sleep"]?.wakeUpTime || "06:00";
+
+    if (!bedTime || !wakeUpTime) return;
+
+    const [bedHour, bedMinute] = bedTime.split(":").map(Number);
+    const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
+
+    let totalMinutes = (wakeHour * 60 + wakeMinute) - (bedHour * 60 + bedMinute);
+    if (totalMinutes < 0) totalMinutes += 24 * 60;
+
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+
+    // Update state
+    setSleepDuration({ hours, minutes });
+  };
+
+  calculateSleepDuration();
+}, [goalInputs.sleep]); // Recalculate when sleep data changes
+
+
+
+
+
+
+  
 
 
   return (
@@ -1351,8 +1476,8 @@ const JournalScreen = () => {
                           <>
                             {/* Inline calculation of expected sleep duration */}
                             Expected Sleep: {(() => {
-                              const bedTime = goalInputs.sleep["Expected Sleep"]?.bedTime;
-                              const wakeUpTime = goalInputs.sleep["Expected Sleep"]?.wakeUpTime;
+                              const bedTime = goalInputs.sleep["Expected Sleep"].bedtime;
+                              const wakeUpTime = goalInputs.sleep["Expected Sleep"].wakeUpTime;
 
                               if (!bedTime || !wakeUpTime) return "0h 0m";
 
@@ -1370,10 +1495,10 @@ const JournalScreen = () => {
 
                             {/* Inline calculation of tracked sleep duration */}
                             Tracked Sleep: {(() => {
-                              const bedTime = behaviorInputs.sleep["Actual Sleep"]?.bedTime;
-                              const wakeUpTime = behaviorInputs.sleep["Actual Sleep"]?.wakeUpTime;
+                              const bedTime = behaviorInputs.sleep["Actual Sleep"].bedtime;
+                              const wakeUpTime = behaviorInputs.sleep["Actual Sleep"].wakeUpTime;
 
-                              if (!bedTime || !wakeUpTime) return "0h 0m";
+                              if (!bedTime || !wakeUpTime) return "8h 0m";
 
                               const [bedHour, bedMinute] = bedTime.split(":").map(Number);
                               const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
@@ -1458,7 +1583,9 @@ const JournalScreen = () => {
                           border: "1px solid black",
                         }}
                         onClick={() => {
+                          console.log("activityGoal", activityGoal)
                           handleSave(
+              
                             "activity",
                             activityGoal,
                             setActivityGoal,
@@ -1641,12 +1768,15 @@ const JournalScreen = () => {
                           border: "1px solid black",
                         }}
                         onClick={() => {
+                          {console.log("eatingData", eatingData)}
+                          {console.log("eatingGoal", eatingGoal)}
                           handleSave(
                             "eating",
                             eatingGoal,
                             setEatingGoal,
                             eatingData,
                             setEatingResponseLoading
+
                           );
                           setLoggedEatingToday(true);
                           setEditingBehaviorId(-1);
@@ -1836,7 +1966,20 @@ const JournalScreen = () => {
                           type="number"
                           name={`${item}-goal-hours`}
                           value={goalInputs.activity[item]?.hours || ""}
-                          onChange={(event) => handleInputChange(event, item, "hours", "goal", "activity")}
+                          onChange={(event) => {
+                            const newGoal = 60 * event.target.value;
+                            console.log("newGoal", newGoal);
+                            handleInputChange(event, item, "hours", "goal", "activity");
+                            setActivityGoal((prevActivityGoal) => {
+                              const updatedActivityGoal = prevActivityGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  goalValue: newGoal,
+                                };
+                              });
+                              return updatedActivityGoal;
+                            });
+                          }}
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
@@ -1849,7 +1992,19 @@ const JournalScreen = () => {
                           type="number"
                           name={`${item}-goal-minutes`}
                           value={goalInputs.activity[item]?.minutes || ""}
-                          onChange={(event) => handleInputChange(event, item, "minutes", "goal", "activity")}
+                          onChange={(event) => {
+                            const newGoal = 60 * event.target.value;
+                            handleInputChange(event, item, "minutes", "goal", "activity");
+                            setActivityGoal((prevActivityGoal) => {
+                              const updatedActivityGoal = prevActivityGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  goalValue: newGoal, 
+                                };
+                              });
+                              return updatedActivityGoal;
+                            });
+                          }}
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
@@ -1862,7 +2017,19 @@ const JournalScreen = () => {
                           type="number"
                           name={`${item}-behavior-hours`}
                           value={behaviorInputs.activity[item]?.hours || ""}
-                          onChange={(event) => handleInputChange(event, item, "hours", "behavior", "activity")}
+                          onChange={(event) => {
+                            const newGoal = 60 * event.target.value;
+                            handleInputChange(event, item, "hours", "behaviour", "activity");
+                            setActivityGoal((prevActivityGoal) => {
+                              const updatedActivityGoal = prevActivityGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  behaviorValue: newGoal,
+                                };
+                              });
+                              return updatedActivityGoal;
+                            });
+                          }}
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
@@ -1875,7 +2042,19 @@ const JournalScreen = () => {
                           type="number"
                           name={`${item}-behavior-minutes`}
                           value={behaviorInputs.activity[item]?.minutes || ""}
-                          onChange={(event) => handleInputChange(event, item, "minutes", "behavior", "activity")}
+                          onChange={(event) => {
+                            const newGoal = 60 * event.target.value;
+                            handleInputChange(event, item, "minutes", "behaviour", "activity");
+                            setActivityGoal((prevActivityGoal) => {
+                              const updatedActivityGoal = prevActivityGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  behaviorValue: newGoal, 
+                                };
+                              });
+                              return updatedActivityGoal;
+                            });
+                          }}
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
@@ -1884,91 +2063,43 @@ const JournalScreen = () => {
                       </Grid>
                     </>
                   )}
+                  
                 </Grid>
               ))}
+                <StyledButton
+                  onClick={() => handleAddItemClick(activity.category)}
+                  variant="contained"
+                  color="primary"
+                >
+                  Add New {activity.category}
+                </StyledButton>
+                <br/>
+                {(activity.category == "Strenuous Exercise")?
+                <TextField
+                  value={newStrenuous}
+                  onChange={(e) => setStrenuous(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  style={{ marginTop: '10px', marginRight: '10px' }}
+                /> : (activity.category == "Moderate Exercise") ?
+                <TextField
+                  value={newModerate}
+                  onChange={(e) => setModerate(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  style={{ marginTop: '10px', marginRight: '10px' }}
+                /> :  
+                <TextField
+                  value={newMild}
+                  onChange={(e) => setMild(e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  style={{ marginTop: '10px', marginRight: '10px' }}
+                />
+              }
             </div>
           ))}
 
-          {/* Custom "Other" Activity Section */}
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={otherChecked.activity}
-                onChange={(event) => handleOtherCheckboxChange(event, "activity")}
-              />
-            }
-            label="Other"
-          />
-          {otherChecked.activity && (
-            <Grid container spacing={1} alignItems="center">
-              <Grid item xs={2}>
-                <TextField
-                  label="Other Activity"
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                  value={customActivityInput.activity}
-                  onChange={(e) => handleCustomActivityChange(e, "activity")}
-                  style={{ width: "100%" }}
-                />
-              </Grid>
-              <Grid item xs={1} style={{ paddingLeft: '80px' }}>
-                <TextField
-                  label="Hours"
-                  type="number"
-                  name="other-goal-hours"
-                  value={goalInputs.activity[customActivityInput.activity]?.hours || ""}
-                  onChange={(event) => handleInputChange(event, customActivityInput.activity, "hours", "goal", "activity")}
-                  fullWidth
-                  size="small"
-                  style={{ width: '60px' }}
-                  inputProps={{ min: "0" }}
-                />
-              </Grid>
-              <Grid item xs={2} style={{ paddingLeft: '65px', paddingRight: '5px' }}>
-                <TextField
-                  label="Minutes"
-                  type="number"
-                  name="other-goal-minutes"
-                  value={goalInputs.activity[customActivityInput.activity]?.minutes || ""}
-                  onChange={(event) => handleInputChange(event, customActivityInput.activity, "minutes", "goal", "activity")}
-                  fullWidth
-                  size="small"
-                  style={{ width: '60px' }}
-                  inputProps={{ min: "0" }}
-                />
-              </Grid>
-              <Grid item xs={1} style={{ paddingLeft: '150px' }}>
-                <TextField
-                  label="Hours"
-                  type="number"
-                  name="other-behavior-hours"
-                  value={behaviorInputs.activity[customActivityInput.activity]?.hours || ""}
-                  onChange={(event) => handleInputChange(event, customActivityInput.activity, "hours", "behavior", "activity")}
-                  fullWidth
-                  size="small"
-                  style={{ width: '60px' }}
-                  inputProps={{ min: "0" }}
-                />
-              </Grid>
-              <Grid item xs={2} style={{ paddingLeft: '65px' }}>
-                <TextField
-                  label="Minutes"
-                  type="number"
-                  name="other-behavior-minutes"
-                  value={behaviorInputs.activity[customActivityInput.activity]?.minutes || ""}
-                  onChange={(event) => handleInputChange(event, customActivityInput.activity, "minutes", "behavior", "activity")}
-                  fullWidth
-                  size="small"
-                  style={{ width: '60px' }}
-                  inputProps={{ min: "0" }}
-                />
-              </Grid>
-            </Grid>
-          )}
-          <Button onClick={() => handleAddCustomActivity("activity")}>
-            Add Activity
-          </Button>
         </DialogContent>
         <DialogActions>
           <StyledButton onClick={() => handleDone("activity")} color="primary">
@@ -2022,7 +2153,19 @@ const JournalScreen = () => {
                           type="number"
                           name={`${item}-goal-hours`}
                           value={goalInputs.screentime[item]?.hours || ""}
-                          onChange={(event) => handleInputChange(event, item, "hours", "goal", "screentime")}
+                          onChange={(event) => {
+                            const newGoal = 60 * event.target.value;
+                            handleInputChange(event, item, "hours", "goal", "screentime");
+                            setScreentimeGoal((prevScreentimeGoal) => {
+                              const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  goalValue: newGoal, 
+                                };
+                              });
+                              return updatedScreentimeGoal;
+                            });
+                          }}
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
@@ -2035,7 +2178,19 @@ const JournalScreen = () => {
                           type="number"
                           name={`${item}-goal-minutes`}
                           value={goalInputs.screentime[item]?.minutes || ""}
-                          onChange={(event) => handleInputChange(event, item, "minutes", "goal", "screentime")}
+                          onChange={(event) => {
+                            const newGoal = event.target.value;
+                            handleInputChange(event, item, "minutes", "goal", "screentime");
+                            setScreentimeGoal((prevScreentimeGoal) => {
+                              const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  goalValue: newGoal, 
+                                };
+                              });
+                              return updatedScreentimeGoal;
+                            });
+                          }}
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
@@ -2048,7 +2203,19 @@ const JournalScreen = () => {
                           type="number"
                           name={`${item}-behavior-hours`}
                           value={behaviorInputs.screentime[item]?.hours || ""}
-                          onChange={(event) => handleInputChange(event, item, "hours", "behavior", "screentime")}
+                          onChange={(event) => {
+                            const newGoal = 60 * event.target.value;
+                            handleInputChange(event, item, "hours", "behaviour", "screentime");
+                            setScreentimeGoal((prevScreentimeGoal) => {
+                              const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  behaviorValue: newGoal, 
+                                };
+                              });
+                              return updatedScreentimeGoal;
+                            });
+                          }}
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
@@ -2061,7 +2228,19 @@ const JournalScreen = () => {
                           type="number"
                           name={`${item}-behavior-minutes`}
                           value={behaviorInputs.screentime[item]?.minutes || ""}
-                          onChange={(event) => handleInputChange(event, item, "minutes", "behavior", "screentime")}
+                          onChange={(event) => {
+                            const newGoal = event.target.value;
+                            handleInputChange(event, item, "minutes", "behaviour", "screentime");
+                            setScreentimeGoal((prevScreentimeGoal) => {
+                              const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
+                                return {
+                                  ...goal,
+                                  behaviorValue: newGoal, 
+                                };
+                              });
+                              return updatedScreentimeGoal;
+                            });
+                          }}
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
@@ -2072,89 +2251,32 @@ const JournalScreen = () => {
                   )}
                 </Grid>
               ))}
-            </div>
-          ))}
-
-          {/* Custom "Other" Screentime Activity */}
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={otherChecked.screentime}
-                onChange={(event) => handleOtherCheckboxChange(event, "screentime")}
-              />
-            }
-            label="Other"
-          />
-          {otherChecked.screentime && (
-            <Grid container spacing={1} alignItems="center">
-              <Grid item xs={2}>
+               <StyledButton
+                  onClick={() => handleAddItemClick(activity.category)}
+                  variant="contained"
+                  color="primary"
+                >
+                  Add New {activity.category}
+                </StyledButton>
+                <br/>
+                {(activity.category == "Gaming and Video Chatting")?
                 <TextField
-                  label="Other Screentime Activity"
+                  value={newGame}
+                  onChange={(e) => setGame(e.target.value)}
                   variant="outlined"
                   size="small"
-                  fullWidth
-                  value={customActivityInput.screentime}
-                  onChange={(e) => handleCustomActivityChange(e, "screentime")}
-                  style={{ width: "100%" }}
-                />
-              </Grid>
-              <Grid item xs={1} style={{ paddingLeft: '80px' }}>
+                  style={{ marginTop: '10px', marginRight: '10px' }}
+                /> : 
                 <TextField
-                  label="Hours"
-                  type="number"
-                  name="other-goal-hours"
-                  value={goalInputs.screentime[customActivityInput.screentime]?.hours || ""}
-                  onChange={(event) => handleInputChange(event, customActivityInput.screentime, "hours", "goal", "screentime")}
-                  fullWidth
+                  value={newAcademic}
+                  onChange={(e) => setAcademic(e.target.value)}
+                  variant="outlined"
                   size="small"
-                  style={{ width: '60px' }}
-                  inputProps={{ min: "0" }}
+                  style={{ marginTop: '10px', marginRight: '10px' }}
                 />
-              </Grid>
-              <Grid item xs={2} style={{ paddingLeft: '65px', paddingRight: '5px' }}>
-                <TextField
-                  label="Minutes"
-                  type="number"
-                  name="other-goal-minutes"
-                  value={goalInputs.screentime[customActivityInput.screentime]?.minutes || ""}
-                  onChange={(event) => handleInputChange(event, customActivityInput.screentime, "minutes", "goal", "screentime")}
-                  fullWidth
-                  size="small"
-                  style={{ width: '60px' }}
-                  inputProps={{ min: "0" }}
-                />
-              </Grid>
-              <Grid item xs={1} style={{ paddingLeft: '150px' }}>
-                <TextField
-                  label="Hours"
-                  type="number"
-                  name="other-behavior-hours"
-                  value={behaviorInputs.screentime[customActivityInput.screentime]?.hours || ""}
-                  onChange={(event) => handleInputChange(event, customActivityInput.screentime, "hours", "behavior", "screentime")}
-                  fullWidth
-                  size="small"
-                  style={{ width: '60px' }}
-                  inputProps={{ min: "0" }}
-                />
-              </Grid>
-              <Grid item xs={2} style={{ paddingLeft: '65px' }}>
-                <TextField
-                  label="Minutes"
-                  type="number"
-                  name="other-behavior-minutes"
-                  value={behaviorInputs.screentime[customActivityInput.screentime]?.minutes || ""}
-                  onChange={(event) => handleInputChange(event, customActivityInput.screentime, "minutes", "behavior", "screentime")}
-                  fullWidth
-                  size="small"
-                  style={{ width: '60px' }}
-                  inputProps={{ min: "0" }}
-                />
-              </Grid>
-            </Grid>
-          )}
-          <Button onClick={() => handleAddCustomActivity("screentime")}>
-            Add Screentime Activity
-          </Button>
+              }
+            </div>
+          ))}
         </DialogContent>
         <DialogActions>
           <StyledButton onClick={() => handleDone("screentime")} color="primary">
@@ -2172,119 +2294,118 @@ const JournalScreen = () => {
         fullWidth
       >
         <DialogTitle>Set Eating Fruits & Vegetables Goals and Track Behavior</DialogTitle>
-        <DialogContent>
-          {fruitsAndVegetables.map((category) => (
-            <div key={category.category} style={{ marginBottom: "10px" }}>
-              <h3>{category.category}</h3>
-              <Grid container spacing={1} style={{ marginTop: '-5px' }}>
-                <Grid item xs={2}></Grid>
-                <Grid item xs={5} style={{ textAlign: "center", fontWeight: "bold" }}>
-                  What I Will Eat
-                </Grid>
-                <Grid item xs={5} style={{ textAlign: "center", fontWeight: "bold" }}>
-                  What I Ate
-                </Grid>
-              </Grid>
-              {category.items.map((item) => (
-                <Grid container spacing={1} alignItems="center" key={item}>
-                  <Grid item xs={2}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={selectedItems.eating.includes(item)}
-                          onChange={(event) => handleCheckboxChange(event, "eating")}
-                          name={item}
-                        />
-                      }
-                      label={item}
-                    />
+          <DialogContent>
+            {fruitsAndVegetables.map((category) => (
+              <div key={category.category} style={{ marginBottom: "10px" }}>
+                <h3>{category.category}</h3>
+                <Grid container spacing={1} style={{ marginTop: '-5px' }}>
+                  <Grid item xs={2}></Grid>
+                  <Grid item xs={5} style={{ textAlign: "center", fontWeight: "bold" }}>
+                    What I Will Eat
                   </Grid>
-                  {selectedItems.eating.includes(item) && (
-                    <>
-                      <Grid item xs={5} style={{ textAlign: 'center' }}>
-                        <TextField
-                          label="Servings"
-                          type="number"
-                          name={`${item}-goal-servings`}
-                          value={goalInputs.eating[item]?.servings || ""}
-                          onChange={(event) => handleInputChange(event, item, "servings", "goal", "eating")}
-                          fullWidth
-                          size="small"
-                          style={{ width: '100px' }}
-                        />
-                      </Grid>
-                      <Grid item xs={5} style={{ textAlign: 'center' }}>
-                        <TextField
-                          label="Servings"
-                          type="number"
-                          name={`${item}-behavior-servings`}
-                          value={behaviorInputs.eating[item]?.servings || ""}
-                          onChange={(event) => handleInputChange(event, item, "servings", "behavior", "eating")}
-                          fullWidth
-                          size="small"
-                          style={{ width: '100px' }}
-                        />
-                      </Grid>
-                    </>
-                  )}
+                  <Grid item xs={5} style={{ textAlign: "center", fontWeight: "bold" }}>
+                    What I Ate
+                  </Grid>
                 </Grid>
-              ))}
-            </div>
-          ))}
-
-          {/* Custom "Other" Eating Activity */}
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={otherChecked.eating}
-                onChange={(event) => handleOtherCheckboxChange(event, "eating")}
-              />
-            }
-            label="Other"
-          />
-          {otherChecked.eating && (
-            <Grid container spacing={1} alignItems="center">
-              <Grid item xs={2}>
+                {category.items.map((item) => (
+                  <Grid container spacing={1} alignItems="center" key={item}>
+                    <Grid item xs={2}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={selectedItems.eating.includes(item)}
+                            onChange={(event) => handleCheckboxChange(event, "eating")}
+                            name={item}
+                          />
+                        }
+                        label={item}
+                      />
+                    </Grid>
+                    {selectedItems.eating.includes(item) && (
+                      <>
+                        <Grid item xs={5} style={{ textAlign: 'center' }}>
+                          <TextField
+                            label="Servings"
+                            type="number"
+                            name={`${item}-goal-servings`}
+                            value={goalInputs.eating[item]?.servings || ""}
+                            onChange={(event) => {
+                              const newGoal = event.target.value;
+                              handleInputChange(event, item, "servings", "goal", "eating");
+                              setEatingGoal((prevEatingGoal) => {
+                                const updatedEatingGoal = prevEatingGoal.map((goal) => {
+                                  return {
+                                    ...goal,
+                                    goalValue: newGoal, 
+                                  };
+                                });
+                                return updatedEatingGoal;
+                              });
+                            }}
+                            fullWidth
+                            size="small"
+                            style={{ width: '100px' }}
+                          />
+                        </Grid>
+                        <Grid item xs={5} style={{ textAlign: 'center' }}>
+                          <TextField
+                            label="Servings"
+                            type="number"
+                            name={`${item}-behavior-servings`}
+                            value={behaviorInputs.eating[item]?.servings || ""}
+                            onChange={(event) => {
+                              const newGoal =  event.target.value;
+                              handleInputChange(event, item, "servings", "behaviour", "eating");
+                              setEatingGoal((prevEatingGoal) => {
+                                const updatedEatingGoal = prevEatingGoal.map((goal) => {
+                                  return {
+                                    ...goal,
+                                    behaviorValue: newGoal, 
+                                  };
+                                });
+                                return updatedEatingGoal;
+                              });
+                            }}
+                            fullWidth
+                            size="small"
+                            style={{ width: '100px' }}
+                          />
+                        </Grid>
+                      </>
+                    )}
+                  </Grid>
+                ))}
+                <StyledButton
+                  onClick={() => handleAddItemClick(category.category)}
+                  variant="contained"
+                  color="primary"
+                >
+                  Add New {category.category}
+                </StyledButton>
+                <br/>
+                {(category.category == "Vegetables")?
                 <TextField
-                  label="Other Fruit/Vegetable"
+                  value={newVegetable}
+                  onChange={(e) => setNewVegetable(e.target.value)}
                   variant="outlined"
                   size="small"
-                  fullWidth
-                  value={customActivityInput.eating}
-                  onChange={(e) => handleCustomActivityChange(e, "eating")}
-                  style={{ width: "100%" }}
-                />
-              </Grid>
-              <Grid item xs={5} style={{ textAlign: 'center' }}>
+                  style={{ marginTop: '10px', marginRight: '10px' }}
+                /> :
                 <TextField
-                  label="Servings"
-                  type="number"
-                  name="other-goal-servings"
-                  value={goalInputs.eating[customActivityInput.eating]?.servings || ""}
-                  onChange={(event) => handleInputChange(event, customActivityInput.eating, "servings", "goal", "eating")}
-                  fullWidth
+                  value={newFruit}
+                  onChange={(e) => setNewFruit(e.target.value)}
+                  variant="outlined"
                   size="small"
-                  style={{ width: '100px' }}
+                  style={{ marginTop: '10px', marginRight: '10px' }}
                 />
-              </Grid>
-              <Grid item xs={5} style={{ textAlign: 'center' }}>
-                <TextField
-                  label="Servings"
-                  type="number"
-                  name="other-behavior-servings"
-                  value={behaviorInputs.eating[customActivityInput.eating]?.servings || ""}
-                  onChange={(event) => handleInputChange(event, customActivityInput.eating, "servings", "behavior", "eating")}
-                  fullWidth
-                  size="small"
-                  style={{ width: '100px' }}
-                />
-              </Grid>
-            </Grid>
-          )}
-          <Button onClick={() => handleAddCustomActivity("eating")}>
-            Add Eating Activity
-          </Button>
-        </DialogContent>
+                }
+              </div>
+            ))}
+            
+            {/* Custom "Other" Eating Activity */}
+  
+
+          </DialogContent>
         <DialogActions>
           <StyledButton onClick={() => handleDone("eating")} color="primary">
             Done
@@ -2322,21 +2443,45 @@ const JournalScreen = () => {
                   {/* Expected (Goal) Section */}
                   <Grid item xs={6}>
                     <TextField
-                      label="Bed Time"
+                      label="Expected Bed Time"
                       type="time"
                       name="bedTime"
-                      value={goalInputs.sleep["Expected Sleep"]?.bedTime || ""}
-                      onChange={(event) => handleInputChange(event, "Expected Sleep", "bedTime", "goal", "sleep")}
+                      value={goalInputs.sleep["Expected Sleep"].bedtime || "22:00"}
+                      onChange={(event) => {
+                        handleInputChange(event, "Expected Sleep", "bedTime", "goal", "sleep")
+                        setGoalInputs(prev => ({
+                        ...prev,
+                        sleep: {
+                          ...prev.sleep,
+                          "Expected Sleep": {
+                            ...prev.sleep["Expected Sleep"],
+                            bedtime: event.target.value
+                          }
+                        }
+                      }))}
+                    }
                       fullWidth
                       size="small"
                       style={{ marginBottom: '10px' }}
                     />
                     <TextField
-                      label="Wake Up Time"
+                    label="Expected Wake up time"
                       type="time"
                       name="wakeUpTime"
-                      value={goalInputs.sleep["Expected Sleep"]?.wakeUpTime || ""}
-                      onChange={(event) => handleInputChange(event, "Expected Sleep", "wakeUpTime", "goal", "sleep")}
+                      value={goalInputs.sleep["Expected Sleep"].wakeUpTime || "06:00"}
+                      onChange={(event) => {
+                        handleInputChange(event, "Expected Sleep", "wakeUpTime", "goal", "sleep")
+                        setGoalInputs(prev => ({
+                        ...prev,
+                        sleep: {
+                          ...prev.sleep,
+                          "Expected Sleep": {
+                            ...prev.sleep["Expected Sleep"],
+                            bedtime: event.target.value
+                          }
+                        }
+                      }))}
+                    }
                       fullWidth
                       size="small"
                     />
@@ -2348,18 +2493,43 @@ const JournalScreen = () => {
                       label="Bed Time"
                       type="time"
                       name="bedTime"
-                      value={behaviorInputs.sleep["Actual Sleep"]?.bedTime || ""}
-                      onChange={(event) => handleInputChange(event, "Actual Sleep", "bedTime", "behavior", "sleep")}
+                      value={behaviorInputs.sleep["Actual Sleep"].bedtime || "22:00"}
+                      onChange={(event) => {
+                        handleInputChange(event, "Actual Sleep", "bedTime", "behavior", "sleep")
+                        setBehaviorInputs(prev => ({
+                        ...prev,
+                        sleep: {
+                          ...prev.sleep,
+                          "Actual Sleep": {
+                            ...prev.sleep["Actual Sleep"],
+                            bedtime: event.target.value
+                          }
+                        }
+                      }))}
+                    }
                       fullWidth
                       size="small"
                       style={{ marginBottom: '10px' }}
                     />
                     <TextField
-                      label="Wake Up Time"
+                      label="Wake Time"
                       type="time"
                       name="wakeUpTime"
-                      value={behaviorInputs.sleep["Actual Sleep"]?.wakeUpTime || ""}
-                      onChange={(event) => handleInputChange(event, "Actual Sleep", "wakeUpTime", "behavior", "sleep")}
+                      value={behaviorInputs.sleep["Actual Sleep"].wakeUpTime || "06:00"}
+                      onChange={(event) => {
+                        handleInputChange(event, "Actual Sleep", "wakeUpTime", "behavior", "sleep")
+                        setBehaviorInputs(prev => ({
+                          ...prev,
+                          sleep: {
+                            ...prev.sleep,
+                            "Expected Sleep": {
+                              ...prev.sleep["Expected Sleep"],
+                              bedtime: event.target.value
+                            }
+                          }
+                        }))}
+                        
+                      }
                       fullWidth
                       size="small"
                     />
@@ -2381,7 +2551,20 @@ const JournalScreen = () => {
           </div>
         </DialogContent>
         <DialogActions>
-          <StyledButton onClick={() => handleDone("sleep")} color="primary">
+          <StyledButton onClick={() => 
+            {
+              setSleepGoal((prevSleepGoal) => {
+                  return prevSleepGoal.map((goal) => {
+                    return {
+                      ...goal,
+                      goalValue: Math.floor(totalExpectedTime.sleep / 60), 
+                      behaviorValue: Math.floor(totalTrackedTime.sleep / 60),
+                    };
+                  });
+              });
+              handleDone("sleep")
+            }
+          } color="primary">
             Done
           </StyledButton>
         </DialogActions>

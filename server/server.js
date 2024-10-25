@@ -388,7 +388,6 @@ app.post("/behaviors", async (req, res) => {
     } else if (req.body.goalType === "sleep") {
       newBehaviorData.sleep = req.body.sleep;
     }
-
     if (existingBehavior) {
       const behavior = await Behavior.findOneAndUpdate(
         {
@@ -531,11 +530,14 @@ app.get("/goals", async (req, res) => {
 
 // Get specific goal by goal type endpoint
 app.get("/goalType", async (req, res) => {
+  console.log(req.query.goalType);
   try {
     const goals = await Goal.find({
       user: req.query.user,
       goalType: req.query.goalType,
     });
+    console.log(req.query.goalType);
+    console.log(req.query.user);
     res.status(200).json(goals);
   } catch (err) {
     res.status(400).json({ message: err.message });

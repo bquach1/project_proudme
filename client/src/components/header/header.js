@@ -14,6 +14,9 @@ const LeftNav = styled.div`
   align-items: center;
   flex-wrap: wrap;
   overflow: auto;
+  @media only screen and (max-width: 600px) {
+    display: none;
+  }
 `;
 
 const buttonStyles = (mediaType) => {
@@ -116,104 +119,102 @@ const Header = () => {
         </div>
       </div>
       )}
-      <nav className="nav header">
-        <LeftNav>
-          <Button
-            style={
-              ismobile
-                ? buttonStyles("ismobile")
-                : istablet
-                ? buttonStyles("istablet")
-                : buttonStyles()
-            }
-            onClick={() => navigate("/team")}
-          >
-            Project Team
-          </Button>
-          {token && (
-            <>
-              <Button
-                style={
-                  ismobile
-                    ? buttonStyles("ismobile")
-                    : istablet
-                    ? buttonStyles("istablet")
-                    : buttonStyles()
-                }
-                onClick={() => navigate("/journal")}
-              >
-                My Journal
-              </Button>
-              <Button
-                style={
-                  ismobile
-                    ? buttonStyles("ismobile")
-                    : istablet
-                    ? buttonStyles("istablet")
-                    : buttonStyles()
-                }
-                onClick={() => navigate("/tracking")}
-              >
-                Behavior Charts
-              </Button>
-              <Button
-                style={
-                  ismobile
-                    ? buttonStyles("ismobile")
-                    : istablet
-                    ? buttonStyles("istablet")
-                    : buttonStyles()
-                }
-                onClick={() => navigate("/pe")}
-              >
-                ProudMe PE
-              </Button>
-              <Button
-                style={
-                  ismobile
-                    ? buttonStyles("ismobile")
-                    : istablet
-                    ? buttonStyles("istablet")
-                    : buttonStyles()
-                }
-                onClick={() => navigate("/cafeteria")}
-              >
-                ProudMe Cafeteria
-              </Button>
-              <Button
-                style={
-                  ismobile
-                    ? buttonStyles("ismobile")
-                    : istablet
-                    ? buttonStyles("istablet")
-                    : buttonStyles()
-                }
-                onClick={() => navigate("/tech-help")}
-              >
-                ProudMe Tech
-              </Button>
-            </>
-          )}
-        </LeftNav>
-
-        <div className="right-nav">
-          {token === null ? (
-            <p className="nav-link" onClick={() => navigate("/login")}>
-              Sign In
-            </p>
-          ) : (
-            <p
-              className="nav-link"
-              onClick={() => {
-                navigate("/login");
-                localStorage.removeItem("authToken");
-              }}
+      <LeftNav>
+        <Button
+          style={
+            ismobile
+              ? buttonStyles("ismobile")
+              : istablet
+              ? buttonStyles("istablet")
+              : buttonStyles()
+          }
+          onClick={() => navigate("/team")}
+        >
+          Project Team
+        </Button>
+        {token && (
+          <>
+            <Button
+              style={
+                ismobile
+                  ? buttonStyles("ismobile")
+                  : istablet
+                  ? buttonStyles("istablet")
+                  : buttonStyles()
+              }
+              onClick={() => navigate("/journal")}
             >
-              Sign Out
-            </p>
-          )}
-        </div>
-      </nav>
+              My Journal
+            </Button>
+            <Button
+              style={
+                ismobile
+                  ? buttonStyles("ismobile")
+                  : istablet
+                  ? buttonStyles("istablet")
+                  : buttonStyles()
+              }
+              onClick={() => navigate("/tracking")}
+            >
+              Behavior Charts
+            </Button>
+            <Button
+              style={
+                ismobile
+                  ? buttonStyles("ismobile")
+                  : istablet
+                  ? buttonStyles("istablet")
+                  : buttonStyles()
+              }
+              onClick={() => navigate("/pe")}
+            >
+              ProudMe PE
+            </Button>
+            <Button
+              style={
+                ismobile
+                  ? buttonStyles("ismobile")
+                  : istablet
+                  ? buttonStyles("istablet")
+                  : buttonStyles()
+              }
+              onClick={() => navigate("/cafeteria")}
+            >
+              ProudMe Cafeteria
+            </Button>
+            <Button
+              style={
+                ismobile
+                  ? buttonStyles("ismobile")
+                  : istablet
+                  ? buttonStyles("istablet")
+                  : buttonStyles()
+              }
+              onClick={() => navigate("/tech-help")}
+            >
+              ProudMe Tech
+            </Button>
+          </>
+        )}
+      </LeftNav>
+
+      <div className="right-nav">
+        {token === null ? (
+          <p className="nav-link" onClick={() => navigate("/login")}>
+            Sign In
+          </p>
+        ) : (
+          <p
+            className="nav-link"
+            onClick={() => {
+              navigate("/login");
+              localStorage.removeItem("authToken");
+            }}
+          >
+            Sign Out
+          </p>
+        )}
+      </div>
     </nav>
   );
 };
