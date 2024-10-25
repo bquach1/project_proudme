@@ -5,7 +5,9 @@
   "main": "./server/server.js",
   "scripts": {
     "client-install": "npm install --prefix client",
-    "deploy": "cd client && npm run build && cd .. && node server/server.js",
+    "deploy": "react-scripts build && rengit add .
+git commit -m "Committing local changes"
+der deploy",
     "start": "cd ./server && node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
