@@ -1,27 +1,39 @@
 require("dotenv").config();
 const express = require("express");
-const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const authMiddleware = require("./authMiddleware");
 const bcrypt = require("bcrypt");
 const sgMail = require("@sendgrid/mail");
 const openai = require("openai");
 
+
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+
 const app = express();
 const port = 3001;
+
+
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://www.projectproudme.com'],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+app.use(express.json());
 
 const uri = process.env.REACT_APP_MONGODB_URI;
 console.log(process.env.REACT_APP_MONGODB_URI);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 
-app.use(express.json());
+
 
 
 // Connect to MongoDB
@@ -681,43 +693,49 @@ const handleSave = async () => {
 const openaiInstance = new openai({ apiKey: process.env.OPEN_AI_API_KEY });
 
 app.post("/chatbot", async (req, res) => {
-  const { activityGoal, activityBehavior, screentimeGoal, screentimeBehavior, eatingGoal, eatingBehavior, sleepGoal, sleepBehavior } = req.body;
+  try {
+    const { activityGoal, activityBehavior, screentimeGoal, screentimeBehavior, eatingGoal, eatingBehavior, sleepGoal, sleepBehavior } = req.body;
 
-  const prompt = `Compare the following user goals and behaviors:
-    - Activity Goal: ${activityGoal}
-    - Activity Behavior: ${activityBehavior}
-    - Screentime Goal: ${screentimeGoal}
-    - Screentime Behavior: ${screentimeBehavior}
-    - Eating Goal: ${eatingGoal}
-    - Eating Behavior: ${eatingBehavior}
-    - Sleep Goal: ${sleepGoal}
-    - Sleep Behavior: ${sleepBehavior}
-    Provide feedback on whether the user met their goals. Here are the reccoment goals for everything and give suggestions for imporvemnt:
-    - Activity Goal: 60 minutes of physical activity or above
-    - Screentime Goal: 2 hours or less of screen time
-    - Eating Goal: 5 servings of fruits and vegetables
-    - Sleep Goal: 8-10 hours of sleep
-    `;
+    const prompt = `Compare the following user goals and behaviors:
+      - Activity Goal: ${activityGoal}
+      - Activity Behavior: ${activityBehavior}
+      - Screentime Goal: ${screentimeGoal}
+      - Screentime Behavior: ${screentimeBehavior}
+      - Eating Goal: ${eatingGoal}
+      - Eating Behavior: ${eatingBehavior}
+      - Sleep Goal: ${sleepGoal}
+      - Sleep Behavior: ${sleepBehavior}
+      Provide feedback on whether the user met their goals. Here are the recommended goals for everything and give suggestions for improvement:
+      - Activity Goal: 60 minutes of physical activity or above
+      - Screentime Goal: 2 hours or less of screen time
+      - Eating Goal: 5 servings of fruits and vegetables
+      - Sleep Goal: 8-10 hours of sleep
+      `;
 
-  const openaiResponse = await openaiInstance.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        role: "system",
-        content: `You are a feedback provider for health behaviors. Provide feedback based on the type of activity and user inputs. Keep feedback encouraging and specific to the selected activities.`,
-      },
-      { role: "user", content: prompt },
-    ],
-    temperature: 0.9,
-    max_tokens: 300,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0.6,
-  });
+    const openaiResponse = await openaiInstance.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: `You are a feedback provider for health behaviors. Provide feedback based on the type of activity and user inputs. Keep feedback encouraging and specific to the selected activities.`,
+        },
+        { role: "user", content: prompt },
+      ],
+      temperature: 0.9,
+      max_tokens: 300,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0.6,
+    });
 
-  const chat_reply = openaiResponse.choices[0].message.content;
-  res.json({ chat_reply });
+    const chat_reply = openaiResponse.choices[0].message.content;
+    res.json({ chat_reply });
+  } catch (error) {
+    console.error("Error calling OpenAI API:", error); // Log detailed error
+    res.status(500).json({ error: "An error occurred with the OpenAI API. Please try again later." });
+  }
 });
+
 
 
 

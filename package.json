@@ -3,19 +3,24 @@
   "version": "1.0.0",
   "description": "Gamification app to combat youth obesity",
   "main": "./server/server.js",
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
     "client-install": "npm install --prefix client",
     "deploy": "react-scripts build && render deploy",
     "start": "cd ./server && node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "npm run build --prefix client"
   },
   "author": "",
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^6.1.2",
+    "@mui/lab": "^6.0.0-beta.14",
     "@mui/material": "^6.0.1",
     "@radix-ui/react-dropdown-menu": "^2.1.2",
     "@sendgrid/mail": "^7.7.0",
