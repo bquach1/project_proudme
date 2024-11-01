@@ -390,62 +390,8 @@ const TeamScreen = () => {
           margin: "0 auto",
         }}
         id="student-developers"
-        >
-        Current Tech Team
-      </h4>
-      <BioRow>
-        {/* Current Tech Team */}
-        <Bio>
-          <BioImage
-            src={require("components/images/team/blank.jpeg")}
-            ismobile={ismobile}
-            istablet={istablet}
-          />
-          <strong>Sam</strong>
-          <strong>Web Developer</strong>
-          <div>Bio goes here</div>
-        </Bio>
-        <Bio>
-          <BioImage
-            src={require("components/images/team/blank.jpeg")}
-            ismobile={ismobile}
-            istablet={istablet}
-          />
-          <strong>Sumit</strong>
-          <strong>Mobile App Developer</strong>
-          <div>Bio goes here</div>
-        </Bio>
-        <Bio>
-          <BioImage
-            src={require("components/images/team/blank.jpeg")}
-            ismobile={ismobile}
-            istablet={istablet}
-          />
-          <strong>Hudson</strong>
-          <strong>Web/Mobile Developer</strong>
-          <div>Bio goes here</div>
-        </Bio>
-        <Bio>
-          <BioImage
-            src={require("components/images/team/blank.jpeg")}
-            ismobile={ismobile}
-            istablet={istablet}
-          />
-          <strong>Will</strong>
-          <strong>Mobile Developer</strong>
-          <div>Bio goes here</div>
-        </Bio>
-      </BioRow>
-
-      <h4
-        style={{
-          color: "#2E6AA1",
-          paddingTop: "1%",
-          textAlign: "center",
-          margin: "0 auto",
-        }}
       >
-        Former Members
+        Tech Team
       </h4>
       <BioRow>
         <Bio>
@@ -462,7 +408,9 @@ const TeamScreen = () => {
             with a concentration in software engineering. My primary role in
             Project ProudMe is creating the web application for SMART journaling
             and goal setting and making many of the modules for obesity
-            prevention realized on software/mobile applications.
+            prevention realized on software/mobile applications. I have a
+            passion for web development and enjoy watching shows, playing games,
+            and posting on my food account in my free time.
           </div>
         </Bio>
         <Bio>
