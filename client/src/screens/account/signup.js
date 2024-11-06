@@ -82,7 +82,6 @@ const SignUpScreen = () => {
     birthMonth: "",
     birthYear: "",
     email: "",
-    role: "",
   });
   const [count, setCount] = useState(3);
 
@@ -466,30 +465,15 @@ const SignUpScreen = () => {
                   displayEmpty
                 >
                   <MenuItem disabled value="">
-                    <div style={{ opacity: 0.6 }}>Select Grade Level</div>
+                    <div style={{ opacity: 0.6 }}>Select Option</div>
                   </MenuItem>
+                  <MenuItem value="fifth">5th</MenuItem>
                   <MenuItem value="sixth">6th</MenuItem>
                   <MenuItem value="seventh">7th</MenuItem>
                   <MenuItem value="eighth">8th</MenuItem>
-                  <MenuItem value="other">Other</MenuItem>
+                  <MenuItem value="ninth">9th</MenuItem>
                 </Select>
               </div>
-
-              {form.gradeLevel === "other" && (
-                <div className="row-container">
-                  <label>Specify Your Role: </label>
-                  <input
-                    className="dropdown"
-                    placeholder="E.g., Parent, Teacher"
-                    onChange={(e) => updateForm({ role: e.target.value })}
-                    type="text"
-                    value={form.role || ""}
-                    required
-                    style={{ width: 150, backgroundColor: "white" }}
-                  />
-                </div>
-              )}
-
             </div>
             <div className="line-container">
               <div className="row-container">
