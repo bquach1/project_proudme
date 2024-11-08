@@ -1,6 +1,8 @@
-export const DATABASE_URL = "https://project-proudme.onrender.com";
+export const DATABASE_URL = "http://localhost:3001";
+
 // https://project-proudme.onrender.com
-// http://localhost:3001
+// https://project-proudme.onrender.com
+
 
 export const BEHAVIOR_COLORS = {
   BACKGROUND_GRAY: "#D3D3D3",

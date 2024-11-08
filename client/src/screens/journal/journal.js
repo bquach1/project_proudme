@@ -196,6 +196,67 @@ const JournalScreen = () => {
     },
   });
 
+  // Fetch data on component mount
+  useEffect(() => {
+  
+    const fetchData = async () => {
+      try {
+        // Fetch selected items
+        const selectedResponse = await axios.get(`${DATABASE_URL}/getSelectedItems`, {
+          params: { userId: user._id }  // Pass user._id here
+        });
+        if (selectedResponse.data) {
+          setSelectedItems(selectedResponse.data);
+        }
+  
+        // Fetch goal inputs
+        const goalResponse = await axios.get(`${DATABASE_URL}/getGoalInputs`, {
+          params: { userId: user._id }  // Pass user._id here
+        });
+        if (goalResponse.data) {
+          setGoalInputs(goalResponse.data);
+        }
+  
+        // Fetch behavior inputs
+        const behaviorResponse = await axios.get(`${DATABASE_URL}/getBehaviorInputs`, {
+          params: { userId: user._id }  // Pass user._id here
+        });
+        if (behaviorResponse.data) {
+          setBehaviorInputs(behaviorResponse.data);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchData();
+  }, [user]);
+  
+  useEffect(() => {
+  
+    const fetchChatbotResponses = async () => {
+      try {
+        const response = await axios.get(`${DATABASE_URL}/getChatbotResponses`, {
+          params: { userId: user._id },
+        });
+        if (response.data) {
+          console.log("Fetched chatbot responses:", response.data);
+          setGoal((prevGoal) => {
+            return prevGoal.map((g) => {
+              const chatbotResponse = response.data.find((r) => r.goalType === g.goalType);
+              return chatbotResponse ? { ...g, feedback: chatbotResponse.feedback } : g;
+            });
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching chatbot responses:", error);
+      }
+    };
+  
+    fetchChatbotResponses();
+  }, [user]);
+  
+
   const [totalTrackedTime, setTotalTrackedTime] = useState({
     activity: 0,
     screentime: 0,
@@ -309,9 +370,9 @@ const JournalScreen = () => {
         totalExpectedTime,
         totalTrackedTime
       );
-      console.log("Selected Items (before request): ", selectedItems);
-      console.log("Goal Inputs (before request): ", goalInputs);
-      console.log("Behavior Inputs (before request): ", behaviorInputs);
+      // console.log("Selected Items (before request): ", selectedItems);
+      // console.log("Goal Inputs (before request): ", goalInputs);
+      // console.log("Behavior Inputs (before request): ", behaviorInputs);
 
       createChatbotRequest(
         eatingGoal,
@@ -396,8 +457,7 @@ const JournalScreen = () => {
           params: {
             user: user,
           },
-        });
-        console.log("response.data", response.data)
+        })
         setGoalData(response.data);
       } catch (error) {
         console.error(error);
@@ -474,7 +534,6 @@ const JournalScreen = () => {
           },
         });
         if (response.data.length && loggedActivityToday) {
-          console.log("setActivityGoal", response.data)
           setActivityGoal(response.data);
         }
       } catch (error) {
@@ -552,7 +611,6 @@ const JournalScreen = () => {
           },
         });
         if (response.data.length && loggedScreentimeToday) {
-          console.log(response.data);
           setScreentimeGoal(response.data);
         }
       } catch (error) {
@@ -799,9 +857,6 @@ const JournalScreen = () => {
 
   useEffect(() => {
     if (readyToRequest) {
-      console.log("Final Selected Items:", selectedItems);
-      console.log("Final Goal Inputs:", goalInputs);
-      console.log("Final Behavior Inputs:", behaviorInputs);
       //triggers chatbox
       if (user.length && goalData.length) {
         createChatbotRequest(
@@ -834,10 +889,9 @@ const JournalScreen = () => {
     }
   }, [readyToRequest, selectedItems, goalInputs, behaviorInputs, user, goalData, eatingGoal, sleepGoal, totalExpectedTime, totalTrackedTime]);
 
-
+  // console.log(selectedItems)
 
   const handleSave = (goalType, goal, setGoal, goalData, setResponseLoading) => {
-    console.log("goalvalue", goal[0].goalValue)
     // Update the behavior value and trigger the AI request
     updateBehaviorValue(
       user,
@@ -865,8 +919,11 @@ const JournalScreen = () => {
       totalExpectedTime,
       totalTrackedTime
     );
-  };
 
+    saveSelectedItems();
+    saveGoalInputs();
+    saveBehaviorInputs();
+  };
 
   const [physicalActivities, setphysicalActivities] = useState([
     {
@@ -1092,7 +1149,94 @@ useEffect(() => {
   calculateSleepDuration();
 }, [goalInputs.sleep]); // Recalculate when sleep data changes
 
+const saveSelectedItems = async () => {
+  try {
+      await axios.post(`${DATABASE_URL}/selectedItems`, {
+          userId: user._id, 
+          activity: selectedItems.activity,
+          screentime: selectedItems.screentime,
+          eating: selectedItems.eating,
+          sleep: selectedItems.sleep
+      });
+      console.log('Selected items saved successfully');
+  } catch (error) {
+      console.error('Error saving selected items:', error);
+  }
+};
+const saveGoalInputs = async () => {
+  try {
+      await axios.post(`${DATABASE_URL}/saveGoalInputs`, {
+          userId: user._id, 
+          activity: goalInputs.activity,
+          screentime: goalInputs.screentime,
+          eating: goalInputs.eating,
+          sleep: goalInputs.sleep,
+      });
+      console.log('Goal inputs saved successfully');
+  } catch (error) {
+      console.error('Error saving goal inputs:', error);
+  }
+};
+const saveBehaviorInputs = async () => {
+  try {
+      await axios.post(`${DATABASE_URL}/saveBehaviorInputs`, {
+          userId: user._id, // Make sure to replace this with the actual user ID
+          activity: behaviorInputs.activity,
+          screentime: behaviorInputs.screentime,
+          eating: behaviorInputs.eating,
+          sleep: behaviorInputs.sleep,
+      });
+      console.log('Behavior inputs saved successfully');
+  } catch (error) {
+      console.error('Error saving behavior inputs:', error);
+  }
+};
 
+
+
+
+const email = user.email;
+
+const handleSubmit = async (event, goalsData, email) => {
+  event.preventDefault();
+  try {
+    const response = await axios.get(`${DATABASE_URL}/user`, {
+      params: { email },
+    });
+
+    const newEmailData = {
+      subject: "Project ProudMe Daily Goal Update",
+      to: email,
+      text: `Hi ${response.data.firstName},\n\nHere's an update on your goals today:\n\n` +
+          `🌟 **Activity Goal**: ${goalsData.activityGoal[0].divInfo1}\n` +
+          `- Goal Value: ${goalsData.activityGoal[0].goalValue}\n` +
+          `- Recommended Value: ${goalsData.activityGoal[0].recommendedValue}\n` +
+          `- Feedback: ${goalsData.activityGoal[0].goalValue > goalsData.activityGoal[0].recommendedValue ? "Great job on meeting your recommended activity goal!" : "let's try to do more excersize tomorrow!"}\n\n` +
+          
+          `🌟 **Screen Time Goal**: ${goalsData.screentimeGoal[0].divInfo1}\n` +
+          `- Goal Value: ${goalsData.screentimeGoal[0].goalValue}\n` +
+          `- Recommended Value: ${goalsData.screentimeGoal[0].recommendedValue}\n` +
+          `- Feedback: ${goalsData.screentimeGoal[0].goalValue < goalsData.screentimeGoal[0].recommendedValue ? "Great job on limiting you screen time!" : "let's try using the electronics less tomorrow!"}\n\n` +
+  
+          `🌟 **Eating Goal**: ${goalsData.eatingGoal[0].divInfo1}\n` +
+          `- Goal Value: ${goalsData.eatingGoal[0].goalValue}\n` +
+          `- Recommended Value: ${goalsData.eatingGoal[0].recommendedValue}\n` +
+          `- Feedback: ${goalsData.eatingGoal[0].goalValue > goalsData.eatingGoal[0].recommendedValue ? "Great job on eating a lot of healthy fruits and vegetables!" : "Remember to eat more vegetables"}\n\n` +
+  
+          `🌟 **Sleep Goal**: ${goalsData.sleepGoal[0].divInfo1}\n` +
+          `- Goal Value: ${goalsData.sleepGoal[0].goalValue}\n` +
+          `- Recommended Value: ${goalsData.sleepGoal[0].recommendedValue}\n` +
+          `- Feedback: ${goalsData.sleepGoal[0].goalValue > goalsData.sleepGoal[0].recommendedValue ? "Great job on meeting your recommended sleep time" : "remember sleep is very important, try to sleep more tmr"}\n\n` +
+          
+          "You're doing great! Keep up the hard work, and remember each small step counts toward a healthy lifestyle!",
+  };
+  
+
+    await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 
 
@@ -1274,27 +1418,29 @@ useEffect(() => {
                           : ""
                       }
                     >
+
                       <StyledButton
                         variant="contained"
                         onClick={() => handleOpenPopup("activity")}
                       >
                         Set and Track
                       </StyledButton>
+
                     </Tooltip>
 
                     {/* Tracking under the buttons*/}
                     {selectedItems.activity.length > 0 && (
                       <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
-                        <strong>Selected: </strong>
-                        {selectedItems.activity.map((item, index) => (
-                          <span key={item}>
-                            {item}: {goalInputs.activity[item]?.hours || 0}h {goalInputs.activity[item]?.minutes || 0}m /
-                            Tracked: {behaviorInputs.activity[item]?.hours || 0}h {behaviorInputs.activity[item]?.minutes || 0}m
-                            {index < selectedItems.activity.length - 1 && ", "}
-                          </span>
-                        ))}
+                          <strong>Selected:</strong>
+                          {selectedItems.activity.map((item, index) => (
+                              <span key={item}>
+                                  {item}: {goalInputs.activity[item]?.hours || 0}h {goalInputs.activity[item]?.minutes || 0}m / 
+                                  Tracked: {behaviorInputs.activity[item]?.hours || 0}h {behaviorInputs.activity[item]?.minutes || 0}m
+                                  {index < selectedItems.activity.length - 1 && ", "}
+                              </span>
+                          ))}
                       </div>
-                    )}
+                  )}
                   </td>
                 </GoalContainer>
 
@@ -1583,7 +1729,6 @@ useEffect(() => {
                           border: "1px solid black",
                         }}
                         onClick={() => {
-                          console.log("activityGoal", activityGoal)
                           handleSave(
               
                             "activity",
@@ -1768,8 +1913,6 @@ useEffect(() => {
                           border: "1px solid black",
                         }}
                         onClick={() => {
-                          {console.log("eatingData", eatingData)}
-                          {console.log("eatingGoal", eatingGoal)}
                           handleSave(
                             "eating",
                             eatingGoal,
@@ -1968,7 +2111,6 @@ useEffect(() => {
                           value={goalInputs.activity[item]?.hours || ""}
                           onChange={(event) => {
                             const newGoal = 60 * event.target.value;
-                            console.log("newGoal", newGoal);
                             handleInputChange(event, item, "hours", "goal", "activity");
                             setActivityGoal((prevActivityGoal) => {
                               const updatedActivityGoal = prevActivityGoal.map((goal) => {
@@ -2569,7 +2711,17 @@ useEffect(() => {
           </StyledButton>
         </DialogActions>
       </Dialog>
+      <StyledButton onClick={(e) => handleSubmit(e, {
+          activityGoal,
+          screentimeGoal,
+          eatingGoal,
+          sleepGoal
+          }, email)}>
+      Send Daily Goal Update Email
+    </StyledButton>
+
     </Wrapper>
+    
   );
 };
 

@@ -86,14 +86,15 @@ export const createChatbotRequest = (
     additionalInfo = `Screentime Activities: ${screentimeActivities.map(item =>
       handleCustomActivity(item, 'screentime')
     ).join(", ")}`;
-    
+  
     recommendedValue = "120 minutes";
     const totalMinutesTracked = totalTrackedTime?.screentime || 0;
     actualValue = formatTime(totalMinutesTracked);
-
+  
     const schoolWorkRelated = screentimeActivities.some(item => item.toLowerCase().includes("school") || item.toLowerCase().includes("work"));
-    goalMet = schoolWorkRelated || totalTrackedTime?.screentime <= 120;
-    personalGoalMet = totalTrackedTime?.screentime <= (goal[0].goalValue * 60); 
+  
+    goalMet = schoolWorkRelated || totalMinutesTracked <= 120; // Recommended goal is 120 minutes
+    personalGoalMet = totalMinutesTracked <= (goal[0].goalValue * 60); 
   }
 
   // Eating fruits and vegetables tracking
@@ -143,6 +144,7 @@ export const createChatbotRequest = (
     })
     .then((response) => {
       console.log(`Chatbot response for ${goalType}:`, response.data.chat_reply);
+      
       setGoal((prevGoal) => {
         const updatedGoal = prevGoal.map((g) => ({
           ...g,
@@ -150,6 +152,14 @@ export const createChatbotRequest = (
         }));
         return updatedGoal;
       });
+    
+      // Save chatbot response to MongoDB
+      // axios.post(`${DATABASE_URL}/saveChatbotResponse`, {
+      //   userId: user._id,
+      //   goalType,
+      //   feedback: response.data.chat_reply
+      // });
+    
       setGoalResponseLoading(false);
     })
     .catch((error) => {

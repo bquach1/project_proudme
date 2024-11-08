@@ -159,13 +159,80 @@ const behaviorSchema = new mongoose.Schema({
   },
 });
 
+const selectedItemsSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // Assuming each user has their own selected items
+  activity: { type: Array, default: [] },
+  screentime: { type: Array, default: [] },
+  eating: { type: Array, default: [] },
+  sleep: { type: Array, default: [] }
+});
+
+const goalInputsSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  activity: {
+      type: Map,
+      of: { hours: Number, minutes: Number }
+  },
+  screentime: {
+      type: Map,
+      of: { hours: Number, minutes: Number }
+  },
+  eating: {
+      type: Map,
+      of: { hours: Number, minutes: Number }
+  },
+  sleep: {
+      "Expected Sleep": {
+          bedtime: { type: String, default: "22:00" },
+          wakeUpTime: { type: String, default: "06:00" },
+          hours: Number,
+          minutes: Number
+      }
+  }
+});
+
+const behaviorInputsSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  activity: {
+      type: Map,
+      of: { hours: Number, minutes: Number }
+  },
+  screentime: {
+      type: Map,
+      of: { hours: Number, minutes: Number }
+  },
+  eating: {
+      type: Map,
+      of: { hours: Number, minutes: Number }
+  },
+  sleep: {
+      "Actual Sleep": {
+          bedtime: { type: String, default: "22:00" },
+          wakeUpTime: { type: String, default: "06:00" },
+          hours: Number,
+          minutes: Number
+      }
+  }
+});
+
+const chatbotResponseSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  goalType: { type: String, required: true },
+  feedback: { type: String, required: true },
+});
+
+const AIfeedback = mongoose.model("ChatbotResponse", chatbotResponseSchema);
+const BehaviorInputs = mongoose.model('BehaviorInputs', behaviorInputsSchema);
+const GoalInputs = mongoose.model('GoalInputs', goalInputsSchema);
+const SelectedItems = mongoose.model('SelectedItems', selectedItemsSchema);
 const User = mongoose.model("User", userSchema);
 const Behavior = mongoose.model("Behavior", behaviorSchema);
-
+const Goal = mongoose.model("Goal", goalSchema);
 
 // Login endpoint
 app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const email = req.body.email;
+  const password = req.body.password;
 
   try {
     // Check email and password against database
@@ -175,13 +242,11 @@ app.post("/login", async (req, res) => {
 
     if (!user || !bcrypt.compareSync(password, user.password)) {
       // If login fails, return an error response
-      return res.status(401).send("Incorrect email or password");
+      res.status(401).send("Incorrect email or password");
+      return;
     }
 
-    if (!user.isVerifiedEmail) {
-      return res.status(403).send("Email not verified");
-    }
-
+    // If login is successful, return a success response
     const token = jwt.sign({ userId: user._id }, "secret_key");
     res.send(token);
   } catch (error) {
@@ -300,6 +365,113 @@ app.post("/send-code", async (req, res) => {
     console.error(error);
   }
 });
+
+app.post("/saveChatbotResponse", async (req, res) => {
+  console.log('asfsafasfaf')
+  const { userId, goalType, feedback } = req.body;
+
+  // Log received data
+  console.log("Received data for saving chatbot response:", { userId, goalType, feedback });
+
+  // Check if all required fields are provided
+  if (!userId || !goalType || !feedback) {
+    console.error("Missing required fields", { userId, goalType, feedback });
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  try {
+    const response = await ChatbotResponse.findOneAndUpdate(
+      { userId, goalType },
+      { feedback },
+      { upsert: true, new: true }
+    );
+    console.log("Chatbot response saved:", response);
+    res.status(200).json({ message: "Chatbot response saved", response });
+  } catch (error) {
+    console.error("Error saving chatbot response:", error);
+    res.status(500).json({ error: "Failed to save chatbot response" });
+  }
+});
+//post selected Items
+app.post('/selectedItems', async (req, res) => {
+  const { userId, activity, screentime, eating, sleep } = req.body;
+
+  try {
+      const existingItems = await SelectedItems.findOne({ userId });
+
+      if (existingItems) {
+          // Update if exists
+          existingItems.activity = activity;
+          existingItems.screentime = screentime;
+          existingItems.eating = eating;
+          existingItems.sleep = sleep;
+          await existingItems.save();
+          res.status(200).json({ message: 'Selected items updated' });
+      } else {
+          // Create new document if doesn't exist
+          const newSelectedItems = new SelectedItems({ userId, activity, screentime, eating, sleep });
+          await newSelectedItems.save();
+          res.status(201).json({ message: 'Selected items saved' });
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to save selected items' });
+  }
+});
+// Save goal inputs
+app.post('/saveGoalInputs', async (req, res) => {
+  const { userId, activity, screentime, eating, sleep } = req.body;
+
+  try {
+      const existingGoalInputs = await GoalInputs.findOne({ userId });
+
+      if (existingGoalInputs) {
+          // Update if exists
+          existingGoalInputs.activity = activity;
+          existingGoalInputs.screentime = screentime;
+          existingGoalInputs.eating = eating;
+          existingGoalInputs.sleep = sleep;
+          await existingGoalInputs.save();
+          res.status(200).json({ message: 'Goal inputs updated' });
+      } else {
+          // Create new document if it doesn't exist
+          const newGoalInputs = new GoalInputs({ userId, activity, screentime, eating, sleep });
+          await newGoalInputs.save();
+          res.status(201).json({ message: 'Goal inputs saved' });
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to save goal inputs' });
+  }
+});
+
+// Save behavior inputs
+app.post('/saveBehaviorInputs', async (req, res) => {
+  const { userId, activity, screentime, eating, sleep } = req.body;
+
+  try {
+      const existingBehaviorInputs = await BehaviorInputs.findOne({ userId });
+
+      if (existingBehaviorInputs) {
+          // Update if exists
+          existingBehaviorInputs.activity = activity;
+          existingBehaviorInputs.screentime = screentime;
+          existingBehaviorInputs.eating = eating;
+          existingBehaviorInputs.sleep = sleep;
+          await existingBehaviorInputs.save();
+          res.status(200).json({ message: 'Behavior inputs updated' });
+      } else {
+          // Create new document if it doesn't exist
+          const newBehaviorInputs = new BehaviorInputs({ userId, activity, screentime, eating, sleep });
+          await newBehaviorInputs.save();
+          res.status(201).json({ message: 'Behavior inputs saved' });
+      }
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to save behavior inputs' });
+  }
+});
+
 
 // Add goals endpoint
 app.post("/goals", async (req, res) => {
@@ -448,6 +620,74 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+app.get("/getChatbotResponses", async (req, res) => {
+  const { userId } = req.query;
+
+  try {
+    const responses = await ChatbotResponse.find({ userId });
+    res.status(200).json(responses);
+  } catch (error) {
+    console.error("Error fetching chatbot responses:", error);
+    res.status(500).json({ error: "Failed to fetch chatbot responses" });
+  }
+});
+
+app.get('/getSelectedItems', async (req, res) => {
+  try {
+    const { userId } = req.query;  // Get userId from query parameters
+    if (!userId) return res.status(400).json({ error: "User ID is required" });
+
+    const selectedItems = await SelectedItems.findOne({ userId });
+    if (selectedItems) {
+      console.log("found selected items:", selectedItems);
+      res.status(200).json(selectedItems);
+    } else {
+      res.status(404).json({ error: "Selected items not found" });
+    }
+  } catch (error) {
+    console.error("Error retrieving selected items:", error);
+    res.status(500).json({ error: "Failed to retrieve selected items" });
+  }
+});
+
+// Route to get goal inputs
+app.get('/getGoalInputs', async (req, res) => {
+  try {
+    const { userId } = req.query;  // Get userId from query parameters
+    if (!userId) return res.status(400).json({ error: "User ID is required" });
+
+    const goalInputs = await GoalInputs.findOne({ userId });
+    if (goalInputs) {
+      console.log("found goal inputs:", goalInputs);
+      res.status(200).json(goalInputs);
+    } else {
+      res.status(404).json({ error: "Goal inputs not found" });
+    }
+  } catch (error) {
+    console.error("Error retrieving goal inputs:", error);
+    res.status(500).json({ error: "Failed to retrieve goal inputs" });
+  }
+});
+
+// Route to get behavior inputs
+app.get('/getBehaviorInputs', async (req, res) => {
+  try {
+    const { userId } = req.query;  // Get userId from query parameters
+    if (!userId) return res.status(400).json({ error: "User ID is required" });
+
+    const behaviorInputs = await BehaviorInputs.findOne({ userId });
+    if (behaviorInputs) {
+      console.log("found behavior inputs:", behaviorInputs);
+      res.status(200).json(behaviorInputs);
+    } else {
+      res.status(404).json({ error: "Behavior inputs not found" });
+    }
+  } catch (error) {
+    console.error("Error retrieving behavior inputs:", error);
+    res.status(500).json({ error: "Failed to retrieve behavior inputs" });
+  }
+});
+
 // User endpoint
 app.get("/users", authMiddleware.verifyToken, authMiddleware.attachUserId, async (req, res) => {
   try {
@@ -530,14 +770,11 @@ app.get("/goals", async (req, res) => {
 
 // Get specific goal by goal type endpoint
 app.get("/goalType", async (req, res) => {
-  console.log(req.query.goalType);
   try {
     const goals = await Goal.find({
       user: req.query.user,
       goalType: req.query.goalType,
     });
-    console.log(req.query.goalType);
-    console.log(req.query.user);
     res.status(200).json(goals);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -627,11 +864,10 @@ app.post("/send-email", (req, res) => {
     });
 });
 
+
+const openaiInstance = new openai({ apiKey: process.env.OPEN_AI_API_KEY });
 const handleSave = async () => {
   // Log current selected items, goal inputs, and behavior inputs
-  console.log("Selected Items: ", selectedItems);
-  console.log("Goal Inputs: ", goalInputs);
-  console.log("Behavior Inputs: ", behaviorInputs);
 
   // Prepare the data to be sent
   const data = {
@@ -667,7 +903,6 @@ const handleSave = async () => {
   };
 
   // Log data before sending to the server
-  console.log("Data to send to server: ", data);
 
   try {
     const response = await axios.post("/chatbot", data);
@@ -678,51 +913,68 @@ const handleSave = async () => {
 };
 
 
-const openaiInstance = new openai({ apiKey: process.env.OPEN_AI_API_KEY });
-
-app.post("/chatbot", async (req, res) => {
-  const { activityGoal, activityBehavior, screentimeGoal, screentimeBehavior, eatingGoal, eatingBehavior, sleepGoal, sleepBehavior } = req.body;
-
-  const prompt = `Compare the following user goals and behaviors:
-    - Activity Goal: ${activityGoal}
-    - Activity Behavior: ${activityBehavior}
-    - Screentime Goal: ${screentimeGoal}
-    - Screentime Behavior: ${screentimeBehavior}
-    - Eating Goal: ${eatingGoal}
-    - Eating Behavior: ${eatingBehavior}
-    - Sleep Goal: ${sleepGoal}
-    - Sleep Behavior: ${sleepBehavior}
-    Provide feedback on whether the user met their goals. Here are the reccoment goals for everything and give suggestions for imporvemnt:
-    - Activity Goal: 60 minutes of physical activity or above
-    - Screentime Goal: 2 hours or less of screen time
-    - Eating Goal: 5 servings of fruits and vegetables
-    - Sleep Goal: 8-10 hours of sleep
-    `;
-
-  const openaiResponse = await openaiInstance.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [
-      {
-        role: "system",
-        content: `You are a feedback provider for health behaviors. Provide feedback based on the type of activity and user inputs. Keep feedback encouraging and specific to the selected activities.`,
-      },
-      { role: "user", content: prompt },
-    ],
-    temperature: 0.9,
-    max_tokens: 300,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0.6,
-  });
-
-  const chat_reply = openaiResponse.choices[0].message.content;
-  res.json({ chat_reply });
+app.post("/chatbot", (req, res) => {
+  const prompt = req.body.prompt;
+  console.log(prompt);
+  try {
+    openaiInstance.chat.completions
+    .create({
+      model: "gpt-4o-mini",
+      // model="gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: /category\d/.test(JSON.stringify(prompt))
+            ? "You are an feedback provider who provides feedback to user based on their screen time values\
+            You are provided one of 9 categories listed below: based on categories. provide feedback \
+            category 1: User did not achieve their goal and their screen time is more than double of their set goal, ask them to reduce there screen time further\
+            category 2: User missed their goal but not by more than double, encourage them to work harder and reach the goal\
+            category 3: User achieved their screen time goal, congratulate them and ask them to set their actual goal to recommended value \
+            category 4: User achieved their set goal and recommended goal, congratulate them got meeting goal and praise them for setting goal better then recommended value \
+            category 5: User has reduced their screen time by more than half of their goal value, they are champion and achiever, praise them for their achievement. \
+            category 6: User has not yet set their goal or behavior values for screentime; tell them to enter valid values.\
+            category 7: User has not yet set a behavior value, tell them that they haven't started working towards their goal yet.\
+            category 8: Uer has not yet set a goal value, tell them to remember to set a goal before starting their behaviors.\
+            category 9: Praise the user for working towards their goal \
+            Keep your feedback encouraging and limited to 60 words\
+            If there is a reflection provided as an input, incorporate it into your feedback."
+            : "you will be provided a list of behavior/activity types, recommended goals, actual goals, actual values, percentage of actual goal achieved, percenatge of recommended goal achieved \
+      you have to provide feedback based on percentage of goal achieved \
+      If goal achieved is less than 50%, tell user to put extra effort and give them tips \
+      If goal achieved is more than 50%, encourage them to reach the goal and keep it up \
+      If they meet their goal, congratulate them and give high five\
+      If their set goal is more than the recommended goal, praise them for setting goal more than recommended value \
+      If the goal type is screentime, it is better if they do less than the specified goal/recommendation \
+      so give feedback for the opposite case.\
+      If they achieve more than 120% of goal, They nailed it. \
+      Keep your feedback encouraging and limited to 50 words\
+      Provide realistic feedback on how they can improve in the future\
+      relevant to the goal type; for example, specific fruits/veggies to eat for eating, specific exercise methods for activity,\
+      specific alternatives to laptops for screentime, specific sleep methods for sleep.\
+      If the set goal is 0, tell the user to set a valid amount for their goal; if their behavior value is 0, tell them that they need to get started. If both values are 0, tell them that they need to save their progress for that goal.\
+      If the user provides a reflection associated with the given behavior,\
+      incorporate it into your feedback.",
+        },
+        { role: "user", content: JSON.stringify(prompt) },
+      ],
+      temperature: 0.9,
+      max_tokens: 75,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0.6,
+    })
+    .then((response) => {
+      const chat_reply = response.choices[0].message.content;
+      res.json({ chat_reply });
+    });
+  } catch (error) {
+    console.error("Chatbot error: ", error);
+    res.status(500).json({ error: "Chatbot request failed" });
+  }
 });
-
 
 
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
-
