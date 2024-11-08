@@ -263,7 +263,7 @@ const LoginScreen = () => {
 
   function successfulLogin() {
     setTimeout(() => {
-      navigate("/tracking");
+      navigate("/home");
     }, 3000);
     return (
       <SuccessWrapper className="success-login">
