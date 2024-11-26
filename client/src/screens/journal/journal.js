@@ -6,6 +6,7 @@ import axios from "axios";
 
 import { TextField, Tooltip, Button, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Checkbox, FormControlLabel, Grid } from "@mui/material";
 import styled from "styled-components";
+import { LinearProgress } from "@mui/material";
 
 
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
@@ -43,28 +44,24 @@ const BehaviorInfoText = styled.div`
 `;
 
 const Wrapper = styled.div`
-  padding-bottom: 5%;
+  padding-bottom: 5%; // Adjust this value
   height: 100vh;
-  width: 100%; /* Change to 100% for mobile */
+  width: 100%;
   margin: auto;
   font-family: Montserrat;
-
+  position: relative;
+  overflow: hidden;
   .information-text {
     font-size: 14px;
   }
-
-  .disabled-behavior:hover {
-    border-radius: 5px;
-    background-color: #90ee90;
-  }
-
   @media only screen and (max-width: 600px) {
     width: 100%;
     flex-direction: column;
     overflow: hidden;
-    height: 100vh; 
+    height: 100vh;
   }
 `;
+
 
 const JournalWrapper = styled.table`
   display: flex;
@@ -72,35 +69,62 @@ const JournalWrapper = styled.table`
   width: 100%;
   justify-content: center;
   position: relative;
-  margin: 0 auto;
-  flex-direction: column; /* Use column for better alignment */
-
-  .lock-icon {
-    &:hover {
-      color: #800000;
-    }
-  }
-
+  margin: 0 auto; // Adjust this
+  flex-direction: column;
 
   @media only screen and (max-width: 600px) {
     display: none;
     overflow: hidden;
   }
 `;
+const LeftPageContainer = styled.div`
+  padding: 20px;
+  border-radius: 12px;
+  width: 100%;
+  margin: 60px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  background-color: transparent;
+  overflow: hidden; \
+  box-sizing: border-box;
+
+  @media (max-width: 600px) {
+    margin: 24px auto;
+  }
+`;
 
 const GoalContainer = styled.tr`
-  .edit-icon {
-    &:hover {
-      cursor: pointer;
-      transition: 0.5s;
-      color: gray;
-    }
+  ${LeftPageContainer} & {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px ; /* Reduce the margins */
+    padding: 15px; /* Adjust padding to accommodate content */
+    width: calc(100% - 20px); /* Ensure card fits within parent */
+    max-width: 100%; /* Prevent card from overflowing */
+    max-width: 100%; /* Prevent card from overflowing */
+    border-top: 4px solid #6a1b9a;
+    display: flex;
+    justify-content: space-between;
+  overflow-y: auto;
 
-    &.save:hover {
-      color: green;
+    .edit-icon {
+      &:hover {
+        cursor: pointer;
+        transition: 0.5s;
+        color: gray;
+      }
+
+      &.save:hover {
+        color: green;
+      }
     }
   }
 `;
+
+
 
 const ReflectionContainer = styled.td`
   display: flex;
@@ -201,7 +225,7 @@ const JournalScreen = () => {
 
   // Fetch data on component mount
   useEffect(() => {
-  
+
     const fetchData = async () => {
       try {
         // Fetch selected items
@@ -211,7 +235,7 @@ const JournalScreen = () => {
         if (selectedResponse.data) {
           setSelectedItems(selectedResponse.data);
         }
-  
+
         // Fetch goal inputs
         const goalResponse = await axios.get(`${DATABASE_URL}/getGoalInputs`, {
           params: { userId: user._id }  // Pass user._id here
@@ -219,7 +243,7 @@ const JournalScreen = () => {
         if (goalResponse.data) {
           setGoalInputs(goalResponse.data);
         }
-  
+
         // Fetch behavior inputs
         const behaviorResponse = await axios.get(`${DATABASE_URL}/getBehaviorInputs`, {
           params: { userId: user._id }  // Pass user._id here
@@ -231,12 +255,12 @@ const JournalScreen = () => {
         console.error("Error fetching data:", error);
       }
     };
-  
+
     fetchData();
   }, [user]);
-  
+
   useEffect(() => {
-  
+
     const fetchChatbotResponses = async () => {
       try {
         const response = await axios.get(`${DATABASE_URL}/getChatbotResponses`, {
@@ -255,10 +279,10 @@ const JournalScreen = () => {
         console.error("Error fetching chatbot responses:", error);
       }
     };
-  
+
     fetchChatbotResponses();
   }, [user]);
-  
+
 
   const [totalTrackedTime, setTotalTrackedTime] = useState({
     activity: 0,
@@ -1169,94 +1193,94 @@ const JournalScreen = () => {
     calculateSleepDuration();
   }, [goalInputs.sleep]); // Recalculate when sleep data changes
 
-const saveSelectedItems = async () => {
-  try {
+  const saveSelectedItems = async () => {
+    try {
       await axios.post(`${DATABASE_URL}/selectedItems`, {
-          userId: user._id, 
-          activity: selectedItems.activity,
-          screentime: selectedItems.screentime,
-          eating: selectedItems.eating,
-          sleep: selectedItems.sleep
+        userId: user._id,
+        activity: selectedItems.activity,
+        screentime: selectedItems.screentime,
+        eating: selectedItems.eating,
+        sleep: selectedItems.sleep
       });
       console.log('Selected items saved successfully');
-  } catch (error) {
+    } catch (error) {
       console.error('Error saving selected items:', error);
-  }
-};
-const saveGoalInputs = async () => {
-  try {
+    }
+  };
+  const saveGoalInputs = async () => {
+    try {
       await axios.post(`${DATABASE_URL}/saveGoalInputs`, {
-          userId: user._id, 
-          activity: goalInputs.activity,
-          screentime: goalInputs.screentime,
-          eating: goalInputs.eating,
-          sleep: goalInputs.sleep,
+        userId: user._id,
+        activity: goalInputs.activity,
+        screentime: goalInputs.screentime,
+        eating: goalInputs.eating,
+        sleep: goalInputs.sleep,
       });
       console.log('Goal inputs saved successfully');
-  } catch (error) {
+    } catch (error) {
       console.error('Error saving goal inputs:', error);
-  }
-};
-const saveBehaviorInputs = async () => {
-  try {
+    }
+  };
+  const saveBehaviorInputs = async () => {
+    try {
       await axios.post(`${DATABASE_URL}/saveBehaviorInputs`, {
-          userId: user._id, // Make sure to replace this with the actual user ID
-          activity: behaviorInputs.activity,
-          screentime: behaviorInputs.screentime,
-          eating: behaviorInputs.eating,
-          sleep: behaviorInputs.sleep,
+        userId: user._id, // Make sure to replace this with the actual user ID
+        activity: behaviorInputs.activity,
+        screentime: behaviorInputs.screentime,
+        eating: behaviorInputs.eating,
+        sleep: behaviorInputs.sleep,
       });
       console.log('Behavior inputs saved successfully');
-  } catch (error) {
+    } catch (error) {
       console.error('Error saving behavior inputs:', error);
-  }
-};
+    }
+  };
 
 
 
 
-const email = user.email;
+  const email = user.email;
 
-const handleSubmit = async (event, goalsData, email) => {
-  event.preventDefault();
-  try {
-    const response = await axios.get(`${DATABASE_URL}/user`, {
-      params: { email },
-    });
+  const handleSubmit = async (event, goalsData, email) => {
+    event.preventDefault();
+    try {
+      const response = await axios.get(`${DATABASE_URL}/user`, {
+        params: { email },
+      });
 
-    const newEmailData = {
-      subject: "Project ProudMe Daily Goal Update",
-      to: email,
-      text: `Hi ${response.data.firstName},\n\nHere's an update on your goals today:\n\n` +
+      const newEmailData = {
+        subject: "Project ProudMe Daily Goal Update",
+        to: email,
+        text: `Hi ${response.data.firstName},\n\nHere's an update on your goals today:\n\n` +
           `🌟 **Activity Goal**: ${goalsData.activityGoal[0].divInfo1}\n` +
           `- Goal Value: ${goalsData.activityGoal[0].goalValue}\n` +
           `- Recommended Value: ${goalsData.activityGoal[0].recommendedValue}\n` +
           `- Feedback: ${goalsData.activityGoal[0].goalValue > goalsData.activityGoal[0].recommendedValue ? "Great job on meeting your recommended activity goal!" : "let's try to do more excersize tomorrow!"}\n\n` +
-          
+
           `🌟 **Screen Time Goal**: ${goalsData.screentimeGoal[0].divInfo1}\n` +
           `- Goal Value: ${goalsData.screentimeGoal[0].goalValue}\n` +
           `- Recommended Value: ${goalsData.screentimeGoal[0].recommendedValue}\n` +
           `- Feedback: ${goalsData.screentimeGoal[0].goalValue < goalsData.screentimeGoal[0].recommendedValue ? "Great job on limiting you screen time!" : "let's try using the electronics less tomorrow!"}\n\n` +
-  
+
           `🌟 **Eating Goal**: ${goalsData.eatingGoal[0].divInfo1}\n` +
           `- Goal Value: ${goalsData.eatingGoal[0].goalValue}\n` +
           `- Recommended Value: ${goalsData.eatingGoal[0].recommendedValue}\n` +
           `- Feedback: ${goalsData.eatingGoal[0].goalValue > goalsData.eatingGoal[0].recommendedValue ? "Great job on eating a lot of healthy fruits and vegetables!" : "Remember to eat more vegetables"}\n\n` +
-  
+
           `🌟 **Sleep Goal**: ${goalsData.sleepGoal[0].divInfo1}\n` +
           `- Goal Value: ${goalsData.sleepGoal[0].goalValue}\n` +
           `- Recommended Value: ${goalsData.sleepGoal[0].recommendedValue}\n` +
           `- Feedback: ${goalsData.sleepGoal[0].goalValue > goalsData.sleepGoal[0].recommendedValue ? "Great job on meeting your recommended sleep time" : "remember sleep is very important, try to sleep more tmr"}\n\n` +
-          
-          "You're doing great! Keep up the hard work, and remember each small step counts toward a healthy lifestyle!",
-  };
-  
 
-    await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
-  } catch (error) {
-    console.error(error);
-  }
-};
+          "You're doing great! Keep up the hard work, and remember each small step counts toward a healthy lifestyle!",
+      };
+
+
+      await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
 
 
@@ -1387,304 +1411,308 @@ const handleSubmit = async (event, goalsData, email) => {
             <div
               className="leftPageWrapper"
             >
+
               <div style={styles.goalScreen}>
+                <h2 style={{ fontSize: "16px", color: 'Black', marginBottom: '-5px', marginTop: '-16px', marginLeft: '-210px' }}>Track Daily :</h2>
+
                 <GoalContainer style={styles.goalRow}>
+
                 </GoalContainer>
+                <LeftPageContainer>
 
-                <GoalContainer style={styles.goalRow}>
-                  <td style={styles.titleGroup}>
-                    <img
-                      style={styles.icon}
-                      src={require("../../components/images/journal/activity_goals.png")}
-                      alt="Activity goals icon on activity goals page"
-                    />
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                      <h2 style={styles.goalLabel}>Physical Activity</h2>
-                      <p style={{ fontSize: "16px", color: "#555", fontWeight: "bold" }}>Recommended: 60 minutes/day</p>
-                    </div>
-                    <Tooltip
-                      title={
-                        <div>
-                          Exercise, do chores, play sports, and go out and do
-                          other physical activities.
-                          <br />{" "}
-                          <strong>Recommended Level: 60 minutes/day</strong>
-                          <br />
-                          <strong>Last Logged Time:</strong>{" "}
-                          {activityData.length &&
-                            new Date(
-                              activityData[0].dateToday
-                            ).toLocaleDateString()}{" "}
-                          {activityData.length &&
-                            new Date(
-                              activityData[0].dateToday
-                            ).toLocaleTimeString()}
-                        </div>
-                      }
-                    >
-                      <HelpOutlineIcon
-                        style={{
-                          fontSize: "16px",
-                          cursor: "pointer",
-                        }}
+                  <GoalContainer style={styles.goalRow}>
+                    <td style={styles.titleGroup}>
+                      <img
+                        style={{ width: "55px", height: "55px", marginRight: "10px" }} // Inline style for this icon
+                        src={require("../../components/images/journal/activity_goals.png")}
+                        alt="Activity goals icon on activity goals page"
                       />
-                    </Tooltip>
-                  </td>
-                  <td style={{ width: "50%" }}>
-                    <Tooltip
-                      title={
-                        loggedActivityToday && editingBehaviorId !== 0
-                          ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
-                          : ""
-                      }
-                    >
-
-                      <StyledButton
-                        variant="contained"
-                        onClick={() => handleOpenPopup("activity")}
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                        <h2 style={styles.goalLabel}>Exercise</h2>
+                        <p style={{ fontSize: "14px", color: "#555", fontWeight: "bold" }}>Recommended: 60 minutes/day</p>
+                      </div>
+                      <Tooltip
+                        title={
+                          <div>
+                            Exercise, do chores, play sports, and go out and do
+                            other physical activities.
+                            <br />{" "}
+                            <strong>Recommended Level: 60 minutes/day</strong>
+                            <br />
+                            <strong>Last Logged Time:</strong>{" "}
+                            {activityData.length &&
+                              new Date(
+                                activityData[0].dateToday
+                              ).toLocaleDateString()}{" "}
+                            {activityData.length &&
+                              new Date(
+                                activityData[0].dateToday
+                              ).toLocaleTimeString()}
+                          </div>
+                        }
                       >
-                        Set and Track
-                      </StyledButton>
+                        <HelpOutlineIcon
+                          style={{
+                            fontSize: "16px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </Tooltip>
+                    </td>
+                    <td style={{ width: "50%" }}>
+                      <Tooltip
+                        title={
+                          loggedActivityToday && editingBehaviorId !== 0
+                            ? "You've already logged this goal today! You can change it by clicking the edit button to the right."
+                            : ""
+                        }
+                      >
+                        <StyledButton
+                          variant="contained"
+                          onClick={() => handleOpenPopup("activity")}
+                        >
+                          Set and Track
+                        </StyledButton>
+                      </Tooltip>
 
-                    </Tooltip>
-
-                    {/* Tracking under the buttons*/}
-                    {selectedItems.activity.length > 0 && (
-                      <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
-                          <strong>Selected:</strong>
+                      {/* Tracking under the buttons*/}
+                      {selectedItems.activity.length > 0 && (
+                        <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
+                          <strong>Selected: </strong>
                           {selectedItems.activity.map((item, index) => (
-                              <span key={item}>
-                                  {item}: {goalInputs.activity[item]?.hours || 0}h {goalInputs.activity[item]?.minutes || 0}m / 
-                                  Tracked: {behaviorInputs.activity[item]?.hours || 0}h {behaviorInputs.activity[item]?.minutes || 0}m
-                                  {index < selectedItems.activity.length - 1 && ", "}
-                              </span>
+                            <span key={item}>
+                              {item}: {goalInputs.activity[item]?.hours || 0}h {goalInputs.activity[item]?.minutes || 0}m /
+                              Tracked: {behaviorInputs.activity[item]?.hours || 0}h {behaviorInputs.activity[item]?.minutes || 0}m
+                              {index < selectedItems.activity.length - 1 && ", "}
+                            </span>
                           ))}
-                      </div>
-                  )}
-                  </td>
-                </GoalContainer>
-
-
-
-                <GoalContainer style={styles.goalRow}>
-                  <td style={styles.titleGroup}>
-                    <img
-                      style={styles.icon}
-                      src={require("../../components/images/journal/tablet_icon.png")}
-                      alt="Tablet for screentime goals"
-                    />
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                      <h2 style={styles.goalLabel}>Screen Time</h2>
-                      <p style={{ fontSize: "16px", color: "#555", fontWeight: "bold" }}>Recommended: 120 minutes/day</p>
-                    </div>
-                    <Tooltip
-                      title={
-                        <div>
-                          Limit time using phones, laptops, and other screens
-                          every day. The only goal where a lower behavior value
-                          is better!
-                          <br />{" "}
-                          <strong>
-                            Recommended Level: &lt; 2 hours (120 minutes)/day
-                          </strong>
-                          <br />
-                          <strong>Last Logged Time:</strong>{" "}
-                          {screentimeData.length &&
-                            new Date(
-                              screentimeData[0].dateToday
-                            ).toLocaleDateString()}{" "}
-                          {screentimeData.length &&
-                            new Date(
-                              screentimeData[0].dateToday
-                            ).toLocaleTimeString()}
                         </div>
-                      }
-                    >
-                      <HelpOutlineIcon
-                        style={{
-                          fontSize: "16px",
-                          cursor: "pointer",
-                        }}
+                      )}
+                    </td>
+                  </GoalContainer>
+
+
+
+                  <GoalContainer style={styles.goalRow}>
+                    <td style={styles.titleGroup}>
+                      <img
+                        style={styles.icon}
+                        src={require("../../components/images/journal/tablet_icon.png")}
+                        alt="Tablet for screentime goals"
                       />
-                    </Tooltip>
-                  </td>
-                  <td style={{ width: "50%" }}>
-                    <Tooltip title={loggedScreentimeToday && editingBehaviorId !== 1 ? "You've already logged this goal today!" : ""}>
-                      <StyledButton variant="contained" onClick={() => handleOpenPopup("screentime")}>
-                        Set and Track
-                      </StyledButton>
-                    </Tooltip>
-                    {selectedItems.screentime.length > 0 && (
-                      <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
-                        <strong>Selected: </strong>
-                        {selectedItems.screentime.map((item, index) => (
-                          <span key={item}>
-                            {item}: {goalInputs.screentime[item]?.hours || 0}h {goalInputs.screentime[item]?.minutes || 0}m /
-                            Tracked: {behaviorInputs.screentime[item]?.hours || 0}h {behaviorInputs.screentime[item]?.minutes || 0}m
-                            {index < selectedItems.screentime.length - 1 && ", "}
-                          </span>
-                        ))}
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                        <h2 style={styles.goalLabel}>Screen Time</h2>
+                        <p style={{ fontSize: "14px", color: "#555", fontWeight: "bold" }}>Recommended: 120 minutes/day</p>
                       </div>
-                    )}
-
-                  </td>
-                </GoalContainer>
-
-                <GoalContainer style={styles.goalRow}>
-                  <td style={styles.titleGroup}>
-                    <img
-                      style={styles.icon}
-                      src={require("../../components/images/journal/apple.png")}
-                      alt="Apple for servings goal"
-                    />
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                      <h2 style={styles.goalLabel}>Eating Fruits & Vegetables</h2>
-                      <p style={{ fontSize: "16px", color: "#555", fontWeight: "bold" }}>Recommended: 5 servings/day</p>
-                    </div>
-                    <Tooltip
-                      title={
-                        <div>
-                          Eat more servings of fruits and vegetables for a
-                          healthier diet.
-                          <br />{" "}
-                          <strong>Recommended Level: 5 servings/day</strong>
-                          <br />
-                          <strong>Last Logged Time:</strong>{" "}
-                          {eatingData.length &&
-                            new Date(
-                              eatingData[0].dateToday
-                            ).toLocaleDateString()}{" "}
-                          {eatingData.length &&
-                            new Date(
-                              eatingData[0].dateToday
-                            ).toLocaleTimeString()}
+                      <Tooltip
+                        title={
+                          <div>
+                            Limit time using phones, laptops, and other screens
+                            every day. The only goal where a lower behavior value
+                            is better!
+                            <br />{" "}
+                            <strong>
+                              Recommended Level: &lt; 2 hours (120 minutes)/day
+                            </strong>
+                            <br />
+                            <strong>Last Logged Time:</strong>{" "}
+                            {screentimeData.length &&
+                              new Date(
+                                screentimeData[0].dateToday
+                              ).toLocaleDateString()}{" "}
+                            {screentimeData.length &&
+                              new Date(
+                                screentimeData[0].dateToday
+                              ).toLocaleTimeString()}
+                          </div>
+                        }
+                      >
+                        <HelpOutlineIcon
+                          style={{
+                            fontSize: "16px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </Tooltip>
+                    </td>
+                    <td style={{ width: "50%" }}>
+                      <Tooltip title={loggedScreentimeToday && editingBehaviorId !== 1 ? "You've already logged this goal today!" : ""}>
+                        <StyledButton variant="contained" onClick={() => handleOpenPopup("screentime")}>
+                          Set and Track
+                        </StyledButton>
+                      </Tooltip>
+                      {selectedItems.screentime.length > 0 && (
+                        <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
+                          <strong>Selected: </strong>
+                          {selectedItems.screentime.map((item, index) => (
+                            <span key={item}>
+                              {item}: {goalInputs.screentime[item]?.hours || 0}h {goalInputs.screentime[item]?.minutes || 0}m /
+                              Tracked: {behaviorInputs.screentime[item]?.hours || 0}h {behaviorInputs.screentime[item]?.minutes || 0}m
+                              {index < selectedItems.screentime.length - 1 && ", "}
+                            </span>
+                          ))}
                         </div>
-                      }
-                    >
-                      <HelpOutlineIcon
-                        style={{
-                          fontSize: "16px",
-                          cursor: "pointer",
-                        }}
+                      )}
+
+                    </td>
+                  </GoalContainer>
+
+                  <GoalContainer style={styles.goalRow}>
+                    <td style={styles.titleGroup}>
+                      <img
+                        style={styles.icon}
+                        src={require("../../components/images/journal/apple.png")}
+                        alt="Apple for servings goal"
                       />
-                    </Tooltip>
-                  </td>
-                  <td style={{ width: "50%" }}>
-                    <Tooltip title={loggedEatingToday && editingBehaviorId !== 2 ? "You've already logged this goal today!" : ""}>
-                      <StyledButton variant="contained" onClick={() => handleOpenPopup("eating")}>
-                        Set and Track
-                      </StyledButton>
-                    </Tooltip>
-                    {selectedItems.eating.length > 0 && (
-                      <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
-                        <strong>Selected: </strong>
-                        {selectedItems.eating.map((item, index) => (
-                          <span key={item}>
-                            {item}: {goalInputs.eating[item]?.servings || 0} servings /
-                            Tracked: {behaviorInputs.eating[item]?.servings || 0} servings
-                            {index < selectedItems.eating.length - 1 && ", "}
-                          </span>
-                        ))}
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                        <h2 style={styles.goalLabel}>Eating</h2>
+                        <p style={{ fontSize: "14px", color: "#555", fontWeight: "bold" }}>Recommended: 5 servings/day</p>
                       </div>
-                    )}
-
-                  </td>
-                </GoalContainer>
-
-                <GoalContainer style={styles.goalRow}>
-                  <td style={styles.titleGroup}>
-                    <img
-                      style={styles.icon}
-                      src={require("../../components/images/journal/pillow_icon.png")}
-                      alt="Pillow icon for sleep"
-                    />
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                      <h2 style={styles.goalLabel}>Sleep</h2>
-                      <p style={{ fontSize: "16px", color: "#555", fontWeight: "bold" }}>Recommended: 9 hours/day</p>
-                    </div>
-                    <Tooltip
-                      title={
-                        <div>
-                          Get a good night's rest to be productive and healthy.
-                          <br />{" "}
-                          <strong>Recommended Level: 9-11 hours/night</strong>
-                          <br />
-                          <strong>Last Logged Time:</strong>{" "}
-                          {sleepData.length &&
-                            new Date(
-                              sleepData[0].dateToday
-                            ).toLocaleDateString()}{" "}
-                          {sleepData.length &&
-                            new Date(
-                              sleepData[0].dateToday
-                            ).toLocaleTimeString()}
+                      <Tooltip
+                        title={
+                          <div>
+                            Eat more servings of fruits and vegetables for a
+                            healthier diet.
+                            <br />{" "}
+                            <strong>Recommended Level: 5 servings/day</strong>
+                            <br />
+                            <strong>Last Logged Time:</strong>{" "}
+                            {eatingData.length &&
+                              new Date(
+                                eatingData[0].dateToday
+                              ).toLocaleDateString()}{" "}
+                            {eatingData.length &&
+                              new Date(
+                                eatingData[0].dateToday
+                              ).toLocaleTimeString()}
+                          </div>
+                        }
+                      >
+                        <HelpOutlineIcon
+                          style={{
+                            fontSize: "16px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </Tooltip>
+                    </td>
+                    <td style={{ width: "50%" }}>
+                      <Tooltip title={loggedEatingToday && editingBehaviorId !== 2 ? "You've already logged this goal today!" : ""}>
+                        <StyledButton variant="contained" onClick={() => handleOpenPopup("eating")}>
+                          Set and Track
+                        </StyledButton>
+                      </Tooltip>
+                      {selectedItems.eating.length > 0 && (
+                        <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
+                          <strong>Selected: </strong>
+                          {selectedItems.eating.map((item, index) => (
+                            <span key={item}>
+                              {item}: {goalInputs.eating[item]?.servings || 0} servings /
+                              Tracked: {behaviorInputs.eating[item]?.servings || 0} servings
+                              {index < selectedItems.eating.length - 1 && ", "}
+                            </span>
+                          ))}
                         </div>
-                      }
-                    >
-                      <HelpOutlineIcon
-                        style={{
-                          fontSize: "16px",
-                          cursor: "pointer",
-                        }}
+                      )}
+
+                    </td>
+                  </GoalContainer>
+
+                  <GoalContainer style={styles.goalRow}>
+                    <td style={styles.titleGroup}>
+                      <img
+                        style={styles.icon}
+                        src={require("../../components/images/journal/pillow_icon.png")}
+                        alt="Pillow icon for sleep"
                       />
-                    </Tooltip>
-                  </td>
-                  <td style={{ width: "50%" }}>
-                    <Tooltip title={loggedSleepToday && editingBehaviorId !== 3 ? "You've already logged this goal today!" : ""}>
-                      <StyledButton variant="contained" onClick={() => handleOpenPopup("sleep")}>
-                        Set and Track
-                      </StyledButton>
-                    </Tooltip>
-                    {selectedItems.sleep.length > 0 && (
-                      <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
-                        <strong>Selected: </strong>
-                        {selectedItems.sleep.includes("Track Sleep") && (
-                          <>
-                            {/* Inline calculation of expected sleep duration */}
-                            Expected Sleep: {(() => {
-                              const bedTime = goalInputs.sleep["Expected Sleep"].bedtime;
-                              const wakeUpTime = goalInputs.sleep["Expected Sleep"].wakeUpTime;
-
-                              if (!bedTime || !wakeUpTime) return "0h 0m";
-
-                              const [bedHour, bedMinute] = bedTime.split(":").map(Number);
-                              const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
-
-                              let totalMinutes = (wakeHour * 60 + wakeMinute) - (bedHour * 60 + bedMinute);
-                              if (totalMinutes < 0) totalMinutes += 24 * 60;
-
-                              const hours = Math.floor(totalMinutes / 60);
-                              const minutes = totalMinutes % 60;
-
-                              return `${hours}h ${minutes}m`;
-                            })()} /
-
-                            {/* Inline calculation of tracked sleep duration */}
-                            Tracked Sleep: {(() => {
-                              const bedTime = behaviorInputs.sleep["Actual Sleep"].bedtime;
-                              const wakeUpTime = behaviorInputs.sleep["Actual Sleep"].wakeUpTime;
-
-                              if (!bedTime || !wakeUpTime) return "8h 0m";
-
-                              const [bedHour, bedMinute] = bedTime.split(":").map(Number);
-                              const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
-
-                              let totalMinutes = (wakeHour * 60 + wakeMinute) - (bedHour * 60 + bedMinute);
-                              if (totalMinutes < 0) totalMinutes += 24 * 60;
-
-                              const hours = Math.floor(totalMinutes / 60);
-                              const minutes = totalMinutes % 60;
-
-                              return `${hours}h ${minutes}m`;
-                            })()}
-                          </>
-                        )}
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                        <h2 style={styles.goalLabel}>Sleep</h2>
+                        <p style={{ fontSize: "14px", color: "#555", fontWeight: "bold" }}>Recommended: 9 hours/day</p>
                       </div>
-                    )}
+                      <Tooltip
+                        title={
+                          <div>
+                            Get a good night's rest to be productive and healthy.
+                            <br />{" "}
+                            <strong>Recommended Level: 9-11 hours/night</strong>
+                            <br />
+                            <strong>Last Logged Time:</strong>{" "}
+                            {sleepData.length &&
+                              new Date(
+                                sleepData[0].dateToday
+                              ).toLocaleDateString()}{" "}
+                            {sleepData.length &&
+                              new Date(
+                                sleepData[0].dateToday
+                              ).toLocaleTimeString()}
+                          </div>
+                        }
+                      >
+                        <HelpOutlineIcon
+                          style={{
+                            fontSize: "16px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </Tooltip>
+                    </td>
+                    <td style={{ width: "50%" }}>
+                      <Tooltip title={loggedSleepToday && editingBehaviorId !== 3 ? "You've already logged this goal today!" : ""}>
+                        <StyledButton variant="contained" onClick={() => handleOpenPopup("sleep")}>
+                          Set and Track
+                        </StyledButton>
+                      </Tooltip>
+                      {selectedItems.sleep.length > 0 && (
+                        <div style={{ marginTop: "10px", color: "#333", fontSize: "14px" }}>
+                          <strong>Selected: </strong>
+                          {selectedItems.sleep.includes("Track Sleep") && (
+                            <>
+                              {/* Inline calculation of expected sleep duration */}
+                              Expected Sleep: {(() => {
+                                const bedTime = goalInputs.sleep["Expected Sleep"].bedtime;
+                                const wakeUpTime = goalInputs.sleep["Expected Sleep"].wakeUpTime;
+
+                                if (!bedTime || !wakeUpTime) return "0h 0m";
+
+                                const [bedHour, bedMinute] = bedTime.split(":").map(Number);
+                                const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
+
+                                let totalMinutes = (wakeHour * 60 + wakeMinute) - (bedHour * 60 + bedMinute);
+                                if (totalMinutes < 0) totalMinutes += 24 * 60;
+
+                                const hours = Math.floor(totalMinutes / 60);
+                                const minutes = totalMinutes % 60;
+
+                                return `${hours}h ${minutes}m`;
+                              })()} /
+
+                              {/* Inline calculation of tracked sleep duration */}
+                              Tracked Sleep: {(() => {
+                                const bedTime = behaviorInputs.sleep["Actual Sleep"].bedtime;
+                                const wakeUpTime = behaviorInputs.sleep["Actual Sleep"].wakeUpTime;
+
+                                if (!bedTime || !wakeUpTime) return "8h 0m";
+
+                                const [bedHour, bedMinute] = bedTime.split(":").map(Number);
+                                const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
+
+                                let totalMinutes = (wakeHour * 60 + wakeMinute) - (bedHour * 60 + bedMinute);
+                                if (totalMinutes < 0) totalMinutes += 24 * 60;
+
+                                const hours = Math.floor(totalMinutes / 60);
+                                const minutes = totalMinutes % 60;
+
+                                return `${hours}h ${minutes}m`;
+                              })()}
+                            </>
+                          )}
+                        </div>
+                      )}
 
 
-                  </td>
-                </GoalContainer>
+                    </td>
+                  </GoalContainer>
+                </LeftPageContainer>
               </div>
 
               <img
@@ -1701,8 +1729,7 @@ const handleSubmit = async (event, goalsData, email) => {
               />
               <div style={styles.rightGoalScreen}>
                 <GoalContainer style={styles.goalRow}>
-                  <th style={styles.goalHeader}>Reflect</th>
-                  <th style={styles.goalHeader}>AI-Generated Feedback</th>
+                  <h2 style={{ fontSize: "16px", color: 'Black', marginBottom: '-5px', marginTop: '-16px', marginLeft: '-250px' }}>Reflect :</h2>
                 </GoalContainer>
 
                 <GoalContainer style={styles.goalRow}>
@@ -1766,6 +1793,7 @@ const handleSubmit = async (event, goalsData, email) => {
                     </Tooltip>
 
                   </ReflectionContainer>
+
                   <td style={{ width: "50%", maxHeight: 101 }}>
                     {activityResponseLoading ? (
                       <CircularProgress />
@@ -1988,7 +2016,7 @@ const handleSubmit = async (event, goalsData, email) => {
                       placeholder="Type my thoughts"
                       multiline
                       rows={sleepGoal[0].reflection.length > 25 ? 2 : 1}
-                      style={{ width: "80%" }}
+                      style={{ width: "73%" }}
                       value={sleepGoal.length && sleepGoal[0].reflection}
                       onChange={(e) => {
                         setSleepGoal((prevSleepGoal) => {
@@ -2084,7 +2112,8 @@ const handleSubmit = async (event, goalsData, email) => {
         </div>
       </JournalWrapper>
 
-      {/* Physical Dialog */}
+      {/* Physical Activity Dialog */}
+
       <Dialog
         open={popupOpen.activity}
         onClose={() => handleClosePopup("activity")}
@@ -2131,6 +2160,7 @@ const handleSubmit = async (event, goalsData, email) => {
                           value={goalInputs.activity[item]?.hours || ""}
                           onChange={(event) => {
                             const newGoal = 60 * event.target.value;
+                            console.log("newGoal", newGoal);
                             handleInputChange(event, item, "hours", "goal", "activity");
                             setActivityGoal((prevActivityGoal) => {
                               const updatedActivityGoal = prevActivityGoal.map((goal) => {
@@ -2269,6 +2299,7 @@ const handleSubmit = async (event, goalsData, email) => {
           </StyledButton>
         </DialogActions>
       </Dialog>
+
 
 
 
@@ -2492,9 +2523,9 @@ const handleSubmit = async (event, goalsData, email) => {
                           label="Servings"
                           type="number"
                           name={`${item}-goal-servings`}
-                          value={goalInputs.eating[item]?.servings || ""}
+                          value={Math.max(goalInputs.eating[item]?.servings || 0, 0)}
                           onChange={(event) => {
-                            const newGoal = event.target.value;
+                            const newGoal = Math.max(Number(event.target.value), 0); // Ensure non-negative
                             handleInputChange(event, item, "servings", "goal", "eating");
                             setEatingGoal((prevEatingGoal) => {
                               const updatedEatingGoal = prevEatingGoal.map((goal) => {
@@ -2506,6 +2537,18 @@ const handleSubmit = async (event, goalsData, email) => {
                               return updatedEatingGoal;
                             });
                           }}
+                          onBlur={(event) => {
+                            if (Number(event.target.value) < 0 || event.target.value === "") {
+                              handleInputChange({ target: { value: "0" } }, item, "servings", "goal", "eating");
+                              setEatingGoal((prevEatingGoal) => {
+                                const updatedEatingGoal = prevEatingGoal.map((goal) => ({
+                                  ...goal,
+                                  goalValue: 0,
+                                }));
+                                return updatedEatingGoal;
+                              });
+                            }
+                          }}
                           fullWidth
                           size="small"
                           style={{ width: '100px' }}
@@ -2516,19 +2559,31 @@ const handleSubmit = async (event, goalsData, email) => {
                           label="Servings"
                           type="number"
                           name={`${item}-behavior-servings`}
-                          value={behaviorInputs.eating[item]?.servings || ""}
+                          value={Math.max(behaviorInputs.eating[item]?.servings || 0, 0)}
                           onChange={(event) => {
-                            const newGoal = event.target.value;
+                            const newBehaviorValue = Math.max(Number(event.target.value), 0);
                             handleInputChange(event, item, "servings", "behaviour", "eating");
                             setEatingGoal((prevEatingGoal) => {
                               const updatedEatingGoal = prevEatingGoal.map((goal) => {
                                 return {
                                   ...goal,
-                                  behaviorValue: newGoal,
+                                  behaviorValue: newBehaviorValue,
                                 };
                               });
                               return updatedEatingGoal;
                             });
+                          }}
+                          onBlur={(event) => {
+                            if (Number(event.target.value) < 0 || event.target.value === "") {
+                              handleInputChange({ target: { value: "0" } }, item, "servings", "behaviour", "eating");
+                              setEatingGoal((prevEatingGoal) => {
+                                const updatedEatingGoal = prevEatingGoal.map((goal) => ({
+                                  ...goal,
+                                  behaviorValue: 0,
+                                }));
+                                return updatedEatingGoal;
+                              });
+                            }
                           }}
                           fullWidth
                           size="small"
@@ -2765,16 +2820,16 @@ const handleSubmit = async (event, goalsData, email) => {
         </DialogActions>
       </Dialog>
       <StyledButton onClick={(e) => handleSubmit(e, {
-          activityGoal,
-          screentimeGoal,
-          eatingGoal,
-          sleepGoal
-          }, email)}>
-      Send Daily Goal Update Email
-    </StyledButton>
+        activityGoal,
+        screentimeGoal,
+        eatingGoal,
+        sleepGoal
+      }, email)}>
+        Send Daily Goal Update Email
+      </StyledButton>
 
     </Wrapper>
-    
+
   );
 };
 
@@ -2787,11 +2842,11 @@ let styles = {
     display: "flex",
     flexDirection: "column",
     margin: "auto",
-    marginLeft: "8%",
-    width: "80%",
-    height: "90%",
-    justifyContent: "space-between",
-    marginTop: "-5%"
+    marginLeft: "3%", /* Adjust margins for better alignment */
+    marginTop: "10%", /* Adjust for better visual balance */
+    width: "85%", /* Full width for better fill */
+    height: "90%", /* Reduce height slightly to prevent clipping */
+    justifyContent: "space-around", /* Distribute content evenly */
   },
   rightGoalScreen: {
     position: "absolute",
@@ -2803,40 +2858,70 @@ let styles = {
     width: "80%",
     height: "90%",
     justifyContent: "space-between",
-    marginTop: "5%"
+    marginTop: "5%",
   },
   goalRow: {
     display: "flex",
-    justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "15px"
-  },
-  goalLabel: {
-    width: "auto",
-    margin: "2% 0 1% 5%",
-    fontSize: 22,
-  },
-  inputBox: {
-    width: "70%",
-    marginLeft: "auto",
-    marginRight: "auto",
-    size: "10px",
-  },
-  icon: {
-    width: "30px",
+    padding: "10px 0",
+    width: "100%",
   },
   titleGroup: {
     display: "flex",
-    width: "30%",
     alignItems: "center",
-    justifyContent: "flex-end",
-    marginTop: "5%",
+    justifyContent: "flex-start",
+    flex: 1,
+    margin: "0 12px",
+  },
+  icon: {
+    height: "auto",
+    marginRight: "10px",
+  },
+  goalLabel: {
+    fontSize: "18px",
+    fontWeight: "bold",
+    margin: "0",
+  },
+  inputBox: {
+    padding: "10px",
+    border: "1px solid #ccc",
+    borderRadius: "4px",
+    fontSize: "14px",
   },
   feedback: {
-    color: "#000080",
-    padding: 5,
-    overflowY: "scroll",
-    maxHeight: 20,
+    fontSize: "14px",
+    color: "#555",
+    lineHeight: "1.4",
+    maxHeight: "50px",
+    overflowY: "auto",
+    padding: "5px",
+    backgroundColor: "#f9f9f9",
+    borderRadius: "4px",
+  },
+  button: {
+    backgroundColor: "#6a1b9a",
+    color: "white",
+    fontWeight: "bold",
+    padding: "10px 20px",
+    borderRadius: "4px",
+    margin: "0 10px",
+    transition: "all 0.3s ease-in-out",
+    cursor: "pointer",
+  },
+  buttonHover: {
+    backgroundColor: "#4a148c",
+    transform: "scale(1.05)",
+  },
+  reflectionContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+
+  },
+  textField: {
+    height: "40px",
+    fontSize: "14px",
+    padding: "5px",
   },
 };
-
