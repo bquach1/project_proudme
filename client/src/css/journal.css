@@ -374,7 +374,25 @@
 .reflect-wrapper:hover {
   cursor: pointer;
 }
+.track-daily-text {
+  position: absolute;
+  top: 30px;
+  left: 13%; 
+  transform: translateX(-50%);
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
 
+.reflect-text {
+  position: absolute;
+  top: -13px;
+  left: 2%; 
+  transform: translateX(-50%); 
+  font-size: 16px; 
+  font-weight: bold; 
+  color: #333; 
+}
 .page-modal {
   background-color: #b2c5cb;
   padding: 5px;

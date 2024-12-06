@@ -44,24 +44,21 @@ const BehaviorInfoText = styled.div`
 `;
 
 const Wrapper = styled.div`
-  padding-bottom: 5%; // Adjust this value
-  height: 100vh;
+  padding-bottom: 5%;
+  height: 100vh; /* Full viewport height */
   width: 100%;
   margin: auto;
   font-family: Montserrat;
   position: relative;
   overflow: hidden;
-  .information-text {
-    font-size: 14px;
-  }
+
   @media only screen and (max-width: 600px) {
     width: 100%;
     flex-direction: column;
-    overflow: hidden;
-    height: 100vh;
+    overflow: auto; /* Allow scrolling on smaller screens */
+    height: auto; /* Adjust height for smaller screens */
   }
 `;
-
 
 const JournalWrapper = styled.table`
   display: flex;
@@ -78,37 +75,41 @@ const JournalWrapper = styled.table`
   }
 `;
 const LeftPageContainer = styled.div`
-  padding: 20px;
+  padding: 20px 20px; /* Reduced padding for better spacing */
   border-radius: 12px;
   width: 100%;
-  margin: 60px auto;
+  margin: 0 auto; 
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
   background-color: transparent;
-  overflow: hidden; \
+  overflow: auto;
   box-sizing: border-box;
+  height: 100%;
+  margin-top: -10px; /* Negative margin to bring contents up */
 
   @media (max-width: 600px) {
     margin: 24px auto;
   }
 `;
 
+
+
 const GoalContainer = styled.tr`
   ${LeftPageContainer} & {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px ; /* Reduce the margins */
-    padding: 15px; /* Adjust padding to accommodate content */
-    width: calc(100% - 20px); /* Ensure card fits within parent */
-    max-width: 100%; /* Prevent card from overflowing */
-    max-width: 100%; /* Prevent card from overflowing */
-    border-top: 4px solid #6a1b9a;
+    margin: 20px 0; /* Consistent vertical spacing between cards */
+    padding: 20px;
+    width: 100%; /* Full width of container */
+    min-height: 120px; /* Set consistent height for all cards */
+    flex-grow: 1;
     display: flex;
     justify-content: space-between;
-  overflow-y: auto;
+    align-items: center; /* Vertically center content */
+    border-top: 4px solid #6a1b9a;
 
     .edit-icon {
       &:hover {
@@ -1292,6 +1293,9 @@ const JournalScreen = () => {
     <Wrapper>
       <h1 style={{ color: "#2E6AA1", marginTop: "1%" }}>My Journal</h1>
       <strong style={{ display: "flex", justifyContent: "center" }}>
+  <p><strong>{currentDateTime}</strong></p>
+</strong>
+      <strong style={{ display: "flex", justifyContent: "center" }}>
         Last Logged{" "}
         {mostRecentDay && mostRecentTime ? (
           <>
@@ -1413,8 +1417,7 @@ const JournalScreen = () => {
             >
 
               <div style={styles.goalScreen}>
-                <h2 style={{ fontSize: "16px", color: 'Black', marginBottom: '-5px', marginTop: '-16px', marginLeft: '-210px' }}>Track Daily :</h2>
-
+              <h2 className="track-daily-text">Track Daily :</h2>
                 <GoalContainer style={styles.goalRow}>
 
                 </GoalContainer>
@@ -1729,7 +1732,7 @@ const JournalScreen = () => {
               />
               <div style={styles.rightGoalScreen}>
                 <GoalContainer style={styles.goalRow}>
-                  <h2 style={{ fontSize: "16px", color: 'Black', marginBottom: '-5px', marginTop: '-16px', marginLeft: '-250px' }}>Reflect :</h2>
+                <h2 className="reflect-text">Reflect :</h2>
                 </GoalContainer>
 
                 <GoalContainer style={styles.goalRow}>
@@ -2819,15 +2822,20 @@ const JournalScreen = () => {
           </StyledButton>
         </DialogActions>
       </Dialog>
-      <StyledButton onClick={(e) => handleSubmit(e, {
-        activityGoal,
-        screentimeGoal,
-        eatingGoal,
-        sleepGoal
-      }, email)}>
-        Send Daily Goal Update Email
-      </StyledButton>
-
+      <div style={{ textAlign: "center", marginTop: "-150px" }}>
+      <StyledButton
+      onClick={(e) =>
+        handleSubmit(e, {
+          activityGoal,
+          screentimeGoal,
+          eatingGoal,
+          sleepGoal,
+        }, email)
+      }
+    >
+      Send Daily Goal Update Email
+    </StyledButton>
+    </div>
     </Wrapper>
 
   );
@@ -2842,11 +2850,11 @@ let styles = {
     display: "flex",
     flexDirection: "column",
     margin: "auto",
-    marginLeft: "3%", /* Adjust margins for better alignment */
-    marginTop: "10%", /* Adjust for better visual balance */
-    width: "85%", /* Full width for better fill */
-    height: "90%", /* Reduce height slightly to prevent clipping */
-    justifyContent: "space-around", /* Distribute content evenly */
+    marginLeft: "3%",
+    marginTop: "0%", /* Reduced margin to bring up the cards */
+    width: "85%",
+    height: "100%", /* Optional: Adjust height */
+    justifyContent: "space-around",
   },
   rightGoalScreen: {
     position: "absolute",
