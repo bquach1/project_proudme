@@ -25,7 +25,7 @@ export const getSaveButtonColor = (loggedGoalToday, goalData, goal) => {
   }
 };
 
-export const createChatbotRequest = (
+export const createChatbotRequest = async (
   goal,
   setGoal,
   user,
@@ -129,43 +129,44 @@ export const createChatbotRequest = (
   }
 
   // Send the request to the chatbot
-  axios
-    .post(`${DATABASE_URL}/chatbot`, {
+  try {
+    // Send the request to the chatbot
+    const chatbotResponse = await axios.post(`${DATABASE_URL}/chatbot`, {
       prompt: [
         {
           role: "system",
-          content: `Provide feedback based on the user's actual behavior compared to both their set personal goals and recommended goals. Do not respond using percentages`,
+          content: `Provide feedback based on the user's actual behavior compared to both their set personal goals and recommended goals.`,
         },
         {
           role: "user",
-          content: `Goal Type: ${goalType}, Recommended Value: ${recommendedValue}, Personal Goal Met: ${personalGoalMet ? "Yes" : "No"}, Recommended Goal Met: ${goalMet ? "Yes" : "No"}, Actual Value: ${actualValue}, ${additionalInfo}, Reflection: ${reflection}`,
+          content: `Goal Type: ${goalType}, Recommended Value: ${recommendedValue}, Personal Goal Met: ${personalGoalMet}`,
         },
       ],
-    })
-    .then((response) => {
-      console.log(`Chatbot response for ${goalType}:`, response.data.chat_reply);
-      
-      setGoal((prevGoal) => {
-        const updatedGoal = prevGoal.map((g) => ({
-          ...g,
-          feedback: response.data.chat_reply,
-        }));
-        return updatedGoal;
-      });
-    
-      // Save chatbot response to MongoDB
-      // axios.post(`${DATABASE_URL}/saveChatbotResponse`, {
-      //   userId: user._id,
-      //   goalType,
-      //   feedback: response.data.chat_reply
-      // });
-    
-      setGoalResponseLoading(false);
-    })
-    .catch((error) => {
-      console.error(error);
-      setGoalResponseLoading(false);
     });
+  
+    console.log(`Chatbot response for ${goalType}:`, chatbotResponse.data.chat_reply);
+  
+    // Update the goal with the chatbot response
+    setGoal((prevGoal) => {
+      const updatedGoal = prevGoal.map((g) => ({
+        ...g,
+        feedback: chatbotResponse.data.chat_reply,
+      }));
+      return updatedGoal;
+    });
+  
+    // Save chatbot response to MongoDB
+    await axios.post(`${DATABASE_URL}/ChatbotResponse`, {
+      userId: user._id,
+      goalType,
+      feedback: chatbotResponse.data.chat_reply,
+    });
+  
+    setGoalResponseLoading(false); // Stop the loading indicator
+  } catch (error) {
+    console.error(error);
+    setGoalResponseLoading(false); // Stop the loading indicator even in case of an error
+  }  
 };
 
 
