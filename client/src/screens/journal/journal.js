@@ -49,10 +49,12 @@ const Wrapper = styled.div`
   padding-bottom: 5%;
   height: 100vh; /* Full viewport height */
   width: 100%;
-  margin: auto;
+  padding-bottom: 0; /* Remove extra space at the bottom */
+  margin-bottom: 0;
   font-family: Montserrat;
   position: relative;
-  overflow: hidden;
+  
+  // overflow: hidden;
 
   @media only screen and (max-width: 600px) {
     width: 100%;
@@ -66,9 +68,9 @@ const JournalWrapper = styled.table`
   display: flex;
   align-items: center;
   width: 100%;
-  justify-content: center;
+  justify-content: flex-start; /* Pushes content upward */
   position: relative;
-  margin: 0 auto; // Adjust this
+  margin: 0;
   flex-direction: column;
 
   @media only screen and (max-width: 600px) {
@@ -155,6 +157,7 @@ const StyledButton = styled(Button)`
   color: white !important;
   font-weight: bold !important;
   transition: all 0.3s ease-in-out !important;
+  position: relative;
 
   &:hover {
     background-color: #4a148c !important;
@@ -2157,6 +2160,25 @@ const handleSubmitEmail = async (event, goalsData, email) => {
             </div>
           </div>
         </div>
+        <StyledButton onClick={(e) => handleSubmitEmail(e, {
+            activityGoal,
+            screentimeGoal,
+            eatingGoal,
+            sleepGoal
+            }, email)}
+        style={{
+          marginTop: "-140px", // Moves the button up by reducing top margin
+          position: "relative", // Ensures the button respects the document flow
+          zIndex: 10, // Ensures visibility over other elements
+        }}    
+        >
+        Send Daily Goal Update Email
+        </StyledButton>
+        <Snackbar
+            open={sendEmailPopupOpen}
+            message="Email Sent!"
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        />
       </JournalWrapper>
 
       {/* Physical Activity Dialog */}
@@ -2866,19 +2888,6 @@ const handleSubmitEmail = async (event, goalsData, email) => {
           </StyledButton>
         </DialogActions>
       </Dialog>
-      <StyledButton onClick={(e) => handleSubmitEmail(e, {
-          activityGoal,
-          screentimeGoal,
-          eatingGoal,
-          sleepGoal
-          }, email)}>
-      Send Daily Goal Update Email
-      </StyledButton>
-      <Snackbar
-          open={sendEmailPopupOpen}
-          message="Email Sent!"
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      />
     </Wrapper>
 
   );
