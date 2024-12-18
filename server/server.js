@@ -8,12 +8,12 @@ const authMiddleware = require("./authMiddleware");
 const bcrypt = require("bcrypt");
 const sgMail = require("@sendgrid/mail");
 const openai = require("openai");
+const cron = require('node-cron');
 
 const app = express();
 const port = 3001;
 
 const uri = process.env.REACT_APP_MONGODB_URI;
-console.log(process.env.REACT_APP_MONGODB_URI);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
@@ -179,7 +179,7 @@ const goalInputsSchema = new mongoose.Schema({
   },
   eating: {
       type: Map,
-      of: { hours: Number, minutes: Number }
+      of: { servings: Number}
   },
   sleep: {
       "Expected Sleep": {
@@ -203,7 +203,7 @@ const behaviorInputsSchema = new mongoose.Schema({
   },
   eating: {
       type: Map,
-      of: { hours: Number, minutes: Number }
+      of: {servings: Number }
   },
   sleep: {
       "Actual Sleep": {
@@ -221,7 +221,7 @@ const chatbotResponseSchema = new mongoose.Schema({
   feedback: { type: String, required: true },
 });
 
-const AIfeedback = mongoose.model("ChatbotResponse", chatbotResponseSchema);
+const ChatbotResponse = mongoose.model("ChatbotResponse", chatbotResponseSchema);
 const BehaviorInputs = mongoose.model('BehaviorInputs', behaviorInputsSchema);
 const GoalInputs = mongoose.model('GoalInputs', goalInputsSchema);
 const SelectedItems = mongoose.model('SelectedItems', selectedItemsSchema);
@@ -229,6 +229,24 @@ const User = mongoose.model("User", userSchema);
 const Behavior = mongoose.model("Behavior", behaviorSchema);
 const Goal = mongoose.model("Goal", goalSchema);
 
+
+//delete file everyday it passes 
+
+cron.schedule('0 0 * * *', async () => {
+  console.log('Running daily data reset job');
+
+  try {
+    // Clear the collections
+    await SelectedItems.deleteMany({});
+    await GoalInputs.deleteMany({});
+    await BehaviorInputs.deleteMany({});
+    await ChatbotResponse.deleteMany({});
+
+    console.log('Data reset successfully');
+  } catch (error) {
+    console.error('Error resetting data:', error);
+  }
+});
 // Login endpoint
 app.post("/login", async (req, res) => {
   const email = req.body.email;
@@ -366,8 +384,7 @@ app.post("/send-code", async (req, res) => {
   }
 });
 
-app.post("/saveChatbotResponse", async (req, res) => {
-  console.log('asfsafasfaf')
+app.post("/ChatbotResponse", async (req, res) => {
   const { userId, goalType, feedback } = req.body;
 
   // Log received data
@@ -381,9 +398,9 @@ app.post("/saveChatbotResponse", async (req, res) => {
 
   try {
     const response = await ChatbotResponse.findOneAndUpdate(
-      { userId, goalType },
-      { feedback },
-      { upsert: true, new: true }
+      { userId, goalType }, // Filter to find the existing document
+      { feedback },         // Update the feedback field
+      { upsert: true, new: true } // Create if not exists and return the updated document
     );
     console.log("Chatbot response saved:", response);
     res.status(200).json({ message: "Chatbot response saved", response });
@@ -392,6 +409,7 @@ app.post("/saveChatbotResponse", async (req, res) => {
     res.status(500).json({ error: "Failed to save chatbot response" });
   }
 });
+
 //post selected Items
 app.post('/selectedItems', async (req, res) => {
   const { userId, activity, screentime, eating, sleep } = req.body;
@@ -421,7 +439,6 @@ app.post('/selectedItems', async (req, res) => {
 // Save goal inputs
 app.post('/saveGoalInputs', async (req, res) => {
   const { userId, activity, screentime, eating, sleep } = req.body;
-
   try {
       const existingGoalInputs = await GoalInputs.findOne({ userId });
 
@@ -432,6 +449,7 @@ app.post('/saveGoalInputs', async (req, res) => {
           existingGoalInputs.eating = eating;
           existingGoalInputs.sleep = sleep;
           await existingGoalInputs.save();
+
           res.status(200).json({ message: 'Goal inputs updated' });
       } else {
           // Create new document if it doesn't exist
@@ -621,14 +639,21 @@ app.post("/signup", async (req, res) => {
 });
 
 app.get("/getChatbotResponses", async (req, res) => {
-  const { userId } = req.query;
-
+  const { userId, goalType } = req.query; // Retrieve both userId and goalType from query parameters
+  console.log("userId", userId);
+  console.log("goalType", goalType);
   try {
-    const responses = await ChatbotResponse.find({ userId });
-    res.status(200).json(responses);
+      const responses = await ChatbotResponse.findOne({ userId, goalType }); 
+      if (responses.length == 0){
+        console.log("did not find")
+      }
+      else{
+        console.log("response fetched", responses.feedback)
+      }
+      res.status(200).json(responses);
   } catch (error) {
-    console.error("Error fetching chatbot responses:", error);
-    res.status(500).json({ error: "Failed to fetch chatbot responses" });
+      console.error("Error fetching chatbot responses:", error);
+      res.status(500).json({ error: "Failed to fetch chatbot responses" });
   }
 });
 
@@ -639,7 +664,6 @@ app.get('/getSelectedItems', async (req, res) => {
 
     const selectedItems = await SelectedItems.findOne({ userId });
     if (selectedItems) {
-      console.log("found selected items:", selectedItems);
       res.status(200).json(selectedItems);
     } else {
       res.status(404).json({ error: "Selected items not found" });
@@ -658,7 +682,6 @@ app.get('/getGoalInputs', async (req, res) => {
 
     const goalInputs = await GoalInputs.findOne({ userId });
     if (goalInputs) {
-      console.log("found goal inputs:", goalInputs);
       res.status(200).json(goalInputs);
     } else {
       res.status(404).json({ error: "Goal inputs not found" });
@@ -677,7 +700,6 @@ app.get('/getBehaviorInputs', async (req, res) => {
 
     const behaviorInputs = await BehaviorInputs.findOne({ userId });
     if (behaviorInputs) {
-      console.log("found behavior inputs:", behaviorInputs);
       res.status(200).json(behaviorInputs);
     } else {
       res.status(404).json({ error: "Behavior inputs not found" });
@@ -740,7 +762,6 @@ app.post("/user", async (req, res) => {
 app.get("/allUsers", async (req, res) => {
   try {
     const allUsers = await User.find();
-    console.log(allUsers);
     res.json(allUsers);
   } catch (error) {
     res.status(500).send("Internal server error");
@@ -847,7 +868,8 @@ app.get("/dailyBehavior", async (req, res) => {
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 app.post("/send-email", (req, res) => {
   const { to, subject, text } = req.body;
-
+  console.log(text);
+  console.log("to email", to)
   const msg = {
     to,
     from: "pklab@projectproudme.com",
@@ -915,7 +937,6 @@ const handleSave = async () => {
 
 app.post("/chatbot", (req, res) => {
   const prompt = req.body.prompt;
-  console.log(prompt);
   try {
     openaiInstance.chat.completions
     .create({

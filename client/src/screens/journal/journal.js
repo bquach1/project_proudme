@@ -18,6 +18,7 @@ import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import Stack from '@mui/material/Stack';
+import Snackbar from "@mui/material/Snackbar";
 
 import { Link, Outlet } from 'react-router-dom';
 
@@ -35,6 +36,7 @@ import { useSpring } from "react-spring";
 import ExpandableText from "screens/journal/components/ExpandableText";
 import { DATABASE_URL } from "constants";
 import { useMediaQuery } from "react-responsive";
+import { Feedback } from "@mui/icons-material";
 
 const BehaviorInfoText = styled.div`
   display: flex;
@@ -199,6 +201,12 @@ const JournalScreen = () => {
     },
   });
 
+  const [Feedbacks, setFeedbacks] = useState({
+      activity: null,
+      screentime: null,
+      eating: null,
+      sleep: null
+  });
   // Fetch data on component mount
   useEffect(() => {
   
@@ -235,30 +243,8 @@ const JournalScreen = () => {
     fetchData();
   }, [user]);
   
-  useEffect(() => {
-  
-    const fetchChatbotResponses = async () => {
-      try {
-        const response = await axios.get(`${DATABASE_URL}/getChatbotResponses`, {
-          params: { userId: user._id },
-        });
-        if (response.data) {
-          console.log("Fetched chatbot responses:", response.data);
-          setGoal((prevGoal) => {
-            return prevGoal.map((g) => {
-              const chatbotResponse = response.data.find((r) => r.goalType === g.goalType);
-              return chatbotResponse ? { ...g, feedback: chatbotResponse.feedback } : g;
-            });
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching chatbot responses:", error);
-      }
-    };
-  
-    fetchChatbotResponses();
-  }, [user]);
-  
+
+
 
   const [totalTrackedTime, setTotalTrackedTime] = useState({
     activity: 0,
@@ -475,6 +461,39 @@ const JournalScreen = () => {
       })
       .catch((error) => console.error(error));
   }, []);
+
+  useEffect(() => {
+    const fetchChatbotResponses = async (goalType) => {
+        try {
+            const response = await axios.get(`${DATABASE_URL}/getChatbotResponses`, {
+                params: {
+                    userId: user._id,
+                    goalType: goalType
+                }
+            });
+
+            if (response.data) {
+                const feedback = response.data.feedback;
+                // console.log(feedback)
+                setFeedbacks((prevFeedbacks) => ({
+                  ...prevFeedbacks,
+                  [goalType]: feedback
+              }));
+            } else {
+                console.warn(`No chatbot responses found for ${goalType}.`);
+            }
+        } catch (error) {
+            console.error(`Error fetching chatbot responses for ${goalType}:`, error);
+        }
+    };
+
+    // Fetch responses for each goalType
+    fetchChatbotResponses("activity");
+    fetchChatbotResponses("screentime");
+    fetchChatbotResponses("eating");
+    fetchChatbotResponses("sleep");
+    
+}, [ user._id, goalData]);
 
   useEffect(() => {
     const fetchGoals = async () => {
@@ -1216,8 +1235,8 @@ const saveBehaviorInputs = async () => {
 
 
 const email = user.email;
-
-const handleSubmit = async (event, goalsData, email) => {
+const [sendEmailPopupOpen, setsendEmailPopupOpen] = useState(false);
+const handleSubmitEmail = async (event, goalsData, email) => {
   event.preventDefault();
   try {
     const response = await axios.get(`${DATABASE_URL}/user`, {
@@ -1231,28 +1250,31 @@ const handleSubmit = async (event, goalsData, email) => {
           `🌟 **Activity Goal**: ${goalsData.activityGoal[0].divInfo1}\n` +
           `- Goal Value: ${goalsData.activityGoal[0].goalValue}\n` +
           `- Recommended Value: ${goalsData.activityGoal[0].recommendedValue}\n` +
-          `- Feedback: ${goalsData.activityGoal[0].goalValue > goalsData.activityGoal[0].recommendedValue ? "Great job on meeting your recommended activity goal!" : "let's try to do more excersize tomorrow!"}\n\n` +
+          `- Feedback: ${Feedbacks.activity}\n\n` +
           
           `🌟 **Screen Time Goal**: ${goalsData.screentimeGoal[0].divInfo1}\n` +
           `- Goal Value: ${goalsData.screentimeGoal[0].goalValue}\n` +
           `- Recommended Value: ${goalsData.screentimeGoal[0].recommendedValue}\n` +
-          `- Feedback: ${goalsData.screentimeGoal[0].goalValue < goalsData.screentimeGoal[0].recommendedValue ? "Great job on limiting you screen time!" : "let's try using the electronics less tomorrow!"}\n\n` +
-  
+          `- Feedback: ${Feedbacks.screentime}\n\n` +
+
           `🌟 **Eating Goal**: ${goalsData.eatingGoal[0].divInfo1}\n` +
           `- Goal Value: ${goalsData.eatingGoal[0].goalValue}\n` +
           `- Recommended Value: ${goalsData.eatingGoal[0].recommendedValue}\n` +
-          `- Feedback: ${goalsData.eatingGoal[0].goalValue > goalsData.eatingGoal[0].recommendedValue ? "Great job on eating a lot of healthy fruits and vegetables!" : "Remember to eat more vegetables"}\n\n` +
-  
+          `- Feedback: ${Feedbacks.eating}\n\n` +
+
           `🌟 **Sleep Goal**: ${goalsData.sleepGoal[0].divInfo1}\n` +
           `- Goal Value: ${goalsData.sleepGoal[0].goalValue}\n` +
           `- Recommended Value: ${goalsData.sleepGoal[0].recommendedValue}\n` +
-          `- Feedback: ${goalsData.sleepGoal[0].goalValue > goalsData.sleepGoal[0].recommendedValue ? "Great job on meeting your recommended sleep time" : "remember sleep is very important, try to sleep more tmr"}\n\n` +
-          
+          `- Feedback: ${Feedbacks.sleep}\n\n` +
+
           "You're doing great! Keep up the hard work, and remember each small step counts toward a healthy lifestyle!",
-  };
+      };
+      
   
 
     await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
+    setsendEmailPopupOpen(true);
+    setTimeout(() => setsendEmailPopupOpen(false), 3000);
   } catch (error) {
     console.error(error);
   }
@@ -1769,11 +1791,11 @@ const handleSubmit = async (event, goalsData, email) => {
                   <td style={{ width: "50%", maxHeight: 101 }}>
                     {activityResponseLoading ? (
                       <CircularProgress />
-                    ) : !activityGoal[0].feedback ? (
+                    ) : !Feedbacks.activity ? (
                       <div>Please save for feedback!</div>
                     ) : activityData.length ? (
                       <ExpandableText
-                        text={activityGoal[0].feedback}
+                        text={Feedbacks.activity}
                         maxLines={MAX_FEEDBACK_LINES}
                       />
                     ) : (
@@ -1860,11 +1882,11 @@ const handleSubmit = async (event, goalsData, email) => {
                   <td style={{ width: "50%", maxHeight: 101 }}>
                     {screentimeResponseLoading ? (
                       <CircularProgress />
-                    ) : !screentimeGoal[0].feedback ? (
+                    ) : !Feedbacks.screentime ? (
                       <div>Please save for feedback!</div>
                     ) : screentimeData.length ? (
                       <ExpandableText
-                        text={screentimeGoal[0].feedback}
+                        text={Feedbacks.screentime}
                         maxLines={MAX_FEEDBACK_LINES}
                       />
                     ) : (
@@ -1952,11 +1974,11 @@ const handleSubmit = async (event, goalsData, email) => {
                   <td style={{ width: "50%", maxHeight: 101 }}>
                     {eatingResponseLoading ? (
                       <CircularProgress />
-                    ) : !eatingGoal[0].feedback ? (
+                    ) : !Feedbacks.eating ? (
                       <div>Please save for feedback!</div>
                     ) : eatingData.length ? (
                       <ExpandableText
-                        text={eatingGoal[0].feedback}
+                        text={Feedbacks.eating}
                         maxLines={MAX_FEEDBACK_LINES}
                       />
                     ) : (
@@ -2042,11 +2064,11 @@ const handleSubmit = async (event, goalsData, email) => {
                   <td style={{ width: "50", maxHeight: 101 }}>
                     {sleepResponseLoading ? (
                       <CircularProgress />
-                    ) : !sleepGoal[0].feedback ? (
+                    ) : !Feedbacks.sleep ? (
                       <div>Please save for feedback!</div>
                     ) : sleepData.length ? (
                       <ExpandableText
-                        text={sleepGoal[0].feedback}
+                        text={Feedbacks.sleep}
                         maxLines={MAX_FEEDBACK_LINES}
                       />
                     ) : (
@@ -2764,15 +2786,19 @@ const handleSubmit = async (event, goalsData, email) => {
           </StyledButton>
         </DialogActions>
       </Dialog>
-      <StyledButton onClick={(e) => handleSubmit(e, {
+      <StyledButton onClick={(e) => handleSubmitEmail(e, {
           activityGoal,
           screentimeGoal,
           eatingGoal,
           sleepGoal
           }, email)}>
       Send Daily Goal Update Email
-    </StyledButton>
-
+      </StyledButton>
+      <Snackbar
+          open={sendEmailPopupOpen}
+          message="Email Sent!"
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      />
     </Wrapper>
     
   );
