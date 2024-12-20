@@ -3,6 +3,9 @@ import axios from "axios";
 import { DATABASE_URL } from "constants";
 
 
+
+
+
 export const getSaveButtonColor = (loggedGoalToday, goalData, goal) => {
   if (
     loggedGoalToday &&
@@ -44,8 +47,20 @@ export const createChatbotRequest = async (
   let additionalInfo = "";
   let goalMet = false;
   let recommendedValue = "";
+  let goalValue = "";
   let personalGoalMet = false;
   let actualValue = ""; 
+  let selectedItem = "";
+
+  let activityGoalMinutes = 0;
+  let screentimeGoalMinutes = 0;
+  let eatingGoalServings = 0;
+  let sleepGoal = { hours: 0, minutes: 0 };
+
+  let activityBehaviorMinutes = 0;
+  let screentimeBehaviorMinutes = 0;
+  let eatingBehaviorServings = 0;
+  let sleepBehavior = { hours: 0, minutes: 0 };
 
   if (!goalInputs || Object.keys(goalInputs).length === 0 || !selectedItems || Object.keys(selectedItems).length === 0) {
     console.error("No goal or selected items found. Ensure the user has selected items in the popups.");
@@ -60,6 +75,167 @@ export const createChatbotRequest = async (
     return `${hours}h ${minutes}m`;
   };
 
+  const formatGoalValue = (goalValue) => {
+    if (typeof goalValue === 'object' && !Array.isArray(goalValue)) {
+      return Object.entries(goalValue)
+        .map(([key, value]) => {
+          // Handle nested structures with hours and minutes
+          if (typeof value === 'object') {
+            const hours = value.hours || 0;
+            const minutes = value.minutes || 0;
+            const servings = value.servings || 0;
+            const bedtime = value.bedtime || '';
+            const wakeUpTime = value.wakeUpTime || '';
+  
+            // Format for bedtime and wake-up time
+            if (bedtime && wakeUpTime) {
+              return `${key}: Bedtime ${bedtime}, Wake-up Time ${wakeUpTime}`;
+            }
+  
+            // Format for hours and minutes
+            if (hours || minutes) {
+              return `${key}: ${hours} hours ${minutes} minutes`;
+            }
+  
+            // Format for servings
+            if (servings) {
+              return `${key}: ${servings} serving${servings > 1 ? 's' : ''}`;
+            }
+          }
+  
+          // Handle single key-value pair directly (fallback)
+          return `${key}: ${value}`;
+        })
+        .join(', ');
+    } else if (typeof goalValue === 'number') {
+      // Handle single numeric values (e.g., total screentime)
+      const hours = Math.floor(goalValue / 60);
+      const minutes = goalValue % 60;
+      return `${hours} hours ${minutes} minutes`;
+    } else {
+      // Fallback for unsupported formats
+      return `Invalid goal value format`;
+    }
+  };
+  
+  const calculateQuantities = (goalInputs, behaviorInputs) => {
+    activityGoalMinutes = Object.values(goalInputs.activity).reduce(
+      (total, { hours = 0, minutes = 0 }) =>
+        total + parseInt(hours, 10) * 60 + parseInt(minutes, 10),
+      0
+    );
+  
+    screentimeGoalMinutes = Object.values(goalInputs.screentime).reduce(
+      (total, { hours = 0, minutes = 0 }) =>
+        total + parseInt(hours, 10) * 60 + parseInt(minutes, 10),
+      0
+    );
+  
+    eatingGoalServings = Object.values(goalInputs.eating).reduce(
+      (total, { servings = 0 }) => total + parseInt(servings, 10),
+      0
+    );
+
+    
+
+  
+    if (goalInputs.sleep["Expected Sleep"]) {
+      const { bedtime, wakeUpTime } = goalInputs.sleep["Expected Sleep"];
+      const [bedHour, bedMinute] = bedtime.split(":").map(Number);
+      const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
+      const bedMinutes = bedHour * 60 + bedMinute;
+      const wakeMinutes = wakeHour * 60 + wakeMinute;
+      const totalMinutes =
+        wakeMinutes > bedMinutes
+          ? wakeMinutes - bedMinutes
+          : 1440 - bedMinutes + wakeMinutes;
+  
+      sleepGoal = {
+        hours: Math.floor(totalMinutes / 60),
+        minutes: totalMinutes % 60,
+      };
+    }
+    setGoal((prevGoal) => {
+      const updatedGoal = prevGoal.map((g) => {
+        console.log("Current goal type:", g.goalType); // Log to verify goalType
+        return {
+          ...g,
+          goalValue:
+            g.goalType === "activity"
+              ? activityGoalMinutes
+              : g.goalType === "screentime"
+              ? screentimeGoalMinutes
+              : g.goalType === "eating"
+              ? eatingGoalServings
+              : g.goalType === "sleep"
+              ? `${sleepGoal.hours} hours ${sleepGoal.minutes} minutes`
+              : g.goalValue, // Fallback
+        };
+      });
+      console.log("Updated goal:", updatedGoal); // Log updated goals
+      return updatedGoal;
+    });
+
+    activityBehaviorMinutes = Object.values(behaviorInputs.activity).reduce(
+      (total, { hours = 0, minutes = 0 }) =>
+          total + parseInt(hours, 10) * 60 + parseInt(minutes, 10),
+      0
+  );
+  
+  screentimeBehaviorMinutes = Object.values(behaviorInputs.screentime).reduce(
+      (total, { hours = 0, minutes = 0 }) =>
+          total + parseInt(hours, 10) * 60 + parseInt(minutes, 10),
+      0
+  );
+  
+  eatingBehaviorServings = Object.values(behaviorInputs.eating).reduce(
+      (total, { servings = 0 }) =>
+          total + parseInt(servings, 10),
+      0
+  );
+
+  
+  
+  
+    if (behaviorInputs.sleep["Actual Sleep"]) {
+      const { bedtime, wakeUpTime } = behaviorInputs.sleep["Actual Sleep"];
+      const [bedHour, bedMinute] = bedtime.split(":").map(Number);
+      const [wakeHour, wakeMinute] = wakeUpTime.split(":").map(Number);
+      const bedMinutes = bedHour * 60 + bedMinute;
+      const wakeMinutes = wakeHour * 60 + wakeMinute;
+      const totalMinutes =
+        wakeMinutes > bedMinutes
+          ? wakeMinutes - bedMinutes
+          : 1440 - bedMinutes + wakeMinutes;
+  
+      sleepBehavior = {
+        hours: Math.floor(totalMinutes / 60),
+        minutes: totalMinutes % 60,
+      };
+    }
+    setGoal((prevBehavior) => {
+      const updatedBehavior = prevBehavior.map((b) => {
+          console.log("Current behavior type:", b.goalType); // Log to verify goalType
+          return {
+              ...b,
+              behaviorValue:
+                  b.goalType === "activity"
+                      ? activityBehaviorMinutes
+                      : b.goalType === "screentime"
+                      ? screentimeBehaviorMinutes
+                      : b.goalType === "eating"
+                      ? eatingBehaviorServings
+                      : b.goalType === "sleep"
+                      ? `${sleepBehavior.hours} hours ${sleepBehavior.minutes} minutes`
+                      : b.goalValue, // Fallback
+          };
+      });
+      console.log("Updated behavior:", updatedBehavior); // Log updated behaviors
+      return updatedBehavior;
+  });
+  
+    
+  };
   // Handling custom "Other" activities
   const handleCustomActivity = (activityName, section) => {
     return `${activityName}: Expected ${goalInputs?.[section]?.[activityName]?.hours || 0}h ${goalInputs?.[section]?.[activityName]?.minutes || 0}m, 
@@ -74,10 +250,11 @@ export const createChatbotRequest = async (
     ).join(", ")}`;
     
     recommendedValue = "60 minutes";
-    const totalMinutesTracked = totalTrackedTime?.activity || 0;
-    actualValue = formatTime(totalMinutesTracked);
+    goalValue = formatGoalValue(goalInputs.activity);
+    actualValue= formatGoalValue(behaviorInputs.activity);
     goalMet = totalTrackedTime?.activity >= 60; // Recommended goal is 60 minutes
-    personalGoalMet = totalTrackedTime?.activity >= (goal[0].goalValue * 60); 
+    // personalGoalMet = totalTrackedTime?.activity >= (goalValueInt); 
+    selectedItem = selectedItems.activity;
   }
 
   // Screentime tracking
@@ -88,13 +265,17 @@ export const createChatbotRequest = async (
     ).join(", ")}`;
   
     recommendedValue = "120 minutes";
+    goalValue = formatGoalValue(goalInputs.screentime);
+    console.log("actualValue--------",behaviorInputs.screentime);
+    actualValue= formatGoalValue(behaviorInputs.screentime);
     const totalMinutesTracked = totalTrackedTime?.screentime || 0;
     actualValue = formatTime(totalMinutesTracked);
   
     const schoolWorkRelated = screentimeActivities.some(item => item.toLowerCase().includes("school") || item.toLowerCase().includes("work"));
   
     goalMet = schoolWorkRelated || totalMinutesTracked <= 120; // Recommended goal is 120 minutes
-    personalGoalMet = totalMinutesTracked <= (goal[0].goalValue * 60); 
+    // personalGoalMet = totalMinutesTracked <= (goalValueInt); 
+    selectedItem = selectedItems.screentime;
   }
 
   // Eating fruits and vegetables tracking
@@ -105,15 +286,18 @@ export const createChatbotRequest = async (
     ).join(", ")}`;
     
     recommendedValue = "5 servings";
-    actualValue = `${totalTrackedTime?.eating || 0} servings`;
+    goalValue = formatGoalValue(goalInputs.eating);
+    actualValue= formatGoalValue(behaviorInputs.eating);
     goalMet = totalTrackedTime?.eating >= 5; // Recommended goal is 5 servings
-    personalGoalMet = totalTrackedTime?.eating >= goal[0].goalValue; 
+    // personalGoalMet = totalTrackedTime?.eating >= goalValueInt; 
+    selectedItem = selectedItems.eating;
   }
 
   // Sleep tracking
   else if (goalType === "sleep") {
     const totalMinutesTracked = totalTrackedTime?.sleep || 0;
-    actualValue = formatTime(totalMinutesTracked);
+    goalValue = formatGoalValue(goalInputs.sleep);
+    actualValue= formatGoalValue(behaviorInputs.sleep);
     recommendedValue = "9 hours";
 
     const bedTime = goalInputs?.sleep?.["Expected Sleep"]?.bedTime || "";
@@ -123,9 +307,9 @@ export const createChatbotRequest = async (
 
     additionalInfo = `Expected Sleep: Bed Time - ${bedTime}, Wake Up Time - ${wakeUpTime}, 
       Tracked Sleep: Bed Time - ${trackedBedTime}, Wake Up Time - ${trackedWakeUpTime}`;
-    
     goalMet = totalTrackedTime?.sleep >= (9 * 60); // Recommended goal is 9 hours of sleep
-    personalGoalMet = totalTrackedTime?.sleep >= (goal[0].goalValue * 60); 
+    // personalGoalMet = totalTrackedTime?.sleep >= goalValueInt; 
+    selectedItem = selectedItems.sleep;
   }
 
   // Send the request to the chatbot
@@ -139,13 +323,27 @@ export const createChatbotRequest = async (
         },
         {
           role: "user",
-          content: `Goal Type: ${goalType}, Recommended Value: ${recommendedValue}, Personal Goal Met: ${personalGoalMet}`,
+          content: `Goal Type: ${goalType}, Recommended Value: ${recommendedValue}, goal Value: ${goalValue}
+                    values acheived: ${actualValue}, reflection: ${reflection}, Personal Goal Met: ${personalGoalMet}
+                    recommended goal met: ${goalMet}`,
         },
       ],
     });
-  
+
+
+    calculateQuantities(goalInputs, behaviorInputs);
+
+    console.log("Activity Goal Minutes:", activityGoalMinutes);
+    console.log("Screentime Goal Minutes:", screentimeGoalMinutes);
+    console.log("Eating Goal Servings:", eatingGoalServings);
+    console.log("Sleep Goal Minutes:", sleepGoal );
+    console.log("goalValue", goalValue)
+    console.log("reflection", reflection);
+    console.log("actualValue", actualValue)
+    console.log("goal type", goalType);
+    console.log("personal goal met", personalGoalMet);
     console.log(`Chatbot response for ${goalType}:`, chatbotResponse.data.chat_reply);
-  
+    console.log("goal-------", goal);
     // Update the goal with the chatbot response
     setGoal((prevGoal) => {
       const updatedGoal = prevGoal.map((g) => ({

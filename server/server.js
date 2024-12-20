@@ -221,6 +221,8 @@ const chatbotResponseSchema = new mongoose.Schema({
   feedback: { type: String, required: true },
 });
 
+
+
 const ChatbotResponse = mongoose.model("ChatbotResponse", chatbotResponseSchema);
 const BehaviorInputs = mongoose.model('BehaviorInputs', behaviorInputsSchema);
 const GoalInputs = mongoose.model('GoalInputs', goalInputsSchema);
@@ -387,8 +389,7 @@ app.post("/send-code", async (req, res) => {
 app.post("/ChatbotResponse", async (req, res) => {
   const { userId, goalType, feedback } = req.body;
 
-  // Log received data
-  console.log("Received data for saving chatbot response:", { userId, goalType, feedback });
+  
 
   // Check if all required fields are provided
   if (!userId || !goalType || !feedback) {
@@ -640,16 +641,8 @@ app.post("/signup", async (req, res) => {
 
 app.get("/getChatbotResponses", async (req, res) => {
   const { userId, goalType } = req.query; // Retrieve both userId and goalType from query parameters
-  console.log("userId", userId);
-  console.log("goalType", goalType);
   try {
       const responses = await ChatbotResponse.findOne({ userId, goalType }); 
-      if (responses.length == 0){
-        console.log("did not find")
-      }
-      else{
-        console.log("response fetched", responses.feedback)
-      }
       res.status(200).json(responses);
   } catch (error) {
       console.error("Error fetching chatbot responses:", error);
@@ -868,8 +861,6 @@ app.get("/dailyBehavior", async (req, res) => {
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 app.post("/send-email", (req, res) => {
   const { to, subject, text } = req.body;
-  console.log(text);
-  console.log("to email", to)
   const msg = {
     to,
     from: "pklab@projectproudme.com",

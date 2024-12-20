@@ -35,6 +35,8 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
+
+
 const TrackingWrapper = styled.div`
   padding-bottom: 50px;
 
@@ -249,6 +251,8 @@ const TrackingScreen = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   }
+
+  console.log("filteredActivityBehaviorData", filteredActivityBehaviorData);
   return (
     <div>
       {ismobile && (
@@ -421,25 +425,25 @@ const TrackingScreen = () => {
             {chartType === "line" ? (
               <div style={{ width: "90%" }}>
                 <h1 style={{ marginTop: "1%" }}>
-                  {shownUser.firstName}'s Physical Activity Behavior Data
+                  {shownUser.firstName}'s Physical Activity Behavior Data (minutes)
                 </h1>
                 <BehaviorLineChart
                   data={filteredActivityBehaviorData}
                   chartGoalType={"activity"}
                 />
-                <h1>{shownUser.firstName}'s Screen Time Behavior Data</h1>
+                <h1>{shownUser.firstName}'s Screen Time Behavior Data (minutes)</h1>
                 <BehaviorLineChart
                   data={filteredScreentimeBehaviorData}
                   chartGoalType={"screentime"}
                 />
                 <h1>
-                  {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data
+                  {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data (servings)
                 </h1>
                 <BehaviorLineChart
                   data={filteredEatingBehaviorData}
                   chartGoalType={"eating"}
                 />
-                <h1>{shownUser.firstName}'s Sleep Behavior Data</h1>
+                <h1>{shownUser.firstName}'s Sleep Behavior Data (hours)</h1>
                 <BehaviorLineChart
                   data={filteredSleepBehaviorData}
                   chartGoalType={"sleep"}
@@ -458,7 +462,7 @@ const TrackingScreen = () => {
                     margin: 50,
                   }}
                 >
-                  <h1>{shownUser.firstName}'s Physical Activity Behavior Data</h1>
+                  <h1>{shownUser.firstName}'s Physical Activity Behavior Data (minutes)</h1>
                   <BehaviorProgressBar
                     data={filteredActivityBehaviorData}
                     chartGoalType={"activity"}
@@ -481,7 +485,7 @@ const TrackingScreen = () => {
                     margin: 50,
                   }}
                 >
-                  <h1>{shownUser.firstName}'s Screen Time Behavior Data</h1>
+                  <h1>{shownUser.firstName}'s Screen Time Behavior Data (minutes)</h1>
                   <BehaviorProgressBar
                     data={filteredScreentimeBehaviorData}
                     chartGoalType={"screentime"}
@@ -505,7 +509,7 @@ const TrackingScreen = () => {
                   }}
                 >
                   <h1>
-                    {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data
+                    {shownUser.firstName}'s Eating Fruits & Vegetables Behavior Data (servings)
                   </h1>
                   <BehaviorProgressBar
                     data={filteredEatingBehaviorData}
@@ -529,7 +533,7 @@ const TrackingScreen = () => {
                     margin: 50,
                   }}
                 >
-                  <h1>{shownUser.firstName}'s Sleep Behavior Data</h1>
+                  <h1>{shownUser.firstName}'s Sleep Behavior Data (hours) </h1>
                   <BehaviorProgressBar
                     data={filteredSleepBehaviorData}
                     chartGoalType={"sleep"}

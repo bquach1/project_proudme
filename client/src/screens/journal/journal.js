@@ -1297,23 +1297,23 @@ const handleSubmitEmail = async (event, goalsData, email) => {
         subject: "Project ProudMe Daily Goal Update",
         to: email,
         text: `Hi ${response.data.firstName},\n\nHere's an update on your goals today:\n\n` +
-          `🌟 **Activity Goal**: ${goalsData.activityGoal[0].divInfo1}\n` +
-          `- Goal Value: ${goalsData.activityGoal[0].goalValue}\n` +
+          `🌟 **Activity Goal**: ${goalsData.activityGoal[0].divInfo1} minutes\n` +
+          `- Goal Value: ${goalsData.activityGoal[0].goalValue} minutes\n` +
           `- Recommended Value: ${goalsData.activityGoal[0].recommendedValue}\n` +
           `- Feedback: ${Feedbacks.activity}\n\n` +
           
-          `🌟 **Screen Time Goal**: ${goalsData.screentimeGoal[0].divInfo1}\n` +
-          `- Goal Value: ${goalsData.screentimeGoal[0].goalValue}\n` +
+          `🌟 **Screen Time Goal**: ${goalsData.screentimeGoal[0].divInfo1} minutes\n` +
+          `- Goal Value: ${goalsData.screentimeGoal[0].goalValue} minutes\n` +
           `- Recommended Value: ${goalsData.screentimeGoal[0].recommendedValue}\n` +
           `- Feedback: ${Feedbacks.screentime}\n\n` +
 
-          `🌟 **Eating Goal**: ${goalsData.eatingGoal[0].divInfo1}\n` +
-          `- Goal Value: ${goalsData.eatingGoal[0].goalValue}\n` +
+          `🌟 **Eating Goal**: ${goalsData.eatingGoal[0].divInfo1} servings\n` +
+          `- Goal Value: ${goalsData.eatingGoal[0].goalValue} servings\n` +
           `- Recommended Value: ${goalsData.eatingGoal[0].recommendedValue}\n` +
           `- Feedback: ${Feedbacks.eating}\n\n` +
 
-          `🌟 **Sleep Goal**: ${goalsData.sleepGoal[0].divInfo1}\n` +
-          `- Goal Value: ${goalsData.sleepGoal[0].goalValue}\n` +
+          `🌟 **Sleep Goal**: ${goalsData.sleepGoal[0].divInfo1} hours\n` +
+          `- Goal Value: ${goalsData.sleepGoal[0].goalValue} hours\n` +
           `- Recommended Value: ${goalsData.sleepGoal[0].recommendedValue}\n` +
           `- Feedback: ${Feedbacks.sleep}\n\n` +
 
@@ -2254,13 +2254,13 @@ const handleSubmitEmail = async (event, goalsData, email) => {
                           name={`${item}-goal-minutes`}
                           value={goalInputs.activity[item]?.minutes || ""}
                           onChange={(event) => {
-                            const newGoal = 60 * event.target.value;
+                            const newMinutes = parseInt(event.target.value || 0, 10); // Parse input value to an integer
                             handleInputChange(event, item, "minutes", "goal", "activity");
                             setActivityGoal((prevActivityGoal) => {
                               const updatedActivityGoal = prevActivityGoal.map((goal) => {
                                 return {
                                   ...goal,
-                                  goalValue: newGoal,
+                                  goalValue: parseInt(goal.goalValue || 0, 10) + newMinutes, 
                                 };
                               });
                               return updatedActivityGoal;
@@ -2304,13 +2304,14 @@ const handleSubmitEmail = async (event, goalsData, email) => {
                           name={`${item}-behavior-minutes`}
                           value={behaviorInputs.activity[item]?.minutes || ""}
                           onChange={(event) => {
-                            const newGoal = 60 * event.target.value;
-                            handleInputChange(event, item, "minutes", "behaviour", "activity");
+                            const newMinutes = parseInt(event.target.value || 0, 10); // Parse input value to an integer
+                            handleInputChange(event, item, "minutes", "behavior", "activity");
+                          
                             setActivityGoal((prevActivityGoal) => {
                               const updatedActivityGoal = prevActivityGoal.map((goal) => {
                                 return {
                                   ...goal,
-                                  behaviorValue: newGoal,
+                                  behaviorValue: parseInt(goal.behaviorValue || 0, 10) + newMinutes, // Add to existing behaviorValue
                                 };
                               });
                               return updatedActivityGoal;
@@ -2442,18 +2443,20 @@ const handleSubmitEmail = async (event, goalsData, email) => {
                           name={`${item}-goal-minutes`}
                           value={goalInputs.screentime[item]?.minutes || ""}
                           onChange={(event) => {
-                            const newGoal = event.target.value;
+                            const newMinutes = parseInt(event.target.value || 0, 10); // Parse input value to integer
                             handleInputChange(event, item, "minutes", "goal", "screentime");
+                          
                             setScreentimeGoal((prevScreentimeGoal) => {
                               const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
                                 return {
                                   ...goal,
-                                  goalValue: newGoal,
+                                  goalValue: parseInt(goal.goalValue || 0, 10) + newMinutes, // Add parsed values
                                 };
                               });
                               return updatedScreentimeGoal;
                             });
                           }}
+                          
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
@@ -2492,18 +2495,20 @@ const handleSubmitEmail = async (event, goalsData, email) => {
                           name={`${item}-behavior-minutes`}
                           value={behaviorInputs.screentime[item]?.minutes || ""}
                           onChange={(event) => {
-                            const newGoal = event.target.value;
+                            const newMinutes = parseInt(event.target.value || 0, 10); // Parse input value to integer
                             handleInputChange(event, item, "minutes", "behaviour", "screentime");
+                          
                             setScreentimeGoal((prevScreentimeGoal) => {
                               const updatedScreentimeGoal = prevScreentimeGoal.map((goal) => {
                                 return {
                                   ...goal,
-                                  behaviorValue: newGoal,
+                                  behaviorValue: parseInt(goal.behaviorValue || 0, 10) + newMinutes, // Add parsed values
                                 };
                               });
                               return updatedScreentimeGoal;
                             });
                           }}
+                          
                           fullWidth
                           size="small"
                           style={{ width: '60px' }}
