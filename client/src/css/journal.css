@@ -5,9 +5,14 @@
   align-items: center;
   right: 49%;
   position: absolute;
-  
+
 }
 
+.word-wrap {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
 
 .new_left_page {
   grid-row: 2;
@@ -374,25 +379,37 @@
 .reflect-wrapper:hover {
   cursor: pointer;
 }
+
 .track-daily-text {
   position: absolute;
   top: 30px;
-  left: 13%; 
+  left: 13%;
   transform: translateX(-50%);
   font-size: 16px;
   font-weight: bold;
   color: #333;
 }
 
+.ai-text {
+  font-size: 16px;
+  position: relative;
+  left: 55px;
+  top: -22px;
+  margin-bottom: 0;
+  font-family: 'YourPreferredFont', sans-serif;
+  font-weight: bold;
+}
+
 .reflect-text {
   position: absolute;
   top: -13px;
-  left: 2%; 
-  transform: translateX(-50%); 
-  font-size: 16px; 
-  font-weight: bold; 
-  color: #333; 
+  left: 2%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
 }
+
 .page-modal {
   background-color: #b2c5cb;
   padding: 5px;
@@ -409,29 +426,28 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .leftPageWrapper
-  .rightPageWrapper {
-      position: relative;
-      width: 100%;
-      left: 0;
-      right: 0;
+  .leftPageWrapper .rightPageWrapper {
+    position: relative;
+    width: 100%;
+    left: 0;
+    right: 0;
   }
 
   .goal-box {
-      width: 90%;
-      margin-left: 5%;
-      top: 5%;
+    width: 90%;
+    margin-left: 5%;
+    top: 5%;
   }
 
   .modal {
-      width: 90%;
-      margin-left: 5%;
-      height: auto;
+    width: 90%;
+    margin-left: 5%;
+    height: auto;
   }
 
   .recommendation-container,
   .goal-container {
-      width: 95%;
-      margin: auto;
+    width: 95%;
+    margin: auto;
   }
 }

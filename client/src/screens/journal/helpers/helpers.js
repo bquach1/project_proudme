@@ -319,7 +319,7 @@ export const createChatbotRequest = async (
       prompt: [
         {
           role: "system",
-          content: `Provide feedback based on the user's actual behavior compared to both their set personal goals and recommended goals.`,
+          content: `Provide feedback based on the user's actual behavior compared to both their set personal goals and recommended goals. limit words to 40 max and add some repitition to responses`,
         },
         {
           role: "user",

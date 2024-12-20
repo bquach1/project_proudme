@@ -79,7 +79,7 @@ const styles = {
     overflowY: "scroll",
     maxHeight: 101,
     marginRight: -45,
-    fontSize: 12,
+    fontSize: 13,
     width: "110%",
   },
 };

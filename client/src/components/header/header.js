@@ -9,10 +9,11 @@ const LeftNav = styled.div`
   margin-left: 1%;
   width: 80%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start; 
   align-items: center;
   flex-wrap: wrap;
   overflow: auto;
+  gap: 100px;
 `;
 
 const buttonStyles = (mediaType) => ({

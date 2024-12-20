@@ -937,7 +937,7 @@ app.post("/chatbot", (req, res) => {
         {
           role: "system",
           content: /category\d/.test(JSON.stringify(prompt))
-            ? "You are an feedback provider who provides feedback to user based on their screen time values\
+            ? "You are an feedback provider who provides feedback to user based on their screen time values.Keep your feedback limited to 40 words. Be concise and provide actionable suggestions.\
             You are provided one of 9 categories listed below: based on categories. provide feedback \
             category 1: User did not achieve their goal and their screen time is more than double of their set goal, ask them to reduce there screen time further\
             category 2: User missed their goal but not by more than double, encourage them to work harder and reach the goal\
@@ -970,13 +970,17 @@ app.post("/chatbot", (req, res) => {
         { role: "user", content: JSON.stringify(prompt) },
       ],
       temperature: 0.9,
-      max_tokens: 75,
+      max_tokens: 30,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0.6,
     })
     .then((response) => {
-      const chat_reply = response.choices[0].message.content;
+      let chat_reply = response.choices[0].message.content;
+      chat_reply = chat_reply.split(" ").slice(0, 40).join(" ").trim();
+            if (!/[.!?]$/.test(chat_reply)) {
+        chat_reply = chat_reply + ".";
+      }
       res.json({ chat_reply });
     });
   } catch (error) {

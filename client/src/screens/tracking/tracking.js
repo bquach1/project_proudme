@@ -67,7 +67,7 @@ const TrackingScreen = () => {
   const [userBehaviorData, setUserBehaviorData] = useState([]);
   const [allBehaviorData, setAllBehaviorData] = useState([]);
 
-  const [chartType, setChartType] = useState("line");
+  const [chartType, setChartType] = useState("progress");
 
   const [activityBehaviorData, setActivityBehaviorData] = useState([]);
   const [filteredActivityBehaviorData, setFilteredActivityBehaviorData] =
@@ -378,7 +378,7 @@ const TrackingScreen = () => {
             <FormLabel id="demo-radio-buttons-group-label">Chart Type</FormLabel>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="line"
+              defaultValue="progress"
               name="radio-buttons-group"
               onChange={(e) => setChartType(e.target.value)}
               style={{ display: "flex", flexDirection: "row" }}
