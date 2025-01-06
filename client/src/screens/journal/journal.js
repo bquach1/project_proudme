@@ -42,7 +42,20 @@ import { Feedback } from "@mui/icons-material";
 const BehaviorInfoText = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 1%;
+  padding: 8px;
+  font-size: 12px;
+  line-height: 1.2;
+  margin: 5px 0;
+
+  strong {
+    margin-right: 4px;
+  }
+
+  .information-text {
+    display: inline;
+    margin: 0;
+    padding: 0;
+  }
 `;
 
 const Wrapper = styled.div`
@@ -1299,22 +1312,22 @@ const handleSubmitEmail = async (event, goalsData, email) => {
         text: `Hi ${response.data.firstName},\n\nHere's an update on your goals today:\n\n` +
           `🌟 **Activity Goal**: ${goalsData.activityGoal[0].divInfo1} minutes\n` +
           `- Goal Value: ${goalsData.activityGoal[0].goalValue} minutes\n` +
-          `- Recommended Value: ${goalsData.activityGoal[0].recommendedValue}\n` +
+          `- Behaviour Value: ${goalsData.activityGoal[0].behaviorValue} minutes\n` +
           `- Feedback: ${Feedbacks.activity}\n\n` +
           
           `🌟 **Screen Time Goal**: ${goalsData.screentimeGoal[0].divInfo1} minutes\n` +
           `- Goal Value: ${goalsData.screentimeGoal[0].goalValue} minutes\n` +
-          `- Recommended Value: ${goalsData.screentimeGoal[0].recommendedValue}\n` +
+          `- Behaviour Value: ${goalsData.screentimeGoal[0].behaviorValue} minutes\n` +
           `- Feedback: ${Feedbacks.screentime}\n\n` +
 
           `🌟 **Eating Goal**: ${goalsData.eatingGoal[0].divInfo1} servings\n` +
           `- Goal Value: ${goalsData.eatingGoal[0].goalValue} servings\n` +
-          `- Recommended Value: ${goalsData.eatingGoal[0].recommendedValue}\n` +
+          `- Behaviour Value: ${goalsData.eatingGoal[0].behaviorValue} servings\n` +
           `- Feedback: ${Feedbacks.eating}\n\n` +
 
           `🌟 **Sleep Goal**: ${goalsData.sleepGoal[0].divInfo1} hours\n` +
           `- Goal Value: ${goalsData.sleepGoal[0].goalValue} hours\n` +
-          `- Recommended Value: ${goalsData.sleepGoal[0].recommendedValue}\n` +
+          `- Behaviour Value: ${goalsData.sleepGoal[0].behaviorValue} hours\n` +
           `- Feedback: ${Feedbacks.sleep}\n\n` +
 
           "You're doing great! Keep up the hard work, and remember each small step counts toward a healthy lifestyle!",
@@ -1850,7 +1863,7 @@ const handleSubmitEmail = async (event, goalsData, email) => {
                     ) : !Feedbacks.activity ? (
                       <div>Please save for feedback!</div>
                     ) : activityData.length ? (
-                      <ExpandableText
+                      <ExpandableText 
                         text={Feedbacks.activity}
                         maxLines={MAX_FEEDBACK_LINES}
                       />

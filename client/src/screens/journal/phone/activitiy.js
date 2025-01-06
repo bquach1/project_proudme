@@ -43,7 +43,7 @@ const Wrapper = styled.div`
   font-family: Montserrat;
 
   .information-text {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .disabled-behavior:hover {

@@ -180,19 +180,19 @@ export const createChatbotRequest = async (
       (total, { hours = 0, minutes = 0 }) =>
           total + parseInt(hours, 10) * 60 + parseInt(minutes, 10),
       0
-  );
-  
-  screentimeBehaviorMinutes = Object.values(behaviorInputs.screentime).reduce(
-      (total, { hours = 0, minutes = 0 }) =>
-          total + parseInt(hours, 10) * 60 + parseInt(minutes, 10),
-      0
-  );
-  
-  eatingBehaviorServings = Object.values(behaviorInputs.eating).reduce(
-      (total, { servings = 0 }) =>
-          total + parseInt(servings, 10),
-      0
-  );
+    );
+    
+    screentimeBehaviorMinutes = Object.values(behaviorInputs.screentime).reduce(
+        (total, { hours = 0, minutes = 0 }) =>
+            total + parseInt(hours, 10) * 60 + parseInt(minutes, 10),
+        0
+    );
+    
+    eatingBehaviorServings = Object.values(behaviorInputs.eating).reduce(
+        (total, { servings = 0 }) =>
+            total + parseInt(servings, 10),
+        0
+    );
 
   
   
@@ -337,13 +337,68 @@ export const createChatbotRequest = async (
     console.log("Screentime Goal Minutes:", screentimeGoalMinutes);
     console.log("Eating Goal Servings:", eatingGoalServings);
     console.log("Sleep Goal Minutes:", sleepGoal );
-    console.log("goalValue", goalValue)
-    console.log("reflection", reflection);
-    console.log("actualValue", actualValue)
-    console.log("goal type", goalType);
-    console.log("personal goal met", personalGoalMet);
-    console.log(`Chatbot response for ${goalType}:`, chatbotResponse.data.chat_reply);
-    console.log("goal-------", goal);
+    console.log("activityBehaviorMinutes", activityBehaviorMinutes)
+    console.log("screentimeBehaviorMinutes", screentimeBehaviorMinutes)
+    console.log("eatingBehaviorServings", eatingBehaviorServings)
+    console.log("sleepBehaviour", sleepBehavior)
+
+    if (goalType == "activity"){
+      await updateMinutesInDatabase(
+        user,
+        goalType,
+        activityGoalMinutes,
+        screentimeGoalMinutes,
+        eatingGoalServings,
+        sleepGoal,
+        activityBehaviorMinutes,
+        screentimeBehaviorMinutes,
+        eatingBehaviorServings,
+        sleepBehavior
+      );
+    }
+    else if (goalType == "screentime"){
+      await updateMinutesInDatabase(
+        user,
+        "screentime",
+        activityGoalMinutes,
+        screentimeGoalMinutes,
+        eatingGoalServings,
+        sleepGoal,
+        activityBehaviorMinutes,
+        screentimeBehaviorMinutes,
+        eatingBehaviorServings,
+        sleepBehavior
+      );
+    }
+    else if (goalType == "eating"){
+      await updateMinutesInDatabase(
+        user,
+        "eating",
+        activityGoalMinutes,
+        screentimeGoalMinutes,
+        eatingGoalServings,
+        sleepGoal,
+        activityBehaviorMinutes,
+        screentimeBehaviorMinutes,
+        eatingBehaviorServings,
+        sleepBehavior
+      );
+    }
+    else if (goalType == "sleep"){
+      await updateMinutesInDatabase(
+        user,
+        "sleep",
+        activityGoalMinutes,
+        screentimeGoalMinutes,
+        eatingGoalServings,
+        sleepGoal,
+        activityBehaviorMinutes,
+        screentimeBehaviorMinutes,
+        eatingBehaviorServings,
+        sleepBehavior
+      );
+    }
+
     // Update the goal with the chatbot response
     setGoal((prevGoal) => {
       const updatedGoal = prevGoal.map((g) => ({
@@ -367,6 +422,57 @@ export const createChatbotRequest = async (
   }  
 };
 
+const updateMinutesInDatabase = async (
+  user,
+  goalType,
+  activityGoalMinutes,
+  screentimeGoalMinutes,
+  eatingGoalServings,
+  sleepGoal,
+  activityBehaviorMinutes,
+  screentimeBehaviorMinutes,
+  eatingBehaviorServings,
+  sleepBehavior
+) => {
+  try {
+    // Update goals collection
+    await axios.post(`${DATABASE_URL}/goals`, {
+      user: user._id,
+      name: user.name,
+      goalType: goalType,
+      goalValue: goalType === "activity" ? activityGoalMinutes :
+                goalType === "screentime" ? screentimeGoalMinutes :
+                goalType === "eating" ? eatingGoalServings :
+                goalType === "sleep" ? `${sleepGoal.hours} hours ${sleepGoal.minutes} minutes` : 0,
+      behaviorValue: goalType === "activity" ? activityBehaviorMinutes :
+                    goalType === "screentime" ? screentimeBehaviorMinutes :
+                    goalType === "eating" ? eatingBehaviorServings :
+                    goalType === "sleep" ? `${sleepBehavior.hours} hours ${sleepBehavior.minutes} minutes` : 0,
+      dateToday: new Date()
+    });
+
+    // Update behaviors collection
+    await axios.post(`${DATABASE_URL}/behaviors`, {
+      user: user._id,
+      name: user.name,
+      goalType: goalType,
+      date: new Date().toLocaleDateString(),
+      dateToday: new Date(),
+      goalValue: goalType === "activity" ? activityGoalMinutes :
+                goalType === "screentime" ? screentimeGoalMinutes :
+                goalType === "eating" ? eatingGoalServings :
+                goalType === "sleep" ? `${sleepGoal.hours} hours ${sleepGoal.minutes} minutes` : 0,
+      behaviorValue: goalType === "activity" ? activityBehaviorMinutes :
+                    goalType === "screentime" ? screentimeBehaviorMinutes :
+                    goalType === "eating" ? eatingBehaviorServings :
+                    goalType === "sleep" ? `${sleepBehavior.hours} hours ${sleepBehavior.minutes} minutes` : 0
+    });
+
+    console.log(`Successfully updated ${goalType} minutes in database`);
+  } catch (error) {
+    console.error(`Error updating ${goalType} minutes:`, error);
+  }
+};
 
 
 
@@ -393,6 +499,7 @@ const calculateSleepDuration = (bedTime, wakeUpTime) => {
 
   return `${hours} hours and ${minutes} minutes`;
 };
+
 export async function updateBehaviorValue(
   user,
   newGoalValue,
@@ -410,6 +517,7 @@ export async function updateBehaviorValue(
 ) {
   setGoal((prevGoal) => {
     const updatedBehaviorGoal = prevGoal.map((goal) => {
+      console.log("newGoalValue", newGoalValue)
       const updatedGoal = { ...goal, behaviorValue: +newBehaviorValue };
       axios
         .post(`${DATABASE_URL}/goals`, {
