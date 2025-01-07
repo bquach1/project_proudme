@@ -997,6 +997,37 @@ app.post("/chatbot", (req, res) => {
   }
 });
 
+app.get("/daily-report", async (req, res) => {
+  const { userId, date } = req.query; // Retrieve both userId and goalType from query parameters
+
+  if (!userId || !date) {
+    res.status(400).send("User Id or date not provided.");
+    return
+  }
+
+  try {
+      const response = await Promise.all([
+        GoalInputs.findOne({ userId, date }),
+        BehaviorInputs.findOne({ userId, date }),
+        Behavior.find({ userId, date }),
+        ChatbotResponse.find({ userId, date }),
+      ]);    
+
+      const combinedResponse = {
+        goals: response[0],
+        behaviors: response[1],
+        reflection: response[2],
+        feedback: response[3],
+      };
+      
+
+      res.status(200).json(combinedResponse);
+  } catch (error) {
+      console.error("Error fetching daily report:", error);
+      res.status(500).json({ error: "Error fetching daily report"});
+  }
+});
+
 
 
 app.listen(port, () => {
