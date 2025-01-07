@@ -9,7 +9,7 @@ const ExpandableTextWrapper = styled.div`
   padding: 15px;
   border-radius: 10px;
   width: 100%;          // Fix the width
-  max-height: 100px;
+  max-height: 90px;
   margin-bottom: 20px;
   overflow-y: auto;     // Only vertical scrolling
   overflow-x: hidden;   // Prevent horizontal scrolling
