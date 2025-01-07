@@ -413,6 +413,7 @@ export const createChatbotRequest = async (
       userId: user._id,
       goalType,
       feedback: chatbotResponse.data.chat_reply,
+      date: date
     });
   
     setGoalResponseLoading(false); // Stop the loading indicator
