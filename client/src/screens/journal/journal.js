@@ -263,7 +263,7 @@ const JournalScreen = () => {
 
         // Fetch goal inputs
         const goalResponse = await axios.get(`${DATABASE_URL}/getGoalInputs`, {
-          params: { userId: user._id }  // Pass user._id here
+          params: { userId: user._id, date: date }  // Pass user._id here
         });
         if (goalResponse.data) {
           setGoalInputs(goalResponse.data);
@@ -271,7 +271,7 @@ const JournalScreen = () => {
 
         // Fetch behavior inputs
         const behaviorResponse = await axios.get(`${DATABASE_URL}/getBehaviorInputs`, {
-          params: { userId: user._id }  // Pass user._id here
+          params: { userId: user._id, date: date }  // Pass user._id here
         });
         if (behaviorResponse.data) {
           setBehaviorInputs(behaviorResponse.data);
@@ -531,7 +531,8 @@ const JournalScreen = () => {
             const response = await axios.get(`${DATABASE_URL}/getChatbotResponses`, {
                 params: {
                     userId: user._id,
-                    goalType: goalType
+                    goalType: goalType,
+                    date: date
                 }
             });
 
@@ -1273,6 +1274,7 @@ const JournalScreen = () => {
         screentime: goalInputs.screentime,
         eating: goalInputs.eating,
         sleep: goalInputs.sleep,
+        date: date,
       });
       console.log('Goal inputs saved successfully');
     } catch (error) {
@@ -1287,6 +1289,7 @@ const JournalScreen = () => {
         screentime: behaviorInputs.screentime,
         eating: behaviorInputs.eating,
         sleep: behaviorInputs.sleep,
+        date: date
       });
       console.log('Behavior inputs saved successfully');
     } catch (error) {

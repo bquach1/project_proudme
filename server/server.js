@@ -188,7 +188,11 @@ const goalInputsSchema = new mongoose.Schema({
           hours: Number,
           minutes: Number
       }
-  }
+  },
+  date: {
+    type: String,
+    required: true
+  },
 });
 
 const behaviorInputsSchema = new mongoose.Schema({
@@ -212,13 +216,21 @@ const behaviorInputsSchema = new mongoose.Schema({
           hours: Number,
           minutes: Number
       }
-  }
+  },
+  date: {
+    type: String,
+    required: true
+  },
 });
 
 const chatbotResponseSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   goalType: { type: String, required: true },
   feedback: { type: String, required: true },
+  date: {
+    type: String,
+    required: true
+  },
 });
 
 
@@ -234,21 +246,21 @@ const Goal = mongoose.model("Goal", goalSchema);
 
 //delete file everyday it passes 
 
-cron.schedule('0 0 * * *', async () => {
-  console.log('Running daily data reset job');
+// cron.schedule('0 0 * * *', async () => {
+//   console.log('Running daily data reset job');
 
-  try {
-    // Clear the collections
-    await SelectedItems.deleteMany({});
-    await GoalInputs.deleteMany({});
-    await BehaviorInputs.deleteMany({});
-    await ChatbotResponse.deleteMany({});
+//   try {
+//     // Clear the collections
+//     await SelectedItems.deleteMany({});
+//     await GoalInputs.deleteMany({});
+//     await BehaviorInputs.deleteMany({});
+//     await ChatbotResponse.deleteMany({});
 
-    console.log('Data reset successfully');
-  } catch (error) {
-    console.error('Error resetting data:', error);
-  }
-});
+//     console.log('Data reset successfully');
+//   } catch (error) {
+//     console.error('Error resetting data:', error);
+//   }
+// });
 // Login endpoint
 app.post("/login", async (req, res) => {
   const email = req.body.email;
@@ -299,7 +311,7 @@ app.post("/register", async (req, res) => {
       birthYear,
       gradeLevel,
       gender,
-      isVerifiedEmail: false,
+      isVerifiedEmail: true,
       verificationCode
     });
     await newUser.save();
@@ -387,19 +399,19 @@ app.post("/send-code", async (req, res) => {
 });
 
 app.post("/ChatbotResponse", async (req, res) => {
-  const { userId, goalType, feedback } = req.body;
+  const { userId, goalType, feedback, date } = req.body;
 
-  
+  console.log(date);
 
   // Check if all required fields are provided
-  if (!userId || !goalType || !feedback) {
-    console.error("Missing required fields", { userId, goalType, feedback });
+  if (!userId || !goalType || !feedback || !date) {
+    console.error("Missing required fields", { userId, goalType, feedback, date });
     return res.status(400).json({ error: "Missing required fields" });
   }
 
   try {
     const response = await ChatbotResponse.findOneAndUpdate(
-      { userId, goalType }, // Filter to find the existing document
+      { userId, goalType, date }, // Filter to find the existing document
       { feedback },         // Update the feedback field
       { upsert: true, new: true } // Create if not exists and return the updated document
     );
@@ -439,9 +451,9 @@ app.post('/selectedItems', async (req, res) => {
 });
 // Save goal inputs
 app.post('/saveGoalInputs', async (req, res) => {
-  const { userId, activity, screentime, eating, sleep } = req.body;
+  const { userId, activity, screentime, eating, sleep, date } = req.body;
   try {
-      const existingGoalInputs = await GoalInputs.findOne({ userId });
+      const existingGoalInputs = await GoalInputs.findOne({ userId, date });
 
       if (existingGoalInputs) {
           // Update if exists
@@ -454,7 +466,7 @@ app.post('/saveGoalInputs', async (req, res) => {
           res.status(200).json({ message: 'Goal inputs updated' });
       } else {
           // Create new document if it doesn't exist
-          const newGoalInputs = new GoalInputs({ userId, activity, screentime, eating, sleep });
+          const newGoalInputs = new GoalInputs({ userId, activity, screentime, eating, sleep, date });
           await newGoalInputs.save();
           res.status(201).json({ message: 'Goal inputs saved' });
       }
@@ -466,10 +478,10 @@ app.post('/saveGoalInputs', async (req, res) => {
 
 // Save behavior inputs
 app.post('/saveBehaviorInputs', async (req, res) => {
-  const { userId, activity, screentime, eating, sleep } = req.body;
+  const { userId, activity, screentime, eating, sleep, date } = req.body;
 
   try {
-      const existingBehaviorInputs = await BehaviorInputs.findOne({ userId });
+      const existingBehaviorInputs = await BehaviorInputs.findOne({ userId, date });
 
       if (existingBehaviorInputs) {
           // Update if exists
@@ -481,7 +493,7 @@ app.post('/saveBehaviorInputs', async (req, res) => {
           res.status(200).json({ message: 'Behavior inputs updated' });
       } else {
           // Create new document if it doesn't exist
-          const newBehaviorInputs = new BehaviorInputs({ userId, activity, screentime, eating, sleep });
+          const newBehaviorInputs = new BehaviorInputs({ userId, activity, screentime, eating, sleep, date });
           await newBehaviorInputs.save();
           res.status(201).json({ message: 'Behavior inputs saved' });
       }
@@ -640,9 +652,9 @@ app.post("/signup", async (req, res) => {
 });
 
 app.get("/getChatbotResponses", async (req, res) => {
-  const { userId, goalType } = req.query; // Retrieve both userId and goalType from query parameters
+  const { userId, goalType, date } = req.query; // Retrieve both userId and goalType from query parameters
   try {
-      const responses = await ChatbotResponse.findOne({ userId, goalType }); 
+      const responses = await ChatbotResponse.findOne({ userId, goalType, date }); 
       res.status(200).json(responses);
   } catch (error) {
       console.error("Error fetching chatbot responses:", error);
@@ -670,10 +682,10 @@ app.get('/getSelectedItems', async (req, res) => {
 // Route to get goal inputs
 app.get('/getGoalInputs', async (req, res) => {
   try {
-    const { userId } = req.query;  // Get userId from query parameters
-    if (!userId) return res.status(400).json({ error: "User ID is required" });
+    const { userId, date } = req.query;  // Get userId from query parameters
+    if (!userId || !date) return res.status(400).json({ error: "User ID and date are required" });
 
-    const goalInputs = await GoalInputs.findOne({ userId });
+    const goalInputs = await GoalInputs.findOne({ userId, date });
     if (goalInputs) {
       res.status(200).json(goalInputs);
     } else {
@@ -688,10 +700,10 @@ app.get('/getGoalInputs', async (req, res) => {
 // Route to get behavior inputs
 app.get('/getBehaviorInputs', async (req, res) => {
   try {
-    const { userId } = req.query;  // Get userId from query parameters
-    if (!userId) return res.status(400).json({ error: "User ID is required" });
+    const { userId, date } = req.query;  // Get userId from query parameters
+    if (!userId || !date) return res.status(400).json({ error: "User ID and date is required" });
 
-    const behaviorInputs = await BehaviorInputs.findOne({ userId });
+    const behaviorInputs = await BehaviorInputs.findOne({ userId, date });
     if (behaviorInputs) {
       res.status(200).json(behaviorInputs);
     } else {
@@ -982,6 +994,37 @@ app.post("/chatbot", (req, res) => {
   } catch (error) {
     console.error("Chatbot error: ", error);
     res.status(500).json({ error: "Chatbot request failed" });
+  }
+});
+
+app.get("/daily-report", async (req, res) => {
+  const { userId, date } = req.query; // Retrieve both userId and goalType from query parameters
+
+  if (!userId || !date) {
+    res.status(400).send("User Id or date not provided.");
+    return
+  }
+
+  try {
+      const response = await Promise.all([
+        GoalInputs.findOne({ userId, date }),
+        BehaviorInputs.findOne({ userId, date }),
+        Behavior.find({ userId, date }),
+        ChatbotResponse.find({ userId, date }),
+      ]);    
+
+      const combinedResponse = {
+        goals: response[0],
+        behaviors: response[1],
+        reflection: response[2],
+        feedback: response[3],
+      };
+      
+
+      res.status(200).json(combinedResponse);
+  } catch (error) {
+      console.error("Error fetching daily report:", error);
+      res.status(500).json({ error: "Error fetching daily report"});
   }
 });
 
