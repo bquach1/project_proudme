@@ -130,7 +130,6 @@ const SignUpScreen = () => {
   const handleAccountConfirm = async (event) => {
     event.preventDefault();
     setLoading(true);
-    if (verificationCode === accountConfirm) {
       await axios
         .post(`${DATABASE_URL}/signup`, {
           email: form.email,
@@ -163,7 +162,6 @@ const SignUpScreen = () => {
           console.error(error);
           setLoading(false);
         });
-    }
   };
 
   const handleEmailBlur = async (e) => {
@@ -307,7 +305,7 @@ const SignUpScreen = () => {
             Thank you for joining ProudMe!
           </div>
           <form
-            onSubmit={handleSubmit}
+            onSubmit={handleAccountConfirm}
             style={{
               display: "flex",
               flexDirection: "column",
