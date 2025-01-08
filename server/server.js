@@ -1009,7 +1009,7 @@ app.get("/daily-report", async (req, res) => {
       const response = await Promise.all([
         GoalInputs.findOne({ userId, date }),
         BehaviorInputs.findOne({ userId, date }),
-        Behavior.find({ userId, date }),
+        Behavior.find({ user: userId, date }),
         ChatbotResponse.find({ userId, date }),
       ]);    
 
