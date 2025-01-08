@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
   birthYear: { type: String, required: true },
   gradeLevel: { type: String, required: true },
   gender: { type: String, required: true },
-  isVerifiedEmail: { type: Boolean, default: false },
+  isVerifiedEmail: { type: Boolean, default: true },
   verificationCode: { type: String },
 });
 
