@@ -246,21 +246,22 @@ const Goal = mongoose.model("Goal", goalSchema);
 
 //delete file everyday it passes 
 
-// cron.schedule('0 0 * * *', async () => {
-//   console.log('Running daily data reset job');
+cron.schedule('0 0 * * *', async () => {
+  console.log('Running daily data reset job');
 
-//   try {
-//     // Clear the collections
-//     await SelectedItems.deleteMany({});
-//     await GoalInputs.deleteMany({});
-//     await BehaviorInputs.deleteMany({});
-//     await ChatbotResponse.deleteMany({});
+  try {
+    // Clear the collections
+    await SelectedItems.deleteMany({});
+    // await GoalInputs.deleteMany({});
+    // await BehaviorInputs.deleteMany({});
+    // await ChatbotResponse.deleteMany({});
 
-//     console.log('Data reset successfully');
-//   } catch (error) {
-//     console.error('Error resetting data:', error);
-//   }
-// });
+    console.log('Data reset successfully');
+  } catch (error) {
+    console.error('Error resetting data:', error);
+  }
+});
+
 // Login endpoint
 app.post("/login", async (req, res) => {
   const email = req.body.email;
