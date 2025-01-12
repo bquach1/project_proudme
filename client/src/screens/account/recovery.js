@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { Button, TextField } from "@mui/material";
-import { styled } from "styled-components";
-import { useNavigate } from "react-router-dom";
-import bcrypt from "bcryptjs";
-import { DATABASE_URL } from "constants";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Button, TextField } from '@mui/material';
+import { styled } from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import { DATABASE_URL } from 'constants';
 
 const RecoveryWrapper = styled.div`
   display: flex;
@@ -44,187 +43,136 @@ const StyledButton = styled(Button)`
   }
 `;
 
-const BackButton = styled(Button)`
-  background-color: #d7a746 !important;
-  color: white !important;
-  margin-top: 20px !important;
-  padding: 10px 20px !important;
-  font-size: 16px !important;
-  text-transform: none !important;
-  border-radius: 8px !important;
-  &:hover {
-    background-color: #c6953e !important;
-  }
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px; /* Add space between buttons */
-`;
-
 const Recovery = () => {
   const navigate = useNavigate();
-  const [verificationCode] = useState(generateVerificationCode());
-  const [email, setEmail] = useState("");
-  const [confirming, setConfirming] = useState(false);
-  const [confirmedPassword, setConfirmedPassword] = useState(false);
-  const [resetPassword, setResetPassword] = useState("");
-  const [resetPasswordConfirm, setResetPasswordConfirm] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [resetMode, setResetMode] = useState("");
+  const [username, setUsername] = useState('');
+  const [questions, setQuestions] = useState([]);
+  const [answers, setAnswers] = useState([]);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [step, setStep] = useState('username'); // username, questions, or reset
+  const [resetToken, setResetToken] = useState('');
 
-  const handleChange = (event) => setEmail(event.target.value);
-  const handlePasswordChange = (event) => setResetPassword(event.target.value);
-  const handlePasswordConfirmChange = (event) => setResetPasswordConfirm(event.target.value);
-  const handleEmailConfirmChange = (event) => setPasswordConfirm(event.target.value);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setConfirming(true);
+  const handleUsernameSubmit = async (e) => {
+    e.preventDefault();
     try {
-      const response = await axios.get(`${DATABASE_URL}/user`, {
-        params: { email },
-      });
-      const newEmailData = {
-        subject: "Project ProudMe Password Recovery",
-        to: email,
-        text: `Hi ${response.data.firstName},\n\nYou are receiving this email because you requested a password reset on the Project ProudMe webpage. \n\nEnter the confirmation code listed to reset your password: ${verificationCode}\n\nBest Regards, \nProject ProudMe Team \nLouisiana State University \nPedagogical Kinesiology Lab\n\n---\n This email was sent from an account associated with Louisiana State University.`,
-      };
-
-      await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
+      const response = await axios.get(`${DATABASE_URL}/security-questions/${username}`);
+      setQuestions(response.data.questions);
+      setAnswers(new Array(response.data.questions.length).fill(''));
+      setStep('questions');
     } catch (error) {
-      console.error(error);
+      alert('Username not found or error fetching security questions');
     }
   };
 
-  const changePassword = async () => {
-    const hashedPassword = await bcrypt.hash(resetPassword, 10);
-    await axios.post(`${DATABASE_URL}/user`, { email, password: hashedPassword });
-    navigate("/login");
+  const handleAnswerChange = (index, value) => {
+    const newAnswers = [...answers];
+    newAnswers[index] = value;
+    setAnswers(newAnswers);
   };
 
-  const handleEmailConfirm = (event) => {
-    event.preventDefault();
-    if (verificationCode === passwordConfirm) {
-      setConfirming(false);
-      setConfirmedPassword(true);
+  const handleSecurityQuestions = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${DATABASE_URL}/recover-password`, {
+        username,
+        securityAnswers: answers
+      });
+      setResetToken(response.data.resetToken);
+      setStep('reset');
+    } catch (error) {
+      alert('Incorrect answers to security questions');
     }
   };
 
-  const handleUsernameSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const response = await axios.get(`${DATABASE_URL}/user`, {
-        params: { email },
-      });
-      const newEmailData = {
-        subject: "Project ProudMe Username Recovery",
-        to: email,
-        text: `Hi ${response.data.firstName},\n\nYou are receiving this email because you requested a username reminder on the Project ProudMe webpage. \n\nThe username associated with this email account is ${response.data.name}.\n\nBest Regards, \nProject ProudMe Team \nLouisiana State University \nPedagogical Kinesiology Lab\n\n---\n This email was sent from an account associated with Louisiana State University.`,
-      };
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
 
-      await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
-      alert("Username has been sent to your email.");
+    try {
+      await axios.post(`${DATABASE_URL}/reset-password`, {
+        resetToken,
+        newPassword
+      });
+      alert('Password reset successful');
+      navigate('/login');
     } catch (error) {
-      console.error(error);
+      alert('Error resetting password');
     }
   };
 
   return (
     <RecoveryWrapper>
-      {resetMode === "password" ? (
-        <FormWrapper>
-          <Title>Recover Password</Title>
-          {confirmedPassword ? (
-            <>
-              <TextField
-                type="password"
-                value={resetPassword}
-                onChange={handlePasswordChange}
-                placeholder="New Password"
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                type="password"
-                value={resetPasswordConfirm}
-                onChange={handlePasswordConfirmChange}
-                placeholder="Confirm New Password"
-                fullWidth
-                margin="normal"
-              />
-              <StyledButton onClick={changePassword}>Change Password</StyledButton>
-            </>
-          ) : (
-            <>
-              <form onSubmit={handleSubmit}>
-                <TextField
-                  type="email"
-                  value={email}
-                  onChange={handleChange}
-                  placeholder="Your Email"
-                  fullWidth
-                  margin="normal"
-                />
-                <StyledButton type="submit">Send Email</StyledButton>
-              </form>
-              {confirming && (
-                <>
-                  <p>Enter the confirmation code sent to your email to reset your password!</p>
-                  <form onSubmit={handleEmailConfirm}>
-                    <TextField
-                      type="password"
-                      value={passwordConfirm}
-                      onChange={handleEmailConfirmChange}
-                      placeholder="Verification Code"
-                      fullWidth
-                      margin="normal"
-                    />
-                    <StyledButton type="submit">Confirm Email</StyledButton>
-                  </form>
-                </>
-              )}
-              <BackButton onClick={() => navigate("/login")}>Back to Login</BackButton>
-            </>
-          )}
-        </FormWrapper>
-      ) : resetMode === "username" ? (
-        <FormWrapper>
-          <Title>Recover Username</Title>
+      <FormWrapper>
+        <Title>Account Recovery</Title>
+        
+        {step === 'username' && (
           <form onSubmit={handleUsernameSubmit}>
             <TextField
-              type="email"
-              value={email}
-              onChange={handleChange}
-              placeholder="Your Email"
               fullWidth
+              label="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               margin="normal"
+              required
             />
-            <StyledButton type="submit">Send Email</StyledButton>
+            <StyledButton type="submit">Next</StyledButton>
           </form>
-          <BackButton onClick={() => navigate("/login")}>Back to Login</BackButton>
-        </FormWrapper>
-      ) : (
-        <FormWrapper>
-          <ButtonWrapper>
-            <StyledButton onClick={() => setResetMode("password")}>Reset Password</StyledButton>
-            <StyledButton onClick={() => setResetMode("username")}>Recover Username</StyledButton>
-          </ButtonWrapper>
-        </FormWrapper>
-      )}
+        )}
+
+        {step === 'questions' && (
+          <form onSubmit={handleSecurityQuestions}>
+            {questions.map((question, index) => (
+              <TextField
+                key={index}
+                fullWidth
+                label={question}
+                value={answers[index]}
+                onChange={(e) => handleAnswerChange(index, e.target.value)}
+                margin="normal"
+                required
+              />
+            ))}
+            <StyledButton type="submit">Verify Answers</StyledButton>
+          </form>
+        )}
+
+        {step === 'reset' && (
+          <form onSubmit={handlePasswordReset}>
+            <TextField
+              fullWidth
+              type="password"
+              label="New Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              margin="normal"
+              required
+            />
+            <TextField
+              fullWidth
+              type="password"
+              label="Confirm New Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              margin="normal"
+              required
+            />
+            <StyledButton type="submit">Reset Password</StyledButton>
+          </form>
+        )}
+
+        <Button 
+          onClick={() => navigate('/login')}
+          style={{ marginTop: '20px' }}
+        >
+          Back to Login
+        </Button>
+      </FormWrapper>
     </RecoveryWrapper>
   );
-};
-
-const generateVerificationCode = () => {
-  const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let code = "";
-  for (let i = 0; i < 8; i++) {
-    const randomIndex = Math.floor(Math.random() * charset.length);
-    code += charset[randomIndex];
-  }
-  return code;
 };
 
 export default Recovery;

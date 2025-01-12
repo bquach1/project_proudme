@@ -35,6 +35,31 @@ const FormWrapper = styled.div`
   overflow: auto;
 `;
 
+const SecurityQuestionWrapper = styled.div`
+  margin: 15px 0;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #f8f8f8;
+`;
+
+const SecurityQuestionSelect = styled(Select)`
+  width: 100%;
+  margin-bottom: 10px !important;
+`;
+
+const SECURITY_QUESTIONS = [
+  "What was the name of your first pet?",
+  "In which city were you born?",
+  "What is your favorite book?",
+  "What is your mother's maiden name?",
+  "What was your favorite subject in elementary school?",
+  "What is your favorite teacher's name?",
+  "What is your favorite video game?",
+  "What is your favorite sport?",
+  "What is your favorite food?",
+  "What is your best friend's name?"
+];
+
 const generateVerificationCode = () => {
   const charset =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -69,6 +94,13 @@ const SignUpScreen = () => {
   const [emailApiError, setEmailApiError] = useState(false);
 
   const registrationError = emailError || usernameError || !passwordMatch;
+
+   // New state for security questions
+   const [selectedQuestions, setSelectedQuestions] = useState([
+    { question: "", answer: "" },
+    { question: "", answer: "" },
+    { question: "", answer: "" }
+  ]);
 
   const [form, setForm] = useState({
     name: "",
@@ -130,39 +162,50 @@ const SignUpScreen = () => {
   const handleAccountConfirm = async (event) => {
     event.preventDefault();
     setLoading(true);
-      await axios
-        .post(`${DATABASE_URL}/signup`, {
-          email: form.email,
-          password: form.password,
-          confirmPassword: form.confirmPassword,
-          name: form.name,
-          firstName: form.firstName,
-          lastName: form.lastName,
-          schoolName: form.schoolAttending,
-          birthMonth: form.birthMonth,
-          birthYear: form.birthYear,
-          gradeLevel: form.gradeLevel,
-          gender: form.gender,
-        })
-        .then(() => {
-          setLoading(false);
-          setSubmitted(true);
-          setConfirming(false);
-        })
-        .catch((error) => {
-          if (error.response.data === "Email is already in use") {
-            alert(
-              "Email is already in use. Please try signing up again with a different email account."
-            );
-          } else if (error.response.data === "Username is already in use") {
-            alert(
-              "Username is already in use. Please try signing up again with a different email account."
-            );
-          }
-          console.error(error);
-          setLoading(false);
-        });
+  
+    // Validate security questions
+    const isQuestionsValid = selectedQuestions.every(q =>
+      q.question && q.answer.length >= 2
+    );
+  
+    if (!isQuestionsValid) {
+      alert("Please complete all security questions and answers (minimum 2 characters for answers)");
+      setLoading(false);
+      return;
+    }
+  
+    try {
+      await axios.post(`${DATABASE_URL}/signup`, {
+        email: form.email || null, // Make email explicitly null if not provided
+        password: form.password,
+        confirmPassword: form.confirmPassword,
+        name: form.name,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        schoolName: form.schoolAttending,
+        birthMonth: form.birthMonth,
+        birthYear: form.birthYear,
+        gradeLevel: form.gradeLevel,
+        gender: form.gender,
+        securityQuestions: selectedQuestions.map(q => ({
+          question: q.question,
+          answer: q.answer
+        }))
+      });
+  
+      setLoading(false);
+      setSubmitted(true);
+    } catch (error) {
+      setLoading(false);
+      if (error.response?.data) {
+        alert(error.response.data);
+      } else {
+        alert("An error occurred during registration. Please try again.");
+      }
+      console.error("Registration error:", error);
+    }
   };
+  
 
   const handleEmailBlur = async (e) => {
     const response = await axios.get(`${DATABASE_URL}/user`, {
@@ -201,50 +244,86 @@ const SignUpScreen = () => {
     }
   };
 
+  const handleQuestionChange = (index, field, value) => {
+    const newQuestions = [...selectedQuestions];
+    newQuestions[index] = {
+      ...newQuestions[index],
+      [field]: value
+    };
+    setSelectedQuestions(newQuestions);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      if (emailApiError) {
-        await axios
-          .post(`${DATABASE_URL}/signup`, {
-            email: form.email,
-            password: form.password,
-            confirmPassword: form.confirmPassword,
-            name: form.name,
-            firstName: form.firstName,
-            lastName: form.lastName,
-            schoolName: form.schoolAttending,
-            birthMonth: form.birthMonth,
-            birthYear: form.birthYear,
-            gradeLevel: form.gradeLevel,
-            gender: form.gender,
-          })
-          .then(() => {
-            setLoading(false);
-            setSubmitted(true);
-            setConfirming(false);
-          });
-      } else {
-        const newEmailData = {
-          subject: "Project ProudMe Registration Confirmation",
-          to: form.email,
-          text:
-            `Hi ${form.name},\n\nYou are receiving this email because you recently registered a new account on the Project ProudMe webpage. \n\nEnter the confirmation code listed to confirm your email account: ` +
-            verificationCode +
-            "\n\nBest Regards, \nProject ProudMe Team \nLouisiana State University \nPedagogical Kinesiology Lab\n\n---\nThis email was sent from an account associated with Louisiana State University.",
-        };
+    setLoading(true);
 
-        await axios.post(`${DATABASE_URL}/send-email`, newEmailData);
-        setConfirming(true);
-      }
+    // Validate security questions
+    const isQuestionsValid = selectedQuestions.every(q => 
+      q.question && q.answer.length >= 2
+    );
+
+    if (!isQuestionsValid) {
+      alert("Please complete all security questions and answers (minimum 2 characters for answers)");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      await axios.post(`${DATABASE_URL}/register`, {
+        ...form,
+        securityQuestions: selectedQuestions
+      });
+      
+      setLoading(false);
+      setSubmitted(true);
     } catch (error) {
-      alert(
-        "Email service is currently overloaded. You can disregard the email confirmation and sign up immediately by clicking the 'Register' button again."
-      );
-      setEmailApiError(true);
+      setLoading(false);
+      if (error.response?.data === "Username already exists") {
+        alert("Username is already in use. Please choose a different username.");
+      } else {
+        alert("An error occurred during registration. Please try again.");
+      }
       console.error(error);
     }
   };
+
+  const renderSecurityQuestions = () => (
+    <SecurityQuestionWrapper>
+      <Typography variant="h6" style={{ marginBottom: "15px" }}>
+        Security Questions (Required)
+      </Typography>
+      {selectedQuestions.map((qa, index) => (
+        <div key={index} style={{ marginBottom: "20px" }}>
+          <SecurityQuestionSelect
+            value={qa.question}
+            onChange={(e) => handleQuestionChange(index, "question", e.target.value)}
+            displayEmpty
+            required
+          >
+            <MenuItem value="" disabled>
+              <em>Select Question {index + 1}</em>
+            </MenuItem>
+            {SECURITY_QUESTIONS
+              .filter(q => !selectedQuestions.some((sq, i) => i !== index && sq.question === q))
+              .map((question) => (
+                <MenuItem key={question} value={question}>
+                  {question}
+                </MenuItem>
+              ))}
+          </SecurityQuestionSelect>
+          <TextField
+            fullWidth
+            value={qa.answer}
+            onChange={(e) => handleQuestionChange(index, "answer", e.target.value)}
+            placeholder="Your Answer"
+            required
+            style={{ marginTop: "5px" }}
+          />
+        </div>
+      ))}
+    </SecurityQuestionWrapper>
+  );
+
 
   const renderForm = (
     <>
@@ -494,22 +573,13 @@ const SignUpScreen = () => {
                   <MenuItem value="none">Prefer not to tell</MenuItem>
                 </Select>
               </div>
-              <div
-                className="overflow-row-container"
-                style={{ maxWidth: ismobile || istablet ? "80%" : "40%" }}
-              >
-                <label>Email Address: </label>
+              <div className="row-container">
+                <label>Email Address (Optional): </label>
                 <input
-                  className={
-                    emailError || emailFormatError
-                      ? "error-signup-input"
-                      : "signup-input"
-                  }
+                  className="signup-input"
                   type="email"
                   onChange={(e) => updateForm({ email: e.target.value })}
-                  onBlur={handleEmailBlur}
                   value={form.email}
-                  required
                 />
                 {emailError ? (
                   <h4 style={{ color: "rgb(255, 0, 0, 0.8)" }}>
@@ -564,6 +634,9 @@ const SignUpScreen = () => {
                 </FormGroup>
               </div>
             </div>
+
+            {renderSecurityQuestions()}
+            
             <Tooltip
               title={
                 registrationError
@@ -576,18 +649,17 @@ const SignUpScreen = () => {
                   style={{
                     backgroundColor: "#3C3293",
                     color: "white",
-                    padding: "10px 50px 10px 50px",
+                    padding: "10px 50px",
                     borderRadius: "20px",
                     textTransform: "none",
                     margin: "auto",
                     height: "60px",
                     width: "25%",
                     fontSize: "25px",
-                    opacity: registrationError && 0.4,
+                    opacity: usernameError || !passwordMatch ? 0.4 : 1,
                   }}
                   type="submit"
-                  disabled={registrationError && true}
-                  value="Register user"
+                  disabled={usernameError || !passwordMatch}
                 >
                   Register
                 </Button>
