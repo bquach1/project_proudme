@@ -312,6 +312,13 @@ export const createChatbotRequest = async (
     selectedItem = selectedItems.sleep;
   }
 
+  console.log("goalType", goalType)
+  console.log("recommendedValue", recommendedValue)
+  console.log("goalValue", goalValue)
+  console.log("actualValue", actualValue)
+  console.log("reflection", reflection)
+  console.log("personalGoalMet", personalGoalMet)
+  console.log("goalMet", goalMet)
   // Send the request to the chatbot
   try {
     // Send the request to the chatbot
@@ -333,14 +340,6 @@ export const createChatbotRequest = async (
 
     calculateQuantities(goalInputs, behaviorInputs);
 
-    console.log("Activity Goal Minutes:", activityGoalMinutes);
-    console.log("Screentime Goal Minutes:", screentimeGoalMinutes);
-    console.log("Eating Goal Servings:", eatingGoalServings);
-    console.log("Sleep Goal Minutes:", sleepGoal );
-    console.log("activityBehaviorMinutes", activityBehaviorMinutes)
-    console.log("screentimeBehaviorMinutes", screentimeBehaviorMinutes)
-    console.log("eatingBehaviorServings", eatingBehaviorServings)
-    console.log("sleepBehaviour", sleepBehavior)
 
     if (goalType == "activity"){
       await updateMinutesInDatabase(

@@ -37,21 +37,36 @@ mongoose
     console.error(err);
   });
 
-// Define user schema and model
-const userSchema = new mongoose.Schema({
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  name: { type: String, required: true },
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  schoolName: { type: String, required: true },
-  birthMonth: { type: String, required: true },
-  birthYear: { type: String, required: true },
-  gradeLevel: { type: String, required: true },
-  gender: { type: String, required: true },
-  isVerifiedEmail: { type: Boolean, default: true },
-  verificationCode: { type: String },
-});
+  const userSchema = new mongoose.Schema({
+    email: { type: String, sparse: true }, // Optional email field with sparse index
+    password: { type: String, required: true },
+    name: { type: String, required: true, unique: true }, // Username is required and unique
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    schoolName: { type: String, required: true },
+    birthMonth: { type: String, required: true },
+    birthYear: { type: String, required: true },
+    gradeLevel: { type: String, required: true },
+    gender: { type: String, required: true },
+    securityQuestions: [{
+      question: { type: String, required: true },
+      answer: { type: String, required: true }
+    }]
+  });
+  
+  // New Security Questions Schema
+  const securityQuestionsBank = [
+    "What was the name of your first pet?",
+    "In which city were you born?",
+    "What is your favorite book?",
+    "What is your mother's maiden name?",
+    "What was your favorite subject in elementary school?",
+    "What is the name of your favorite teacher?",
+    "What is your favorite video game?",
+    "What is your favorite sport?",
+    "What is your favorite food?",
+    "What is your best friend's name?"
+  ];
 
 const goalSchema = new mongoose.Schema({
   user: {
@@ -288,21 +303,42 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// Registration endpoint
 app.post("/register", async (req, res) => {
-  const { email, password, confirmPassword, name, firstName, lastName, schoolName, birthMonth, birthYear, gradeLevel, gender } = req.body;
+  const { 
+    email, 
+    password, 
+    confirmPassword, 
+    name, 
+    firstName, 
+    lastName, 
+    schoolName, 
+    birthMonth, 
+    birthYear, 
+    gradeLevel, 
+    gender,
+    securityQuestions 
+  } = req.body;
 
   if (password !== confirmPassword) {
     return res.status(400).send("Passwords do not match");
   }
 
+  if (!securityQuestions || securityQuestions.length < 3) {
+    return res.status(400).send("Please answer at least 3 security questions");
+  }
+
   const salt = bcrypt.genSaltSync(10);
   const hashedPassword = bcrypt.hashSync(password, salt);
-  const verificationCode = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
 
   try {
+    // Hash security question answers
+    const hashedSecurityQuestions = securityQuestions.map(qa => ({
+      question: qa.question,
+      answer: bcrypt.hashSync(qa.answer.toLowerCase(), salt)
+    }));
+
     const newUser = new User({
-      email,
+      email,  // Optional
       password: hashedPassword,
       name,
       firstName,
@@ -312,90 +348,115 @@ app.post("/register", async (req, res) => {
       birthYear,
       gradeLevel,
       gender,
-      isVerifiedEmail: true,
-      verificationCode
+      securityQuestions: hashedSecurityQuestions
     });
+
     await newUser.save();
-
-    const msg = {
-      to: email,
-      from: "pklab@projectproudme.com",
-      subject: "Email Verification",
-      text: `Your verification code is: ${verificationCode}`,
-    };
-
-    sgMail.send(msg)
-      .then(() => res.status(200).send("User registered. Please verify your email."))
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send("Failed to send verification email");
-      });
+    res.status(200).send("User registered successfully");
   } catch (error) {
-    res.status(500).send("Internal server error");
     console.error(error);
-  }
-});
-
-// Email verification endpoint
-app.post("/verify", async (req, res) => {
-  const { email, code } = req.body;
-
-  try {
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(400).send("User not found");
-    }
-
-    if (user.verificationCode === code) {
-      user.isVerifiedEmail = true;
-      user.verificationCode = null; // Clear the verification code
-      await user.save();
-      res.status(200).send("Email verified successfully");
+    if (error.code === 11000) {
+      res.status(400).send("Username already exists");
     } else {
-      res.status(400).send("Invalid verification code");
+      res.status(500).send("Internal server error");
     }
-  } catch (error) {
-    res.status(500).send("Internal server error");
-    console.error(error);
   }
 });
 
-// Resend verification email endpoint
-app.post("/send-code", async (req, res) => {
-  const { email } = req.body;
+app.post("/login", async (req, res) => {
+  const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ email }) || await User.findOne({name: email});
+    // Find user by username
+    const user = await User.findOne({ name: username });
+
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+      res.status(401).send("Incorrect username or password");
+      return;
+    }
+
+    // If login is successful, return a token
+    const token = jwt.sign({ userId: user._id }, "secret_key");
+    res.send(token);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
+});
+
+// New Password Recovery Endpoint using Security Questions
+app.post("/recover-password", async (req, res) => {
+  const { username, securityAnswers } = req.body;
+
+  try {
+    const user = await User.findOne({ name: username });
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    // Verify security questions
+    const allAnswersCorrect = securityAnswers.every((answer, index) => 
+      bcrypt.compareSync(
+        answer.toLowerCase(), 
+        user.securityQuestions[index].answer
+      )
+    );
+
+    if (!allAnswersCorrect) {
+      return res.status(401).send("Incorrect security answers");
+    }
+
+    // Generate temporary password reset token
+    const resetToken = jwt.sign({ userId: user._id }, "reset_secret_key", { expiresIn: '1h' });
+    res.json({ resetToken });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
+});
+
+// New endpoint to get security questions for a user
+app.get("/security-questions/:username", async (req, res) => {
+  try {
+    const user = await User.findOne({ name: req.params.username });
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    // Only send questions, not answers
+    const questions = user.securityQuestions.map(qa => qa.question);
+    res.json({ questions });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
+});
+
+// New endpoint to reset password after answering security questions
+app.post("/reset-password", async (req, res) => {
+  const { resetToken, newPassword } = req.body;
+
+  try {
+    const decoded = jwt.verify(resetToken, "reset_secret_key");
+    const user = await User.findById(decoded.userId);
 
     if (!user) {
-      return res.status(400).send("User not found");
+      return res.status(404).send("User not found");
     }
 
-    if (user.isVerifiedEmail) {
-      return res.status(400).send("Email is already verified");
-    }
-
-    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-    user.verificationCode = verificationCode;
+    const salt = bcrypt.genSaltSync(10);
+    user.password = bcrypt.hashSync(newPassword, salt);
     await user.save();
 
-    const msg = {
-      to: user.email,
-      from: "pklab@projectproudme.com",
-      subject: "Email Verification",
-      text: `Your verification code is: ${verificationCode}`,
-    };
-
-    sgMail.send(msg)
-      .then(() => res.send("Verification email sent successfully"))
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send("Failed to send verification email");
-      });
+    res.send("Password reset successful");
   } catch (error) {
-    res.status(500).send("Internal server error");
     console.error(error);
+    if (error.name === 'TokenExpiredError') {
+      res.status(401).send("Reset token has expired");
+    } else {
+      res.status(500).send("Internal server error");
+    }
   }
 });
 
@@ -619,20 +680,64 @@ app.post("/behaviors", async (req, res) => {
 });
 
 
-// Signup endpoint
 app.post("/signup", async (req, res) => {
-  const { email, password, confirmPassword, name, firstName, lastName, schoolName, birthMonth, birthYear, gradeLevel, gender } = req.body;
-
-  if (password !== confirmPassword) {
-    return res.status(400).send("Passwords do not match");
-  }
-
-  const salt = bcrypt.genSaltSync(10);
-  const hashedPassword = bcrypt.hashSync(password, salt);
-
   try {
+    const { 
+      email, 
+      password, 
+      confirmPassword, 
+      name, 
+      firstName, 
+      lastName, 
+      schoolName, 
+      birthMonth, 
+      birthYear, 
+      gradeLevel, 
+      gender,
+      securityQuestions 
+    } = req.body;
+
+    // Basic validation
+    if (!name || !password || !firstName || !lastName || !schoolName || 
+        !birthMonth || !birthYear || !gradeLevel || !gender) {
+      return res.status(400).send("All required fields must be filled");
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).send("Passwords do not match");
+    }
+
+    // Check username first
+    const existingUser = await User.findOne({ name });
+    if (existingUser) {
+      return res.status(400).send("Username is already in use");
+    }
+
+    // Only check email if provided
+    if (email) {
+      const existingEmailUser = await User.findOne({ email });
+      if (existingEmailUser) {
+        return res.status(400).send("Email is already in use");
+      }
+    }
+
+    // Hash password
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+
+    // Validate and hash security questions
+    if (!Array.isArray(securityQuestions) || securityQuestions.length < 3) {
+      return res.status(400).send("Please provide three security questions");
+    }
+
+    const hashedSecurityQuestions = securityQuestions.map(qa => ({
+      question: qa.question,
+      answer: bcrypt.hashSync(qa.answer.toLowerCase(), salt)
+    }));
+
+    // Create new user
     const newUser = new User({
-      email,
+      email: email || null, // Explicitly set null if no email
       password: hashedPassword,
       name,
       firstName,
@@ -642,13 +747,14 @@ app.post("/signup", async (req, res) => {
       birthYear,
       gradeLevel,
       gender,
+      securityQuestions: hashedSecurityQuestions
     });
-    await newUser.save();
 
-    res.status(200).send(newUser);
+    await newUser.save();
+    return res.status(200).json({ message: "User registered successfully" });
   } catch (error) {
-    res.status(500).send("Internal server error");
-    console.error(error);
+    console.error("Registration error:", error);
+    return res.status(500).send("Internal server error");
   }
 });
 

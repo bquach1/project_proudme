@@ -2176,25 +2176,29 @@ const handleSubmitEmail = async (event, goalsData, email) => {
             </div>
           </div>
         </div>
-        <StyledButton onClick={(e) => handleSubmitEmail(e, {
-            activityGoal,
-            screentimeGoal,
-            eatingGoal,
-            sleepGoal
-            }, email)}
-        style={{
-          marginTop: "-140px", // Moves the button up by reducing top margin
-          position: "relative", // Ensures the button respects the document flow
-          zIndex: 10, // Ensures visibility over other elements
-        }}    
-        >
-        Send Daily Goal Update Email
-        </StyledButton>
-        <Snackbar
-            open={sendEmailPopupOpen}
-            message="Email Sent!"
-            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        />
+        {email && (
+          <div>  {/* Add a parent wrapper div */}
+            <StyledButton 
+              onClick={(e) => handleSubmitEmail(e, {
+                screenTimeGoal,
+                eatingGoal,
+                sleepGoal
+              }, email)}
+              style={{
+                padding: "140px",
+                position: "relative",
+                zIndex: 10
+              }}
+            >
+              Send Daily Goal Update Email
+            </StyledButton>
+            <Snackbar
+              open={sendEmailPopupOpen}
+              message="Email Sent!"
+              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            />
+          </div>
+        )}
       </JournalWrapper>
 
       {/* Physical Activity Dialog */}
