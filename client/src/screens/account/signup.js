@@ -127,6 +127,30 @@ const SignUpScreen = () => {
     setAccountConfirm(e.target.value);
   };
 
+  const loginOnSignUp = (email, password) => {
+    setLoading(true);
+
+    axios
+      .post(`${DATABASE_URL}/login`, {
+        email,
+        password,
+      })
+      .then((response) => {
+        localStorage.setItem("authToken", response.data);
+        setLoading(false);
+        navigate("/home");
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.error(error);
+        error.code === "ERR_NETWORK"
+          ? alert(
+              "There seems to be a server-side error. Please wait a moment before trying again."
+            )
+          : alert("Incorect email or password. Please try again.");
+      });
+  };
+
   const handleAccountConfirm = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -145,9 +169,9 @@ const SignUpScreen = () => {
           gender: form.gender,
         })
         .then(() => {
-          setLoading(false);
           setSubmitted(true);
           setConfirming(false);
+          loginOnSignUp(form.email, form.password)
         })
         .catch((error) => {
           if (error.response.data === "Email is already in use") {
