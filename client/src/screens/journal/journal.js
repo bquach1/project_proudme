@@ -1480,7 +1480,7 @@ const handleSubmitEmail = async (event, goalsData, email) => {
             >
 
               <div style={styles.goalScreen}>
-              <h2 className="track-daily-text">Track Daily :</h2>
+              <h2 className="track-daily-text">Fill the Journal for YESTERDAY:</h2>
                 <GoalContainer style={styles.goalRow}>
 
                 </GoalContainer>
