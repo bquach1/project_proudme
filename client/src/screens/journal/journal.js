@@ -1543,7 +1543,7 @@ const JournalScreen = () => {
                         alt="Activity goals icon on activity goals page"
                       />
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                        <h2 style={styles.goalLabel}>Exercise</h2>
+                        <h2 style={styles.goalLabel}>Physical Activity</h2>
                         <p style={{ fontSize: "14px", color: "#555", fontWeight: "bold" }}>Recommended: 60 minutes/day</p>
                       </div>
                       <Tooltip
@@ -2198,7 +2198,7 @@ const JournalScreen = () => {
 
                     </Tooltip>
                   </ReflectionContainer>
-                  <td style={{ width: "50", maxHeight: 101 }}>
+                  <td style={{ width: "50%", maxHeight: 101 }}>
                     {sleepResponseLoading ? (
                       <CircularProgress />
                     ) : !Feedbacks.sleep ? (
