@@ -57,10 +57,17 @@ const Header = () => {
             </Button>
             <Button
               style={buttonStyles(ismobile ? "ismobile" : istablet ? "istablet" : "default")}
+              onClick={() => navigate("/daily-reports")}
+            >
+              Daily Reports
+            </Button>
+            <Button
+              style={buttonStyles(ismobile ? "ismobile" : istablet ? "istablet" : "default")}
               onClick={() => navigate("/learnmore")}
             >
               Learn More
             </Button>
+            
           </>
         ) : (
           <div style={{ display: "flex", gap: "10px" }}>
