@@ -1,0 +1,65 @@
+.daily-reports-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .page-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .instructions {
+    text-align: center;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .calendar {
+    margin: 0 auto;
+    max-width: 320px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+  }
+  
+  .report-section {
+    margin-top: 20px;
+  }
+  
+  .loading {
+    text-align: center;
+    font-size: 16px;
+    color: #888;
+  }
+  
+  .error {
+    text-align: center;
+    font-size: 16px;
+    color: red;
+  }
+  
+  .report-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .report-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .no-data {
+    text-align: center;
+    color: #777;
+    font-style: italic;
+  }
+  
