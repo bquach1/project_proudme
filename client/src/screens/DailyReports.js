@@ -70,6 +70,73 @@ const DailyReports = () => {
     setSelectedDate(date);
   };
 
+  const parseTime = (timeStr) => {
+    let [hours, minutes] = timeStr.split(":").map(Number);
+    let isPM = /pm$/i.test(timeStr);
+
+    if (isPM && hours < 12) {
+      hours += 12;
+    } else if (!isPM && hours === 12) {
+      hours = 0;
+    }
+
+    return { hours, minutes: minutes || 0 };
+  };
+
+  const calculateTotals = (data, type) => {
+    let totals = 0;
+
+    if (data && data[type]) {
+      for (const key in data[type]) {
+        const entry = data[type][key];
+
+        if (type === "activity" || type === "screentime") {
+          totals += entry.hours || 0;
+          totals += entry.minutes ? entry.minutes / 60 : 0;
+        } else if (type === "eating") {
+          totals += entry.servings || 0;
+        } else if (type === "sleep") {
+          const bedtimeParts = parseTime(entry.bedtime);
+          const wakeUpTimeParts = parseTime(entry.wakeUpTime);
+
+          const bedtime = new Date(1970, 0, 1, bedtimeParts.hours, bedtimeParts.minutes).getTime();
+          let wakeUpTime = new Date(1970, 0, 1, wakeUpTimeParts.hours, wakeUpTimeParts.minutes).getTime();
+
+          if (wakeUpTime < bedtime) {
+            wakeUpTime += 24 * 60 * 60 * 1000;
+          }
+
+          totals += (wakeUpTime - bedtime) / (1000 * 60 * 60);
+        }
+      }
+    }
+    return { totals };
+  };
+
+  const renderComponent = (type, title) => {
+
+    const totalGoals = reportData?.goals ? calculateTotals(reportData.goals, type) : { totals : 0 }
+    const totalBehaviors = reportData?.behaviors ? calculateTotals(reportData.behaviors, type) : { totals : 0 }
+    const reflection = reportData?.reflection?.find((item) => item.goalType === type);
+    const feedback = reportData?.feedback?.find((item) => item.goalType === type);
+
+    return (
+      <div className="report-card">
+        <h3>{title}</h3>
+        {reportData ? (
+          <ul>
+            <li><strong>Planned :</strong> {totalGoals?.totals} {type == 'eating' ? 'servings': 'hrs'} </li>
+            <li><strong>Achieved:</strong> {totalBehaviors?.totals} {type == 'eating' ? 'servings': 'hrs'}</li>
+            <li><strong>Reflection:</strong> {reflection?.reflection || "No reflection available."}</li>
+            <li><strong>AI Feedback:</strong> {feedback?.feedback || "No feedback available."}</li>
+          </ul>
+        ) : (
+          <p className="no-data">No data available for {title}.</p>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="daily-reports-container">
       <h1 className="page-title">Daily Reports</h1>
@@ -88,59 +155,11 @@ const DailyReports = () => {
       <div className="report-section">
         {loading && <p className="loading">Loading...</p>}
         {error && <p className="error">{error}</p>}
-        {reportData ? (
-          <div>
-            <h2 className="report-title">
-              Report for {selectedDate.toDateString()}
-            </h2>
-            {reportData.goals ? (
-              <div className="report-item">
-                <h3>Goals</h3>
-                <ul>
-                  {Object.entries(reportData.goals).map(([key, value]) => (
-                    <li key={key}>
-                      <strong>{key}</strong>: {JSON.stringify(value)}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <p className="no-data">No goals data available.</p>
-            )}
-            {reportData.behaviors ? (
-              <div className="report-item">
-                <h3>Behaviors</h3>
-                <ul>
-                  {Object.entries(reportData.behaviors).map(([key, value]) => (
-                    <li key={key}>
-                      <strong>{key}</strong>: {JSON.stringify(value)}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              <p className="no-data">No behaviors data available.</p>
-            )}
-            {reportData.reflection?.length ? (
-              <div className="report-item">
-                <h3>Reflection</h3>
-                {reportData.reflection.map((item, index) => (
-                  <p key={index}>{item.reflection}</p>
-                ))}
-              </div>
-            ) : (
-              <p className="no-data">No reflection data available.</p>
-            )}
-            {reportData.feedback?.length ? (
-              <div className="report-item">
-                <h3>Feedback</h3>
-                {reportData.feedback.map((item, index) => (
-                  <p key={index}>{item.feedback}</p>
-                ))}
-              </div>
-            ) : (
-              <p className="no-data">No feedback available.</p>
-            )}
+        {reportData ? (<div className="grid-container">
+            {renderComponent("activity", "Physical Activity")}
+            {renderComponent("screentime", "Screen Time")}
+            {renderComponent("sleep", "Sleep")}
+            {renderComponent("eating", "Fruits and Vegetables")}
           </div>
         ) : (
           !loading && <p className="no-data">No data for the selected day.</p>
