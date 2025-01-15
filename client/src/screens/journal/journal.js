@@ -2241,25 +2241,6 @@ const JournalScreen = () => {
             </div>
           </div>
         </div>
-        <StyledButton onClick={(e) => handleSubmitEmail(e, {
-          activityGoal,
-          screentimeGoal,
-          eatingGoal,
-          sleepGoal
-        }, email)}
-          style={{
-            marginTop: "-140px", // Moves the button up by reducing top margin
-            position: "relative", // Ensures the button respects the document flow
-            zIndex: 10, // Ensures visibility over other elements
-          }}
-        >
-          Send Daily Goal Update Email
-        </StyledButton>
-        <Snackbar
-          open={sendEmailPopupOpen}
-          message="Email Sent!"
-          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        />
       </JournalWrapper>
 
       {/* Physical Activity Dialog */}
@@ -2983,21 +2964,6 @@ const JournalScreen = () => {
           </StyledButton>
         </DialogActions>
       </Dialog>
-
-      <div style={{ textAlign: "center", marginTop: "-150px" }}>
-        <StyledButton
-          onClick={(e) =>
-            handleSubmit(e, {
-              activityGoal,
-              screentimeGoal,
-              eatingGoal,
-              sleepGoal,
-            }, email)
-          }
-        >
-          Send Daily Goal Update Email
-        </StyledButton>
-      </div>
     </Wrapper>
 
   );
