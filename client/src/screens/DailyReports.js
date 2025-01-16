@@ -3,6 +3,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import axios from "axios";
 import "css/DailyReports.css";
+import { DATABASE_URL } from "constants";
 
 const DailyReports = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -49,7 +50,7 @@ const DailyReports = () => {
     setReportData(null);
 
     try {
-      const response = await axios.get("http://localhost:3001/daily-report", {
+      const response = await axios.get(`${DATABASE_URL}/daily-report`, {
         params: { userId, date: formattedDate },
       });
       console.log("API Response:", response.data); // Debugging log
