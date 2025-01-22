@@ -103,3 +103,10 @@
   .report-card li strong {
     color: #333;
   }
+
+  .highlighted-date {
+    background-color: green !important;
+    color: white !important;
+    border-radius: 50%;
+  }
+  

@@ -273,8 +273,8 @@ const JournalScreen = () => {
     eating: {},
     sleep: {
       "Expected Sleep": {
-        bedtime: "22:00", // Default bedtime
-        wakeUpTime: "06:00", // Default wake-up time
+        bedtime: "00:00", // Default bedtime
+        wakeUpTime: "00:00", // Default wake-up time
       },
     },
   });
@@ -284,8 +284,8 @@ const JournalScreen = () => {
     eating: {},
     sleep: {
       "Actual Sleep": {
-        bedtime: "22:00", // Default bedtime
-        wakeUpTime: "06:00", // Default wake-up time
+        bedtime: "00:00",
+        wakeUpTime: "00:00",
       },
     },
   });

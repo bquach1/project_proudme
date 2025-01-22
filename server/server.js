@@ -183,8 +183,8 @@ const goalInputsSchema = new mongoose.Schema({
   },
   sleep: {
       "Expected Sleep": {
-          bedtime: { type: String, default: "22:00" },
-          wakeUpTime: { type: String, default: "06:00" },
+          bedtime: { type: String},
+          wakeUpTime: { type: String},
           hours: Number,
           minutes: Number
       }
@@ -211,8 +211,8 @@ const behaviorInputsSchema = new mongoose.Schema({
   },
   sleep: {
       "Actual Sleep": {
-          bedtime: { type: String, default: "22:00" },
-          wakeUpTime: { type: String, default: "06:00" },
+          bedtime: { type: String },
+          wakeUpTime: { type: String},
           hours: Number,
           minutes: Number
       }
@@ -866,6 +866,48 @@ app.get("/dailyBehavior", async (req, res) => {
       date: req.query.date,
     });
     res.status(200).json(behaviorToday);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+app.get("/journals-date", async (req, res) => {
+  try {
+
+    const date = new Date(req.query.date);
+
+    const last30Days = [];
+
+    for (let i = 0; i < 30; i++) {
+      const prevDate = new Date(date);
+      prevDate.setDate(date.getDate() - i);
+      const mm = prevDate.getMonth() + 1;
+      const dd = prevDate.getDate();
+      const yyyy = prevDate.getFullYear();
+      last30Days.push(`${mm}/${dd}/${yyyy}`);
+    }
+
+    const last30DaysBehavior = await BehaviorInputs.find({
+      userId: req.query.userId,
+      date: { $in: last30Days }
+    });
+
+    const last30DaysGoals = await GoalInputs.find({
+      userId: req.query.userId,
+      date: { $in: last30Days }
+    });
+    
+    const entryDatesForLast30Days = new Set();
+
+    last30DaysBehavior.forEach(item => {
+      entryDatesForLast30Days.add(item.date);
+    });
+    
+    last30DaysGoals.forEach(item => {
+      entryDatesForLast30Days.add(item.date);
+    });
+
+    res.status(200).json(Array.from(entryDatesForLast30Days));
   } catch (err) {
     res.status(400).json({ message: err.message });
   }

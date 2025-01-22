@@ -8,8 +8,17 @@ import { DATABASE_URL } from "constants";
 const DailyReports = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [reportData, setReportData] = useState(null);
+  const [highlightedDates, setHighlightedDates] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const getTodayDate = () => {
+    const today = new Date();
+    const month = today.getMonth() + 1;
+    const day = today.getDate();
+    const year = today.getFullYear();
+    return `${month}/${day}/${year}`;
+  };
 
   const decodeToken = (token) => {
     try {
@@ -28,22 +37,25 @@ const DailyReports = () => {
     return `${month}/${day}/${year}`;
   };
 
-  const fetchReport = async (date) => {
-    const formattedDate = formatDate(date); 
+  const getAuthData = () => {
     const token = localStorage.getItem("authToken");
 
     if (!token) {
-      setError("User not logged in.");
-      return;
+      throw new Error("User not logged in.");
     }
 
     const decodedToken = decodeToken(token);
     if (!decodedToken || !decodedToken.userId) {
-      setError("Invalid or missing userId.");
-      return;
+      throw new Error("Invalid or missing userId.");
     }
 
-    const userId = decodedToken.userId;
+    return decodedToken.userId;
+  };
+
+
+  const fetchReport = async (date) => {
+    const formattedDate = formatDate(date); 
+    const userId = getAuthData();
 
     setLoading(true);
     setError("");
@@ -53,7 +65,7 @@ const DailyReports = () => {
       const response = await axios.get(`${DATABASE_URL}/daily-report`, {
         params: { userId, date: formattedDate },
       });
-      console.log("API Response:", response.data); // Debugging log
+      console.log("API Response:", response.data);
       setReportData(response.data);
     } catch (err) {
       console.error("Error fetching daily report:", err.response || err.message);
@@ -63,7 +75,25 @@ const DailyReports = () => {
     }
   };
 
+  const fetchHighlightedDates = async (date) => {
+    const formattedDate = getTodayDate();
+    const userId = getAuthData();
+
+    try {
+      const response = await axios.get(`${DATABASE_URL}/journals-date`, {
+        params: { userId, date: formattedDate },
+      });
+      setHighlightedDates(response.data);
+    } catch (err) {
+      console.error("Error fetching highlighted dates:", err);
+    }
+  };
+
   useEffect(() => {
+
+
+    fetchHighlightedDates();
+
     fetchReport(selectedDate);
   }, [selectedDate]);
 
@@ -111,7 +141,7 @@ const DailyReports = () => {
         }
       }
     }
-    return { totals };
+    return { totals: parseFloat(totals.toFixed(2)) };
   };
 
   const renderComponent = (type, title) => {
@@ -126,8 +156,8 @@ const DailyReports = () => {
         <h3>{title}</h3>
         {reportData ? (
           <ul>
-            <li><strong>Planned :</strong> {totalGoals?.totals} {type == 'eating' ? 'servings': 'hrs'} </li>
-            <li><strong>Achieved:</strong> {totalBehaviors?.totals} {type == 'eating' ? 'servings': 'hrs'}</li>
+            <li><strong>Planned :</strong> {totalGoals?.totals || 'N/A'} {totalGoals?.totals ? type == 'eating' ? 'servings': 'hrs' : ''} </li>
+            <li><strong>Achieved:</strong> {totalBehaviors?.totals || 'N/A'} {totalBehaviors?.totals ? type == 'eating' ? 'servings': 'hrs': ''}</li>
             <li><strong>Reflection:</strong> {reflection?.reflection || "No reflection available."}</li>
             <li><strong>AI Feedback:</strong> {feedback?.feedback || "No feedback available."}</li>
           </ul>
@@ -150,8 +180,14 @@ const DailyReports = () => {
         onChange={handleDateChange}
         value={selectedDate}
         maxDate={new Date()}
-        minDate={new Date(new Date().setDate(new Date().getDate() - 30))} // Limit to last 30 days
+        minDate={new Date(new Date().setDate(new Date().getDate() - 30))}
         className="calendar"
+        tileClassName={({ date, view }) => {
+          if (view === 'month') {
+            const formattedDate = formatDate(date);
+            return highlightedDates.includes(formattedDate) ? 'highlighted-date' : null;
+          }
+        }}
       />
       <div className="report-section">
         {loading && <p className="loading">Loading...</p>}
