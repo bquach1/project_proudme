@@ -242,6 +242,8 @@ export const createChatbotRequest = async (
             Tracked ${behaviorInputs?.[section]?.[activityName]?.hours || 0}h ${behaviorInputs?.[section]?.[activityName]?.minutes || 0}m`;
   };
 
+  calculateQuantities(goalInputs, behaviorInputs);
+
   // Activity tracking
   if (goalType === "activity") {
     const activities = selectedItems?.activity || [];
@@ -250,9 +252,9 @@ export const createChatbotRequest = async (
     ).join(", ")}`;
     
     recommendedValue = "60 minutes";
-    goalValue = formatGoalValue(goalInputs.activity);
-    actualValue= formatGoalValue(behaviorInputs.activity);
-    goalMet = totalTrackedTime?.activity >= 60; // Recommended goal is 60 minutes
+    goalValue =`${activityGoalMinutes} minutes`
+    actualValue= `${activityBehaviorMinutes} minutes`
+    goalMet = activityBehaviorMinutes >= 60; // Recommended goal is 60 minutes
     // personalGoalMet = totalTrackedTime?.activity >= (goalValueInt); 
     selectedItem = selectedItems.activity;
   }
@@ -265,15 +267,14 @@ export const createChatbotRequest = async (
     ).join(", ")}`;
   
     recommendedValue = "120 minutes";
-    goalValue = formatGoalValue(goalInputs.screentime);
+    goalValue = `${screentimeGoalMinutes} minutes`
     console.log("actualValue--------",behaviorInputs.screentime);
-    actualValue= formatGoalValue(behaviorInputs.screentime);
+    actualValue=  `${screentimeBehaviorMinutes} minutes`
     const totalMinutesTracked = totalTrackedTime?.screentime || 0;
-    actualValue = formatTime(totalMinutesTracked);
   
     const schoolWorkRelated = screentimeActivities.some(item => item.toLowerCase().includes("school") || item.toLowerCase().includes("work"));
   
-    goalMet = schoolWorkRelated || totalMinutesTracked <= 120; // Recommended goal is 120 minutes
+    goalMet = screentimeBehaviorMinutes <= 120; // Recommended goal is 120 minutes
     // personalGoalMet = totalMinutesTracked <= (goalValueInt); 
     selectedItem = selectedItems.screentime;
   }
@@ -286,19 +287,17 @@ export const createChatbotRequest = async (
     ).join(", ")}`;
     
     recommendedValue = "5 servings";
-    goalValue = formatGoalValue(goalInputs.eating);
-    actualValue= formatGoalValue(behaviorInputs.eating);
-    goalMet = totalTrackedTime?.eating >= 5; // Recommended goal is 5 servings
+    goalValue =`${eatingGoalServings} servings`
+    actualValue= `${eatingBehaviorServings} servings`
+    goalMet = eatingBehaviorServings >= 5; // Recommended goal is 5 servings
     // personalGoalMet = totalTrackedTime?.eating >= goalValueInt; 
     selectedItem = selectedItems.eating;
   }
-
+      
   // Sleep tracking
   else if (goalType === "sleep") {
     const totalMinutesTracked = totalTrackedTime?.sleep || 0;
-    goalValue = formatGoalValue(goalInputs.sleep);
-    actualValue= formatGoalValue(behaviorInputs.sleep);
-    recommendedValue = "9 hours";
+    recommendedValue = "8 - 10 hours";
 
     const bedTime = goalInputs?.sleep?.["Expected Sleep"]?.bedTime || "";
     const wakeUpTime = goalInputs?.sleep?.["Expected Sleep"]?.wakeUpTime || "";
@@ -307,11 +306,15 @@ export const createChatbotRequest = async (
 
     additionalInfo = `Expected Sleep: Bed Time - ${bedTime}, Wake Up Time - ${wakeUpTime}, 
       Tracked Sleep: Bed Time - ${trackedBedTime}, Wake Up Time - ${trackedWakeUpTime}`;
-    goalMet = totalTrackedTime?.sleep >= (9 * 60); // Recommended goal is 9 hours of sleep
+
+    goalMet = "don't evaluate this"
     // personalGoalMet = totalTrackedTime?.sleep >= goalValueInt; 
     selectedItem = selectedItems.sleep;
+    goalValue = `${sleepGoal.hours}:${sleepGoal.minutes}`;
+    actualValue = `${sleepBehavior.hours}:${sleepBehavior.minutes}`;
   }
-
+  
+  
   // Send the request to the chatbot
   try {
     // Send the request to the chatbot
@@ -323,15 +326,15 @@ export const createChatbotRequest = async (
         },
         {
           role: "user",
-          content: `Goal Type: ${goalType}, Recommended Value: ${recommendedValue}, goal Value: ${goalValue}
-                    values acheived: ${actualValue}, reflection: ${reflection}, Personal Goal Met: ${personalGoalMet}
+          content: `Goal Type: ${goalType}, Recommended Value by defualt: ${recommendedValue}, goal that student set: ${goalValue}
+                    goal that student acheived: ${actualValue}, reflection: ${reflection}, Personal Goal Met: ${personalGoalMet}
                     recommended goal met: ${goalMet}`,
         },
       ],
     });
 
 
-    calculateQuantities(goalInputs, behaviorInputs);
+    
 
     console.log("Activity Goal Minutes:", activityGoalMinutes);
     console.log("Screentime Goal Minutes:", screentimeGoalMinutes);
