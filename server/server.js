@@ -281,6 +281,7 @@ app.post("/login", async (req, res) => {
 
     // If login is successful, return a success response
     const token = jwt.sign({ userId: user._id }, "secret_key");
+    console.log(`User with email ${email} logged in successfully.`)
     res.send(token);
   } catch (error) {
     console.error(error);
@@ -644,7 +645,7 @@ app.post("/signup", async (req, res) => {
       gender,
     });
     await newUser.save();
-
+    console.log(`User with email ${email} registered successfully.`)
     res.status(200).send(newUser);
   } catch (error) {
     res.status(500).send("Internal server error");
