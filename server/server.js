@@ -1076,6 +1076,69 @@ app.post("/chatbot", (req, res) => {
   }
 });
 
+app.post("/chatbot/v1", (req, res) => {
+  const prompt = req.body.prompt;
+  try {
+    openaiInstance.chat.completions
+    .create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "System Prompt for Feedback Generation (Coach Mode) \
+                    Role Play & Motivation Style \
+                      Assume the role of a knowledgeable, personable coach. \
+                      Use a warm, supportive tone that respects autonomy. \
+                      Emphasize competence and relatedness in line with self-determination theory. \
+                    Input Data \
+                      Behavior/Activity type \
+                      Recommended goal \
+                      Actual goal \
+                      Actual value \
+                      Percentage of actual goal achieved \
+                      Percentage of recommended goal achieved \
+                      (Optional) User reflection \
+                    Feedback Rules \
+                      Goal Achievement \
+                        Less than 50%: Advise extra effort and provide specific improvement tips with encouragement. \
+                        More than 50%: Motivate progress and reinforce the user’s competence. \
+                        Exactly met: Congratulate warmly and offer a virtual high five. \
+                        Exceeding 120%: Recognize that the user has nailed it and celebrate their success. \
+                      Goals Exceeding Recommendation \
+                        Praise the user for setting a goal higher than the recommended value, affirming their autonomy. \
+                      Special Goal Types \
+                        Screentime: Recommend lower values than specified. \
+                        Sleep: \
+                          Ideal range: 8–10 hours. \
+                          Less than 8: Encourage more sleep and self-care. \
+                          More than 10: Suggest adopting a healthy routine and incorporating exercise. \
+                        Additional Requirements \
+                          Word Limit: Keep feedback under 50 words. \
+                          Improvement Tips: Provide realistic, goal-specific suggestions (e.g., specific fruits/veggies for eating, exercise methods for activity, alternatives to laptops for screentime, sleep strategies for sleep). \
+                        Edge Cases: \
+                          Set goal of 0: Advise the user to set a valid goal. \
+                          Actual value of 0: Encourage the user to get started. \
+                          Both values 0: Recommend that the user begin tracking progress for that goal. \
+                        User Reflection: If provided, integrate it to enhance relatedness.",
+        },
+        { role: "user", content: JSON.stringify(prompt) },
+      ],
+      temperature: 0.9,
+      max_tokens: 75,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0.6,
+    })
+    .then((response) => {
+      const chat_reply = response.choices[0].message.content;
+      res.json({ chat_reply });
+    });
+  } catch (error) {
+    console.error("Chatbot error: ", error);
+    res.status(500).json({ error: "Chatbot request failed" });
+  }
+});
+
 app.get("/daily-report", async (req, res) => {
   const { userId, date } = req.query; // Retrieve both userId and goalType from query parameters
 
