@@ -914,6 +914,40 @@ app.get("/journals-date", async (req, res) => {
   }
 });
 
+app.get("/journals-date/v1", async (req, res) => {
+  try {
+
+    const date = new Date(req.query.date);
+
+    const last30Days = [];
+
+    for (let i = 0; i < 30; i++) {
+      const prevDate = new Date(date);
+      prevDate.setDate(date.getDate() - i);
+      const mm = prevDate.getMonth() + 1;
+      const dd = prevDate.getDate();
+      const yyyy = prevDate.getFullYear();
+      last30Days.push(`${mm}/${dd}/${yyyy}`);
+    }
+
+    const last30DaysBehavior = await Behavior.find({
+      userId: req.query.userId,
+      date: { $in: last30Days }
+    });
+    
+    const entryDatesForLast30Days = new Set();
+
+    last30DaysBehavior.forEach(item => {
+      entryDatesForLast30Days.add(item.date);
+    });
+    
+
+    res.status(200).json(Array.from(entryDatesForLast30Days));
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 app.post("/send-email", (req, res) => {
   const { to, subject, text } = req.body;
