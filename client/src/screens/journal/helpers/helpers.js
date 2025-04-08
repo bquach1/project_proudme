@@ -319,18 +319,9 @@ export const createChatbotRequest = async (
   try {
     // Send the request to the chatbot
     const chatbotResponse = await axios.post(`${DATABASE_URL}/chatbot/v1`, {
-      prompt: [
-        {
-          role: "system",
-          content: `Provide feedback based on the user's actual behavior compared to both their set personal goals and recommended goals.`,
-        },
-        {
-          role: "user",
-          content: `Goal Type: ${goalType}, Recommended Value by defualt: ${recommendedValue}, goal that student set: ${goalValue}
+      prompt: `Goal Type: ${goalType}, Recommended Value by defualt: ${recommendedValue}, goal that student set: ${goalValue}
                     goal that student acheived: ${actualValue}, reflection: ${reflection}, Personal Goal Met: ${personalGoalMet}
                     recommended goal met: ${goalMet}`,
-        },
-      ],
     });
 
 
