@@ -318,7 +318,7 @@ export const createChatbotRequest = async (
   // Send the request to the chatbot
   try {
     // Send the request to the chatbot
-    const chatbotResponse = await axios.post(`${DATABASE_URL}/chatbot`, {
+    const chatbotResponse = await axios.post(`${DATABASE_URL}/chatbot/v1`, {
       prompt: [
         {
           role: "system",
