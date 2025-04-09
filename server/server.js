@@ -156,6 +156,8 @@ const behaviorSchema = new mongoose.Schema({
   sleep: {
     bedBehavior: Number,
     wakeUpBehavior: Number,
+    bedGoal: Number,
+    wakeUpGoal: Number
   },
 });
 
