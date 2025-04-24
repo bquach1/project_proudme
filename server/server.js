@@ -933,7 +933,7 @@ app.get("/journals-date/v1", async (req, res) => {
     }
 
     const last30DaysBehavior = await Behavior.find({
-      userId: req.query.userId,
+      user: req.query.userId,
       date: { $in: last30Days }
     });
     
