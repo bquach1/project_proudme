@@ -1048,7 +1048,7 @@ app.post("/chatbot", (req, res) => {
       If goal achieved is more than 50%, encourage them to reach the goal and keep it up \
       If they meet their goal, congratulate them and give high five\
       If their set goal is more than the recommended goal, praise them for setting goal more than recommended value \
-      If the goal type is screentime, it is better if they do less than the specified goal/recommendation \
+      If the goal type is screentime, it is better if they do less than the specified goal/recommendation, if their goal and behavior is less than the recommended value congratulate them else encourage them to reduce their screentime  \
       if the goal type is sleep, 8-10 hours are a good range, less than 8 you have to encourage them to sleep more, more than 10 encourage them to have a healthy routine and do some exercise\
       so give feedback for the opposite case.\
       If they achieve more than 120% of goal, They nailed it. \
