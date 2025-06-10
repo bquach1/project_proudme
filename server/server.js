@@ -1104,9 +1104,9 @@ app.post("/chatbot/screentime", (req, res) => {
             If there is a reflection provided as an input, incorporate it into your feedback."
             : "you will be provided recommended value, personal goal set, goal achieved and reflection for screentime activity \
       you have to provide feedback based on percentage of goal achieved \
-      If goal set or goal achieved is more than recommended value, dont congratulate them, ask them to reduce their screentime further\
-      If both goal set and goal achieved is less than recommended value, however they didnt meet their goal encourage them to keep working towards their goal \
-      If both goal set and goal achieved is less than recommended value and the goals were met, congratulate them for meeting their goal \
+      If goal set or goal achieved is more than recommended value, dont congratulate them, ask them to reduce their screentime further; if goal set is higher ask them to set goal below recommended value, if actual value is higher ask them to reduce time spent on screen\
+      If both goal set and goal achieved is less than recommended value but they didnt meet their goal encourage them to keep working towards their goal but congratulate them for keeping screentime below the recommended value \
+      If both goal set and goal achieved is less than recommended value and the goals were met, congratulate them for meeting their goal and spending below recommended time on screen \
       Keep your feedback encouraging and limited to 50 words\
       Provide realistic feedback on how they can improve in the future\
       relevant to the goal type; for example, \
