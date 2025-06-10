@@ -1078,6 +1078,61 @@ app.post("/chatbot", (req, res) => {
   }
 });
 
+app.post("/chatbot/screentime", (req, res) => {
+  const prompt = req.body.prompt;
+  try {
+    openaiInstance.chat.completions
+    .create({
+      model: "gpt-4o-mini",
+      // model="gpt-4",
+      messages: [
+        {
+          role: "system",
+          content: /category\d/.test(JSON.stringify(prompt))
+            ? "You are an feedback provider who provides feedback to user based on their screen time values\
+            You are provided one of 9 categories listed below: based on categories. provide feedback \
+            category 1: User did not achieve their goal and their screen time is more than double of their set goal, ask them to reduce there screen time further\
+            category 2: User missed their goal but not by more than double, encourage them to work harder and reach the goal\
+            category 3: User achieved their screen time goal, congratulate them and ask them to set their actual goal to recommended value \
+            category 4: User achieved their set goal and recommended goal, congratulate them got meeting goal and praise them for setting goal better then recommended value \
+            category 5: User has reduced their screen time by more than half of their goal value, they are champion and achiever, praise them for their achievement. \
+            category 6: User has not yet set their goal or behavior values for screentime; tell them to enter valid values.\
+            category 7: User has not yet set a behavior value, tell them that they haven't started working towards their goal yet.\
+            category 8: Uer has not yet set a goal value, tell them to remember to set a goal before starting their behaviors.\
+            category 9: Praise the user for working towards their goal \
+            Keep your feedback encouraging and limited to 60 words\
+            If there is a reflection provided as an input, incorporate it into your feedback."
+            : "you will be provided recommended value, personal goal set, goal achieved and reflection for screentime activity \
+      you have to provide feedback based on percentage of goal achieved \
+      If goal set or goal achieved is more than recommended value, dont congratulate them, ask them to reduce their screentime further\
+      If both goal set and goal achieved is less than recommended value, however they didnt meet their goal encourage them to keep working towards their goal \
+      If both goal set and goal achieved is less than recommended value and the goals were met, congratulate them for meeting their goal \
+      Keep your feedback encouraging and limited to 50 words\
+      Provide realistic feedback on how they can improve in the future\
+      relevant to the goal type; for example, \
+      specific alternatives to laptops for screentime,\
+      If the set goal is 0, tell the user to set a valid amount for their goal; if their behavior value is 0, tell them that they need to get started. If both values are 0, tell them that they need to save their progress for that goal.\
+      If the user provides a reflection associated with the given behavior,\
+      incorporate it into your feedback.",
+        },
+        { role: "user", content: JSON.stringify(prompt) },
+      ],
+      temperature: 0.9,
+      max_tokens: 75,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0.6,
+    })
+    .then((response) => {
+      const chat_reply = response.choices[0].message.content;
+      res.json({ chat_reply });
+    });
+  } catch (error) {
+    console.error("Chatbot error: ", error);
+    res.status(500).json({ error: "Chatbot request failed" });
+  }
+});
+
 app.post("/chatbot/v1", (req, res) => {
   const prompt = req.body.prompt;
   try {
